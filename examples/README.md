@@ -1,7 +1,7 @@
 # List of Examples
 
 | Name | Link | Reference |
-| ---- | ---- | ---- | ---- |
+| ---- | ---- | ---- |
 | Anderson Moore 64 | [anderson-moore-64](anderson-moore-64/) | And89 |
 | Bryson-Denham | [bryson-denham](bryson-denham/) | Bry75 |
 | Bryson Ho 109 | [bryson-ho-109](bryson-ho-109/) | Bry75 |
