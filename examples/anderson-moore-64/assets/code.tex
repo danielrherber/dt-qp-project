@@ -1,0 +1,21 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{u(t)} \quad & \int_{t_0}^{t_f}\left[ \frac{1}{2} e^{-t} \xi^2 + 2 e^{-t} u^2 \right] dt \\
+\text{subject to:} \quad & \dot{\xi} = \frac{1}{2}\xi + u \\
+& \xi(0) = \xi_0 \\
+\end{align*}
+}}
+\end{document}
+
+% solution

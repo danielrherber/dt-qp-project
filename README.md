@@ -49,4 +49,4 @@ See [INSTALL_DTQP_Project.m](INSTALL_DTQP_Project.m) for more information.
 
 #### Project Links
 - [https://github.com/danielrherber/dt-qp-project](https://github.com/danielrherber/dt-qp-project)
-- [https://www.mathworks.com/matlabcentral/fileexchange/XXXXX](https://www.mathworks.com/matlabcentral/fileexchange/XXXXX)
+- [https://www.mathworks.com/matlabcentral/fileexchange/65434](https://www.mathworks.com/matlabcentral/fileexchange/65434)
