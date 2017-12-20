@@ -1,7 +1,9 @@
 %--------------------------------------------------------------------------
-% BrysonHo109.m
-% pp. 109-110 of A. E. Bryson Jr. and Y.-C. Ho, Applied Optimal Control.
-% Taylor & Francis, 1975, isbn: 9780891162285
+% BettsBiehnCampbell1.m
+% J. T. Betts, N. Biehn, and S. L. Campbell, Convergence of Nonconvergent 
+% IRK Discretizations of Optimal Control Problems with State Inequality 
+% Constraints," SIAM Journal on Scientific Computing, vol. 23, no. 6, 
+% pp. 1981-2007, 2002. doi: 10.1137/S1064827500383044
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -9,24 +11,18 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function varargout = BrysonHo109(varargin)
+function varargout = BettsBiehnCampbell1(varargin)
 
 % default parameters
 opts.plotflag = 1; % create the plots
 opts.saveflag = 0;
-opts.displevel = 2;
-opts.Defectmethod = 'HS';
-opts.Quadmethod = 'CQHS';
+opts.Defectmethod = 'TR';
+opts.Quadmethod = 'CTR';
 opts.NType = 'ED';
-p.nt = 200; % number of nodes
-opts.reorder = 0;
-opts.solver = 'built-in';
-opts.tolerance = 1e-15;
-opts.maxiters = 200;
-opts.disp = 'iter';
+p.nt = 11; % number of nodes
 
 % if input arguments are provided
-% BrysonHo109(p,p.nt,opts,opts.Quadmethod,opts.Defectmethod,opts.NType)
+% BettsBiehnCampbell1(p,p.nt,opts,opts.Quadmethod,opts.Defectmethod,opts.NType)
 if nargin >= 1
     p = varargin{1};
 end
@@ -54,42 +50,43 @@ end
 opts.mpath = mpath;
 opts.mname = mname;
 
-%% tunable parameters
-p.x0 = 1; p.a = 2; % 1
-p.tf = 1; % time horizon
-p.g = @(t) t.*cos(20*pi*t) - 1/4;
-
 %% setup
-% time horizon
-p.t0 = 0; 
+p.t0 = 34/15; p.tf =4;
 
 % system dynamics
-A = 0; B{1,1} = p.g;
+A = [0 1; 0 0]; 
+B = [0;1]; 
 
 % Lagrange term
-L(1).left = 1; L(1).right = 1; L(1).matrix = 1/2; % 1/2*u^2
+L(1).left = 1; % control variables
+L(1).right = 1; % control variables
+L(1).matrix = 1e-3; % 1e-3*u^2
+L(2).left = 2; % state variables
+L(2).right = 2; % state variables
+L(2).matrix = [1 0; 0 0]; % y1^2
 
-% Mayer term
-M(1).left = 5; M(1).right = 5; M(1).matrix = p.a^2/2; % a^2/2*xf^2
+% initial values
+LB(1).right = 4; % initial states
+LB(1).matrix = [302399/50625; 70304/3375];
+UB(1).right = 4; % initial states
+UB(1).matrix = [302399/50625; 70304/3375];
 
-% simple bounds
-UB(1).right = 4; UB(1).matrix = p.x0; % initial state
-LB(1).right = 4; LB(1).matrix = p.x0;
-UB(2).right = 1; UB(2).matrix = 1; % control
-LB(2).right = 1; LB(2).matrix = -1;
+% simple bound path constraint
+LB(2).right = 2; % states
+LB(2).matrix = {@(t) 15 - (t-4).^4;-Inf};
 
-% combine structures
-setup.A = A; setup.B = B; setup.L = L; setup.M = M;
-setup.UB = UB; setup.LB = LB; setup.p = p;
+% combine
+setup.A = A; setup.B = B; setup.L = L; 
+setup.LB = LB; setup.UB = UB; setup.p = p;
 
 %% solve
 [T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = BrysonHo109_output(T,U,Y,P,F,p,opts);
+[O,sol] = BettsBiehnCampbell1_output(T,U,Y,P,F,p,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-BrysonHo109_plot(T,U,Y,P,F,p,opts,sol)
+BettsBiehnCampbell1_plot(T,U,Y,P,F,p,opts,sol)

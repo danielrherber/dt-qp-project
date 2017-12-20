@@ -18,7 +18,7 @@ opts.Quadmethod = 'G';
 opts.NType = 'LGL';
 
 % if input arguments are provided
-% Cart(p,p.nt,opts,opts.Quadmethod,opts.Defectmethod,opts.NType)
+% AndersonMoore64(p,p.nt,opts,opts.Quadmethod,opts.Defectmethod,opts.NType)
 if nargin >= 1
     p = varargin{1};
 end

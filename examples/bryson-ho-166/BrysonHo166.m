@@ -60,30 +60,31 @@ p.x0 = -0.5; p.v0 = 1; % other
 
 %% setup
 p.t0 = 0;
-setup.p = p;
 
 % system dynamics
-setup.A = [0 1;-1 0]; 
-setup.B = [0;1]; 
+A = [0 1;-1 0]; 
+B = [0;1]; 
 
 % Lagrange term
-setup.L(1).left = 1; % control variables
-setup.L(1).right = 1; % control variables
-setup.L(1).matrix(1,1) = 1/2; % 1/2*u.^2
+L(1).left = 1; % control variables
+L(1).right = 1; % control variables
+L(1).matrix = 1/2; % 1/2*u^2
 
-% linear boundary constraints
-setup.Y(1).linear(1).right = 4; % initial states
-setup.Y(1).linear(1).matrix = [1;0];
-setup.Y(1).b = p.x0;
-setup.Y(2).linear(1).right = 4; % initial states
-setup.Y(2).linear(1).matrix = [0;1];
-setup.Y(2).b = p.v0;
-setup.Y(3).linear(1).right = 5; % final states
-setup.Y(3).linear(1).matrix = [1;0];
-setup.Y(3).b = 0;
-setup.Y(4).linear(1).right = 5; % final states
-setup.Y(4).linear(1).matrix = [0;1];
-setup.Y(4).b = 0;
+% initial conditions
+LB(1).right = 4; % initial states
+LB(1).matrix = [p.x0;p.v0];
+UB(1).right = 4; % initial states
+UB(1).matrix = [p.x0;p.v0];
+
+% final conditions
+LB(2).right = 5; % final states
+LB(2).matrix = [0;0];
+UB(2).right = 5; % final states
+UB(2).matrix = [0;0];
+
+% combine
+setup.A = A; setup.B = B; setup.L = L;
+setup.LB = LB; setup.UB = UB; setup.p = p;
 
 %% solve
 [T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);

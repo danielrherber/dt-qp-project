@@ -12,7 +12,7 @@
 function varargout = BrysonHo116(varargin)
 
 % if input arguments are provided
-% BrysonHo166(p,p.nt,opts,opts.Quadmethod,opts.Defectmethod,opts.NType)
+% BrysonHo116(p,p.nt,opts,opts.Quadmethod,opts.Defectmethod,opts.NType)
 if nargin >= 1
     p = varargin{1};
 end

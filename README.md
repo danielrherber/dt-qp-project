@@ -30,7 +30,7 @@ open BrysonHo166
 ### Citation
 Please cite the following two items if you use the DT QP Project:
 * DR Herber. *Advances in Combined Architecture, Plant, and Control Design.* PhD Dissertation, University of Illinois at Urbana-Champaign, Urbana, IL, USA, Dec. 2017. [[bibtex]](http://systemdesign.illinois.edu/~systemdesign/bibtexbrowser.php?key=Herber2017e&bib=esdl_refs.bib) [[pdf]](http://systemdesign.illinois.edu/publications/Her17e.pdf)
-	- *Discuss the theory behind this project and contains a number of examples comparing the different methods.*
+	- *Discusses the theory behind this project and contains a number of examples comparing the different methods.*
 * DR Herber, YH Lee, JT Allison. *DT QP Project*, GitHub. url: [https://github.com/danielrherber/dt-qp-project](https://github.com/danielrherber/dt-qp-project)
 
 ### External Includes
