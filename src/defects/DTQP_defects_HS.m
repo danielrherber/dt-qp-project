@@ -194,9 +194,9 @@ function [Aeq,beq] = DTQP_defects_HS(A,B,G,d,p,opts)
         Ifb = []; Vfb = [];
         
         for i = 1:ns % defect constraint of row continuous constraints
-            I = repmat(DefectIndices,1,nd); % row (continuous)
-            T = 1:nd*nt; T(nt:nt:nd*nt) = []; % time indexing vector
-            H = repmat(h,nd,1); % vector of time steps
+            I = (i-1)*(nt-1)+1:i*(nt-1); % row (continuous)
+            T = 1:nt-1; % time indexing vector
+            H = h; % vector of time steps
 
             % extract matrices
             dv = reshape(dt(i,:,:),[],1);

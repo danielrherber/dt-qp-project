@@ -60,7 +60,8 @@ function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,p,opts)
             I = repmat(DefectIndices,1,nu); % current defect constraint row indices
             J = 1:nu*nt; % current optimization variable column indices
             J(nt:nt:nu*nt) = []; % remove endpoints
-            
+
+            % extract matrices
             Bv = reshape(Bt(i,:,:),[],1);
 
             % theta values
@@ -84,6 +85,7 @@ function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,p,opts)
             J = nu*nt+1:(nu+ns)*nt; % current optimization variable column indices
             J(nt:nt:end) = []; % remove endpoints
             
+            % extract matrices
             Av = reshape(At(i,:,:),[],1);
 
             % theta values
@@ -111,6 +113,7 @@ function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,p,opts)
             I = repmat(DefectIndices,1,np); % current defect constraint row indices
             J = kron(nt*(nu+ns)+(1:np), ones(1,nt-1)); % current optimization variable column indices
             
+            % extract matrices
             Gv = reshape(Gt(i,:,:),[],1);
 
             % theta values
@@ -137,8 +140,9 @@ function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,p,opts)
         Ifb = []; Vfb = [];
         
         for i = 1:ns % defect constraint of row continuous constraints
-            I = repmat(DefectIndices,1,nd); % row (continuous)
+            I = (i-1)*(nt-1)+1:i*(nt-1); % row (continuous)
 
+            % extract matrices
             dv = reshape(dt(i,:,:),[],1);
 
             % nu values

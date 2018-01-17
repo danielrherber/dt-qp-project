@@ -3,6 +3,7 @@
 % formulation
 \documentclass{article}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{bm}
 \usepackage{graphicx}
 \usepackage{geometry}
@@ -11,11 +12,10 @@
 \begin{document}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{u(t)} \quad & \int_{34/15}^{4}\left[ \xi_1^2 + 10^{-3} u^2 \right] dt \\
-\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}\xi_2 \\ u \end{bmatrix} \\
-& \xi_1(34/15) = 302399/50625 \\
-& \xi_2(34/15) = 70304/3375 \\
-& -\xi_1(t) + 15 - (t-4)^4 \leq 0 \\
+\min_{\bm{u}(t)} \quad & \int_{t_0}^{t_f} \bm{u}^\intercal \bm{I} \bm{u} dt \\
+\text{subject to:} \quad & \dot{\bm{\xi}} = \bm{A} \bm{\xi} + \bm{B} \bm{u} \\
+& \bm{\xi}(t_0) = \bm{\xi}_0 \\
+& \bm{\xi}(t_f) = \bm{0}
 \end{align*}
 }}
 \end{document}

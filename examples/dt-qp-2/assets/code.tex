@@ -11,11 +11,9 @@
 \begin{document}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{u(t)} \quad & \int_{34/15}^{4}\left[ \xi_1^2 + 10^{-3} u^2 \right] dt \\
-\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}\xi_2 \\ u \end{bmatrix} \\
-& \xi_1(34/15) = 302399/50625 \\
-& \xi_2(34/15) = 70304/3375 \\
-& -\xi_1(t) + 15 - (t-4)^4 \leq 0 \\
+\min_{u(t)} \quad & m\left[ \xi(t_f) \right]^2 + \int_0^{t_f} r u^2 dt \\
+\text{subject to:} \quad & \dot{\xi} = a\xi + b \sin(\omega t) u \\
+& \xi(0) = \xi_0
 \end{align*}
 }}
 \end{document}

@@ -3,6 +3,7 @@
 | Name | Link | Reference |
 | ---- | ---- | ---- |
 | Anderson Moore 64 | [anderson-moore-64](anderson-moore-64/) | And89 |
+| Arbitrary Transfer | [arbitrary-transfer](arbitrary-transfer/) |  
 | Betts Biehn Campbell 1 | [betts-biehn-campbell-1](betts-biehn-campbell-1/) | Betts02 |
 | Bryson-Denham | [bryson-denham](bryson-denham/) | Bry75 |
 | Bryson Ho 109 | [bryson-ho-109](bryson-ho-109/) | Bry75 |
@@ -13,8 +14,12 @@
 | Bryson Ho 166 | [bryson-ho-166](bryson-ho-166/) | Bry75 |
 | Cart | [cart](cart/) | Ball99 |
 | DTQP Example 1 | [dt-qp-1](dt-qp-1/) | Her17 |
+| DTQP Example 2 | [dt-qp-2](dt-qp-2/) |  |
+| DTQP Example 3 | [dt-qp-3](dt-qp-3/) |  |
 | Hager 1 | [hager-1](hager-1/) | Hag00 |
-| Standard LQR | [lqr-standard](lqr-standard/) | Bry75 |
+| LQR Inhomogeneous | [lqr-inhomogeneous](lqr-inhomogeneous/) | Bry75 |
+| LQR Scalar | [lqr-scalar](lqr-scalar/) |  |
+| LQR Standard | [lqr-standard](lqr-standard/) | Bry75 |
 
 ### References
 - [**And89**] B. D. O. Anderson and J. B. Moore, *Optimal Control: Linear Quadratic Methods*. Prentice-Hall, 1989, isbn: 0136386512.

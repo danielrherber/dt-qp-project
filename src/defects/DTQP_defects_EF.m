@@ -52,6 +52,7 @@ function [Aeq,beq] = DTQP_defects_EF(A,B,G,d,p,opts)
             T = J; % time indexing vector
             H = repmat(h,nu,1); % vector of time steps
             
+            % extract matrices
             Bv = reshape(Bt(i,:,:),[],1);
 
             % theta values
@@ -107,6 +108,7 @@ function [Aeq,beq] = DTQP_defects_EF(A,B,G,d,p,opts)
             T = 1:np*nt; T(nt:nt:np*nt) = []; % time indexing vector
             H = repmat(h,np,1); % vector of time steps
             
+            % extract matrices
             Gv = reshape(Gt(i,:,:),[],1);
 
             % theta values
@@ -133,10 +135,11 @@ function [Aeq,beq] = DTQP_defects_EF(A,B,G,d,p,opts)
         Ifb = []; Vfb = [];
         
         for i = 1:ns % defect constraint of row continuous constraints
-            I = repmat(DefectIndices,1,nd); % row (continuous)
-            T = 1:nd*nt; T(nt:nt:nd*nt) = []; % time indexing vector
-            H = repmat(h,nd,1); % vector of time steps
+            I = (i-1)*(nt-1)+1:i*(nt-1); % row (continuous)
+            T = 1:nt-1; % time indexing vector
+            H = h; % vector of time steps
             
+            % extract matrices
             dv = reshape(dt(i,:,:),[],1);
 
             % nu values

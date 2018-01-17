@@ -124,7 +124,7 @@ function [Aeq,beq] = DTQP_defects_PS(A,B,G,d,p,opts)
         for i = 1:ns % defect constraint of row continuous constraints
             I = (i-1)*nt+1:i*nt; % row (continuous)
             dv = reshape(dt(i,:,:),[],1);
-            V = h/2*dv; % theta X
+            V = h/2*dv;
             
             % remove zeros
             ZeroIndex = (V==0);
