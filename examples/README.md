@@ -1,25 +1,26 @@
 # List of Examples
 
-| Name | Link | Reference |
-| ---- | ---- | ---- |
-| Anderson Moore 64 | [anderson-moore-64](anderson-moore-64/) | And89 |
-| Arbitrary Transfer | [arbitrary-transfer](arbitrary-transfer/) |  
-| Betts Biehn Campbell 1 | [betts-biehn-campbell-1](betts-biehn-campbell-1/) | Betts02 |
-| Bryson-Denham | [bryson-denham](bryson-denham/) | Bry75 |
-| Bryson Ho 109 | [bryson-ho-109](bryson-ho-109/) | Bry75 |
-| Bryson Ho 116 | [bryson-ho-116](bryson-ho-116/) | Bry75 |
-| Bryson Ho 153 | [bryson-ho-153](bryson-ho-153/) | Bry75 |
-| Bryson Ho 154 | [bryson-ho-154](bryson-ho-154/) | Bry75 |
-| Bryson Ho 156 | [bryson-ho-156](bryson-ho-156/) | Bry75 |
-| Bryson Ho 166 | [bryson-ho-166](bryson-ho-166/) | Bry75 |
-| Cart | [cart](cart/) | Ball99 |
-| DTQP Example 1 | [dt-qp-1](dt-qp-1/) | Her17 |
-| DTQP Example 2 | [dt-qp-2](dt-qp-2/) |  |
-| DTQP Example 3 | [dt-qp-3](dt-qp-3/) |  |
-| Hager 1 | [hager-1](hager-1/) | Hag00 |
-| LQR Inhomogeneous | [lqr-inhomogeneous](lqr-inhomogeneous/) | Bry75 |
-| LQR Scalar | [lqr-scalar](lqr-scalar/) |  |
-| LQR Standard | [lqr-standard](lqr-standard/) | Bry75 |
+| Name | Link | Reference | Solution Type |
+| ---- | ---- | ---- | ---- |
+| Anderson Moore 64 | [anderson-moore-64](anderson-moore-64/) | And89 | closed-form |
+| Arbitrary Transfer | [arbitrary-transfer](arbitrary-transfer/) | |
+| Betts Biehn Campbell 1 | [betts-biehn-campbell-1](betts-biehn-campbell-1/) | Betts02 | closed-form |
+| Bryson-Denham | [bryson-denham](bryson-denham/) | Bry75 | closed-form |
+| Bryson Ho 109 | [bryson-ho-109](bryson-ho-109/) | Bry75 | simple implicit |
+| Bryson Ho 116 | [bryson-ho-116](bryson-ho-116/) | Bry75 | closed-form |
+| Bryson Ho 153 | [bryson-ho-153](bryson-ho-153/) | Bry75 | closed-form |
+| Bryson Ho 154 | [bryson-ho-154](bryson-ho-154/) | Bry75 | closed-form |
+| Bryson Ho 156 | [bryson-ho-156](bryson-ho-156/) | Bry75 | closed-form |
+| Bryson Ho 166 | [bryson-ho-166](bryson-ho-166/) | Bry75 | closed-form |
+| Cart | [cart](cart/) | Ball99 | closed-form |
+| DTQP Example 1 | [dt-qp-1](dt-qp-1/) | Her17 | |
+| DTQP Example 2 | [dt-qp-2](dt-qp-2/) | | simple integral |
+| DTQP Example 3 | [dt-qp-3](dt-qp-3/) | | closed-form |
+| Hager 1 | [hager-1](hager-1/) | Hag00 | closed-form |
+| LQR Inhomogeneous | [lqr-inhomogeneous](lqr-inhomogeneous/) | Bry75 | boundary value problem |
+| LQR Scalar | [lqr-scalar](lqr-scalar/) | | closed-form |
+| LQR Scalar Transfer | [lqr-scalar-transfer](lqr-scalar-transfer/) | | closed-form |
+| LQR Standard | [lqr-standard](lqr-standard/) | Bry75 | boundary value problem |
 
 ### References
 - [**And89**] B. D. O. Anderson and J. B. Moore, *Optimal Control: Linear Quadratic Methods*. Prentice-Hall, 1989, isbn: 0136386512.
