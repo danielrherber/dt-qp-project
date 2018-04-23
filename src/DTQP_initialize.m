@@ -11,6 +11,9 @@
 
 %% create mesh
 p = setup.p;
+if ~isfield(p,'t0')
+    p.t0 = 0; % default is 0
+end
 p = DTQP_createT(p,opts);
 p.h = diff(p.t);
 
@@ -87,12 +90,12 @@ for i = 1:length(Ltemp)
     
     % determine the order
     if (Lflag == 0) && (Rflag == 0) % constant term
-        if isfield(setup.c,'L')
-            N = length(setup.c.L);
+        if isfield(setup,'cL')
+            N = length(setup.cL);
         else
             N = 0;
         end
-        setup.c.L(N+1) = Ltemp(i).matrix;
+        setup.cL(N+1).matrix = Ltemp(i).matrix;
     elseif (Lflag == 0) && (Rflag == 1) % linear term
         if isfield(setup,'l')
             N = length(setup.l);
@@ -101,6 +104,14 @@ for i = 1:length(Ltemp)
         end
         setup.l(N+1).right = Ltemp(i).right;
         setup.l(N+1).matrix = Ltemp(i).matrix;
+    elseif (Lflag == 1) && (Rflag == 0) % linear term (improper ordering)
+        if isfield(setup,'l')
+            N = length(setup.l);
+        else
+            N = 0;
+        end
+        setup.l(N+1).right = Ltemp(i).left; % move left to right
+        setup.l(N+1).matrix = Ltemp(i).matrix'; % transpose
     else % quadratic term
         if isfield(setup,'L')
             N = length(setup.L);
@@ -137,11 +148,11 @@ for i = 1:length(Mtemp)
     % determine the order
     if (Lflag == 0) && (Rflag == 0) % constant term
         if isfield(setup.c,'M')
-            N = length(setup.c.M);
+            N = length(setup.cM);
         else
             N = 0;
         end
-        setup.c.M(N+1) = Mtemp(i).matrix;
+        setup.cM(N+1) = Mtemp(i).matrix;
     elseif (Lflag == 0) && (Rflag == 1) % linear term
         if isfield(setup,'m')
             N = length(setup.m);
@@ -169,8 +180,8 @@ if ~isfield(setup,'M'), setup.M = []; end
 if ~isfield(setup,'c'), setup.c = []; end
 if ~isfield(setup,'l'), setup.l = []; end
 if ~isfield(setup,'m'), setup.m = []; end
-if ~isfield(setup.c,'L'), setup.c.L = []; end
-if ~isfield(setup.c,'M'), setup.c.M = []; end
+if ~isfield(setup,'cL'), setup.cL = []; end
+if ~isfield(setup,'cM'), setup.cM = []; end
 if ~isfield(setup,'Y'), setup.Y = []; end
 if ~isfield(setup,'Z'), setup.Z = []; end
 if ~isfield(setup,'LB'), setup.LB = []; end

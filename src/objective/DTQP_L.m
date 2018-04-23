@@ -24,28 +24,25 @@ for k = 1:length(Lfull)
     L = Lfull(k);
 
 	% find time dependent matrix
-    Lt = DTQP_tmatrix(L.matrix,p);
-    
-    % calculate intermediate time mesh
+	Lt = DTQP_tmultiprod(L.matrix,p);
+
+    % find time dependent matrix at time grid midpoints
     if OffFlag
-        pt = p.t;
-        p.t = p.tm; % assign to p structure
-        Lmid = DTQP_tmatrix(L.matrix,p); % find time dependent matrix at mid
-        p.t = pt;
+        Lmid = DTQP_tmultiprod(L.matrix,p,p.tm); 
     end
-    
+
     % check if both left and right fields are present, assign 0 if not
     if ~isfield(L,'left'), L.left = 0; end
     if ~isfield(L,'right'), L.right = 0; end
-    
+
     % check if both left and right fields are equal to 0
     if (L.left ~= 0), R = p.i{L.left}; else R = 0; end % rows (continuous)
     if (L.right ~= 0), C = p.i{L.right}; else C = 0; end % columns (continuous)
-    
+
     % determine locations and matrix values at this points
     for i = 1:length(R) % number of row continuous variables
         for j = 1:length(C) % number of column continuous variables
-            
+
             r = DTQP_getQPIndex(R(i),L.left,1,p); % Hessian row index sequence
             c = DTQP_getQPIndex(C(j),L.right,1,p); % Hessian column index sequence 
 
@@ -60,14 +57,14 @@ for k = 1:length(Lfull)
             end
 
             % combine values evaluated on the time grid
-            Q = [Q;squeeze(Lt(i,j,:))];   
+            Q = [Q;Lt(:,i,j)];   
 
             % combine values evaluated on the intermediate time grid
             if OffFlag
-                Lmidv = squeeze(Lmid(i,j,:));
+                Lmidv = Lmid(:,i,j);
                 Qmid = [Qmid; Lmidv; 0];
             end
-            
+
         end % end C for loop
     end % end R for loop
 end % end L for loop
@@ -105,4 +102,4 @@ if OffFlag
     V = [V;Voff;Voff];
 end
 
-end % end QP_DT_Lbig function
+end % end DTQP_L function

@@ -15,7 +15,7 @@ function [J,V,b] = DTQP_boundary(yz,p)
     % go through each substructure
     for j = 1:length(yz.linear) % loop through the extended variables
 
-        % check if the supplied matrix is a cell
+        % check if the supplied matrix is a cell (column vector)
         if ~ismatrix(yz.linear(j).matrix)
             yzt = cell2mat(yz.linear(j).matrix);
         else
@@ -33,9 +33,9 @@ function [J,V,b] = DTQP_boundary(yz,p)
 
                 % single value assigned
                 V = [V,reshape(yzt(i,1),1,[])];
-                
+
         end % end for i
-        
+
     end % end for j
 
     % assign constant value

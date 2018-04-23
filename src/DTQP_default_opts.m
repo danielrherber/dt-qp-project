@@ -91,6 +91,11 @@ function [setup,opts] = DTQP_default_opts(setup,opts)
     % START: phase specific
     %----------------------------------------------------------------------
     for idx = 1:length(setup)
+        % p structure
+        if ~isfield(setup(idx),'p')
+            error('Need to provide setup.p')
+        end
+            
         % number of nodes
         if ~isfield(setup(idx).p,'nt')
             setup(idx).p.nt = 100; % 

@@ -46,13 +46,18 @@ function [T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts)
         end    
 
         % add the constant term to objective function
-        F = F + c;
+        F = F + c;        
 
         % return optimal controls, states, and parameters
         T = p.t;
         U = reshape(X(1:p.nu*p.nt),p.nt,p.nu); % controls
         Y = reshape(X(p.nu*p.nt+1:(p.nu+p.ns)*p.nt),p.nt,p.ns); % states
         P = reshape(X((p.nu+p.ns)*p.nt+1:(p.nu+p.ns)*p.nt+p.np),p.np,1); % parameters
+        
+        % check for zero-order hold method and nan final controls
+        if strcmp(opts.Defectmethod,'ZO') || strcmp(opts.Defectmethod,'EF')
+            U(end,:) = nan;
+        end
     end
     
 end

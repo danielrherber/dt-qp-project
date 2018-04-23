@@ -44,4 +44,4 @@ for k = 1:length(Mfull)
     end % end R for loop
 end % end M for loop
 
-end % end QP_DT_M function
+end % end DTQP_M function

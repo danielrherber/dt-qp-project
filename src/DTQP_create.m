@@ -24,7 +24,7 @@ function [H,f,c,A,b,Aeq,beq,lb,ub,setup,p,opts] = DTQP_create(setup,opts)
     % objective function (maximum quadratic terms)
     H = DTQP_createH(setup.L,setup.M,p,opts); % create Hessian
     f = DTQP_createf(setup.l,setup.m,p,opts); % create gradient
-    c = DTQP_createc(setup.c.L,setup.c.M,p,opts); % determine constants
+    c = DTQP_createc(setup.cL,setup.cM,p,opts); % determine constants
 
     % constraints (maximum linear terms)   
     % create defect constraints

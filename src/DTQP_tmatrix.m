@@ -10,24 +10,30 @@
 % At(:,:,1) =
 %      1     1
 %      1     1
+%      1     1
+%      1     1
+%      1     1
 % At(:,:,2) =
+%      1     1
+%      1     1
+%      1     1
 %      1     1
 %      1     1
 % Example 2: basic time-varying -------------------------------------------
 % p.t = 0:2; A{1} = @(t) sin(t); A{2} = -1; At = DTQP_tmatrix(A,p);
 % At(:,:,1) =
-%      0    -1
+%          0
+%     0.8415
+%     0.9093
 % At(:,:,2) =
-%     0.8415   -1.0000
-% At(:,:,3) =
-%     0.9093   -1.0000
+%     -1
+%     -1
+%     -1
 % Example 3: passing additional parameters --------------------------------
 % p.t = 0:2; p.a = 3; A{1} = @(t,p) p.a*sin(t); At = DTQP_tmatrix(A,p);
-% At(:,:,1) =
-%      0
-% At(:,:,2) =
+% At =
+%          0
 %     2.5244
-% At(:,:,3) =
 %     2.7279
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber), University of 
@@ -40,22 +46,28 @@ function At = DTQP_tmatrix(A,p,varargin)
         At = []; % return empty matrix if A is empty
     else
         % check if another time mesh is inputted
-        if ~isempty(varargin)
-            t = varargin{1};
-        else
+        if isempty(varargin)
             t = p.t;
+        else
+            t = varargin{1};
         end
 
-        % convert to a cell array if a normal matrix
-        if ~isa(A,'cell'), A = num2cell(A); end
-        
+        % convert to a cell if a normal matrix or single time-varying function
+        if isa(A,'function_handle')
+            A = {A};
+        elseif ~isa(A,'cell')
+            A = num2cell(A);
+        elseif isequal(size(A),[1 1]) && ~isa(A{1},'function_handle')
+            A = num2cell(A{1});
+        end
+
         % get matrix size
         r = size(A,1);
         c = size(A,2);
-        
+
         % initialize output matrix
-        At = zeros(r,c,length(t));
-        
+        At = zeros(length(t),r,c);
+
         % go through each row and column in A
         for i = 1:r
             for j = 1:c
@@ -63,16 +75,16 @@ function At = DTQP_tmatrix(A,p,varargin)
                     % do nothing
                 elseif isa(A{i,j},'function_handle') % A is time-varying
                     if nargin(A{i,j}) == 2
-                        At(i,j,:) = A{i,j}(t,p);
+                        At(:,i,j) = A{i,j}(t,p);
                     elseif nargin(A{i,j}) == 1
-                        At(i,j,:) = A{i,j}(t);
+                        At(:,i,j) = A{i,j}(t);
                     else
                         error('not a properly defined function')
                     end
                 elseif A{i,j} == 0 % A is zero
                     % do nothing
                 else % A is time-invariant
-                    At(i,j,:) = A{i,j};
+                    At(:,i,j) = A{i,j};
                 end
             end   
         end
