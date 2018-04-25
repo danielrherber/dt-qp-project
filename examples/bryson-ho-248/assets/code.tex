@@ -1,0 +1,25 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{u(t)} \quad & \frac{1}{2} \int_{0}^{t_f} \xi_1^2 dt \\
+\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}0 & 1 \\ 0 & 0 \end{bmatrix} \bm{\xi} + \begin{bmatrix} 1 \\ -1 \end{bmatrix} u \\
+& \xi_1(0) = \alpha \\
+& \xi_2(0) = \beta \\
+& \xi_1(t_f) = 0 \\
+& \xi_2(t_f) = 0 \\
+& |u(t)| \leq \gamma
+\end{align*}
+}}
+\end{document}
+
+% solution

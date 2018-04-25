@@ -11,39 +11,9 @@
 %--------------------------------------------------------------------------
 function varargout = BrysonHo153(varargin)
 
-% default parameters
-opts.plotflag = 1; % create the plots
-opts.saveflag = 0;
-opts.displevel = 2;
-
-% if input arguments are provided
-% BrysonHo153(p,p.nt,opts,opts.Quadmethod,opts.Defectmethod,opts.NType)
-if nargin >= 1
-    p = varargin{1};
-end
-if nargin >= 2
-    p.nt = varargin{2};
-end
-if nargin >= 3
-    opts = varargin{3};
-end
-if nargin >= 4
-    opts.Quadmethod = varargin{4};
-end
-if nargin >= 5
-    opts.Defectmethod = varargin{5};
-end
-if nargin >= 6
-    opts.NType = varargin{6};
-end
-if nargin > 6
-    warning('too many input arguments...');
-end
-
-% set current file name and path
-[mpath,mname] = fileparts(mfilename('fullpath'));
-opts.mpath = mpath;
-opts.mname = mname;
+% set p and opts (see BrysonHo153_opts.m)
+% input arguments can be provided in the format 'BrysonHo153(p,opts)'
+[p,opts] = DTQP_standardizedinputs('BrysonHo153_opts',varargin);
 
 %% tunable parameters
 p.t0 = 0; p.tf = 1; % time horizon

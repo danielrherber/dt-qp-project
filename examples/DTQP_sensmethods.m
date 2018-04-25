@@ -35,10 +35,9 @@ Testarray = 1:8; % test all methods
 PSntmax = 500;
 
 % calculate the number of outputs
-p = [];
-nt = 5; % dummy value
+p.nt = 5; % dummy value
 opts = options();
-Ot = f(p,nt,opts);
+Ot = f(p,opts);
 nO = length(Ot);
 
 % grid of test cases
@@ -58,21 +57,25 @@ DefectV = DefectArray(J);
 MeshV = MeshArray(J);
 NV = narray(I);
 
-% parfor idx = 1:Nparfor % parallel
-for idx = 1:Nparfor % serial
-    % get current values
-    Quadmethod = QuadV{idx}; 
-    Defectmethod = DefectV{idx};
-    NType = MeshV{idx}; 
-    nt = NV(idx);
+parfor idx = 1:Nparfor % parallel
+% for idx = 1:Nparfor % serial
+    % initialize
+    opts = options();
+    p = [];
+
+    % 
+    opts.Quadmethod = QuadV{idx};
+    opts.Defectmethod = DefectV{idx};
+    opts.NType = MeshV{idx}; 
+    p.nt = NV(idx); 
 
     % check if 
-    if sum(strcmp(NType,{'LGL','CGL'})) && (nt > PSntmax)
+    if sum(strcmp(opts.NType,{'LGL','CGL'})) && (p.nt > PSntmax)
         % do nothing, nan already assigned
     else
         try
             % run and get outputs
-            O = f(p,nt,opts,Quadmethod,Defectmethod,NType);
+            O = f(p,opts);
 
             % assign outputs to the output matrix
             for k = 1:nO

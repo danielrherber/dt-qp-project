@@ -11,51 +11,9 @@
 %--------------------------------------------------------------------------
 function varargout = LQRstandard(varargin)
 
-% default parameters
-opts.plotflag = 1; % create the plots
-opts.saveflag = 0;
-opts.displevel = 2;
-opts.Defectmethod = 'PS';
-opts.Quadmethod = 'G';
-opts.NType = 'LGL';
-opts.reorder = 0;
-opts.solver = 'built-in';
-opts.tolerance = 1e-15;
-opts.maxiters = 200;
-opts.disp = 'iter';
-p.nt = 50; % number of nodes
-
-% if input arguments are provided
-% LQRstandard(p,p.nt,opts,opts.Quadmethod,opts.Defectmethod,opts.NType)
-if nargin >= 1
-    p = varargin{1};
-end
-if nargin >= 2
-    p.nt = varargin{2};
-end
-if nargin >= 3
-    opts = varargin{3};
-end
-if nargin >= 4
-    opts.Quadmethod = varargin{4};
-end
-if nargin >= 5
-    opts.Defectmethod = varargin{5};
-end
-if nargin >= 6
-    opts.NType = varargin{6};
-end
-if nargin >= 7
-	p = varargin{7};
-end
-if nargin > 7
-    warning('too many input arguments...');
-end
-
-% set current file name and path
-[mpath,mname] = fileparts(mfilename('fullpath'));
-opts.mpath = mpath;
-opts.mname = mname;
+% set p and opts (see LQRstandard_opts.m)
+% input arguments can be provided in the format 'LQRstandard(p,opts)'
+[p,opts] = DTQP_standardizedinputs('LQRstandard_opts',varargin);
 
 %% tunable parameters
 p.ns = 20; % number of states
@@ -63,7 +21,7 @@ p.nu = 10; % number of controls
 p.t0 = 0; % time horizon
 p.tf = 10; % time horizon
 p.x0 = linspace(-5,5,p.ns)'; % initial states
-rng(393872382) % specific random seed
+rng(393872382,'twister') % specific random seed
 p.A = sprand(p.ns,p.ns,0.5,1);
 p.B = sprand(p.ns,p.nu,1,1);
 p.R = eye(p.nu);

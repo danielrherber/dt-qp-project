@@ -10,48 +10,9 @@
 %--------------------------------------------------------------------------
 function varargout = DTQP1(varargin)
 
-% default parameters
-opts.plotflag = 1; % create the plots
-opts.saveflag = 0;
-opts.displevel = 2;
-opts.Defectmethod = 'HS';
-opts.Quadmethod = 'CQHS';
-opts.NType = 'ED';
-p.nt = 5000; % number of nodes
-opts.reorder = 0;
-opts.solver = 'built-in';
-opts.tolerance = 1e-15;
-opts.maxiters = 100;
-opts.disp = 'iter';
-
-% if input arguments are provided
-% DTQP1(p,p.nt,opts,opts.Quadmethod,opts.Defectmethod,opts.NType)
-if nargin >= 1
-    p = varargin{1};
-end
-if nargin >= 2
-    p.nt = varargin{2};
-end
-if nargin >= 3
-    opts = varargin{3};
-end
-if nargin >= 4
-    opts.Quadmethod = varargin{4};
-end
-if nargin >= 5
-    opts.Defectmethod = varargin{5};
-end
-if nargin >= 6
-    opts.NType = varargin{6};
-end
-if nargin > 6
-    warning('too many input arguments...');
-end
-
-% set current file name and path
-[mpath,mname] = fileparts(mfilename('fullpath'));
-opts.mpath = mpath;
-opts.mname = mname;
+% set p and opts (see DTQP1_opts.m)
+% input arguments can be provided in the format 'DTQP1(p,opts)'
+[p,opts] = DTQP_standardizedinputs('DTQP1_opts',varargin);
 
 %% setup
 % time horizon
@@ -67,7 +28,7 @@ A = [-1,2,0,0;3,-4,0,0;1,2,-1,0;1,0,0,0]; B = [1,0;-1,0;0,1/20;0,0]; G = zeros(4
 L(1).left = 1; L(1).right = 1; L(1).matrix = eye(2)/10; % u1^2 + u2^2
 L(2).left = 1; L(2).right = 2; L(2).matrix = [1,1,0,0;0,0,0,0]; % u1*y1 + u1*y2
 L(3).left = 2; L(3).right = 2; L(3).matrix = zeros(4); L(3).matrix(2,2) = 5; % 5*y2^2
-L(4).left = 0; L(4).right = 2; L(4).matrix = {0,@(t) -5*2*p.g(t),0,0}; % ?5*2*g*y2
+L(4).left = 0; L(4).right = 2; L(4).matrix = {0,@(t) -5*2*p.g(t),0,0}; % -5*2*g*y2
 L(5).left = 0; L(5).right = 0; L(5).matrix{1} = @(t) 5*(p.g(t)).^2; % 5*g^2
 
 % Mayer term

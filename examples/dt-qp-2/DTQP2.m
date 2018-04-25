@@ -8,42 +8,10 @@
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = DTQP2(varargin)
-% number of time points
-p.nt = 1000;
 
-% default parameters
-opts.plotflag = 1; % create the plots
-opts.saveflag = 0;
-opts.displevel = 2;
-
-% if input arguments are provided
-% DTQP2(p,p.nt,opts,opts.Quadmethod,opts.Defectmethod,opts.NType)
-if nargin >= 1
-    p = varargin{1};
-end
-if nargin >= 2
-    p.nt = varargin{2};
-end
-if nargin >= 3
-    opts = varargin{3};
-end
-if nargin >= 4
-    opts.Quadmethod = varargin{4};
-end
-if nargin >= 5
-    opts.Defectmethod = varargin{5};
-end
-if nargin >= 6
-    opts.NType = varargin{6};
-end
-if nargin > 6
-    warning('too many input arguments...');
-end
-
-% set current file name and path
-[mpath,mname] = fileparts(mfilename('fullpath'));
-opts.mpath = mpath;
-opts.mname = mname;
+% set p and opts (see DTQP2_opts.m)
+% input arguments can be provided in the format 'DTQP2(p,opts)'
+[p,opts] = DTQP_standardizedinputs('DTQP2_opts',varargin);
 
 %% tunable parameters
 p.tf = 15; % time horizon
@@ -52,14 +20,14 @@ p.r = 1;
 p.m = 1;
 p.a = 1;
 p.b = 1;
-p.w = pi;
+p.omega = pi;
 
 %% setup
 p.t0 = 0;
 
 % system dynamics
 A = p.a;
-B = {@(t) p.b*sin(p.w*t)};
+B = @(t) p.b*sin(p.omega*t);
 
 % Lagrange term
 L(1).left = 1; % control variables

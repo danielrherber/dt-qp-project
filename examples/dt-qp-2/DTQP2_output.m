@@ -12,16 +12,16 @@ function [O,sol] = DTQP2_output(T,U,Y,P,F,p,opts)
 
 % solution on T
 sol(1).T = T;
-sol(1).U = DTQP2_U(p.a,p.b,p.m,p.r,T,p.tf,p.w,p.x0);
-sol(1).Y = DTQP2_Y(p.a,p.b,p.m,p.r,T,p.tf,p.w,p.x0);
-sol(1).F = integral(@(t) DTQP2_L(p.a,p.b,p.m,p.r,t,p.tf,p.w,p.x0),0,p.tf,...
+sol(1).U = DTQP2_U(p.a,p.b,p.m,p.r,T,p.tf,p.omega,p.x0);
+sol(1).Y = DTQP2_Y(p.a,p.b,p.m,p.r,T,p.tf,p.omega,p.x0);
+sol(1).F = integral(@(t) DTQP2_L(p.a,p.b,p.m,p.r,t,p.tf,p.omega,p.x0),0,p.tf,...
     'AbsTol',eps) + p.m*sol(1).Y(end)^2;
 
 % solution on high resolution T
 if opts.plotflag
     sol(2).T = linspace(p.t0,p.tf,1e4)';
-    sol(2).U = DTQP2_U(p.a,p.b,p.m,p.r,sol(2).T,p.tf,p.w,p.x0);
-    sol(2).Y = DTQP2_Y(p.a,p.b,p.m,p.r,sol(2).T,p.tf,p.w,p.x0);
+    sol(2).U = DTQP2_U(p.a,p.b,p.m,p.r,sol(2).T,p.tf,p.omega,p.x0);
+    sol(2).Y = DTQP2_Y(p.a,p.b,p.m,p.r,sol(2).T,p.tf,p.omega,p.x0);
     sol(2).F = sol(1).F;
 end
 

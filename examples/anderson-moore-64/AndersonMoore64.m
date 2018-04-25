@@ -11,40 +11,9 @@
 %--------------------------------------------------------------------------
 function varargout = AndersonMoore64(varargin)
 
-% number of time points
-p.nt = 30;
-opts.Defectmethod = 'PS';
-opts.Quadmethod = 'G';
-opts.NType = 'LGL';
-
-% if input arguments are provided
-% AndersonMoore64(p,p.nt,opts,opts.Quadmethod,opts.Defectmethod,opts.NType)
-if nargin >= 1
-    p = varargin{1};
-end
-if nargin >= 2
-    p.nt = varargin{2};
-end
-if nargin >= 3
-    opts = varargin{3};
-end
-if nargin >= 4
-    opts.Quadmethod = varargin{4};
-end
-if nargin >= 5
-    opts.Defectmethod = varargin{5};
-end
-if nargin >= 6
-    opts.NType = varargin{6};
-end
-if nargin > 6
-    warning('too many input arguments...');
-end
-
-% set current file name and path
-[mpath,mname] = fileparts(mfilename('fullpath'));
-opts.mpath = mpath;
-opts.mname = mname;
+% set p and opts (see AndersonMoore64_opts.m)
+% input arguments can be provided in the format 'AndersonMoore64(p,opts)'
+[p,opts] = DTQP_standardizedinputs('AndersonMoore64_opts',varargin);
 
 %% tunable parameters
 p.t0 = 0; p.tf = 10; % time horizon
