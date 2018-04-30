@@ -14,7 +14,7 @@ function [I,J,V] = DTQP_L(Lfull,p,opts)
 nt = p.nt;
 
 % do we need off diagonal terms?
-OffFlag = any(strcmp(opts.Quadmethod,'CQHS'));
+OffFlag = any(strcmpi(opts.dt.quadrature,'CQHS'));
 
 % initialize sequences  
 I = []; J = []; W = []; H = []; Q = []; Qmid = [];
@@ -46,11 +46,11 @@ for k = 1:length(Lfull)
             r = DTQP_getQPIndex(R(i),L.left,1,p); % Hessian row index sequence
             c = DTQP_getQPIndex(C(j),L.right,1,p); % Hessian column index sequence 
 
-            I = [I,r]; % main diagonal row
-            J = [J,c]; % main diagonal column
+            I = [I;r]; % main diagonal row
+            J = [J;c]; % main diagonal column
 
             % combine integration weights
-            if any(strcmp(opts.Quadmethod,{'G','CC'}))
+            if any(strcmpi(opts.dt.quadrature,{'G','CC'}))
                 W = [W; p.w];
             else
                 H = [H; p.h; 0];
@@ -80,7 +80,7 @@ if OffFlag
 end
 
 % begin method specific
-switch opts.Quadmethod
+switch upper(opts.dt.quadrature)
     case 'CEF'
         V = H.*Q;
     case 'CTR'
@@ -97,8 +97,8 @@ end
 
 % concatenate for final outputs
 if OffFlag
-    I = [I,IU,IL];
-    J = [J,JU,JL];
+    I = [I;IU;IL];
+    J = [J;JU;JL];
     V = [V;Voff;Voff];
 end
 

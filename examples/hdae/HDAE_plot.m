@@ -10,7 +10,7 @@
 %--------------------------------------------------------------------------
 function HDAE_plot(T,U,Y,P,F,p,opts,sol)
 
-if opts.plotflag
+if opts.general.plotflag
 
 close all
 
@@ -44,7 +44,7 @@ ylabel('$\xi$','fontsize',fontsize)
 % set(hL,'interpreter','latex','location','best','fontsize',fontsize-4,'box','on')
 
 % save
-if opts.saveflag
+if opts.general.saveflag
     path = msavename(mfilename('fullpath'),'plots');
     filename = [path,'figure-state'];
     str = ['export_fig ''',filename,''' -png -pdf'];
@@ -75,7 +75,7 @@ ylabel('$u$','fontsize',fontsize)
 % set(hL,'interpreter','latex','location','best','fontsize',fontsize-4,'box','on')
 
 % save
-if opts.saveflag
+if opts.general.saveflag
     path = msavename(mfilename('fullpath'),'plots');
     filename = [path,'figure-control'];
     str = ['export_fig ''',filename,''' -png -pdf'];

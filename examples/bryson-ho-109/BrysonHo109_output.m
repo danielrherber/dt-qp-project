@@ -37,7 +37,7 @@ if (p.a == 1) && (p.x0 == 1) && (p.tf == 1) && strcmp(func2str(p.g),'@(t)t.*cos(
     sol(1).F = D.F;
     
     % solution on high resolution T
-    if opts.plotflag
+    if opts.general.plotflag
         sol(2).T = linspace(p.t0,p.tf,1e4)';
         sol(2).U = interp1(D.T,D.U,sol(2).T,'PCHIP');
         sol(2).Y = interp1(D.T,D.Y,sol(2).T,'PCHIP');
@@ -70,7 +70,7 @@ elseif (p.a == 2) && (p.x0 == 1) && (p.tf == 1) && strcmp(func2str(p.g),'@(t)t.*
     sol(1).F = D.F;
     
     % solution on high resolution T
-    if opts.plotflag
+    if opts.general.plotflag
         sol(2).T = linspace(p.t0,p.tf,1e4)';
         sol(2).U = interp1(D.T,D.U,sol(2).T,'PCHIP');
         sol(2).Y = interp1(D.T,D.Y,sol(2).T,'PCHIP');
@@ -82,7 +82,7 @@ else
     sol = BrysonHo109_solution(T,Y,p);
 
     % solution on high resolution T
-    if opts.plotflag
+    if opts.general.plotflag
         D = BrysonHo109_solution(linspace(p.t0,p.tf,1e4)',Y,p);
         sol(2).T = D.T;
         sol(2).U = D.U;

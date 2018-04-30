@@ -1,25 +1,18 @@
 %--------------------------------------------------------------------------
-% BrysonHo153_opts.m
-% User options function for BrysonHo153 example
+% DTQP_indexcolumns.m
+% Create optimization variable (column) locations
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
+% Primary contributor: Daniel R. Herber (danielrherber), University of 
 % Illinois at Urbana-Champaign
-% Link: https://github.com/danielrherber/dt-qp-project
+% Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [p,opts] = BrysonHo153_opts
+function J = DTQP_indexcolumns(a,b,c)
 
-% test number
-num = 1;
-
-switch num
-
-case 1
-    % default parameters
-    p = [];
-    opts = [];
-
-end
+J = a*c+1:a*(b+c);
+J = reshape(J,a,b);
+J(end,:) = [];
+J = J(:);
 
 end

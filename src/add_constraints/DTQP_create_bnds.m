@@ -14,7 +14,7 @@ function [lb,ub] = DTQP_create_bnds(LB,UB,p)
     % lower bounds
     %----------------------------------------------------------------------
     % initialize all lower bounds as -Inf (unconstrained)
-    lb = -Inf*ones(p.nx,length(LB));
+    lb = -inf(p.nx,length(LB));
     
     % go through each substructure
     for i = 1:length(LB)
@@ -29,14 +29,13 @@ function [lb,ub] = DTQP_create_bnds(LB,UB,p)
     
     % assign maximum row value to lower bound vector
     lb = max(lb,[],2);
-
     %----------------------------------------------------------------------
 
     %----------------------------------------------------------------------
     % upper bounds
     %----------------------------------------------------------------------
     % initialize all upper bounds as Inf (unconstrained)
-    ub = Inf*ones(p.nx,length(UB));
+    ub = inf(p.nx,length(UB));
 
     % go through each substructure
     for i = 1:length(UB)

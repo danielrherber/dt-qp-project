@@ -17,7 +17,7 @@ sol(1).Y = DTQP3_Y(p.a1,p.a2,p.b,p.m,p.r,T,p.tf,p.w1,p.w2,p.x0);
 sol(1).F = DTQP3_F(p.a1,p.a2,p.b,p.m,p.r,p.tf,p.w1,p.w2,p.x0);
 
 % solution on high resolution T
-if opts.plotflag
+if opts.general.plotflag
     sol(2).T = linspace(p.t0,p.tf,1e4)';
     sol(2).U = ones(size(sol(2).T))*sol(1).U(1);
     sol(2).Y = DTQP3_Y(p.a1,p.a2,p.b,p.m,p.r,sol(2).T,p.tf,p.w1,p.w2,p.x0);

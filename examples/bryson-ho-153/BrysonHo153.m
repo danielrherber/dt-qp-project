@@ -11,9 +11,9 @@
 %--------------------------------------------------------------------------
 function varargout = BrysonHo153(varargin)
 
-% set p and opts (see BrysonHo153_opts.m)
+% set p and opts (see BrysonHo153_opts)
 % input arguments can be provided in the format 'BrysonHo153(p,opts)'
-[p,opts] = DTQP_standardizedinputs('BrysonHo153_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@BrysonHo153_opts,varargin);
 
 %% tunable parameters
 p.t0 = 0; p.tf = 1; % time horizon
@@ -55,3 +55,16 @@ end
 
 %% plot
 BrysonHo153_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for BrysonHo153 example
+function opts = BrysonHo153_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    % default parameters
+    opts = [];
+end
+end

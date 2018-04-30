@@ -14,12 +14,12 @@ function [H,f,c,A,b,Aeq,beq,lb,ub,setup,p,opts] = DTQP_create(setup,opts)
     p = setup.p;
 
     % potentially start the timer
-    if (opts.displevel > 0) % minimal
+    if (opts.general.displevel > 0) % minimal
         tic % start timer
     end
 
     % initialize some stuff
-    DTQP_initialize
+    [setup,p] = DTQP_initialize(setup,opts.dt);
     
     % objective function (maximum quadratic terms)
     H = DTQP_createH(setup.L,setup.M,p,opts); % create Hessian
@@ -42,12 +42,12 @@ function [H,f,c,A,b,Aeq,beq,lb,ub,setup,p,opts] = DTQP_create(setup,opts)
     [lb,ub] = DTQP_create_bnds(setup.LB,setup.UB,p);
     
     % end the timer
-    if (opts.displevel > 0) % minimal
+    if (opts.general.displevel > 0) % minimal
         opts.QPcreatetime = toc;
     end
     
     % display to the command window
-    if (opts.displevel > 1) % verbose
+    if (opts.general.displevel > 1) % verbose
         disp(['QP creation time: ', num2str(opts.QPcreatetime), ' s'])
     end
 

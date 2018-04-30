@@ -31,13 +31,18 @@ Testarray = 1:8; % test all methods
 % Testarray = [5,6]; % only test CQHS methods
 % Testarray = [7,8]; % only test PS methods
 
+DefectArray = DefectArray(Testarray);
+QuadArray = QuadArray(Testarray);
+MeshArray = MeshArray(Testarray);
+LegendArray = LegendArray(Testarray);
+
 % maximum N for PS methods
 PSntmax = 500;
 
 % calculate the number of outputs
-p.nt = 5; % dummy value
 opts = options();
-Ot = f(p,opts);
+opts.dt.nt = 5; % dummy value
+Ot = f([],opts);
 nO = length(Ot);
 
 % grid of test cases
@@ -57,20 +62,20 @@ DefectV = DefectArray(J);
 MeshV = MeshArray(J);
 NV = narray(I);
 
-parfor idx = 1:Nparfor % parallel
-% for idx = 1:Nparfor % serial
+% parfor idx = 1:Nparfor % parallel
+for idx = 1:Nparfor % serial
     % initialize
     opts = options();
     p = [];
 
     % 
-    opts.Quadmethod = QuadV{idx};
-    opts.Defectmethod = DefectV{idx};
-    opts.NType = MeshV{idx}; 
-    p.nt = NV(idx); 
+    opts.dt.quadrature = QuadV{idx};
+    opts.dt.defects = DefectV{idx};
+    opts.dt.mesh = MeshV{idx}; 
+    opts.dt.nt = NV(idx); 
 
     % check if 
-    if sum(strcmp(opts.NType,{'LGL','CGL'})) && (p.nt > PSntmax)
+    if sum(strcmpi(opts.dt.mesh,{'LGL','CGL'})) && (opts.dt.nt > PSntmax)
         % do nothing, nan already assigned
     else
         try
@@ -149,11 +154,11 @@ narray = unique([Nmin,Narray,Nmax]);
 end
 % default options
 function opts = options
-opts.plotflag = 0;
-opts.saveflag = 0;
-opts.displevel = 1;
-opts.disp = 'none';
-opts.Defectmethod = 'TR';
-opts.Quadmethod = 'CTR';
-opts.NType = 'ED'; 
+opts.general.plotflag = 0;
+opts.general.saveflag = 0;
+opts.general.displevel = 1;
+opts.qp.disp = 'none';
+opts.dt.defects = 'TR';
+opts.dt.quadrature = 'CTR';
+opts.dt.mesh = 'ED'; 
 end

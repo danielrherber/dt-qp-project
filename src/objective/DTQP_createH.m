@@ -16,13 +16,13 @@ function H = DTQP_createH(L,M,p,opts)
     % Lagrange terms
     if ~isempty(L)
         [I,J,V] = DTQP_L(L,p,opts);
-        HI = [HI,I]; HJ = [HJ,J]; HV = [HV;V(:)];
+        HI = [HI;I]; HJ = [HJ;J]; HV = [HV;V];
     end
 
     % Mayer terms
     if ~isempty(M)
         [I,J,V] = DTQP_M(M,p,opts);
-        HI = [HI,I]; HJ = [HJ,J]; HV = [HV;V(:)];
+        HI = [HI;I]; HJ = [HJ;J]; HV = [HV;V];
     end
 
     % sparse matrix for Hessian

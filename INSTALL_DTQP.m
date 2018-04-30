@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% INSTALL_DTQP_Project
+% INSTALL_DTQP
 % Project link: https://github.com/danielrherber/dt-qp-project
 % This scripts helps you get the DT QP Project up and running
 %--------------------------------------------------------------------------
@@ -14,7 +14,7 @@
 % Illinois at Urbana-Champaign
 % Additional contributors: Yong Hoon Lee (yonghoonlee)
 %--------------------------------------------------------------------------
-function INSTALL_DTQP_Project
+function INSTALL_DTQP
 
     % add contents to path
     AddSubmissionContents(mfilename)
@@ -82,17 +82,23 @@ function RequiredWebZips
     
     % zip 2
 	ind = ind + 1; % increment
+	zips(ind).url = 'https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/31272/versions/10/download/zip/DataHash_20160618.zip';
+	zips(ind).folder = 'MFX 31272';
+	zips(ind).test = 'DataHash';
+    
+    % zip 3
+	ind = ind + 1; % increment
 	zips(ind).url = 'http://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/40397/versions/7/download/zip/mfoldername_v2.zip';
 	zips(ind).folder = 'MFX 40397';
 	zips(ind).test = 'mfoldername';
     
-    % zip 3
+    % zip 4
 	ind = ind + 1; % increment
 	zips(ind).url = 'https://github.com/altmany/export_fig/archive/master.zip';
 	zips(ind).folder = 'MFX 23629';
 	zips(ind).test = 'export_fig';
     
-    % zip 4
+    % zip 5
 	ind = ind + 1; % increment
 	zips(ind).url = 'https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/43183/versions/2/download/zip/spyc.zip';
 	zips(ind).folder = 'MFX 43183';

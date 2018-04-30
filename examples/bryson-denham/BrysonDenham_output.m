@@ -17,7 +17,7 @@ sol(1).Y = BrysonDenham_Y(T,p.ell);
 sol(1).F = BrysonDenham_F(p.ell);
 
 % solution on high resolution T
-if opts.plotflag
+if opts.general.plotflag
     sol(2).T = linspace(p.t0,p.tf,1e4)';
     sol(2).U = BrysonDenham_U(sol(2).T,p.ell);
     sol(2).Y = BrysonDenham_Y(sol(2).T,p.ell);

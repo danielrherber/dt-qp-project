@@ -11,18 +11,18 @@
 function f = DTQP_createf(l,m,p,opts)
 
     % initialize
-	fI = []; fV = [];
+	fJ = []; fV = [];
 
     % Lagrange terms
     if ~isempty(l)
         [~,J,V] = DTQP_L(l,p,opts);
-        fI = [fI,J]; fV = [fV;V(:)];
+        fJ = [fJ;J]; fV = [fV;V];
     end
 
     % Mayer terms
     if ~isempty(m)
         [~,J,V] = DTQP_M(m,p,opts);
-        fI = [fI,J]; fV = [fV;V(:)];
+        fJ = [fJ;J]; fV = [fV;V];
     end
 
     % sparse matrix for Hessian
@@ -30,7 +30,7 @@ function f = DTQP_createf(l,m,p,opts)
         f = []; % no Hessian
     else
         % sparse matrix for gradient
-        f = sparse(fI,1,fV,p.nx,1);
+        f = sparse(fJ,1,fV,p.nx,1);
     end
 
 end

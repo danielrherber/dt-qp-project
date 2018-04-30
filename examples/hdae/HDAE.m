@@ -11,9 +11,9 @@
 %--------------------------------------------------------------------------
 function varargout = HDAE(varargin)
 
-% set p and opts (see HDAE_opts.m)
+% set p and opts (see HDAE_opts)
 % input arguments can be provided in the format 'HDAE(p,opts)'
-[p,opts] = DTQP_standardizedinputs('HDAE_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@HDAE_opts,varargin);
 
 %% tunable parameters
 n = 20;
@@ -112,3 +112,23 @@ end
 
 %% plot
 HDAE_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for HDAE example
+function opts = HDAE_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 100;
+case 2
+    opts.dt.defects = 'PS';
+    opts.dt.quadrature = 'G';
+    opts.dt.mesh = 'LGL';
+    opts.dt.nt = 100; % number of nodes
+end
+end

@@ -20,13 +20,13 @@ function I = DTQP_getQPIndex(x,xtype,Flag,p)
     switch xtype
         case 0 % singleton dimension
             I = 1;
-        case {1,2} % control or states
+        case {1,2} % controls or states
             I = ((x-1)*p.nt+1):(x*p.nt);
         case 3 % parameters
             I = (x-p.nu-p.ns) + (p.nu+p.ns)*p.nt;
-        case 4 % initial states
+        case {4,6} % initial controls or states 
             I = (x-1)*p.nt+1;
-        case 5 % final states
+        case {5,7} % final controls or states
             I = x*p.nt;
     end
 
@@ -36,4 +36,7 @@ function I = DTQP_getQPIndex(x,xtype,Flag,p)
             I = I*ones(1,p.nt); % continuous option, output Nt elements
         end
     end
+    
+    % make column vector
+    I = I(:);
 end

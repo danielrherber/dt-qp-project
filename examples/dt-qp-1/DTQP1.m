@@ -10,9 +10,9 @@
 %--------------------------------------------------------------------------
 function varargout = DTQP1(varargin)
 
-% set p and opts (see DTQP1_opts.m)
+% set p and opts (see DTQP1_opts)
 % input arguments can be provided in the format 'DTQP1(p,opts)'
-[p,opts] = DTQP_standardizedinputs('DTQP1_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@DTQP1_opts,varargin);
 
 %% setup
 % time horizon
@@ -78,3 +78,26 @@ end
 
 %% plot
 DTQP1_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for DTQP1 example
+function opts = DTQP1_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    opts.general.plotflag = 1; % create the plots
+    opts.general.saveflag = 1;
+    opts.general.displevel = 2;
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 5000; % number of nodes
+    opts.qp.reorder = 0;
+    opts.qp.solver = 'built-in';
+    opts.qp.tolerance = 1e-15;
+    opts.qp.maxiters = 100;
+    opts.qp.disp = 'iter';
+end
+end

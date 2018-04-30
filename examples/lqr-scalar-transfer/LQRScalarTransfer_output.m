@@ -27,7 +27,7 @@ if any(isnan(sol(1).U(:))) || any(isnan(sol(1).U(:))) || isnan(sol(1).F)
 end
 
 % solution on high resolution T
-if opts.plotflag
+if opts.general.plotflag
     sol(2).T = (DTQP_nodes_CGL(999)+1)*p.tf/2;
     sol(2).F = sol(1).F;
     if symflag

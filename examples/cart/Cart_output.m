@@ -17,7 +17,7 @@ sol(1).Y = Cart_Y(T,p.tf);
 sol(1).F = Cart_F(p.tf);
 
 % solution on high resolution T
-if opts.plotflag
+if opts.general.plotflag
     sol(2).T = linspace(p.t0,p.tf,1e4)';
     sol(2).U = Cart_U(sol(2).T,p.tf);
     sol(2).Y = Cart_Y(sol(2).T,p.tf);

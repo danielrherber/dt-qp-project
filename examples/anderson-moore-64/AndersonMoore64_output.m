@@ -17,7 +17,7 @@ sol(1).Y = AndersonMoore64_Y(T,p.t0,p.tf,p.x0);
 sol(1).F = AndersonMoore64_F(p.t0,p.tf,p.x0);
 
 % solution on high resolution T
-if opts.plotflag
+if opts.general.plotflag
     sol(2).T = linspace(p.t0,p.tf,1e4)';
     sol(2).U = AndersonMoore64_U(sol(2).T,p.t0,p.tf,p.x0);
     sol(2).Y = AndersonMoore64_Y(sol(2).T,p.t0,p.tf,p.x0);

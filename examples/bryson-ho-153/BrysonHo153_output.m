@@ -17,7 +17,7 @@ sol(1).Y = BrysonHo153_Y(p.c,T,p.t0,p.tf,p.x0);
 sol(1).F = BrysonHo153_F(p.c,p.t0,p.tf,p.x0);
 
 % solution on high resolution T
-if opts.plotflag
+if opts.general.plotflag
     sol(2).T = linspace(p.t0,p.tf,1e4)';
     sol(2).U = BrysonHo153_U(p.c,p.t0,p.tf,p.x0)*ones(size(sol(2).T));
     sol(2).Y = BrysonHo153_Y(p.c,sol(2).T,p.t0,p.tf,p.x0);

@@ -11,9 +11,9 @@
 %--------------------------------------------------------------------------
 function varargout = AndersonMoore64(varargin)
 
-% set p and opts (see AndersonMoore64_opts.m)
+% set p and opts (see AndersonMoore64_opts)
 % input arguments can be provided in the format 'AndersonMoore64(p,opts)'
-[p,opts] = DTQP_standardizedinputs('AndersonMoore64_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@AndersonMoore64_opts,varargin);
 
 %% tunable parameters
 p.t0 = 0; p.tf = 10; % time horizon
@@ -53,3 +53,28 @@ end
 
 %% plot
 AndersonMoore64_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for AndersonMoore64 example
+function opts = AndersonMoore64_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    opts.dt.defects = 'PS';
+    opts.dt.quadrature = 'G';
+    opts.dt.mesh = 'LGL';
+    opts.dt.nt = 30;
+case 2
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.defects = 'HS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 100;
+case 3
+    opts.dt.quadrature = 'CTR';
+    opts.dt.defects = 'TR';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 100;
+end
+end

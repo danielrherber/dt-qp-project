@@ -9,9 +9,9 @@
 %--------------------------------------------------------------------------
 function varargout = DTQP2(varargin)
 
-% set p and opts (see DTQP2_opts.m)
+% set p and opts (see DTQP2_opts)
 % input arguments can be provided in the format 'DTQP2(p,opts)'
-[p,opts] = DTQP_standardizedinputs('DTQP2_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@DTQP2_opts,varargin);
 
 %% tunable parameters
 p.tf = 15; % time horizon
@@ -60,3 +60,15 @@ end
 
 %% plot
 DTQP2_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for DTQP2 example
+function opts = DTQP2_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    opts.dt.nt = 1000; % number of time points
+end
+end

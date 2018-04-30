@@ -53,7 +53,9 @@ function [H,f,A,b,Aeq,beq,lb,ub,p,s] = DTQP_scaling(H,f,A,b,Aeq,beq,lb,ub,p,s)
     s = [s1;s2;s3];
     
     % diagonal scaling matrix
-    S = sparse(diag(s));    
+    ns = length(s);
+    Is = 1:ns;
+    S = sparse(Is,Is,s,ns,ns);
 
     % scale the matrices
     % H

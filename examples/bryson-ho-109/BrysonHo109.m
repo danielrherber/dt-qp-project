@@ -11,9 +11,9 @@
 %--------------------------------------------------------------------------
 function varargout = BrysonHo109(varargin)
 
-% set p and opts (see BrysonHo109_opts.m)
+% set p and opts (see BrysonHo109_opts)
 % input arguments can be provided in the format 'BrysonHo109(p,opts)'
-[p,opts] = DTQP_standardizedinputs('BrysonHo109_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@BrysonHo109_opts,varargin);
 
 %% tunable parameters
 p.x0 = 1; p.a = 2; % 1
@@ -54,3 +54,27 @@ end
 
 %% plot
 BrysonHo109_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for BrysonHo109 example
+function opts = BrysonHo109_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    % default parameters
+    opts.general.plotflag = 1; % create the plots
+    opts.general.saveflag = 0;
+    opts.general.displevel = 2;
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 200; % number of nodes
+    opts.qp.reorder = 0;
+    opts.qp.solver = 'built-in';
+    opts.qp.tolerance = 1e-15;
+    opts.qp.maxiters = 200;
+    opts.qp.disp = 'iter';
+end
+end

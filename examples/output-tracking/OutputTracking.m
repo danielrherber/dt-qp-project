@@ -11,9 +11,9 @@
 %--------------------------------------------------------------------------
 function varargout = OutputTracking(varargin)
 
-% set p and opts (see OutputTracking_opts.m)
+% set p and opts (see OutputTracking_opts)
 % input arguments can be provided in the format 'OutputTracking(p,opts)'
-[p,opts] = DTQP_standardizedinputs('OutputTracking_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@OutputTracking_opts,varargin);
 
 %% tunable parameters
 p.tf = 50; % final time
@@ -59,10 +59,30 @@ setup.UB = UB; setup.LB = LB; setup.p = p;
 [T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = OutputTracking_output(T,U,Y,P,F,p,opts);
+[O,sol] = OutputTracking_output(T,U,Y,P,F,p,setup,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
 OutputTracking_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for OutputTracking example
+function opts = OutputTracking_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    opts.dt.defects = 'PS';
+    opts.dt.quadrature = 'G';
+    opts.dt.mesh = 'LGL';
+    opts.dt.nt = 100; % number of nodes
+case 2
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 1000; % number of nodes
+end
+end

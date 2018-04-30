@@ -22,7 +22,7 @@ sol(1).Y = LQRScalar_Y(c1,c2,c3,p.r,T);
 sol(1).F = LQRScalar_F(p.a,p.b,c1,c2,c3,p.m,p.q,p.r,p.t0,p.tf);
 
 % solution on high resolution T
-if opts.plotflag
+if opts.general.plotflag
     sol(2).T = linspace(p.t0,p.tf,1e4)';
     sol(2).U = LQRScalar_U(p.a,p.b,c1,c2,c3,p.r,sol(2).T);
     sol(2).Y = LQRScalar_Y(c1,c2,c3,p.r,sol(2).T);

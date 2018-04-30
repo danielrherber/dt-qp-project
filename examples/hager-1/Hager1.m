@@ -12,9 +12,9 @@
 %--------------------------------------------------------------------------
 function varargout = Hager1(varargin)
 
-% set p and opts (see Hager1_opts.m)
+% set p and opts (see Hager1_opts)
 % input arguments can be provided in the format 'Hager1(p,opts)'
-[p,opts] = DTQP_standardizedinputs('Hager1_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@Hager1_opts,varargin);
 
 %% setup
 p.t0 = 0; p.tf = 1; % time horizon
@@ -55,3 +55,28 @@ end
 
 %% plot
 Hager1_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for Hager1 example
+function opts = Hager1_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    opts.dt.defects = 'PS';
+    opts.dt.quadrature = 'G';
+    opts.dt.mesh = 'LGL';
+    opts.dt.nt = 10;
+case 2
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.defects = 'HS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 10;
+case 3
+    opts.dt.quadrature = 'CTR';
+    opts.dt.defects = 'TR';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 10;
+end
+end

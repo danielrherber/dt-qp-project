@@ -11,9 +11,9 @@
 %--------------------------------------------------------------------------
 function varargout = LQRstandard(varargin)
 
-% set p and opts (see LQRstandard_opts.m)
+% set p and opts (see LQRstandard_opts)
 % input arguments can be provided in the format 'LQRstandard(p,opts)'
-[p,opts] = DTQP_standardizedinputs('LQRstandard_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@LQRstandard_opts,varargin);
 
 %% tunable parameters
 p.ns = 20; % number of states
@@ -59,3 +59,32 @@ end
 
 %% plot
 LQRstandard_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for LQRstandard example
+function opts = LQRstandard_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    % default parameters
+    opts.general.plotflag = 1; % create the plots
+    opts.general.saveflag = 0;
+    opts.general.displevel = 2;
+    opts.dt.defects = 'PS';
+    opts.dt.quadrature = 'G';
+    opts.dt.mesh = 'LGL';
+    opts.dt.nt = 50; % number of nodes
+    opts.qp.reorder = 0;
+    opts.qp.solver = 'built-in';
+    opts.qp.tolerance = 1e-15;
+    opts.qp.maxiters = 200;
+    opts.qp.disp = 'iter';
+case 2
+    opts.dt.defects = 'ZO';
+    opts.dt.quadrature = 'CEF';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 20;
+end
+end

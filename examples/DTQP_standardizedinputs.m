@@ -10,11 +10,14 @@
 %--------------------------------------------------------------------------
 function [p,opts] = DTQP_standardizedinputs(f,in)
 
+% initialize
+p = [];
+
 % number of inputs
 n = length(in);
 
 % get user options for this example
-[p,opts] = feval(f);
+opts = feval(f);
 
 % potentially add inputs to p or opts
 if n >= 1
@@ -28,12 +31,18 @@ if n > 3
 end
 
 % potentially set current file name and path
-[mpath,mname] = fileparts(mfilename('fullpath'));
-if ~isfield(opts,'mpath')
-	opts.mpath = mpath;
+if ~isfield(opts,'general')
+   opts.general = []; 
 end
 if ~isfield(opts,'mname')
-	opts.mname = mname;
+    mname = char(f);
+    mname(end-4:end) = [];
+	opts.general.mname = mname;    
+end
+mname = opts.general.mname;
+if ~isfield(opts.general,'mpath')
+    mpath = mfoldername(mname,'');
+    opts.general.mpath = mpath;
 end
 
 end

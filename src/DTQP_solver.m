@@ -11,22 +11,22 @@
 function [X,F,opts] = DTQP_solver(H,f,A,b,Aeq,beq,lb,ub,opts)
 
 % potentially start the timer
-if (opts.displevel > 0) % minimal
+if (opts.general.displevel > 0) % minimal
     tic % start timer
 end
 
-switch opts.solver
+switch opts.qp.solver
     %----------------------------------------------------------------------
     case 'built-in' % built-in MATLAB solvers
 
         if isempty(H) && isempty(f) % feasibility problem
             % options
             options = optimoptions(@quadprog,'Algorithm','interior-point-convex',...
-                'Display',opts.disp,...
-                'MaxIterations',opts.maxiters,...
-                'ConstraintTolerance',opts.tolerance,...
-                'OptimalityTolerance',opts.tolerance,...
-                'StepTolerance',opts.tolerance);
+                'Display',opts.qp.disp,...
+                'MaxIterations',opts.qp.maxiters,...
+                'ConstraintTolerance',opts.qp.tolerance,...
+                'OptimalityTolerance',opts.qp.tolerance,...
+                'StepTolerance',opts.qp.tolerance);
             warning('off','optim:quadprog:NullHessian');
 
             % solve the QP
@@ -35,7 +35,7 @@ switch opts.solver
             warning('on','optim:quadprog:NullHessian');
 %         elseif isempty(H) % linear program
 %             % options
-%             options = optimoptions(@linprog, 'Display', opts.disp,...
+%             options = optimoptions(@linprog, 'Display', opts.qp.disp,...
 %                 'TolFun', 100000*eps, 'algorithm', 'interior-point',...
 %                 'MaxIter', 200);
 % 
@@ -45,11 +45,11 @@ switch opts.solver
         else % quadratic program
             % options
             options = optimoptions(@quadprog,'Algorithm','interior-point-convex',...
-                'Display',opts.disp,...
-                'MaxIterations',opts.maxiters,...
-                'ConstraintTolerance',opts.tolerance,...
-                'OptimalityTolerance',opts.tolerance,...
-                'StepTolerance',opts.tolerance);
+                'Display',opts.qp.disp,...
+                'MaxIterations',opts.qp.maxiters,...
+                'ConstraintTolerance',opts.qp.tolerance,...
+                'OptimalityTolerance',opts.qp.tolerance,...
+                'StepTolerance',opts.qp.tolerance);
 
             % solve the QP
             [X, F, EXITFLAG] = quadprog(H,f,A,b,Aeq,beq,lb,ub,[],options);
@@ -64,12 +64,12 @@ switch opts.solver
 end
 
 % end the timer
-if (opts.displevel > 0) % minimal
+if (opts.general.displevel > 0) % minimal
     opts.QPsolvetime = toc; % end the timer
 end
 
 % display to the command window
-if (opts.displevel > 1) % verbose
+if (opts.general.displevel > 1) % verbose
     disp(['QP solving time: ', num2str(opts.QPsolvetime), ' s'])
 end
 

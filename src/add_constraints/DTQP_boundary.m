@@ -9,8 +9,8 @@
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function [J,V,b] = DTQP_boundary(yz,p)
-    % initialize sequences
-	J = []; V = [];
+    % initialize storage arrays
+    Jsav = {}; Vsav = {};
 
     % go through each substructure
     for j = 1:length(yz.linear) % loop through the extended variables
@@ -28,16 +28,27 @@ function [J,V,b] = DTQP_boundary(yz,p)
         % go through each variable of the current type
         for i = 1:length(C)
 
-                % column location
-                J = [J,DTQP_getQPIndex(C(i),yz.linear(j).right,0,p)];
+            % column location
+            Js = DTQP_getQPIndex(C(i),yz.linear(j).right,0,p);
 
-                % single value assigned
-                V = [V,reshape(yzt(i,1),1,[])];
+            % single value assigned
+            Vs = reshape(yzt(i,1),1,[]);
+
+            % remove zeros
+            ZeroIndex = find(~Vs);
+            Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
+
+            % combine 
+            Jsav{end+1} = Js; Vsav{end+1} = Vs;  
 
         end % end for i
 
     end % end for j
 
+    % combine
+    J = vertcat(Jsav{:});
+    V = vertcat(Vsav{:});
+    
     % assign constant value
     b = yz.b;
 

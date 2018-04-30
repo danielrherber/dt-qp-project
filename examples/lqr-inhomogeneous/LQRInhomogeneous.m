@@ -11,9 +11,9 @@
 %--------------------------------------------------------------------------
 function varargout = LQRInhomogeneous(varargin)
 
-% set p and opts (see LQRInhomogeneous_opts.m)
+% set p and opts (see LQRInhomogeneous_opts)
 % input arguments can be provided in the format 'LQRInhomogeneous(p,opts)'
-[p,opts] = DTQP_standardizedinputs('LQRInhomogeneous_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@LQRInhomogeneous_opts,varargin);
 
 %% tunable parameters
 p.ns = 20; % number of states
@@ -68,3 +68,28 @@ end
 
 %% plot
 LQRInhomogeneous_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for LQRInhomogeneous example
+function opts = LQRInhomogeneous_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.defects = 'HS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 100;
+case 2
+    opts.dt.defects = 'PS';
+    opts.dt.quadrature = 'G';
+    opts.dt.mesh = 'LGL';
+    opts.dt.nt = 100;
+case 3
+    opts.dt.quadrature = 'CTR';
+    opts.dt.defects = 'TR';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 100;
+end
+end

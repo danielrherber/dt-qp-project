@@ -13,7 +13,7 @@ function varargout = BrysonHo248(varargin)
 
 % set p and opts (see BrysonHo248_opts.m)
 % input arguments can be provided in the format 'BrysonHo248(p,opts)'
-[p,opts] = DTQP_standardizedinputs('BrysonHo248_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@BrysonHo248_opts,varargin);
 
 %% tunable parameters
 p.tf = 1;
@@ -68,3 +68,28 @@ end
 
 %% plot
 BrysonHo248_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for BrysonHo248 example
+function opts = BrysonHo248_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    opts.dt.quadrature = 'CEF';
+    opts.dt.defects = 'ZO';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 100;
+case 2
+    opts.dt.quadrature = 'G';
+    opts.dt.defects = 'PS';
+    opts.dt.mesh = 'LGL';
+    opts.dt.nt = 100;
+case 3      
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.defects = 'HS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 100;
+end
+end

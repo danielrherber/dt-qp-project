@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTDP_initialize.m
+% DTQP_initialize.m
 % Initialize various structures and variables
 %--------------------------------------------------------------------------
 %
@@ -8,41 +8,48 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
+function [setup,p] = DTQP_initialize(setup,dt)
 
 %% create mesh
 p = setup.p;
+p.nt = dt.nt;
 if ~isfield(p,'t0')
     p.t0 = 0; % default is 0
 end
-p = DTQP_createT(p,opts);
+p = DTQP_createT(p,dt);
 p.h = diff(p.t);
 
 % calculate midpoints in time grid
-if strcmp(opts.Quadmethod,'CQHS') || any(strcmp(opts.Defectmethod,{'HS','RK4'}))
+if strcmpi(dt.quadrature,'CQHS') || any(strcmpi(dt.defects,{'HS','RK4'}))
     t1 = [0;p.t]; t2 = [p.t;0];
     t3 = t1 + (t2-t1)/2; % midpoints endpoints incorrect
     p.tm = t3(2:end-1);
+else
+    p.tm = [];
 end
 
 %% pseudospectral methods
 % differentiation matrix
-if strcmp(opts.Defectmethod,'PS') || strcmp(opts.Defectmethod,'PS_old')
+if strcmpi(dt.defects,'PS')
     tau = ( 2/(p.tf-p.t0)*p.t - (p.tf+p.t0)/(p.tf-p.t0) );
-    switch opts.NType
-        case 'LGL'
+    switch lower(dt.mesh)
+        case 'lgl'
             p.D = DTQP_Dmatrix_LGL(tau); % sparse differentiation matrix
-        case 'CGL'
+        case 'cgl'
             p.D = DTQP_Dmatrix_CGL(tau); % sparse differentiation matrix
     end
+else
+    p.D = [];
 end
 % Gaussian quadrature weights
-if strcmp(opts.Quadmethod,'G') && strcmp(opts.NType,'LGL')
+if strcmpi(dt.quadrature,'G') && strcmpi(dt.mesh,'LGL')
 	tau = ( 2/(p.tf-p.t0)*p.t - (p.tf+p.t0)/(p.tf-p.t0) );		
     p.w = DTQP_weights_LGL(tau); % sparse Gaussian quadrature weights
-end
-if strcmp(opts.Quadmethod,'CC') && strcmp(opts.NType,'CGL')
+elseif strcmpi(dt.quadrature,'CC') && strcmpi(dt.mesh,'CGL')
 	tau = ( 2/(p.tf-p.t0)*p.t - (p.tf+p.t0)/(p.tf-p.t0) );		
     p.w = DTQP_weights_CGL(tau); % sparse Gaussian quadrature weights
+else
+    p.w = [];
 end
 
 %% counts
@@ -60,7 +67,6 @@ p.nu = size(setup.B,2); % number of controls
 p.np = size(setup.G,2); % number of parameters
 p.nd = size(setup.d,2); % number of disturbances
 
-p.nt = length(p.t);
 p.nx = (p.nu+p.ns)*p.nt + p.np; % number of optimization variables
 
 if isempty(setup.A)
@@ -187,6 +193,8 @@ if ~isfield(setup,'Z'), setup.Z = []; end
 if ~isfield(setup,'LB'), setup.LB = []; end
 if ~isfield(setup,'UB'), setup.UB = []; end
 if ~isfield(setup,'scaling'), setup.scaling = []; end
+if ~isfield(setup,'LY'), setup.LY = []; end
+if ~isfield(setup,'LZ'), setup.LZ = []; end
 
 %% indices
 p.i{1} = 1:p.nu; % control indices
@@ -194,3 +202,5 @@ p.i{2} = p.nu+1:(p.nu+p.ns); % state indices
 p.i{3} = (p.nu+p.ns)+1:(p.nu+p.ns)+p.np; % parameter indices
 p.i{4} = p.i{2}; % initial state indices
 p.i{5} = p.i{2}; % final state indices
+p.i{6} = p.i{1}; % initial control indices
+p.i{7} = p.i{1}; % final control indices

@@ -9,9 +9,9 @@
 %--------------------------------------------------------------------------
 function varargout = DTQP3(varargin)
 
-% set p and opts (see DTQP3_opts.m)
+% set p and opts (see DTQP3_opts)
 % input arguments can be provided in the format 'DTQP3(p,opts)'
-[p,opts] = DTQP_standardizedinputs('DTQP3_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@DTQP3_opts,varargin);
 
 %% tunable parameters
 p.tf = 10; % time horizon
@@ -72,3 +72,28 @@ end
 
 %% plot
 DTQP3_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for DTQP3 example
+function opts = DTQP3_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    opts.dt.defects = 'PS';
+    opts.dt.quadrature = 'G';
+    opts.dt.mesh = 'LGL';
+    opts.dt.nt = 100;
+case 2
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.defects = 'HS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 100;
+case 3
+    opts.dt.quadrature = 'CTR';
+    opts.dt.defects = 'TR';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 100;
+end
+end

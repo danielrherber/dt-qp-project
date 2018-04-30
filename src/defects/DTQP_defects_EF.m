@@ -11,85 +11,102 @@
 function [Aeq,beq] = DTQP_defects_EF(A,B,G,d,p,opts)
 
     % extract some of the variables in p
-    nt = p.nt; nu = p.nu; ns = p.ns; np = p.np;
+    nt = p.nt; nu = p.nu; ny = p.ns; np = p.np;
     nd = p.nd; h = p.h; nx = p.nx;
 
     % matrix form of I in the formulas
-    K = kron(eye(ns),ones(nt-1,1));
+    K = kron(eye(ny),ones(nt-1,1));
 
-    %------------------------------------------------------------------
-    % calculate matrices
-    %------------------------------------------------------------------    
+    % initialize storage arrays
+    Isav = {}; Jsav = {}; Vsav = {};
+
+    %----------------------------------------------------------------------
+    % calculate matrices and sequencing vectors
+    %----------------------------------------------------------------------
     % find time dependent matrices
     At = DTQP_tmultiprod(A,p);
     Bt = DTQP_tmultiprod(B,p);
     Gt = DTQP_tmultiprod(G,p);
     dt = DTQP_tmultiprod(d,p);
-    %------------------------------------------------------------------
+    
+    Jy = DTQP_indexcolumns(nt,ny,nu); % optimization variable (column) locations
+    Jys = [Jy;Jy+1]; % combine to create paired optimization variable locations
+    Ty = Jy - nt*nu; % time indexing vectors
+    Hy = repmat(h,ny,1); % vector of time steps
+    
+    if nu > 0
+        Ju = DTQP_indexcolumns(nt,nu,0); % optimization variable (column) locations
+        Tu = Ju; % time indexing vectors
+        Hu = repmat(h,nu,1); % vector of time steps
+    end
+    
+    if np > 0
+        Jp = kron(nt*(nu+ny)+(1:np)', ones(nt-1,1)); % optimization variable (column) locations
+        Tp = DTQP_indexcolumns(nt,np,0); % time indexing vectors
+        Hp = repmat(h,np,1); % vector of time steps
+    end
+    
+    if nd > 0
+        Hd = h; % vector of time steps
+        Td = 1:nt-1; % time indexing vectors
+    end
+    %----------------------------------------------------------------------
 
-    % initialize sequences 
-    If = []; Jf = []; Vf = [];
-
-     % defect constraint of row continuous constraints
-    for i = 1:ns
+    % defect constraint of row continuous constraints
+    for i = 1:ny
         % current defect constraint row indices
-        DefectIndices = (i-1)*(nt-1)+1:i*(nt-1);
+        DefectIndices = reshape((i-1)*(nt-1)+1:i*(nt-1),[],1);
 
         %------------------------------------------------------------------
         % controls
         %------------------------------------------------------------------
         if nu > 0
-            I = repmat(DefectIndices,1,nu); % current defect constraint row indices
-            J = 1:nu*nt; % current optimization variable column indices
-            J(nt:nt:nu*nt) = []; % remove endpoints
-            % T = 1:nu*nt; T(nt:nt:nu*nt) = [];
-            T = J; % time indexing vector
-            H = repmat(h,nu,1); % vector of time steps
+            % defect constraint (row) locations
+            Iu = repmat(DefectIndices,nu,1);
 
             % extract matrices
             Bv = reshape(Bt(:,i,:),[],1);
 
             % theta values
-            V3 = -H.*Bv(T); % theta 3
-
-            % remove zeros
-            ZeroIndex = (V3==0);
-            I(ZeroIndex) = []; J(ZeroIndex) = []; V3(ZeroIndex) = [];
-
-            % combine with 
-            If = [If,I]; Jf = [Jf,J]; Vf = [Vf;V3];
- 
-        end
-        %------------------------------------------------------------------
-        
-        %------------------------------------------------------------------
-        % states
-        %------------------------------------------------------------------
-        % if ns > 0 % always is at least one state
-            I = repmat(DefectIndices,1,ns); % current defect constraint row indices
-            J = nu*nt+1:(nu+ns)*nt; % current optimization variable column indices
-            J(nt:nt:end) = []; % remove endpoints
-            % T = 1:ns*nt; T(nt:nt:ns*nt) = [];
-            T = J - nt*nu; % time indexing vector (faster than line above)
-            H = repmat(h,ns,1); % vector of time steps
-
-            Av = reshape(At(:,i,:),[],1);
-
-            % theta values
-            V1 = -K(:,i) - H.*Av(T); % theta 1
-            V2 = K(:,i); % theta 2
+            V3 = -Hu.*Bv(Tu); % theta 3
 
             % combine
-            Is = [I,I];
-            Js = [J,J+1];
-            Vs = [V1;V2];
+            Is = Iu; Js = Ju; Vs = V3;
 
             % remove zeros
-            ZeroIndex = (Vs==0);
+            ZeroIndex = find(~Vs);
             Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
 
             % combine 
-            If = [If,Is]; Jf = [Jf,Js]; Vf = [Vf;Vs];
+            Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
+
+        end
+        %------------------------------------------------------------------
+
+        %------------------------------------------------------------------
+        % states
+        %------------------------------------------------------------------
+        % if ny > 0 % there always is at least one state
+            % defect constraint (row) locations
+            Iy = repmat(DefectIndices,ny,1);
+
+            % extract matrices
+            Av = reshape(At(:,i,:),[],1);
+
+            % theta values
+            V1 = -K(:,i) - Hy.*Av(Ty); % theta 1
+            V2 = K(:,i); % theta 2
+
+            % combine
+            Is = [Iy;Iy]; Js = Jys; Vs = [V1;V2];
+
+            % remove zeros
+            ZeroIndex = find(~Vs);
+            Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
+
+            % combine 
+            Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
+
         % end
         %------------------------------------------------------------------
 
@@ -97,61 +114,73 @@ function [Aeq,beq] = DTQP_defects_EF(A,B,G,d,p,opts)
         % parameters
         %------------------------------------------------------------------
         if np > 0
-            I = repmat(DefectIndices,1,np); % current defect constraint row indices
-            J = kron(nt*(nu+ns)+(1:np), ones(1,nt-1)); % current optimization variable column indices
-            T = 1:np*nt; T(nt:nt:np*nt) = []; % time indexing vector
-            H = repmat(h,np,1); % vector of time steps
+            % defect constraint (row) locations
+            Is = repmat(DefectIndices,np,1);
 
             % extract matrices
             Gv = reshape(Gt(:,i,:),[],1);
 
             % theta values
-            V = -H.*Gv(T); % theta 5  
-
-            % remove zeros
-            ZeroIndex = (V==0);
-            I(ZeroIndex) = []; J(ZeroIndex) = []; V(ZeroIndex) = [];
+            Vs = -Hp.*Gv(Tp); % theta 5  
 
             % combine
-            If = [If,I]; Jf = [Jf,J]; Vf = [Vf;V];
+            Js = Jp;
+
+            % remove zeros
+            ZeroIndex = find(~Vs);
+            Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
+
+            % combine 
+            Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
+
         end
         %------------------------------------------------------------------
     end
 
+    % combine
+    If = vertcat(Isav{:});
+    Jf = vertcat(Jsav{:});
+    Vf = vertcat(Vsav{:});
+
 	% output sparse matrix   
-    Aeq = sparse(If,Jf,Vf,ns*(nt-1),nx);
+    Aeq = sparse(If,Jf,Vf,ny*(nt-1),nx);
 
     %------------------------------------------------------------------
 	% disturbance
     %------------------------------------------------------------------
     if nd > 0
-        % initialize sequences 
-        Ifb = []; Vfb = [];
+        % initialize storage arrays
+        Isav = {}; Vsav = {};
 
-        for i = 1:ns % defect constraint of row continuous constraints
-            I = (i-1)*(nt-1)+1:i*(nt-1); % row (continuous)
-            T = 1:nt-1; % time indexing vector
-            H = h; % vector of time steps
+        % defect constraint of row continuous constraints
+        for i = 1:ny
+            % defect constraint (row) locations
+            Is = reshape((i-1)*(nt-1)+1:i*(nt-1),[],1);
 
             % extract matrices
             dv = reshape(dt(:,i,:),[],1);
 
             % nu values
-            V = H.*dv(T); % nu
+            Vs = Hd.*dv(Td); % nu
 
             % remove zeros
-            ZeroIndex = (V==0);
-            I(ZeroIndex) = []; V(ZeroIndex) = [];
+            ZeroIndex = find(~Vs);
+            Is(ZeroIndex) = []; Vs(ZeroIndex) = [];
 
-            % combine with 
-            Ifb = [Ifb,I]; Vfb = [Vfb;V];
+            % combine 
+            Isav{end+1} = Is; Vsav{end+1} = Vs;
 
         end
 
-        beq = sparse(Ifb,1,Vfb,ns*(nt-1),1);   
+        % combine
+        If = vertcat(Isav{:});
+        Vf = vertcat(Vsav{:});
+
+        % output sparse matrix
+        beq = sparse(If,1,Vf,ny*(nt-1),1);   
     else
         % output sparse matrix
-        beq = sparse([],[],[],ns*(nt-1),1);
+        beq = sparse([],[],[],ny*(nt-1),1);
     end
     %------------------------------------------------------------------
 end

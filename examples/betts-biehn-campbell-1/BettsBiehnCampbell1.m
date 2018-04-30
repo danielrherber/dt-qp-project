@@ -13,9 +13,9 @@
 %--------------------------------------------------------------------------
 function varargout = BettsBiehnCampbell1(varargin)
 
-% set p and opts (see BettsBiehnCampbell1_opts.m)
+% set p and opts (see BettsBiehnCampbell1_opts)
 % input arguments can be provided in the format 'BettsBiehnCampbell1(p,opts)'
-[p,opts] = DTQP_standardizedinputs('BettsBiehnCampbell1_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@BettsBiehnCampbell1_opts,varargin);
 
 %% setup
 p.t0 = 34/15; p.tf =4;
@@ -57,3 +57,23 @@ end
 
 %% plot
 BettsBiehnCampbell1_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for BettsBiehnCampbell1 example
+function opts = BettsBiehnCampbell1_opts
+% test number
+num = 2;
+
+switch num
+case 1
+    opts.dt.defects = 'TR';
+    opts.dt.quadrature = 'CTR';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 11; % number of nodes
+case 2
+    opts.dt.defects = 'PS';
+    opts.dt.quadrature = 'G';
+    opts.dt.mesh = 'LGL';
+    opts.dt.nt = 11; % number of nodes
+end
+end

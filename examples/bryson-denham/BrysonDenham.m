@@ -11,9 +11,9 @@
 %--------------------------------------------------------------------------
 function varargout = BrysonDenham(varargin)
 
-% set p and opts (see BrysonDenham_opts.m)
+% set p and opts (see BrysonDenham_opts)
 % input arguments can be provided in the format 'BrysonDenham(p,opts)'
-[p,opts] = DTQP_standardizedinputs('BrysonDenham_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@BrysonDenham_opts,varargin);
 
 %% tunable parameters
 p.ell = 1/9;
@@ -49,3 +49,32 @@ end
 
 %% plot
 BrysonDenham_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for BrysonDenham example
+function opts = BrysonDenham_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    % default parameters
+    opts.general.plotflag = 1; % create the plots
+    opts.general.saveflag = 0;
+    opts.general.displevel = 2;
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 16; % number of nodes
+    opts.qp.reorder = 0;
+    opts.qp.solver = 'built-in';
+    opts.qp.tolerance = 1e-15;
+    opts.qp.maxiters = 200;
+    opts.qp.disp = 'iter';
+case 2
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 4; % number of nodes
+end
+end

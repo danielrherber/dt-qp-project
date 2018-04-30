@@ -11,9 +11,9 @@
 %--------------------------------------------------------------------------
 function varargout = Cart(varargin)
 
-% set p and opts (see Cart_opts.m)
+% set p and opts (see Cart_opts)
 % input arguments can be provided in the format 'Cart(p,opts)'
-[p,opts] = DTQP_standardizedinputs('Cart_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@Cart_opts,varargin);
 
 %% tunable parameters
 p.t0 = 0;
@@ -57,3 +57,15 @@ end
 
 %% plot
 Cart_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for Cart example
+function opts = Cart_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    opts.dt.nt = 100; % number of nodes
+end
+end

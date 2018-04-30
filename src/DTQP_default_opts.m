@@ -13,33 +13,39 @@ function [setup,opts] = DTQP_default_opts(setup,opts)
     %----------------------------------------------------------------------
     % START: general options
     %----------------------------------------------------------------------
+    % initialize general options structure
+    if ~isfield(opts,'general')
+        opts.general = [];
+    end
+
     % plots
-    if ~isfield(opts,'plotflag')
-        opts.plotflag = 1; % create the plots
-        % opts.plotflag = 0; % don't create the plots
+    if ~isfield(opts.general,'plotflag')
+        opts.general.plotflag = 1; % create the plots
+        % opts.general.plotflag = 0; % don't create the plots
     end
     
     % save the solution and plots to disk (custom plotting function)
-    if ~isfield(opts,'saveflag')
-        % opts.saveflag = 1; % save
-        opts.saveflag = 0; % don't save
+    if ~isfield(opts.general,'saveflag')
+        % opts.general.saveflag = 1; % save
+        opts.general.saveflag = 0; % don't save
     end
 
     % name of the example
-    if ~isfield(opts,'name')
-        opts.name = mfilename; 
+    if ~isfield(opts.general,'name')
+        % opts.general.name = mfilename;
+        opts.general.name = 'DTQP_Example';
     end
 
     % path for saving
-    if ~isfield(opts,'path')
-        opts.path = mfoldername(mfilename('fullpath'),'_private'); 
+    if ~isfield(opts.general,'path')
+        opts.general.path = mfoldername(mfilename('fullpath'),'_private'); 
     end
 
     % controls displaying diagnostics to the command window
-    if ~isfield(opts,'displevel')
-        opts.displevel = 2; % verbose
-    %     opts.displevel = 1; % minimal
-    %     opts.displevel = 0; % none
+    if ~isfield(opts.general,'displevel')
+        opts.general.displevel = 2; % verbose
+        % opts.general.displevel = 1; % minimal
+        % opts.general.displevel = 0; % none
     end
     %----------------------------------------------------------------------
     % END: general options
@@ -48,100 +54,203 @@ function [setup,opts] = DTQP_default_opts(setup,opts)
     %----------------------------------------------------------------------
     % START: direct transcription specific
     %----------------------------------------------------------------------
-    % defect constraint method
-    if ~isfield(opts,'Defectmethod')
-        % opts.Defectmethod = 'ZO'; % zero-order hold
-        % opts.Defectmethod = 'EF'; % Euler forward 
-        opts.Defectmethod = 'TR'; % trapezoidal
-        % opts.Defectmethod = 'HS'; % Hermite-Simpson 
-        % opts.Defectmethod = 'RK4'; % fourth-order Runge-Kutta 
-        % opts.Defectmethod = 'PS'; % pseudospectral (both LGL and CGL)
-        if (opts.displevel > 0) % minimal
-            disp(['using default defect constraint method ',opts.Defectmethod])
-        end
+    % initialize direct transcription-specific options structure
+    if ~isfield(opts,'dt')
+        opts.dt(1).refinement = []; % initialize
+    end
+    
+    %----------------------------------------------------------------------
+	% mesh refinement algorithm (same for all phases)
+
+    default = 'none'; % no mesh refinement
+    
+    defaultflag = 0; % initialize
+    if ~isfield(opts.dt(1),'refinement') % not present
+        opts.dt(1).refinement = default; % set as the default
+        defaultflag = 1;
+    elseif isempty(opts.dt(1).refinement) % empty
+        opts.dt(1).refinement = default; % set as the default
+        defaultflag = 1;
+    end
+    if defaultflag && (opts.general.displevel > 1) % minimal
+        disp(['using default mesh refinement method ',opts.dt(1).refinement])
+    end
+    
+    %----------------------------------------------------------------------
+    % defect constraint method (first phase)
+    
+    % default = 'ZO'; % zero-order hold
+    % default = 'EF'; % Euler forward 
+    % default = 'Huen'; % Huen's method
+    % default = 'ModEF'; % modified Euler method
+    default = 'TR'; % trapezoidal
+    % default = 'HS'; % Hermite-Simpson 
+    % default = 'RK4'; % fourth-order Runge-Kutta 
+    % default = 'PS'; % pseudospectral (both LGL and CGL meshes)
+    
+    defaultflag = 0; % initialize
+    if ~isfield(opts.dt(1),'defects') % not present
+        opts.dt(1).defects = default; % set as the default
+        defaultflag = 1;
+    elseif isempty(opts.dt(1).defects) % empty
+        opts.dt(1).defects = default; % set as the default
+        defaultflag = 1;
+    end
+    if defaultflag &&(opts.general.displevel > 1) % minimal
+        disp(['using default defect constraint method ',opts.dt(1).defects])
     end
 
-    % quadrature method
-    if ~isfield(opts,'Quadmethod')
-        % opts.Quadmethod = 'CEF';
-        opts.Quadmethod = 'CTR';
-        % opts.Quadmethod = 'CQHS';
-        % opts.Quadmethod = 'G';
-        % opts.Quadmethod = 'CC';
-        if (opts.displevel > 0) % minimal
-            disp(['using default quadrature method ',opts.Quadmethod])
-        end
+    %----------------------------------------------------------------------
+    % quadrature method (first phase)
+    
+    % default = 'CEF'; % composite Euler forward
+    default = 'CTR'; % composite trapezoidal
+    % default = 'CQHS'; % composite quadratic hermite-simpson
+    % default = 'G'; % Gaussian
+    % default = 'CC'; % Clenshaw–Curtis
+    
+    defaultflag = 0; % initialize
+    if ~isfield(opts.dt(1),'quadrature') % not present
+        opts.dt(1).quadrature = default; % set as the default
+        defaultflag = 1;
+    elseif isempty(opts.dt(1).quadrature) % empty
+        opts.dt(1).quadrature = default; % set as the default
+        defaultflag = 1;
     end
+    if defaultflag &&(opts.general.displevel > 1) % minimal
+        disp(['using default quadrature method ',opts.dt(1).quadrature])
+    end
+    
+    %----------------------------------------------------------------------
+	% mesh type (first phase)
+    
+    default = 'ED'; % equidistant nodes
+    % default = 'LGL'; % Legendre-Gauss-Lobatto nodes
+    % default = 'CGL'; % Chebyshev-Gauss-Lobatto nodes
+    % default = 'USER'; % user-defined nodes
+    
+    defaultflag = 0; % initialize
+    if ~isfield(opts.dt(1),'mesh') % not present
+        opts.dt(1).mesh = default; % set as the default
+        defaultflag = 1;
+    elseif isempty(opts.dt(1).mesh) % empty
+        opts.dt(1).mesh = default; % set as the default
+        defaultflag = 1;
+    end
+    if defaultflag &&(opts.general.displevel > 1) % minimal
+            disp(['using default mesh type ',opts.dt(1).mesh])
+    end
+    
+    %----------------------------------------------------------------------
+	% number of nodes (first phase)
+    
+    default = 100; % 100 nodes
 
-	% mesh type
-    if ~isfield(opts,'NType')
-        opts.NType = 'ED'; % 
-        % opts.NType = 'LGL'; % 
-        % opts.NType = 'CGL'; % 
-        % opts.NType = 'USER'; % 
-        if (opts.displevel > 0) % minimal
-            disp(['using default mesh type ',opts.NType])
+    defaultflag = 0; % initialize
+    if ~isfield(opts.dt(1),'nt') % not present
+        opts.dt(1).nt = default; % set as the default
+        defaultflag = 1;
+    elseif isempty(opts.dt(1).nt) % empty
+        opts.dt(1).nt = default; % set as the default
+        defaultflag = 1;
+    end
+    if defaultflag &&(opts.general.displevel > 1) % minimal
+            disp(['using default number of nodes ',opts.dt(1).nt])
+    end
+    
+    %----------------------------------------------------------------------
+    % phase specific
+    nphase = length(setup); % number of phases
+    for phs = 2:nphase
+    
+        % potentially copy phase information
+        if phs > length(opts.dt)
+            DT = [];
+        else
+            DT = opts.dt(phs);
         end
+        
+        % mesh refinement algorithm (same for all phases)
+        if ~isfield(DT,'refinement')
+            DT.refinement = opts.dt(1).refinement; % from first phase
+        elseif isempty(DT.refinement)
+            DT.refinement = opts.dt(1).refinement; % from first phase
+        end
+        
+        % defect constraint method
+        if ~isfield(DT,'defects')
+            DT.defects = opts.dt(1).defects; % from first phase
+        elseif isempty(DT.defects)
+            DT.defects = opts.dt(1).defects; % from first phase
+        end
+        
+        % quadrature method
+        if ~isfield(DT,'quadrature')
+            DT.quadrature = opts.dt(1).quadrature; % from first phase
+        elseif isempty(DT.quadrature)
+            DT.quadrature = opts.dt(1).quadrature; % from first phase
+        end
+        
+        % mesh type
+        if ~isfield(DT,'mesh')
+            DT.mesh = opts.dt(1).mesh; % from first phase
+        elseif isempty(DT.mesh)
+            DT.mesh = opts.dt(1).mesh; % from first phase
+        end
+        
+        % number of nodes
+        if ~isfield(DT,'nt')
+            DT.nt = opts.dt(1).nt; % from first phase
+        elseif isempty(DT.nt)
+            DT.nt = opts.dt(1).nt; % from first phase
+        end
+        
+        % assign and clear
+        opts.dt(phs) = DT;
+        clear DT
+        
     end
     %----------------------------------------------------------------------
     % END: direct transcription specific
     %----------------------------------------------------------------------
-    
-    %----------------------------------------------------------------------
-    % START: phase specific
-    %----------------------------------------------------------------------
-    for idx = 1:length(setup)
-        % p structure
-        if ~isfield(setup(idx),'p')
-            error('Need to provide setup.p')
-        end
-            
-        % number of nodes
-        if ~isfield(setup(idx).p,'nt')
-            setup(idx).p.nt = 100; % 
-            if (opts.displevel > 0) % minimal
-                disp(['using default number of nodes ',num2str(setup(idx).p.nt),...
-                    ' in phase ',num2str(idx)])
-            end
-        end   
-
-    end
-    %----------------------------------------------------------------------
-    % END: phase specific
-    %----------------------------------------------------------------------
-    
+ 
     %----------------------------------------------------------------------
     % START: quadratic programming specific
     %----------------------------------------------------------------------
-    % reordering of the optimization variables (see DTQP_reorder)
-    if ~isfield(opts,'reorder')
-        opts.reorder = 0;
-        % opts.reorder = 1; % reorder
+    % initialize quadratic programming-specific options structure
+    if ~isfield(opts,'qp')
+        opts.qp = [];
+    end
+    
+    % reordering of the optimization variables (see DTQP_reorder.m)
+    if ~isfield(opts.qp,'reorder')
+        opts.qp.reorder = 0; % don't reorder
+        % opts.qp.reorder = 1; % reorder
     end
 
     % solver
-    if ~isfield(opts,'solver')
-        opts.solver = 'built-in'; % MATLAB quadprog
-        % opts.solver = 'qpip'; % add later
-        % opts.solver =  'ooqp'; % add later
+    if ~isfield(opts.qp,'solver')
+        opts.qp.solver = 'built-in'; % MATLAB quadprog
+        % % opts.qp.solver = 'qpip'; % (to be added)
+        % % opts.qp.solver = 'ooqp'; % (to be added)
     end
     
-    % tolerance (see DTQP_solver)
-    if ~isfield(opts,'tolerance')
-        opts.tolerance = 1e-12;
+    % tolerance (see DTQP_solver.m)
+    if ~isfield(opts.qp,'tolerance')
+        opts.qp.tolerance = 1e-12;
     end
 
-    % maximum iterations (see DTQP_solver)
-    if ~isfield(opts,'maxiters')
-        opts.maxiters = 200;
+    % maximum iterations (see DTQP_solver.m)
+    if ~isfield(opts.qp,'maxiters')
+        opts.qp.maxiters = 200;
     end
 
     % display level in the optimization routine
-    if ~isfield(opts,'disp')
-        if opts.displevel > 1 % verbose
-            opts.disp = 'Iter'; % iterations
+    if ~isfield(opts.qp,'disp')
+        if opts.general.displevel > 1 % verbose
+            opts.qp.disp = 'iter'; % iterations
         else
-            opts.disp = 'None'; % none
+            opts.qp.disp = 'none'; % none
         end
     end
     %----------------------------------------------------------------------

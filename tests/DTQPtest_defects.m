@@ -21,7 +21,7 @@ f = matlabFunction(f);
 F = matlabFunction(F);
 
 % number of nodes
-p.nt = 25;
+opts.dt.nt = 25;
 
 % tunable parameters
 p.t0 = 0; p.tf = 10; % time horizon
@@ -42,36 +42,36 @@ setup.M(1).right = 5;
 setup.M(1).matrix = 1;
 
 % don't display anything
-opts.displevel = 0;
+opts.general.displevel = 0;
 
 %% ZO
-opts.Defectmethod = 'ZO';
-opts.NType = 'ED';
+opts.dt.defects = 'ZO';
+opts.dt.mesh = 'ED';
 [tzo,~,Xzo,~,~,~,~] = DTQP_solve(setup,opts);
 
 %% EF
-opts.Defectmethod = 'EF';
-opts.NType = 'ED';
+opts.dt.defects = 'EF';
+opts.dt.mesh = 'ED';
 [tef,~,Xef,~,~,~,~] = DTQP_solve(setup,opts);
 
 %% TR
-opts.Defectmethod = 'TR';
-opts.NType = 'ED';
+opts.dt.defects = 'TR';
+opts.dt.mesh = 'ED';
 [ttr,~,Xtr,~,~,~,~] = DTQP_solve(setup,opts);
 
 %% HS
-opts.Defectmethod = 'HS';
-opts.NType = 'ED';
+opts.dt.defects = 'HS';
+opts.dt.mesh = 'ED';
 [ths,~,Xhs,~,~,~,~] = DTQP_solve(setup,opts);
 
 %% RK4
-opts.Defectmethod = 'RK4';
-opts.NType = 'ED';
+opts.dt.defects = 'RK4';
+opts.dt.mesh = 'ED';
 [trk4,~,Xrk4,~,~,~,~] = DTQP_solve(setup,opts);
 
 %% PS-LGL
-opts.Defectmethod = 'PS';
-opts.NType = 'LGL';
+opts.dt.defects = 'PS';
+opts.dt.mesh = 'LGL';
 [tlgl,~,Xlgl,~,~,~,~] = DTQP_solve(setup,opts);
 
 %% plots

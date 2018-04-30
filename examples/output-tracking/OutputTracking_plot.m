@@ -10,7 +10,7 @@
 %--------------------------------------------------------------------------
 function OutputTracking_plot(T,U,Y,P,F,p,opts,sol)
 
-if opts.plotflag
+if opts.general.plotflag
 
 close all
 
@@ -44,7 +44,7 @@ hL = legend(Lv{1:2}); % only the first two entries
 set(hL,'interpreter','latex','location','best','fontsize',fontsize-4,'box','on')
 
 % save
-if opts.saveflag
+if opts.general.saveflag
     path = msavename(mfilename('fullpath'),'plots');
     filename = [path,'figure-state'];
     str = ['export_fig ''',filename,''' -png -pdf'];
@@ -75,7 +75,7 @@ hL = legend(Lv{1:2});
 set(hL,'interpreter','latex','location','best','fontsize',fontsize-4,'box','on')
 
 % save
-if opts.saveflag
+if opts.general.saveflag
     path = msavename(mfilename('fullpath'),'plots');
     filename = [path,'figure-control'];
     str = ['export_fig ''',filename,''' -png -pdf'];
@@ -109,7 +109,7 @@ hL = legend(Lv{1:2}); % only the first two entries
 set(hL,'interpreter','latex','location','best','fontsize',fontsize-4,'box','on')
 
 % save
-if opts.saveflag
+if opts.general.saveflag
     path = msavename(mfilename('fullpath'),'plots');
     filename = [path,'figure-output'];
     str = ['export_fig ''',filename,''' -png -pdf'];
@@ -140,7 +140,7 @@ hL = legend(Hv,Lv);
 set(hL,'location','best','fontsize',fontsize-4,'box','on')
 
 % save
-if opts.saveflag
+if opts.general.saveflag
     path = msavename(mfilename('fullpath'),'plots');
     filename = [path,'figure-error'];
     str = ['export_fig ''',filename,''' -png -pdf'];

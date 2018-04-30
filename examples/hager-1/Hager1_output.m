@@ -17,7 +17,7 @@ sol(1).Y = Hager1_Y(T);
 sol(1).F = Hager1_F;
 
 % solution on high resolution T
-if opts.plotflag
+if opts.general.plotflag
     sol(2).T = linspace(p.t0,p.tf,1e4)';
     sol(2).U = Hager1_U(sol(2).T);
     sol(2).Y = Hager1_Y(sol(2).T);

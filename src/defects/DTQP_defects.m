@@ -10,7 +10,7 @@
 %--------------------------------------------------------------------------
 function [Aeq,beq] = DTQP_defects(A,B,G,d,p,opts)
 
-    switch opts.Defectmethod
+    switch upper(opts.dt.defects)
         case 'ZO' % zero-order hold
             [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,p,opts);
         case 'EF' % Euler forward 
@@ -18,11 +18,15 @@ function [Aeq,beq] = DTQP_defects(A,B,G,d,p,opts)
         case 'TR' % trapezoidal
             [Aeq,beq] = DTQP_defects_TR(A,B,G,d,p,opts);
         case 'HS' % Hermite-Simpson 
-            [Aeq,beq] = DTQP_defects_HS(A,B,G,d,p,opts); 
+            [Aeq,beq] = DTQP_defects_HS(A,B,G,d,p,opts);
         case 'RK4' % fourth-order Runge-Kutta 
-            [Aeq,beq] = DTQP_defects_RK4(A,B,G,d,p,opts);   
+            [Aeq,beq] = DTQP_defects_RK4(A,B,G,d,p,opts);  
         case 'PS' % pseudospectral (both LGL and CGL)
             [Aeq,beq] = DTQP_defects_PS(A,B,G,d,p,opts);
+        case 'HUEN' % Heun's method
+            [Aeq,beq] = DTQP_defects_Huen(A,B,G,d,p,opts);
+        case 'MODEF' % Modified Euler method
+            [Aeq,beq] = DTQP_defects_ModEF(A,B,G,d,p,opts);
     end
     
 end

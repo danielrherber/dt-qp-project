@@ -21,9 +21,9 @@
 %--------------------------------------------------------------------------
 function varargout = LQRScalarTransfer(varargin)
 
-% set p and opts (see LQRScalarTransfer_opts.m)
+% set p and opts (see LQRScalarTransfer_opts)
 % input arguments can be provided in the format 'LQRScalarTransfer(p,opts)'
-[p,opts] = DTQP_standardizedinputs('LQRScalarTransfer_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@LQRScalarTransfer_opts,varargin);
 
 %% tunable parameters
 % "Hyper-Sensitive"-like behavior
@@ -95,3 +95,18 @@ end
 
 %% plot
 LQRScalarTransfer_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for LQRScalarTransfer example
+function opts = LQRScalarTransfer_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'CGL';
+    opts.dt.nt = 2000; % number of nodes
+end
+end

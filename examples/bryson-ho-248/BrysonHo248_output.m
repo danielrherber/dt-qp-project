@@ -19,7 +19,7 @@ sol(1).Y = BrysonHo248_Y(p.alpha,p.beta,p.gamma,T,t1,t2,p.tf);
 sol(1).F = BrysonHo248_F(p.alpha,p.beta,p.gamma,t1,t2,p.tf);
 
 % solution on high resolution T
-if opts.plotflag
+if opts.general.plotflag
     sol(2).T = linspace(p.t0,p.tf,1e4)';
     sol(2).U = BrysonHo248_U(p.alpha,p.beta,p.gamma,sol(2).T,t1,t2,p.tf);
     sol(2).Y = BrysonHo248_Y(p.alpha,p.beta,p.gamma,sol(2).T,t1,t2,p.tf);

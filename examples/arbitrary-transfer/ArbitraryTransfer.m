@@ -9,9 +9,9 @@
 %--------------------------------------------------------------------------
 function varargout = ArbitraryTransfer(varargin)
 
-% set p and opts (see ArbitraryTransfer_opts.m)
+% set p and opts (see ArbitraryTransfer_opts)
 % input arguments can be provided in the format 'ArbitraryTransfer(p,opts)'
-[p,opts] = DTQP_standardizedinputs('ArbitraryTransfer_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@ArbitraryTransfer_opts,varargin);
 
 %% tunable parameters
 p.t0 = 0; p.tf = 10; % time horizon
@@ -75,3 +75,18 @@ end
 
 %% plot
 ArbitraryTransfer_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for ArbitraryTransfer example
+function opts = ArbitraryTransfer_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'ED'; 
+    opts.dt.nt = 200; % number of time points
+end
+end

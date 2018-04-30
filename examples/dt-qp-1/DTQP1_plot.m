@@ -10,7 +10,7 @@
 %--------------------------------------------------------------------------
 function DTQP1_plot(T,U,Y,P,F,p,opts,sol)
 
-if opts.plotflag
+if opts.general.plotflag
 
 close all
 
@@ -45,7 +45,7 @@ hL = legend('$\xi_1^*$','$\xi_2^*$','$\xi_3^*$',...
 set(hL,'location','best','fontsize',fontsize-4,'box','on')
 
 % save
-if opts.saveflag
+if opts.general.saveflag
     path = msavename(mfilename('fullpath'),'plots');
     filename = [path,'figure-state'];
     str = ['export_fig ''',filename,''' -png -pdf'];
@@ -72,7 +72,7 @@ hL = legend('$u_1^*$','$u_2^*$','$|u_2^*|\leq 10$');
 set(hL,'location','best','fontsize',fontsize-4,'box','on')
 
 % save
-if opts.saveflag
+if opts.general.saveflag
     path = msavename(mfilename('fullpath'),'plots');
     filename = [path,'figure-control'];
     str = ['export_fig ''',filename,''' -png -pdf'];
@@ -103,7 +103,7 @@ set(hL,'location','best','fontsize',fontsize-4,'box','on')
 hL.Position = [0.3905041 0.372839 0.243739 0.188766];
 
 % save
-if opts.saveflag
+if opts.general.saveflag
     path = msavename(mfilename('fullpath'),'plots');
     filename = [path,'figure-other'];
     str = ['export_fig ''',filename,''' -png -pdf'];

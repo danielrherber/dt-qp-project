@@ -10,9 +10,9 @@
 %--------------------------------------------------------------------------
 function varargout = LQRScalar(varargin)
 
-% set p and opts (see LQRScalar_opts.m)
+% set p and opts (see LQRScalar_opts)
 % input arguments can be provided in the format 'LQRScalar(p,opts)'
-[p,opts] = DTQP_standardizedinputs('LQRScalar_opts',varargin);
+[p,opts] = DTQP_standardizedinputs(@LQRScalar_opts,varargin);
 
 %% tunable parameters
 p.t0 = 0; p.tf = 1; % time horizon
@@ -62,3 +62,16 @@ end
 
 %% plot
 LQRScalar_plot(T,U,Y,P,F,p,opts,sol)
+
+end
+% User options function for LQRScalar example
+function opts = LQRScalar_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    opts = [];
+
+end
+end

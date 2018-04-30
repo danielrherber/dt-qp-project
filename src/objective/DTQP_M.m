@@ -35,8 +35,8 @@ for k = 1:length(Mfull)
             r = DTQP_getQPIndex(R(i),M.left,0,p); % Hessian row index sequence
             c = DTQP_getQPIndex(C(j),M.right,0,p); % Hessian column index sequence 
             
-            I = [I,r]; % main diagonal row
-            J = [J,c]; % main diagonal column
+            I = [I;r]; % main diagonal row
+            J = [J;c]; % main diagonal column
 
             V = [V;squeeze(Mt(i,j,:))]; % combine
             
