@@ -168,3 +168,18 @@ e = (f(2) + (f(2)-f(1))/(m2^k0-1)) - (f(3) + (f(3)-f(1))/(m3^k0-1));
 % square of the error
 z = e^2;
 end
+% Richardson extrapolation
+function R = richardson(As,ks,t)
+% general recurrence relation for Richardson extrapolation
+f = @(Ah,Aht,k,t) (t^k*Aht - Ah)./(t^k - 1);
+
+% compute the triangular extrapolation table
+for i = 1:(size(As,2)-1)
+    for j = 1:(size(As,2)-i)
+        As(:,j) = f(As(:,j),As(:,j+1),ks(i),t);
+    end
+end
+
+% output extrapolated value
+R = As(:,1);
+end
