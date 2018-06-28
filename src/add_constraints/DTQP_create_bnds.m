@@ -8,19 +8,19 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [lb,ub] = DTQP_create_bnds(LB,UB,p)
+function [lb,ub] = DTQP_create_bnds(LB,UB,in)
 
     %----------------------------------------------------------------------
     % lower bounds
     %----------------------------------------------------------------------
     % initialize all lower bounds as -Inf (unconstrained)
-    lb = -inf(p.nx,length(LB));
+    lb = -inf(in.nx,length(LB));
     
     % go through each substructure
     for i = 1:length(LB)
         
         % get the sequences for the lower bounds
-        [I,V] = DTQP_bnds(LB(i),p);
+        [I,V] = DTQP_bnds(LB(i),in);
         
         % combine
         lb(I,i) = V;
@@ -35,13 +35,13 @@ function [lb,ub] = DTQP_create_bnds(LB,UB,p)
     % upper bounds
     %----------------------------------------------------------------------
     % initialize all upper bounds as Inf (unconstrained)
-    ub = inf(p.nx,length(UB));
+    ub = inf(in.nx,length(UB));
 
     % go through each substructure
     for i = 1:length(UB)
         
         % get the sequences for the upper bounds
-        [I,V] = DTQP_bnds(UB(i),p);
+        [I,V] = DTQP_bnds(UB(i),in);
         
         % combine
         ub(I,i) = V;

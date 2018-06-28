@@ -44,12 +44,12 @@ function RequiredWebFiles
 
     % initialize structure
     files = struct('url','','folder','');
-
-    % file 1
-    ind = ind + 1; % increment 
-	files(ind).url = 'http://dmpeli.math.mcmaster.ca/Matlab/Math4Q3/Lecture2-1/LagrangeInter.m';
-	files(ind).folder = 'LagrangeInter';
     
+    % file 1
+    ind = ind + 1; % increment
+	files(ind).url = 'http://www1.spms.ntu.edu.sg/~lilian/bookcodes/legen/legslbdiff.m';
+	files(ind).folder = 'legslbdiff';
+
     % file 2
     ind = ind + 1; % increment
 	files(ind).url = 'http://www1.spms.ntu.edu.sg/~lilian/bookcodes/legen/lepoly.m';
@@ -76,33 +76,33 @@ function RequiredWebZips
 
     % zip 1
 	ind = ind + 1; % increment
+	zips(ind).url = 'https://github.com/chebfun/chebfun/archive/master.zip';
+	zips(ind).folder = 'MFX 47023';
+	zips(ind).test = 'chebfun';
+    
+    % zip 2
+	ind = ind + 1; % increment
 	zips(ind).url = 'https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/8773/versions/38/download/zip/Multiprod_2009.zip';
 	zips(ind).folder = 'MFX 8773';
 	zips(ind).test = 'multiprod';
     
-    % zip 2
+    % zip 3
 	ind = ind + 1; % increment
 	zips(ind).url = 'https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/31272/versions/10/download/zip/DataHash_20160618.zip';
 	zips(ind).folder = 'MFX 31272';
 	zips(ind).test = 'DataHash';
     
-    % zip 3
+    % zip 4
 	ind = ind + 1; % increment
 	zips(ind).url = 'http://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/40397/versions/7/download/zip/mfoldername_v2.zip';
 	zips(ind).folder = 'MFX 40397';
 	zips(ind).test = 'mfoldername';
     
-    % zip 4
+    % zip 5
 	ind = ind + 1; % increment
 	zips(ind).url = 'https://github.com/altmany/export_fig/archive/master.zip';
 	zips(ind).folder = 'MFX 23629';
 	zips(ind).test = 'export_fig';
-    
-    % zip 5
-	ind = ind + 1; % increment
-	zips(ind).url = 'https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/43183/versions/2/download/zip/spyc.zip';
-	zips(ind).folder = 'MFX 43183';
-	zips(ind).test = 'spyc';
 
     % obtain full function path
     full_fun_path = which(mfilename('fullpath'));
@@ -118,6 +118,9 @@ function AddSubmissionContents(name)
 	disp('--- Adding submission contents to path')
 	disp(' ')
 
+    % turn off potential warning
+    warning('off','MATLAB:dispatcher:nameConflict')
+    
 	% current file
 	fullfuncdir = which(name);
 
@@ -125,7 +128,10 @@ function AddSubmissionContents(name)
 	submissiondir = fullfile(fileparts(fullfuncdir));
 
 	% add folders and subfolders to path
-	addpath(genpath(submissiondir)) 
+	addpath(genpath(submissiondir))
+    
+    % turn warning back on
+    warning('on','MATLAB:dispatcher:nameConflict')
 end
 %--------------------------------------------------------------------------
 function CloseThisFile(name)

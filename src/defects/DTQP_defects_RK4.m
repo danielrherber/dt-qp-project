@@ -8,11 +8,11 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [Aeq,beq] = DTQP_defects_RK4(A,B,G,d,p,opts)
+function [Aeq,beq] = DTQP_defects_RK4(A,B,G,d,in,opts)
 
-    % extract some of the variables in p
-    nt = p.nt; nu = p.nu; ny = p.ns; np = p.np;
-    nd = p.nd; h = p.h; nx = p.nx; tm = p.tm;
+    % extract some of the variables
+    nu = in.nu; ny = in.ny; np = in.np; nd = in.nd; nx = in.nx;
+    p = in.p; nt = in.nt; t = in.t; h = in.h; tm = in.tm;
 
     % matrix form of I in the formulas
     K = kron(eye(ny),ones(nt-1,1));
@@ -24,10 +24,10 @@ function [Aeq,beq] = DTQP_defects_RK4(A,B,G,d,p,opts)
     % calculate matrices and sequencing vectors
     %----------------------------------------------------------------------
     % find time dependent matrices
-    At = DTQP_tmultiprod(A,p);
-    Bt = DTQP_tmultiprod(B,p);
-    Gt = DTQP_tmultiprod(G,p);
-    dt = DTQP_tmultiprod(d,p);
+    At = DTQP_tmultiprod(A,p,t);
+    Bt = DTQP_tmultiprod(B,p,t);
+    Gt = DTQP_tmultiprod(G,p,t);
+    dt = DTQP_tmultiprod(d,p,t);
 
     % find matrix values for  time grid midpoints
     Am = DTQP_tmultiprod(A,p,tm);

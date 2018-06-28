@@ -8,98 +8,118 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [I,J,V] = DTQP_L(Lfull,p,opts)
+function [I,J,V] = DTQP_L(Lfull,in,opts)
 
-% number of time points
-nt = p.nt;
+% extract some of the variables
+nt = in.nt; nu = in.nu; ny = in.ny; t = in.t; tm = in.tm; h = in.h;
+w = in.w; p = in.p;  ini = in.i; quadrature = opts.dt.quadrature;
 
-% do we need off diagonal terms?
-OffFlag = any(strcmpi(opts.dt.quadrature,'CQHS'));
+% check if we need off-diagonal terms
+OffFlag = any(strcmpi(quadrature,'CQHS'));
 
-% initialize sequences  
-I = []; J = []; W = []; H = []; Q = []; Qmid = [];
+% initialize storage arrays
+Isav = {}; Jsav = {}; HWsav = {}; Qsav = {}; Qmsav = {};
+IUsav = {}; ILsav = {}; JUsav = {}; JLsav = {}; Hoffsav = {}; Qoffsav = {};
 
+% go through each Lagrange term
 for k = 1:length(Lfull)
     % obtain current substructure
-    L = Lfull(k);
+    Lleft = Lfull(k).left;
+    Lright = Lfull(k).right;
+    Lmatrix = Lfull(k).matrix;
 
 	% find time dependent matrix
-	Lt = DTQP_tmultiprod(L.matrix,p);
+	Lt = DTQP_tmultiprod(Lmatrix,p,t);
 
     % find time dependent matrix at time grid midpoints
     if OffFlag
-        Lmid = DTQP_tmultiprod(L.matrix,p,p.tm); 
+        Lm = DTQP_tmultiprod(Lmatrix,p,tm); 
     end
 
-    % check if both left and right fields are present, assign 0 if not
-    if ~isfield(L,'left'), L.left = 0; end
-    if ~isfield(L,'right'), L.right = 0; end
-
     % check if both left and right fields are equal to 0
-    if (L.left ~= 0), R = p.i{L.left}; else R = 0; end % rows (continuous)
-    if (L.right ~= 0), C = p.i{L.right}; else C = 0; end % columns (continuous)
+    if (Lleft ~= 0), R = ini{Lleft}; else, R = 0; end % rows (continuous)
+    if (Lright ~= 0), C = ini{Lright}; else, C = 0; end % columns (continuous)
 
     % determine locations and matrix values at this points
     for i = 1:length(R) % number of row continuous variables
         for j = 1:length(C) % number of column continuous variables
+            % get current matrix values
+            Lv = Lt(:,i,j);
 
-            r = DTQP_getQPIndex(R(i),L.left,1,p); % Hessian row index sequence
-            c = DTQP_getQPIndex(C(j),L.right,1,p); % Hessian column index sequence 
+            % check if this entry is always 0
+            if any(Lv)
+                r = DTQP_getQPIndex(R(i),Lleft,1,nt,nu,ny); % Hessian row index sequence
+                c = DTQP_getQPIndex(C(j),Lright,1,nt,nu,ny); % Hessian column index sequence 
 
-            I = [I;r]; % main diagonal row
-            J = [J;c]; % main diagonal column
+                Isav{end+1} = r; % main diagonal rows
+                Jsav{end+1} = c; % main diagonal columns
 
-            % combine integration weights
-            if any(strcmpi(opts.dt.quadrature,{'G','CC'}))
-                W = [W; p.w];
-            else
-                H = [H; p.h; 0];
-            end
+                % integration weights
+                if any(strcmpi(quadrature,{'G','CC'}))
+                    HWsav{end+1} = w;
+                else
+                    HWsav{end+1} = [h; 0];
+                end
 
-            % combine values evaluated on the time grid
-            Q = [Q;Lt(:,i,j)];   
+                % main diagonal matrix values
+                Qsav{end+1} = Lv;   
 
-            % combine values evaluated on the intermediate time grid
-            if OffFlag
-                Lmidv = Lmid(:,i,j);
-                Qmid = [Qmid; Lmidv; 0];
+                % off-diagonal sequences
+                if OffFlag
+                    Lmv = Lm(:,i,j);
+                    Qmsav{end+1} = [Lmv; 0];
+                    IUsav{end+1} = r(1:end-1);
+                    ILsav{end+1} = r(2:end);
+                    JUsav{end+1} = c(2:end);
+                    JLsav{end+1} = c(1:end-1);
+                    Hoffsav{end+1} = h;
+                    Qoffsav{end+1} = Lv(1:end-1);
+                end
+
             end
 
         end % end C for loop
     end % end R for loop
 end % end L for loop
 
-% calculate off diagonal sequences
+% combine sequences
+I = vertcat(Isav{:});
+J = vertcat(Jsav{:});
+HW = vertcat(HWsav{:});
+Q = vertcat(Qsav{:});
+
+% combine off-diagonal sequences
 if OffFlag
-    IU = I; IU(nt:nt:end) = [];
-    IL = I; IL(1:nt:end) = [];
-    JU = J; JU(1:nt:end) = [];
-    JL = J; JL(nt:nt:end) = [];
-    Hoff = H; Hoff(nt:nt:end) = [];
-    Qoff = Q; Qoff(nt:nt:end) = [];
+    Qm = vertcat(Qmsav{:});
+    IU = vertcat(IUsav{:});
+    IL = vertcat(ILsav{:});
+    JU = vertcat(JUsav{:});
+    JL = vertcat(JLsav{:});
+    Hoff = vertcat(Hoffsav{:});
+    Qoff = vertcat(Qoffsav{:});
 end
 
 % begin method specific
 switch upper(opts.dt.quadrature)
     case 'CEF'
-        V = H.*Q;
+        V = HW.*Q;
     case 'CTR'
-        V = ( (H.*Q) + (circshift(H,[1,1]).*Q) )/2;
+        V = ( (HW.*Q) + (circshift(HW,[1,1]).*Q) )/2;
     case 'CQHS'
-        V = ( (H.*Q) + (circshift(H,[1,1]).*Q) + (H.*Qmid) + circshift(H.*Qmid,[1,1]) )/6;
+        V = ( (HW.*Q) + (circshift(HW,[1,1]).*Q) + (HW.*Qm) + circshift(HW.*Qm,[1,1]) )/6;
         Voff = Hoff.*Qoff/6;
     case 'G'
-        V = (p.tf - p.t0)/2*W.*Q;
+        V = (in.tf - in.t0)/2*HW.*Q;
     case 'CC'
-        V = (p.tf - p.t0)/2*W.*Q;
+        V = (in.tf - in.t0)/2*HW.*Q;
 end
 % end method specific
 
-% concatenate for final outputs
+% combine
 if OffFlag
-    I = [I;IU;IL];
-    J = [J;JU;JL];
-    V = [V;Voff;Voff];
+    I = vertcat(I,IU,IL);
+    J = vertcat(J,JU,JL);
+    V = vertcat(V,Voff,Voff);
 end
 
 end % end DTQP_L function

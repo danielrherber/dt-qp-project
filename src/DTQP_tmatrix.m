@@ -42,15 +42,23 @@
 %--------------------------------------------------------------------------
 function At = DTQP_tmatrix(A,p,varargin)
 
+    % check if another time mesh is inputted
+    if isempty(varargin)
+        t = p.t;
+    else
+        t = varargin{1};
+    end
+
     if isempty(A) % A is empty
         At = []; % return empty matrix if A is empty
+    elseif isnumeric(A) % constant matrix
+        % add dummy dimension
+        A1(1,:,:) = full(A); % needs to be full
+        
+        % replicate the matrix nt times
+        At = repmat(A1,[length(t),1,1]);
+
     else
-        % check if another time mesh is inputted
-        if isempty(varargin)
-            t = p.t;
-        else
-            t = varargin{1};
-        end
 
         % convert to a cell if a normal matrix or single time-varying function
         if isa(A,'function_handle')

@@ -22,7 +22,7 @@ b = 0.2;
 c = 1;
 q1 = 1e-3;
 q2 = 1e-3;
-p.tf = 5;
+tf = 5;
 
 % save to parameter structure
 p.n = n;
@@ -99,19 +99,19 @@ UB(idx).matrix{2,1} = @(t) [0;inf(length(t)-1,1)];
 
 % combine
 setup.A = A; setup.B = B; setup.L = L;
-setup.LB = LB; setup.UB = UB; setup.p = p;
+setup.LB = LB; setup.UB = UB; setup.tf = tf; setup.p = p;
 
 %% solve
-[T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
+[T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = HDAE_output(T,U,Y,P,F,p,opts);
+[O,sol] = HDAE_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-HDAE_plot(T,U,Y,P,F,p,opts,sol)
+HDAE_plot(T,U,Y,P,F,in,opts,sol)
 
 end
 % User options function for HDAE example

@@ -27,7 +27,7 @@ function varargout = LQRScalarTransfer(varargin)
 
 %% tunable parameters
 % "Hyper-Sensitive"-like behavior
-p.tf = 10000; % final time, requires high-precision solution
+tf = 10000; % final time, requires high-precision solution
 p.a = -1; % state matrix
 p.b = 1; % input matrix
 p.c = 1.5; % initial state
@@ -36,7 +36,7 @@ p.q = 1; % quadratic state cost
 p.r = 1; % quadratic control cost
 
 % % "Energy-Optimal Control"
-% p.tf = 5; % final time, tf > 0
+% tf = 5; % final time, tf > 0
 % p.a = 2; % state matrix, a > 0
 % p.b = 3; % input matrix, b > 0
 % p.c = 1; % initial state, c > 0
@@ -45,7 +45,7 @@ p.r = 1; % quadratic control cost
 % p.r = 1/2; % quadratic control cost
 
 % % "Mass-Spring" Problem
-% p.tf = pi/2; % final time
+% tf = pi/2; % final time
 % p.a = 0; % state matrix
 % p.b = 1; % input matrix
 % p.c = 0; % initial state
@@ -54,7 +54,7 @@ p.r = 1; % quadratic control cost
 % p.r = 1; % quadratic control cost
 
 %% setup
-p.t0 = 0;
+t0 = 0;
 
 % system dynamics
 A = p.a;
@@ -82,19 +82,19 @@ UB(2).matrix = p.d;
 
 % combine
 setup.A = A; setup.B = B; setup.L = L;
-setup.LB = LB; setup.UB = UB; setup.p = p;
+setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.p = p;
 
 %% solve
-[T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
+[T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = LQRScalarTransfer_output(T,U,Y,P,F,p,opts);
+[O,sol] = LQRScalarTransfer_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-LQRScalarTransfer_plot(T,U,Y,P,F,p,opts,sol)
+LQRScalarTransfer_plot(T,U,Y,P,F,in,opts,sol)
 
 end
 % User options function for LQRScalarTransfer example

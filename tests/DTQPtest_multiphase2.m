@@ -68,8 +68,8 @@ for phs = 1:length(xT)-1
         setup(phs).LB = LBt; 
     end
 
-    p.t0 = xT(phs);
-    p.tf = xT(phs+1);
+    setup(phs).t0 = xT(phs);
+    setup(phs).tf = xT(phs+1);
     setup(phs).p = p;
 
     if phs < length(xT)-1

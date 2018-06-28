@@ -8,13 +8,13 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [H,f,A,b,Aeq,beq,lb,ub,p,s] = DTQP_scaling(H,f,A,b,Aeq,beq,lb,ub,p,s)
+function [H,f,A,b,Aeq,beq,lb,ub,in,s] = DTQP_scaling(H,f,A,b,Aeq,beq,lb,ub,in,s)
     
     %----------------------------------------------------------------------
     % START: simple scaling
     %----------------------------------------------------------------------
     % initialize as unity linear scaling
-    s1 = ones(p.nu*p.nt,1); s2 = ones(p.ns*p.nt,1); s3 = ones(p.np,1);
+    s1 = ones(in.nu*in.nt,1); s2 = ones(in.ny*in.nt,1); s3 = ones(in.np,1);
 
     % scale controls
     for k = 1:length(s)
@@ -24,21 +24,21 @@ function [H,f,A,b,Aeq,beq,lb,ub,p,s] = DTQP_scaling(H,f,A,b,Aeq,beq,lb,ub,p,s)
         switch s(k).right
             % controls
             case 1
-                if p.nu == length(m)
-                    s1 = kron(m,ones(p.nt,1));
+                if in.nu == length(m)
+                    s1 = kron(m,ones(in.nt,1));
                 else
                     error('wrong size')
                 end
             % states
             case 2
-                if p.ns == length(m)
-                    s2 = kron(m,ones(p.nt,1));
+                if in.ny == length(m)
+                    s2 = kron(m,ones(in.nt,1));
                 else
                     error('wrong size')
                 end
             % parameters
             case 3
-                if p.np == length(m)
+                if in.np == length(m)
                     s3 = m;
                 else
                     error('wrong size')
@@ -100,22 +100,22 @@ function [H,f,A,b,Aeq,beq,lb,ub,p,s] = DTQP_scaling(H,f,A,b,Aeq,beq,lb,ub,p,s)
 %     r = max(abs(A),[],2);
 %     req = max(abs(Aeq),[],2);
 %     
-%     b
+%     % b
 %     if ~isempty(b)
 %         b = b./r;
 %     end
 %     
-%     A
+%     % A
 %     if ~isempty(A)
 %         A = bsxfun(@rdivide,A,r);
 %     end
 %     
-%     beq
+%     % beq
 %     if ~isempty(beq)
 %         beq = beq./req;
 %     end
 %     
-%     Aeq
+%     % Aeq
 %     if ~isempty(Aeq)
 %         Aeq = bsxfun(@rdivide,Aeq,req);
 %     end

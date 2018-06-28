@@ -41,7 +41,7 @@ function [setup,opts] = DTQP_default_opts(setup,opts)
         opts.general.path = mfoldername(mfilename('fullpath'),'_private'); 
     end
 
-    % controls displaying diagnostics to the command window
+    % controls the displayed diagnostics in the command window
     if ~isfield(opts.general,'displevel')
         opts.general.displevel = 2; % verbose
         % opts.general.displevel = 1; % minimal
@@ -60,20 +60,19 @@ function [setup,opts] = DTQP_default_opts(setup,opts)
     end
     
     %----------------------------------------------------------------------
-	% mesh refinement algorithm (same for all phases)
-
-    default = 'none'; % no mesh refinement
-    
+	% mesh refinement algorithm (first phase)
     defaultflag = 0; % initialize
-    if ~isfield(opts.dt(1),'refinement') % not present
-        opts.dt(1).refinement = default; % set as the default
+    if ~isfield(opts.dt(1),'meshr') % not present
+        opts.dt(1).meshr = DTQP_meshr_default_opts([]); % set as the default
         defaultflag = 1;
-    elseif isempty(opts.dt(1).refinement) % empty
-        opts.dt(1).refinement = default; % set as the default
+    elseif isempty(opts.dt(1).meshr) % empty
+        opts.dt(1).meshr = DTQP_meshr_default_opts([]); % set as the default
         defaultflag = 1;
+    else
+        opts.dt(1).meshr = DTQP_meshr_default_opts(opts.dt(1).meshr); %
     end
     if defaultflag && (opts.general.displevel > 1) % minimal
-        disp(['using default mesh refinement method ',opts.dt(1).refinement])
+        disp(['using default mesh refinement ',opts.dt(1).meshr.method])
     end
     
     %----------------------------------------------------------------------
@@ -105,9 +104,9 @@ function [setup,opts] = DTQP_default_opts(setup,opts)
     
     % default = 'CEF'; % composite Euler forward
     default = 'CTR'; % composite trapezoidal
-    % default = 'CQHS'; % composite quadratic hermite-simpson
+    % default = 'CQHS'; % composite quadratic Hermite-Simpson
     % default = 'G'; % Gaussian
-    % default = 'CC'; % Clenshaw–Curtis
+    % default = 'CC'; % Clenshaw-Curtis
     
     defaultflag = 0; % initialize
     if ~isfield(opts.dt(1),'quadrature') % not present
@@ -143,8 +142,14 @@ function [setup,opts] = DTQP_default_opts(setup,opts)
     
     %----------------------------------------------------------------------
 	% number of nodes (first phase)
-    
+
     default = 100; % 100 nodes
+
+    if isfield(opts.dt(1).meshr,'method')
+        if ~strcmpi(opts.dt(1).meshr.method,'none')
+            default = nan; % will be set in DTQP_meshr_default_opts.m
+        end
+    end
 
     defaultflag = 0; % initialize
     if ~isfield(opts.dt(1),'nt') % not present
@@ -171,10 +176,12 @@ function [setup,opts] = DTQP_default_opts(setup,opts)
         end
         
         % mesh refinement algorithm (same for all phases)
-        if ~isfield(DT,'refinement')
-            DT.refinement = opts.dt(1).refinement; % from first phase
-        elseif isempty(DT.refinement)
-            DT.refinement = opts.dt(1).refinement; % from first phase
+        if ~isfield(DT,'meshr')
+            DT.meshr = opts.dt(1).meshr; % from first phase
+        elseif isempty(DT.meshr)
+            DT.meshr = opts.dt(1).meshr; % from first phase
+        else
+            DT.meshr = DTQP_meshr_default_opts(DT.meshr); %
         end
         
         % defect constraint method
@@ -221,7 +228,7 @@ function [setup,opts] = DTQP_default_opts(setup,opts)
     if ~isfield(opts,'qp')
         opts.qp = [];
     end
-    
+
     % reordering of the optimization variables (see DTQP_reorder.m)
     if ~isfield(opts.qp,'reorder')
         opts.qp.reorder = 0; % don't reorder
@@ -230,29 +237,15 @@ function [setup,opts] = DTQP_default_opts(setup,opts)
 
     % solver
     if ~isfield(opts.qp,'solver')
-        opts.qp.solver = 'built-in'; % MATLAB quadprog
-        % % opts.qp.solver = 'qpip'; % (to be added)
-        % % opts.qp.solver = 'ooqp'; % (to be added)
+        opts.qp.solver = 'quadprog'; % MATLAB quadprog
+        % opts.qp.solver = 'cvx'; % see DTQP_solver_cvx.m
+        % opts.qp.solver = 'qpoases'; % see DTQP_solver_qpoases.m
+        % opts.qp.solver = 'qpip'; % (to be added)
+        % opts.qp.solver = 'ooqp'; % (to be added)
     end
     
-    % tolerance (see DTQP_solver.m)
-    if ~isfield(opts.qp,'tolerance')
-        opts.qp.tolerance = 1e-12;
-    end
-
-    % maximum iterations (see DTQP_solver.m)
-    if ~isfield(opts.qp,'maxiters')
-        opts.qp.maxiters = 200;
-    end
-
-    % display level in the optimization routine
-    if ~isfield(opts.qp,'disp')
-        if opts.general.displevel > 1 % verbose
-            opts.qp.disp = 'iter'; % iterations
-        else
-            opts.qp.disp = 'none'; % none
-        end
-    end
+    % get default options for the selected solver
+    opts = DTQP_solver_default_opts(opts);
     %----------------------------------------------------------------------
     % END: quadratic programming specific
     %----------------------------------------------------------------------

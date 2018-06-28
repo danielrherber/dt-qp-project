@@ -14,9 +14,9 @@ This project solves linear-quadratic dynamic optimization (LQDO) problems using 
 ---
 ### Install
 * Download the [DT QP Project](https://github.com/danielrherber/dt-qp-project/archive/master.zip)
-* Run [INSTALL_DTQP_Project.m](INSTALL_DTQP_Project.m) to automatically add the project files to your MATLAB path, download the required files, and open an example
+* Run [INSTALL_DTQP.m](INSTALL_DTQP.m) to automatically add the project files to your MATLAB path, download the required files, and open an example
 ```matlab
-INSTALL_DTQP_Project
+INSTALL_DTQP
 ```
 * See [DTQP_template.m](examples/DTQP_template.m) for some examples illustrating how to implement different linear-quadratic dynamic optimization (LQDO) problem elements using the structure-based syntax of the DT QP Project
 ```matlab
@@ -34,10 +34,10 @@ Please cite the following two items if you use the DT QP Project:
 * DR Herber, YH Lee, JT Allison. *DT QP Project*, GitHub. url: [https://github.com/danielrherber/dt-qp-project](https://github.com/danielrherber/dt-qp-project)
 
 ### External Includes
-See [INSTALL_DTQP_Project.m](INSTALL_DTQP_Project.m) for more information.
-- MATLAB File Exchange Submission IDs (**8773, 40397, 23629, 43183**)
-- [http://dmpeli.math.mcmaster.ca/Matlab/Math4Q3/Lecture2-1/LagrangeInter.m](http://dmpeli.math.mcmaster.ca/Matlab/Math4Q3/Lecture2-1/LagrangeInter.m)
+See [INSTALL_DTQP.m](INSTALL_DTQP.m) for more information.
+- MATLAB File Exchange Submission IDs (**8773**, **23629**, **31272**, **40397**, **47023**)
 - [http://www1.spms.ntu.edu.sg/~lilian/bookcodes/legen/lepoly.m](http://www1.spms.ntu.edu.sg/~lilian/bookcodes/legen/lepoly.m)
+- [http://www1.spms.ntu.edu.sg/~lilian/bookcodes/legen/legslbdiff.m](http://www1.spms.ntu.edu.sg/~lilian/bookcodes/legen/legslbdiff.m)
 
 ---
 ### General Information

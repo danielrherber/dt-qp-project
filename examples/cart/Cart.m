@@ -16,11 +16,10 @@ function varargout = Cart(varargin)
 [p,opts] = DTQP_standardizedinputs(@Cart_opts,varargin);
 
 %% tunable parameters
-p.t0 = 0;
+t0 = 0;
 
 %% setup
-p.tf = 1; % time horizon
-setup.p = p;
+tf = 1; % time horizon
 
 % system dynamics
 A = [0 1; 0 -1]; 
@@ -44,19 +43,19 @@ UB(1).matrix = [0;0];
 
 % combine structures
 setup.A = A; setup.B = B; setup.L = L; setup.M = M; 
-setup.LB = LB; setup.UB = UB;
+setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf;
 
 %% solve
-[T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
+[T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = Cart_output(T,U,Y,P,F,p,opts);
+[O,sol] = Cart_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-Cart_plot(T,U,Y,P,F,p,opts,sol)
+Cart_plot(T,U,Y,P,F,in,opts,sol)
 
 end
 % User options function for Cart example

@@ -16,7 +16,7 @@ function varargout = AndersonMoore64(varargin)
 [p,opts] = DTQP_standardizedinputs(@AndersonMoore64_opts,varargin);
 
 %% tunable parameters
-p.t0 = 0; p.tf = 10; % time horizon
+t0 = 0; tf = 10; % time horizon
 p.x0 = 5; % initial state
 
 %% setup
@@ -40,19 +40,19 @@ UB(1).matrix = p.x0;
 
 % combine structures
 setup.A = A; setup.B = B; setup.L = L;
-setup.LB = LB; setup.UB = UB; setup.p = p;
+setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.p = p;
 
 %% solve
-[T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
+[T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = AndersonMoore64_output(T,U,Y,P,F,p,opts);
+[O,sol] = AndersonMoore64_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-AndersonMoore64_plot(T,U,Y,P,F,p,opts,sol)
+AndersonMoore64_plot(T,U,Y,P,F,in,opts,sol)
 
 end
 % User options function for AndersonMoore64 example

@@ -16,7 +16,7 @@ function varargout = BrysonHo154(varargin)
 [p,opts] = DTQP_standardizedinputs(@BrysonHo154_opts,varargin);
 
 %% tunable parameters
-p.t0 = 0; p.tf = 100; % time horizon
+t0 = 0; tf = 100; % time horizon
 p.x0 = 100; p.v0 = 1; 
 p.c1 = 1; p.c2 = 100;
 
@@ -43,19 +43,19 @@ UB(1).matrix = [p.x0;p.v0];
 
 % combine
 setup.A = A; setup.B = B; setup.L = L; setup.M = M;
-setup.LB = LB; setup.UB = UB; setup.p = p;
+setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.p = p;
 
 %% solve
-[T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
+[T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = BrysonHo154_output(T,U,Y,P,F,p,opts);
+[O,sol] = BrysonHo154_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-BrysonHo154_plot(T,U,Y,P,F,p,opts,sol)
+BrysonHo154_plot(T,U,Y,P,F,in,opts,sol)
 
 end
 % User options function for BrysonHo154 example

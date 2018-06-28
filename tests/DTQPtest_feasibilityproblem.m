@@ -16,13 +16,13 @@ opts.dt.nt = 100;
 g = 1.5; umax = 3;
 v0 = -2; h0 = 10;
 
-% p.tf = 6; % feasible
-p.tf = 4.17; % feasible
-% p.tf = 2; % infeasible
+% setup.tf = 6; % feasible
+setup.tf = 4.17; % feasible
+% setup.tf = 2; % infeasible
 
 %% setup
-p.t0 = 0;
-setup.p = p;
+setup.t0 = 0;
+setup.p = [];
 
 % system dynamics
 A = [0,1;0,0]; 

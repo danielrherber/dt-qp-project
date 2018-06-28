@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [LA,Lb,RA,Rb] = DTQP_linkage(left,right,p)
+function [LA,Lb,RA,Rb] = DTQP_linkage(left,right,in)
 
     % transcribe the linkage constraints for left
     if ~isempty(left)
@@ -23,7 +23,7 @@ function [LA,Lb,RA,Rb] = DTQP_linkage(left,right,p)
         end
 
         % create the sequences
-        [LA,Lb] = DTQP_create_YZ(LEFT,p);
+        [LA,Lb] = DTQP_create_YZ(LEFT,in);
 
     else
         % set as empty matrices
@@ -43,7 +43,7 @@ function [LA,Lb,RA,Rb] = DTQP_linkage(left,right,p)
         end
 
         % create the sequences
-        [RA,Rb] = DTQP_create_YZ(RIGHT,p);
+        [RA,Rb] = DTQP_create_YZ(RIGHT,in);
 
     else
         % set as empty matrices

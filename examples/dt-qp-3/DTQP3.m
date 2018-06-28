@@ -14,7 +14,7 @@ function varargout = DTQP3(varargin)
 [p,opts] = DTQP_standardizedinputs(@DTQP3_opts,varargin);
 
 %% tunable parameters
-p.tf = 10; % time horizon
+tf = 10; % time horizon
 p.x0 = 1; % initial state
 p.b = 1;
 p.r = 1;
@@ -26,7 +26,7 @@ p.w2 = 8;
 p.ParameterFlag = 1; % parameter version?
 
 %% setup
-p.t0 = 0;
+t0 = 0;
 
 % system dynamics
 if p.ParameterFlag
@@ -59,19 +59,20 @@ UB(1).right = 4; % initial states
 UB(1).matrix = p.x0;
 
 % combine
-setup.L = L; setup.M = M; setup.LB = LB; setup.UB = UB; setup.p = p;
+setup.L = L; setup.M = M; setup.LB = LB; setup.UB = UB;
+setup.t0 = t0; setup.tf = tf; setup.p = p;
 
 %% solve
-[T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
+[T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = DTQP3_output(T,U,Y,P,F,p,opts);
+[O,sol] = DTQP3_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-DTQP3_plot(T,U,Y,P,F,p,opts,sol)
+DTQP3_plot(T,U,Y,P,F,in,opts,sol)
 
 end
 % User options function for DTQP3 example

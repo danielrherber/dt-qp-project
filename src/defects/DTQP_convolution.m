@@ -8,10 +8,10 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function Q = DTQP_convolution(A,B,p,opts)
+function Q = DTQP_convolution(A,B,in,opts)
 
 % extract
-t = p.t; h = p.h; nt = opts.dt.nt;
+p = in.p; nt = in.nt; t = in.t; h = in.h; 
 
 % number of states
 ny = size(A,1);

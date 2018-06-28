@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function DTQP3_plot(T,U,Y,P,F,p,opts,sol)
+function DTQP3_plot(T,U,Y,P,F,in,opts,sol)
 
 if opts.general.plotflag
 
@@ -54,7 +54,7 @@ end
 %% control
 figure('Color',[1 1 1]);
 
-if p.ParameterFlag
+if in.p.ParameterFlag
     U = ones(size(T))*P;
 end
 

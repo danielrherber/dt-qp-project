@@ -8,9 +8,12 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function HDAE_plot(T,U,Y,P,F,p,opts,sol)
+function HDAE_plot(T,U,Y,P,F,in,opts,sol)
 
 if opts.general.plotflag
+
+% extract parameter structure
+p = in.p;
 
 close all
 

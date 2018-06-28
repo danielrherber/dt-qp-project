@@ -16,12 +16,12 @@ function varargout = BrysonHo116(varargin)
 [p,opts] = DTQP_standardizedinputs(@BrysonHo116_opts,varargin);
 
 %% tunable parameters
-p.tf = 1.5;
+tf = 1.5;
 p.x0 = 0.1;
 p.v0 = 0.5;
 
 %% setup
-p.t0 = 0;
+t0 = 0;
 
 % system dynamics
 A = [0 1; 0 0]; 
@@ -59,19 +59,19 @@ Z(2).b = 0;
 
 % combine
 setup.A = A; setup.B = B; setup.L = L; setup.UB = UB; setup.LB = LB;
-setup.Z = Z; setup.p = p;
+setup.Z = Z; setup.t0 = t0; setup.tf = tf; setup.p = p;
 
 %% solve
-[T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
+[T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = BrysonHo116_output(T,U,Y,P,F,p,opts);
+[O,sol] = BrysonHo116_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-BrysonHo116_plot(T,U,Y,P,F,p,opts,sol)
+BrysonHo116_plot(T,U,Y,P,F,in,opts,sol)
 
 end
 % User options function for BrysonHo116 example

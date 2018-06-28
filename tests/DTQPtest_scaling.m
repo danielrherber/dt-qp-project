@@ -17,7 +17,7 @@ opts.dt.nt = 10000;
 opts.general.displevel = 0;
 
 % time horizon 
-p.t0 = 0; p.tf = 1;
+setup.t0 = 0; setup.tf = 1;
 
 % system dynamics
 A = [0 1; 0 0]; 

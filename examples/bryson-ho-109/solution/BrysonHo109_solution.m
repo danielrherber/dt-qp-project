@@ -8,7 +8,10 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function sol = BrysonHo109_solution(T,Yguess,p)
+function sol = BrysonHo109_solution(T,Yguess,in)
+
+% extract parameters
+p = in.p;
 
 % symbolic variables
 syms y yf t a
@@ -23,7 +26,7 @@ ufun = matlabFunction(u,'Vars',{'a','t','yf'});
 gufun = matlabFunction(gu,'Vars',{'a','t','yf'});
 
 % solution function
-solfun = @(y) y - ( p.x0 - integral(@(t) gufun(p.a,t,y),p.t0,p.tf,...
+solfun = @(y) y - ( p.x0 - integral(@(t) gufun(p.a,t,y),in.t0,in.tf,...
     'RelTol',1e-16,'AbsTol',1e-16));
 
 % solve the implicit equation
@@ -37,10 +40,11 @@ Y(1,1) = p.x0;
 for i = 2:length(T)
     Y(i,1) =  Y(i-1,1) - integral(@(t) gufun(p.a,t,yf), T(i-1),T(i),...
         'RelTol',1e-16,'AbsTol',1e-16);
+    disp(T(i-1))
 end
 
 % objective function
-Iu = integral(@(t) (ufun(p.a,t,yf)).^2,p.t0,p.tf,'AbsTol',1e-16,'RelTol',1e-16);
+Iu = integral(@(t) (ufun(p.a,t,yf)).^2,in.t0,in.tf,'AbsTol',1e-16,'RelTol',1e-16);
 F = p.a^2/2*yf^2 + 1/2*Iu;
 
 % save to structure

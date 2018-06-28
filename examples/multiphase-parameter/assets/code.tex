@@ -1,0 +1,24 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{p} \quad & \int_0^{t_f} \bm{\xi}^T \bm{I} \bm{\xi} dt \\
+\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{cases} \bm{A}_1 \bm{\xi} + \bm{G} p & 0 \leq t \leq t_1 \\ \bm{A}_2 \bm{\xi} + \bm{G} p & t_1 \leq t \leq t_2 \\ \bm{A}_3 \bm{\xi} & t_2 \leq t \leq t_f \end{cases} \\
+& \bm{\xi}(0) = \bm{\xi}_0 \\
+& \bm{\xi}^{L}(t_1) - \bm{\xi}^{R}(t_1) = \bm{E}_1 \\
+& \bm{\xi}^{L}(t_2) - \bm{\xi}^{R}(t_2) = \bm{E}_2 \\
+\text{where:} \quad & 0 < t_1 < t_2 < t_f
+\end{align*}
+}}
+\end{document}
+
+% solution

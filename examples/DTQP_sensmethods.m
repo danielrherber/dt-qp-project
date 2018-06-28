@@ -46,7 +46,7 @@ Ot = f([],opts);
 nO = length(Ot);
 
 % grid of test cases
-[I,J] = ndgrid(1:length(narray),Testarray);
+[I,J] = ndgrid(1:length(narray),1:length(Testarray));
 
 % number of tests
 Nparfor = numel(I);

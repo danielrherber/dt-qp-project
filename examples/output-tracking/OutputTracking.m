@@ -16,7 +16,7 @@ function varargout = OutputTracking(varargin)
 [p,opts] = DTQP_standardizedinputs(@OutputTracking_opts,varargin);
 
 %% tunable parameters
-p.tf = 50; % final time
+tf = 50; % final time
 
 ny = 8; % number of states
 nu = 3; % number of controls
@@ -53,19 +53,19 @@ LB(1).right = 4; LB(1).matrix = x0; % initial states
 
 % combine structures
 setup.A = A; setup.B = B; setup.L = L;
-setup.UB = UB; setup.LB = LB; setup.p = p;
+setup.UB = UB; setup.LB = LB; setup.tf = tf; setup.p = p;
 
 %% solve
-[T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
+[T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = OutputTracking_output(T,U,Y,P,F,p,setup,opts);
+[O,sol] = OutputTracking_output(T,U,Y,P,F,in,setup,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-OutputTracking_plot(T,U,Y,P,F,p,opts,sol)
+OutputTracking_plot(T,U,Y,P,F,in,opts,sol)
 
 end
 % User options function for OutputTracking example

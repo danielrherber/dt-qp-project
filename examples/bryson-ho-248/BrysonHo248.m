@@ -16,7 +16,7 @@ function varargout = BrysonHo248(varargin)
 [p,opts] = DTQP_standardizedinputs(@BrysonHo248_opts,varargin);
 
 %% tunable parameters
-p.tf = 1;
+tf = 1;
 p.alpha = 1;
 p.beta = 1;
 p.gamma = 20;
@@ -55,19 +55,19 @@ UB(3).matrix = p.gamma;
 
 % combine
 setup.A = A; setup.B = B; setup.L = L;
-setup.UB = UB; setup.LB = LB; setup.p = p;
+setup.UB = UB; setup.LB = LB; setup.tf = tf; setup.p = p;
 
 %% solve
-[T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
+[T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = BrysonHo248_output(T,U,Y,P,F,p,opts);
+[O,sol] = BrysonHo248_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-BrysonHo248_plot(T,U,Y,P,F,p,opts,sol)
+BrysonHo248_plot(T,U,Y,P,F,in,opts,sol)
 
 end
 % User options function for BrysonHo248 example

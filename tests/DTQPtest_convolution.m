@@ -12,13 +12,15 @@ close all; clear; clc
 
 testnum = 1;
 
+in.p = [];
+
 switch testnum
 %--------------------------------------------------------------------------
 case 1 % nonsingular A, ED mesh
     opts.dt.mesh = 'ED';
-    opts.dt.nt = 23;
-    p.t = linspace(0,1,opts.dt.nt);
-    p.h = diff(p.t);
+    in.nt = 23;
+    in.t = linspace(0,1,in.nt);
+    in.h = diff(in.t);
 
     % constant matrices
     A = rand(3);
@@ -26,14 +28,14 @@ case 1 % nonsingular A, ED mesh
     
     % time
     tic
-    Q = DTQP_convolution(A,B,p,opts);
+    Q = DTQP_convolution(A,B,in,opts);
     toc
 %--------------------------------------------------------------------------
 case 2 % nonsingular A, USER mesh
     opts.dt.mesh = 'USER';
-    p.t = [0,0.1,0.5,0.7,1];
-    p.h = diff(p.t);
-    opts.dt.nt = length(p.t);
+    in.t = [0,0.1,0.5,0.7,1];
+    in.h = diff(in.t);
+    in.nt = length(in.t);
 
     % constant matrices
     A = rand(3);
@@ -41,15 +43,15 @@ case 2 % nonsingular A, USER mesh
     
     % time
     tic
-    Q = DTQP_convolution(A,B,p,opts);
+    Q = DTQP_convolution(A,B,in,opts);
     toc
     
 %--------------------------------------------------------------------------
 case 3 % singular A, ED mesh
     opts.dt.mesh = 'ED';
-    opts.dt.nt = 10000;
-    p.t = linspace(0,1,opts.dt.nt);
-    p.h = diff(p.t);
+    in.nt = 10000;
+    in.t = linspace(0,1,in.nt);
+    in.h = diff(in.t);
 
     % singular A
     A = [0 1; 0 0];
@@ -57,14 +59,14 @@ case 3 % singular A, ED mesh
 
     % time
     tic
-    Q = DTQP_convolution(A,B,p,opts);
+    Q = DTQP_convolution(A,B,in,opts);
     toc
 %--------------------------------------------------------------------------
 case 4 % singular A, USER mesh
     opts.dt.mesh = 'USER';
-    p.t = [0,0.1,0.5,0.7,1];
-    p.h = diff(p.t);
-    opts.dt.nt = length(p.t);
+    in.t = [0,0.1,0.5,0.7,1];
+    in.h = diff(in.t);
+    in.nt = length(in.t);
 
     % singular A
     A = [0 1; 0 0];
@@ -72,14 +74,14 @@ case 4 % singular A, USER mesh
 
     % time
     tic
-    Q = DTQP_convolution(A,B,p,opts);
+    Q = DTQP_convolution(A,B,in,opts);
     toc
 %--------------------------------------------------------------------------
 case 5 % time-varying B
     opts.dt.mesh = 'LGL';
-    opts.dt.nt = 100;
-    p.t = DTQP_nodes_LGL(opts.dt.nt-1);
-    p.h = diff(p.t);
+    in.nt = 100;
+    in.t = DTQP_nodes_LGL(in.nt-1);
+    in.h = diff(in.t);
 
     % time-varying matrix
     A = magic(2);
@@ -90,7 +92,7 @@ case 5 % time-varying B
 
     % time
     tic
-    Q = DTQP_convolution(A,B,p,opts);
+    Q = DTQP_convolution(A,B,in,opts);
     toc
 %--------------------------------------------------------------------------
 end

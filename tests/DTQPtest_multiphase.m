@@ -27,8 +27,8 @@ opts.dt(3).mesh  = 'LGL';
 %% phase 1
 phs = 1;
 
-setup(phs).p.t0 = 0;
-setup(phs).p.tf = 1;
+setup(phs).t0 = 0;
+setup(phs).tf = 1;
 
 % dynamics
 setup(phs).A = -eye(2);
@@ -62,8 +62,8 @@ setup(2).LY = LY;
 %% phase 2
 phs = 2;
 
-setup(phs).p.t0 = 1;
-setup(phs).p.tf = 2;
+setup(phs).t0 = 1;
+setup(phs).tf = 2;
 
 % dynamics
 setup(phs).A = 2*eye(2);
@@ -77,8 +77,8 @@ setup(phs).L.matrix = eye(2);
 %% phase 3
 phs = 3;
 
-setup(phs).p.t0 = 2;
-setup(phs).p.tf = 3;
+setup(phs).t0 = 2;
+setup(phs).tf = 3;
 
 % dynamics
 setup(phs).A = -eye(2);

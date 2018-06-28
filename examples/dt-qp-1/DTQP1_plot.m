@@ -8,9 +8,12 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function DTQP1_plot(T,U,Y,P,F,p,opts,sol)
+function DTQP1_plot(T,U,Y,P,F,in,opts,sol)
 
 if opts.general.plotflag
+
+% extract parameter structure
+p = in.p;
 
 close all
 
@@ -29,9 +32,9 @@ for i = 1:3
     plot(T,Y(:,i),'.-','color',cArray(i,:),'markersize',12,'linewidth',2); hold on
 end
 
-plot([p.t(1) p.t(end)], [Y(1,2) Y(end,2)],'ok','markersize',8); hold on
-plot(p.t, p.g(p.t),'--','color',[0 0 0]); hold on
-plot(p.t, P*ones(size(p.t)),'--','color',[0.5 0.5 0.5]); hold on
+plot([T(1) T(end)], [Y(1,2) Y(end,2)],'ok','markersize',8); hold on
+plot(T, p.g(T),'--','color',[0 0 0]); hold on
+plot(T, P*ones(size(T)),'--','color',[0.5 0.5 0.5]); hold on
 
 % axis
 xlabel('$t$ (s)','fontsize',fontsize)
@@ -60,8 +63,8 @@ cArray = lines(size(U,2));
 for i = 1:size(U,2)
     plot(T,U(:,i),'.-','color',cArray(i,:),'markersize',12,'linewidth',2); hold on
 end
-plot(p.t, -10*ones(size(p.t)),'--','color',[0 0 0]); hold on
-plot(p.t, 10*ones(size(p.t)),'--','color',[0 0 0]); hold on
+plot(T, -10*ones(size(T)),'--','color',[0 0 0]); hold on
+plot(T, 10*ones(size(T)),'--','color',[0 0 0]); hold on
 
 % axis
 xlabel('$t$ (s)','fontsize',fontsize)
@@ -84,15 +87,15 @@ figure('Color',[1 1 1]);
 
 % plot
 cArray = lines(2);
-plot(p.t,Y(:,4),'.-','linewidth',2,'markersize',12,'color',cArray(1,:)); hold on
-plot(p.t,-Y(:,1)+U(:,2)/12,'.-','linewidth',2,'markersize',12,'color',cArray(2,:)); hold on
-plot(p.t(1), Y(1,4),'sk','markersize',8); hold on
-plot(p.t(end), Y(end,4),'sk','markersize',8); hold on
-plot(p.t, 0*ones(size(p.t)),'--','color',[0 0 0]); hold on
+plot(T,Y(:,4),'.-','linewidth',2,'markersize',12,'color',cArray(1,:)); hold on
+plot(T,-Y(:,1)+U(:,2)/12,'.-','linewidth',2,'markersize',12,'color',cArray(2,:)); hold on
+plot(T(1), Y(1,4),'sk','markersize',8); hold on
+plot(T(end), Y(end,4),'sk','markersize',8); hold on
+plot(T, 0*ones(size(T)),'--','color',[0 0 0]); hold on
 
 % axis
 xlabel('$t$ (s)','fontsize',fontsize)
-xlim([p.t0 p.tf])
+xlim([in.t0 in.tf])
 ylim([-2.1 0.2])
 
 % legend

@@ -24,7 +24,7 @@ F = matlabFunction(F);
 opts.dt.nt = 25;
 
 % tunable parameters
-p.t0 = 0; p.tf = 10; % time horizon
+setup.t0 = 0; setup.tf = 10; % time horizon
 p.x0 = 1;
 setup.p = p;
 
@@ -90,7 +90,7 @@ hf = figure; % create a new figure and save handle
 hf.Color = [1 1 1]; % change the figure background color
 hf.Position = [200 200 550 400]; % set figure size and position
 
-t = linspace(p.t0,p.tf,10000);
+t = linspace(setup.t0,setup.tf,10000);
 
 plot(tzo,Xzo); hold on
 plot(tef,Xef); hold on

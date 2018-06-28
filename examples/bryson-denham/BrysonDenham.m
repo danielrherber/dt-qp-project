@@ -20,7 +20,7 @@ p.ell = 1/9;
 
 %% setup
 % time horizon
-p.t0 = 0; p.tf = 1;
+t0 = 0; tf = 1;
 
 % system dynamics
 A = [0 1;0 0]; B = [0;1];
@@ -36,19 +36,20 @@ LB(2).right = 5; LB(2).matrix = [0;-1];
 UB(3).right = 2; UB(3).matrix = [p.ell;Inf]; % states
 
 % combine structures
-setup.A = A; setup.B = B; setup.L = L; setup.UB = UB; setup.LB = LB; setup.p = p;
+setup.A = A; setup.B = B; setup.L = L; setup.UB = UB; setup.LB = LB; 
+setup.t0 = t0; setup.tf = tf; setup.p = p;
 
 %% solve
-[T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
+[T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = BrysonDenham_output(T,U,Y,P,F,p,opts);
+[O,sol] = BrysonDenham_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-BrysonDenham_plot(T,U,Y,P,F,p,opts,sol)
+BrysonDenham_plot(T,U,Y,P,F,in,opts,sol)
 
 end
 % User options function for BrysonDenham example
@@ -76,5 +77,10 @@ case 2
     opts.dt.quadrature = 'CQHS';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 4; % number of nodes
+case 3
+    opts.dt.defects = 'PS';
+    opts.dt.quadrature = 'G';
+    opts.dt.mesh = 'LGL';
+    opts.dt.nt = 9; % number of nodes
 end
 end

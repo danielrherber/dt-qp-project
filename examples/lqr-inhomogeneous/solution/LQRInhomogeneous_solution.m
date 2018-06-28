@@ -8,40 +8,40 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function D = LQRInhomogeneous_solution(A,B,d,R,Q,M,p,opts)
+function D = LQRInhomogeneous_solution(in,opts)
 
 % sqrt of the number of costates
-p.snp = p.ns;
+in.snp = in.ny;
 
 % copy the matrices
-p.A = A; p.B = B; p.d = d; p.R = R; p.Q = Q; p.M = M;
+p = in.p; A = p.A; B = p.B; d = p.d; R = p.R; Q = p.Q; M = p.M; x0 = p.x0;
 
 % find indices of diagonal and lower triangular entries
-p.NS = sum(sum(tril(ones(p.snp,p.snp))));
-p.Ilower = find(tril(ones(p.snp,p.snp)));
-p.Idiag = find(eye(p.snp,p.snp));
+in.NS = sum(sum(tril(ones(in.snp,in.snp))));
+in.Ilower = find(tril(ones(in.snp,in.snp)));
+in.Idiag = find(eye(in.snp,in.snp));
 
 %--------------------------------------------------------------------------
 % START: ode solution
 %--------------------------------------------------------------------------
 % copy p to output structure
-pode = p;
+pode = in;
 
 % ode options
 options = odeset('RelTol',opts.tolode,'AbsTol',opts.tolode*1e-3,'InitialStep',1e-6);
 
 % initial costates
 P0 = reshape(full(M),[],1);
-P0 = P0(p.Ilower);
-k0 = zeros(p.ns,1);
+P0 = P0(in.Ilower);
+k0 = zeros(in.ny,1);
 V0 = [P0;k0];
 
 % backward integration for the costates
-[tode,Pkode] = ode15s(@(x,y) odefun_dPk(x,y,p),[p.t(end) p.t(1)],V0,options);
+[tode,Pkode] = ode15s(@(x,y) odefun_dPk(x,y,A,B,d,Q,R,in),[in.t(end) in.t(1)],V0,options);
 
 % extract
-Pode = Pkode(:,1:length(p.Ilower));
-kode = Pkode(:,length(p.Ilower)+1:end);
+Pode = Pkode(:,1:length(in.Ilower));
+kode = Pkode(:,length(in.Ilower)+1:end);
 
 % flip the solution to be forward in time
 tode = flipud(tode);
@@ -52,10 +52,10 @@ kode = flipud(kode);
 pode.t = tode;
 
 % forward integration for the states
-[~,Yode] = ode15s(@(x,y) odefun_dX(x,y,pode,Pode,kode),pode.t,p.x0,options);
+[~,Yode] = ode15s(@(x,y) odefun_dX(x,y,A,B,d,R,pode,Pode,kode),pode.t,x0,options);
 
 % calculate the optimal control
-Uode = calcU(Yode,Pode,kode,p,tode);
+Uode = calcU(Yode,Pode,kode,B,R,in,tode);
 
 %--------------------------------------------------------------------------
 % END: ode solution
@@ -67,7 +67,7 @@ if strcmp(opts.solmethod,'bvp')
     % START: bvp solution
     %----------------------------------------------------------------------
     % ordered nodes of the initial mesh
-    T = p.t;
+    T = in.t;
 
     % initial guess for the solution as intepolation of previous solutions
     yinit = @(t) [interp1(tode,Yode,t,'pchip'),interp1(tode,Pode,t,'pchip'),...
@@ -81,22 +81,22 @@ if strcmp(opts.solmethod,'bvp')
         'NMax',10000,'Stats','on');
     
     % solve the bvp
-    sol = bvp4c(@(x,y) odefun(x,y,p),@(ya,yb) bcfun(ya,yb,p),solinit,options);
+    sol = bvp4c(@(x,y) odefun(x,y,A,B,d,Q,R,in),@(ya,yb) bcfun(ya,yb,x0,M,in),solinit,options);
     
     % time mesh
     D.T = sol.x';
     
     % states
-    D.Y = sol.y(1:p.ns,:)';
+    D.Y = sol.y(1:in.ny,:)';
     
     % costates
-    Psol = sol.y(p.ns+1:p.ns+length(p.Ilower),:)';
+    Psol = sol.y(in.ny+1:in.ny+length(in.Ilower),:)';
     
     % additional costates
-    ksol = sol.y(p.ns+length(p.Ilower)+1:end,:)';
+    ksol = sol.y(in.ny+length(in.Ilower)+1:end,:)';
     
     % calculate the optimal control
-    D.U = calcU(D.Y,Psol,ksol,p,D.T);
+    D.U = calcU(D.Y,Psol,ksol,B,R,in,D.T);
     %----------------------------------------------------------------------
     % END: bvp solution
     %----------------------------------------------------------------------
@@ -116,9 +116,9 @@ Yf = D.Y(end,:)'; % final states
 FM = Yf'*M*Yf;
 
 % Lagrange term
-FQ = integral(@(t) quadIntegrand(t,D.T,D.Y,Q),D.T(1),D.T(end),...
+FQ = integral(@(t) quadIntegrand(t,D.T,D.Y,Q,in),D.T(1),D.T(end),...
     'RelTol',opts.tolode,'AbsTol',opts.tolode*1e-3); % Y'*Q*Y
-FR = integral(@(t) quadIntegrand(t,D.T,D.U,R),D.T(1),D.T(end),...
+FR = integral(@(t) quadIntegrand(t,D.T,D.U,R,in),D.T(1),D.T(end),...
     'RelTol',opts.tolode,'AbsTol',opts.tolode*1e-3); % U'*R*U
 FL = FQ + FR; % combine
 
@@ -130,52 +130,52 @@ D.F = FM/2 + FL/2; % combine
 
 end
 % costate ordinary differential equation function
-function dPk = odefun_dPk(t,Pk,p)
+function dPk = odefun_dPk(t,Pk,A,B,d,Q,R,in)
 % matrix values at current time
-p.t = t;
-A = DTQP_tmatrix(p.A,p);
-B = DTQP_tmatrix(p.B,p);
-d = DTQP_tmatrix(p.d,p);
-Q = DTQP_tmatrix(p.Q,p);
-R = DTQP_tmatrix(p.R,p);
+p = in.p;
+A = DTQP_tmatrix(A,p,t); A = squeeze(A);
+B = DTQP_tmatrix(B,p,t); B = squeeze(B);
+d = DTQP_tmatrix(d,p,t); d = squeeze(d); d = d(:);
+Q = DTQP_tmatrix(Q,p,t); Q = squeeze(Q);
+R = DTQP_tmatrix(R,p,t); R = squeeze(R);
 % extract
-P = Pk(1:length(p.Ilower));
-k = Pk(length(p.Ilower)+1:end);
+P = Pk(1:length(in.Ilower));
+k = Pk(length(in.Ilower)+1:end);
 % reshape the costates
 q = P;
-P = zeros(p.snp,p.snp);
-P(p.Ilower) = q;
+P = zeros(in.snp,in.snp);
+P(in.Ilower) = q;
 Pdiag = diag(P);
 P = P+P';
-P(p.Idiag) = Pdiag;
+P(in.Idiag) = Pdiag;
 % costate equation
 dP = -P*A - A'*P - Q + P*B*(R\(B'))*P;
 % additional costate equation
 dk = (P*B*(R\(B')) - A')*k - P*d;
 % reshape
-dP = dP(p.Ilower);
+dP = dP(in.Ilower);
 % combine
 dPk = [dP;dk];
 end
 % state ordinary differential equation function for ode option
-function dX = odefun_dX(t,X,p,P,k)
+function dX = odefun_dX(t,X,A,B,d,R,in,P,k)
 % interpolate
-P = interp1(p.t,P,t,'pchip'); % costates
-k = interp1(p.t,k,t,'pchip'); % additional costates
+P = interp1(in.t,P,t,'pchip'); % costates
+k = interp1(in.t,k,t,'pchip'); % additional costates
 k = k(:);
 % matrix values at current time
-p.t = t;
-A = DTQP_tmatrix(p.A,p);
-B = DTQP_tmatrix(p.B,p);
-d = DTQP_tmatrix(p.d,p);
-R = DTQP_tmatrix(p.R,p);
+p = in.p;
+A = DTQP_tmatrix(A,p,t); A = squeeze(A);
+B = DTQP_tmatrix(B,p,t); B = squeeze(B);
+d = DTQP_tmatrix(d,p,t); d = squeeze(d); d = d(:);
+R = DTQP_tmatrix(R,p,t); R = squeeze(R);
 % reshape the costates
 q = P;
-P = zeros(p.snp,p.snp);
-P(p.Ilower) = q;
+P = zeros(in.snp,in.snp);
+P(in.Ilower) = q;
 Pdiag = diag(P);
 P = P+P';
-P(p.Idiag) = Pdiag;
+P(in.Idiag) = Pdiag;
 % control
 U = -(R\(B'))*(P*X+k);
 % state equation
@@ -183,28 +183,28 @@ dX = A*X + B*U + d;
 disp(t)
 end
 % ordinary differential equation function for bvp option
-function dY = odefun(t,Y,p)
+function dY = odefun(t,Y,A,B,d,Q,R,in)
 % matrix values at current time
-p.t = t;
-A = DTQP_tmatrix(p.A,p);
-B = DTQP_tmatrix(p.B,p);
-d = DTQP_tmatrix(p.d,p);
-Q = DTQP_tmatrix(p.Q,p);
-R = DTQP_tmatrix(p.R,p);
+p = in.p;
+A = DTQP_tmatrix(A,p,t); A = squeeze(A);
+B = DTQP_tmatrix(B,p,t); B = squeeze(B);
+d = DTQP_tmatrix(d,p,t); d = squeeze(d); d = d(:);
+Q = DTQP_tmatrix(Q,p,t); Q = squeeze(Q);
+R = DTQP_tmatrix(R,p,t); R = squeeze(R);
 % extract
-X = Y(1:p.ns); % states
-P = Y(p.ns+1:p.ns+length(p.Ilower)); % costates
-k = Y(p.ns+length(p.Ilower)+1:end); % additional costates
+X = Y(1:in.ny); % states
+P = Y(in.ny+1:in.ny+length(in.Ilower)); % costates
+k = Y(in.ny+length(in.Ilower)+1:end); % additional costates
 % reshape the states and additional costates
 X = reshape(X,[],1);
 k = reshape(k,[],1);
 % reshape the costates
 q = P;
-P = zeros(p.snp,p.snp);
-P(p.Ilower) = q;
+P = zeros(in.snp,in.snp);
+P(in.Ilower) = q;
 Pdiag = diag(P);
 P = P+P';
-P(p.Idiag) = Pdiag;
+P(in.Idiag) = Pdiag;
 % co-state equation
 dP = -P*A - A'*P - Q + P*B*(R\(B'))*P;
 % additional costate equation
@@ -215,17 +215,17 @@ U = -(R\(B'))*(P*X+k);
 dX = A*X + B*U + d;
 % reshape
 dX = reshape(dX,[],1);
-dP = dP(p.Ilower);
+dP = dP(in.Ilower);
 % combine
 dY = [dX;dP;dk];
 end
 % boundary value function for bvp option
-function res = bcfun(Y0,Yf,p)
-X0 = Y0(1:p.ns); % initial state 
-Pf = Yf(p.ns+1:end); % costate and additional costate final conditions
+function res = bcfun(Y0,Yf,x0,M,in)
+X0 = Y0(1:in.ny); % initial state 
+Pf = Yf(in.ny+1:end); % costate and additional costate final conditions
 % residual equations
-res1 = X0 - p.x0;
-res2 = Pf - [p.M(p.Ilower);zeros(p.ns,1)];
+res1 = X0 - x0;
+res2 = Pf - [M(in.Ilower);zeros(in.ny,1)];
 % reshape
 res1 = reshape(res1,[],1);
 res2 = reshape(res2,[],1);
@@ -233,23 +233,23 @@ res2 = reshape(res2,[],1);
 res = [res1; res2];
 end
 % calculate the optimal control from states and costates
-function U = calcU(Y,P,K,p,T)
+function U = calcU(Y,P,K,B,R,in,T)
     % intialize
-    U = zeros(size(p.B,2),length(T));
+    U = zeros(size(B,2),length(T));
     for k = 1:length(T)
         % matrix values at current time
-        p.t = T(k);
-        B = DTQP_tmatrix(p.B,p);
-        R = DTQP_tmatrix(p.R,p);
+        p = in.p;
+        B = DTQP_tmatrix(B,p,T(k)); B = squeeze(B);
+        R = DTQP_tmatrix(R,p,T(k)); R = squeeze(R);
         % states
         YY = reshape(Y(k,:),[],1);
         % costates
         q = P(k,:);
-        PP = zeros(p.snp,p.snp);
-        PP(p.Ilower) = q;
+        PP = zeros(in.snp,in.snp);
+        PP(in.Ilower) = q;
         Pdiag = diag(PP);
         PP = PP+PP';
-        PP(p.Idiag) = Pdiag;
+        PP(in.Idiag) = Pdiag;
         % additional costates
         KK = reshape(K(k,:),[],1);
         % control equation
@@ -259,11 +259,11 @@ function U = calcU(Y,P,K,p,T)
     U = U';
 end
 % calculate quadratic integrand (vectorized)
-function I = quadIntegrand(t,T,A,B)
+function I = quadIntegrand(t,T,A,B,in)
     I = zeros(size(t));
     for k = 1:length(t)
-        p.t = t(k);
-        H = DTQP_tmatrix(B,p);
+        p = in.p;
+        H = DTQP_tmatrix(B,p,t(k)); H = squeeze(H);
         X = interp1(T,A,t(k),'pchip')';
         I(k) = X'*H*X;
     end

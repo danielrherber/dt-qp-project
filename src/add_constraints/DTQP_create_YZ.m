@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [Aeq,beq] = DTQP_create_YZ(YZ,p)
+function [Aeq,beq] = DTQP_create_YZ(YZ,in)
     % total number of constraints
     nYZ = length(YZ);
     
@@ -47,20 +47,20 @@ function [Aeq,beq] = DTQP_create_YZ(YZ,p)
         % generate the sequences
         if YZflag
             % path constraint
-            [AI,AJ,AV,b] = DTQP_path(YZ(k),p);
+            [AI,AJ,AV,b] = DTQP_path(YZ(k),in);
 
             % combine
             AeqIsav{k} = AI+N;
             AeqJsav{k} = AJ;
             AeqVsav{k} = AV;
-            beqIsav{k} = N+(1:p.nt)';
+            beqIsav{k} = N+(1:in.nt)';
             beqVsav{k} = b;
             
             % update the current number of mixed linear constraints 
-            N = N + p.nt;
+            N = N + in.nt;
         else
             % boundary constraint
-            [AJ,AV,b] = DTQP_boundary(YZ(k),p);
+            [AJ,AV,b] = DTQP_boundary(YZ(k),in);
 
             % combine
             AeqIsav{k} = (N+1)*ones(length(AV),1);
@@ -83,7 +83,7 @@ function [Aeq,beq] = DTQP_create_YZ(YZ,p)
     beqV = vertcat(beqVsav{:});
 
     % create sparse matrices
-    Aeq = sparse(AeqI,AeqJ,AeqV,N,p.nx);
+    Aeq = sparse(AeqI,AeqJ,AeqV,N,in.nx);
     beq = sparse(beqI,1,beqV,N,1);
 
 end % end function

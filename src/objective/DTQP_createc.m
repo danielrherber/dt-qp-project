@@ -8,14 +8,14 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function c =  DTQP_createc(cL,cM,p,opts)
+function c =  DTQP_createc(cL,cM,in,opts)
 
     % initialize constant term
 	c = 0;            
 
     % add constant Lagrange term using same quadrature method as QP
     if ~isempty(cL)
-        [~,~,V] = DTQP_L(cL,p,opts);
+        [~,~,V] = DTQP_L(cL,in,opts);
         c = sum(V); % calculate the integral
     end
 

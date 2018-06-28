@@ -11,7 +11,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/dt-qp-projec
 %--------------------------------------------------------------------------
-function [T,U,Y,P,F,p,opts] = DTQP_multiphase(setup,opts)
+function [T,U,Y,P,F,in,opts] = DTQP_multiphase(setup,opts)
 
     % number of phases
     nphs = length(setup);
@@ -41,26 +41,26 @@ function [T,U,Y,P,F,p,opts] = DTQP_multiphase(setup,opts)
         phsopts.dt = opts.dt(phs);
         
         % transcribe the problem for the current phase
-        [Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,~,p(phs),phsopts] = ...
+        [Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,~,in(phs),phsopts] = ...
             DTQP_create(setup(phs),phsopts);
 
         % store linear term
         if isempty(fi) % handle empty case
-            fs{phs} = sparse([],[],[],p(phs).nx,1);
+            fs{phs} = sparse([],[],[],in(phs).nx,1);
         else
             fs{phs} = fi;
         end
         
         % store lower bounds
         if isempty(lbi) % handle empty case
-            lbs{phs} = -inf(p(phs).nx,1);
+            lbs{phs} = -inf(in(phs).nx,1);
         else
             lbs{phs} = lbi;
         end
 
         % store upper bounds
         if isempty(ubi) % handle empty case
-            ubs{phs} = inf(p(phs).nx,1);
+            ubs{phs} = inf(in(phs).nx,1);
         else
             ubs{phs} = ubi;
         end
@@ -88,7 +88,7 @@ function [T,U,Y,P,F,p,opts] = DTQP_multiphase(setup,opts)
         end
         
         % transcribe the inequality linkage constraints for the current phase
-        [LALi,Lbi,LARi,~] = DTQP_linkage(left,right,p(phs));
+        [LALi,Lbi,LARi,~] = DTQP_linkage(left,right,in(phs));
         
         % store
         LALs{phs} = LALi;
@@ -109,7 +109,7 @@ function [T,U,Y,P,F,p,opts] = DTQP_multiphase(setup,opts)
         end
         
         % transcribe the equality linkage constraints for the current phase
-        [LAeqLi,Lbeqi,LAeqRi,~] = DTQP_linkage(left,right,p(phs));
+        [LAeqLi,Lbeqi,LAeqRi,~] = DTQP_linkage(left,right,in(phs));
         
         % store
         LAeqLs{phs} = LAeqLi;
@@ -145,12 +145,12 @@ function [T,U,Y,P,F,p,opts] = DTQP_multiphase(setup,opts)
 
     % end the timer
     if (displevel > 0) % minimal
-        phsopts.QPcreatetime = toc;
+        in(end).QPcreatetime = toc;
     end
 
     % display to the command window
     if (displevel > 1) % verbose
-        disp(['QP creation time: ', num2str(phsopts.QPcreatetime), ' s'])
+        disp(['QP creation time: ', num2str(in(end).QPcreatetime), ' s'])
     end
 
     % previous displevel
@@ -163,7 +163,7 @@ function [T,U,Y,P,F,p,opts] = DTQP_multiphase(setup,opts)
     % TASK: solve the QP
     %----------------------------------------------------------------------
     % solve the optimization problem
-    [X,F,opts] = DTQP_solver(H,f,A,b,Aeq,beq,lb,ub,opts);
+    [X,F,in,opts] = DTQP_solver(H,f,A,b,Aeq,beq,lb,ub,in,opts);
     %----------------------------------------------------------------------
     % END TASK: solve the QP
     %----------------------------------------------------------------------
@@ -178,13 +178,13 @@ function [T,U,Y,P,F,p,opts] = DTQP_multiphase(setup,opts)
     nx = 0;
     T = []; U = []; Y = []; P = [];
     for phs = 1:length(setup)
-        pI = p(phs);
-        T = [T; p(phs).t];
-        U = [U; reshape(X(nx+(1:pI.nu*pI.nt)),pI.nt,pI.nu)]; % controls
-        Y = [Y; reshape(X(nx+(pI.nu*pI.nt+1:(pI.nu+pI.ns)*pI.nt)),pI.nt,pI.ns)]; % states
-        P = [P; reshape(X(nx+((pI.nu+pI.ns)*pI.nt+1:(pI.nu+pI.ns)*pI.nt+pI.np)),pI.np,1)]; % parameters
+        inphs = in(phs);
+        T = [T; in(phs).t];
+        U = [U; reshape(X(nx+(1:inphs.nu*inphs.nt)),inphs.nt,inphs.nu)]; % controls
+        Y = [Y; reshape(X(nx+(inphs.nu*inphs.nt+1:(inphs.nu+inphs.ny)*inphs.nt)),inphs.nt,inphs.ny)]; % states
+        P = [P; reshape(X(nx+((inphs.nu+inphs.ny)*inphs.nt+1:(inphs.nu+inphs.ny)*inphs.nt+inphs.np)),inphs.np,1)]; % parameters
         % increment phase optimization variable number starting point
-        nx = nx + pI.nx;
+        nx = nx + inphs.nx;
     end
 
     % get unique time values (assumes continuity constraints are satisfied)

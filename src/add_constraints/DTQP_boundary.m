@@ -8,9 +8,12 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [J,V,b] = DTQP_boundary(yz,p)
+function [J,V,b] = DTQP_boundary(yz,in)
+    % extract some of the variables
+    nt = in.nt; nu = in.nu; ny = in.ny; ini = in.i;
+
     % initialize storage arrays
-    Jsav = {}; Vsav = {};
+    Jsav = cell(0,1); Vsav = cell(0,1);
 
     % go through each substructure
     for j = 1:length(yz.linear) % loop through the extended variables
@@ -23,20 +26,20 @@ function [J,V,b] = DTQP_boundary(yz,p)
         end
 
         % variable locations for the variable type
-        C = p.i{yz.linear(j).right};
+        C = ini{yz.linear(j).right};
 
         % go through each variable of the current type
         for i = 1:length(C)
 
             % column location
-            Js = DTQP_getQPIndex(C(i),yz.linear(j).right,0,p);
+            Js = DTQP_getQPIndex(C(i),yz.linear(j).right,0,nt,nu,ny);
 
             % single value assigned
             Vs = reshape(yzt(i,1),1,[]);
 
             % remove zeros
             ZeroIndex = find(~Vs);
-            Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
+            Js(ZeroIndex,:) = []; Vs(ZeroIndex,:) = [];
 
             % combine 
             Jsav{end+1} = Js; Vsav{end+1} = Vs;  

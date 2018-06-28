@@ -8,34 +8,35 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function D = LQRstandard_solution(A,B,R,Q,M,p,opts)
+function D = LQRstandard_solution(in,opts)
 
 % sqrt of the number of costates
-p.snp = p.ns;
+in.snp = in.ny;
 
 % copy the matrices
-p.A = full(A); p.B = full(B); p.iR = inv(R); p.Q = full(Q); p.M = full(M);
+p = in.p; A = full(p.A); B = full(p.B); iR = full(inv(p.R)); R = full(p.R);
+Q = full(p.Q); M = full(p.M); x0 = full(p.x0);
 
 % find indices of diagonal and lower triangular entries
-p.NS = sum(sum(tril(ones(p.snp,p.snp))));
-p.Ilower = find(tril(ones(p.snp,p.snp)));
-p.Idiag = find(eye(p.snp,p.snp));
+in.NS = sum(sum(tril(ones(in.snp,in.snp))));
+in.Ilower = find(tril(ones(in.snp,in.snp)));
+in.Idiag = find(eye(in.snp,in.snp));
 
 %--------------------------------------------------------------------------
 % START: ode solution
 %--------------------------------------------------------------------------
-% copy p to output structure
-pode = p;
+% copy in to output structure
+pode = in;
 
 % ode options
 options = odeset('RelTol',opts.tolode,'AbsTol',opts.tolode*1e-3,'InitialStep',1e-6);
 
 % initial costates
 P0 = reshape(full(M),[],1);
-P0 = P0(p.Ilower);
+P0 = P0(in.Ilower);
 
 % backward integration for the costates
-[tode,Pode] = ode15s(@(x,y) odefun_dP(x,y,p),[p.t(end) p.t(1)],P0,options);
+[tode,Pode] = ode15s(@(x,y) odefun_dP(x,y,A,B,iR,Q,in),[in.t(end) in.t(1)],P0,options);
 
 % flip the solution to be forward in time
 tode = flipud(tode);
@@ -45,10 +46,10 @@ Pode = flipud(Pode);
 pode.t = tode;
 
 % forward integration for the states
-[~,Yode] = ode15s(@(x,y) odefun_dX(x,y,pode,Pode),pode.t,p.x0,options);
+[~,Yode] = ode15s(@(x,y) odefun_dX(x,y,A,B,iR,pode,Pode),pode.t,x0,options);
 
 % calculate the optimal control
-Uode = calcU(Yode,Pode,p,tode);
+Uode = calcU(Yode,Pode,B,iR,in,tode);
 
 %--------------------------------------------------------------------------
 % END: ode solution
@@ -60,7 +61,7 @@ if strcmp(opts.solmethod,'bvp')
     % START: bvp solution
     %----------------------------------------------------------------------
     % ordered nodes of the initial mesh
-    T = p.t;
+    T = in.t;
 
     % initial guess for the solution as intepolation of previous solutions
     yinit = @(t) [interp1(tode,Yode,t,'pchip'),interp1(tode,Pode,t,'pchip')];
@@ -73,19 +74,20 @@ if strcmp(opts.solmethod,'bvp')
         'NMax',10000,'Stats','on');
     
     % solve the bvp
-    sol = bvp4c(@(x,y) odefun(x,y,p),@(ya,yb) bcfun(ya,yb,p),solinit,options);
+    sol = bvp4c(@(x,y) odefun(x,y,A,B,Q,iR,in),@(ya,yb) bcfun(ya,yb,x0,M,in),...
+            solinit,options);
     
     % time mesh
     D.T = sol.x';
     
     % states
-    D.Y = sol.y(1:p.ns,:)';
+    D.Y = sol.y(1:in.ny,:)';
     
     % costates
-    Psol = sol.y(p.ns+1:end,:)';
+    Psol = sol.y(in.ny+1:end,:)';
     
     % calculate the optimal control
-    D.U = calcU(D.Y,Psol,p,D.T);
+    D.U = calcU(D.Y,Psol,B,iR,in,D.T);
     %----------------------------------------------------------------------
     % END: bvp solution
     %----------------------------------------------------------------------
@@ -119,48 +121,46 @@ D.F = FM + FL; % combine
 
 end
 % costate ordinary differential equation function
-function dP = odefun_dP(~,P,p)
+function dP = odefun_dP(~,P,A,B,iR,Q,in)
 % reshape the costates
 q = P;
-P = zeros(p.snp,p.snp);
-P(p.Ilower) = q;
+P = zeros(in.snp,in.snp);
+P(in.Ilower) = q;
 Pdiag = diag(P);
 P = P+P';
-P(p.Idiag) = Pdiag;
+P(in.Idiag) = Pdiag;
 % co-state equation
-dP = -P*p.A - p.A'*P - p.Q + P*p.B*p.iR*p.B'*P;
+dP = -P*A - A'*P - Q + P*B*iR*B'*P;
 % reshape
-dP = dP(p.Ilower);
+dP = dP(in.Ilower);
 end
 % state ordinary differential equation function for ode option
-function dX = odefun_dX(x,X,p,P)
-P = interp1(p.t,P,x,'pchip'); % costates
+function dX = odefun_dX(x,X,A,B,iR,in,P)
+P = interp1(in.t,P,x,'pchip'); % costates
 % reshape the costates
 q = P;
-P = zeros(p.snp,p.snp);
-P(p.Ilower) = q;
+P = zeros(in.snp,in.snp);
+P(in.Ilower) = q;
 Pdiag = diag(P);
 P = P+P';
-P(p.Idiag) = Pdiag;
+P(in.Idiag) = Pdiag;
 % state equation
-dX = (p.A - p.B*p.iR*p.B'*P)*X;
+dX = (A - B*iR*B'*P)*X;
 end
 % ordinary differential equation function for bvp option
-function dY = odefun(~,Y,p)
-% get matrices
-A = p.A; B = p.B; Q = p.Q; iR = p.iR;
+function dY = odefun(~,Y,A,B,Q,iR,in)
 % extract
-X = Y(1:p.ns); % states
-P = Y(p.ns+1:end); % costates
+X = Y(1:in.ny); % states
+P = Y(in.ny+1:end); % costates
 % reshape the states
 X = reshape(X,[],1);
 % reshape the costates
 q = P;
-P = zeros(p.snp,p.snp);
-P(p.Ilower) = q;
+P = zeros(in.snp,in.snp);
+P(in.Ilower) = q;
 Pdiag = diag(P);
 P = P+P';
-P(p.Idiag) = Pdiag;
+P(in.Idiag) = Pdiag;
 % co-state equation
 dP = -(P*A + A'*P + Q - P*B*iR*B'*P);
 % control equation
@@ -169,20 +169,20 @@ U = -iR*B'*P*X;
 dX = A*X + B*U;
 % reshape
 dX = reshape(dX,[],1);
-dP = dP(p.Ilower);
+dP = dP(in.Ilower);
 % combine
 dY = [dX;dP];
 end
 % boundary value function for bvp option
-function res = bcfun(Y0,Yf,p)
-X0 = Y0(1:p.ns); % initial state 
-Pf = Yf(p.ns+1:end); % costate final conditions
+function res = bcfun(Y0,Yf,x0,M,in)
+X0 = Y0(1:in.ny); % initial state 
+Pf = Yf(in.ny+1:end); % costate final conditions
 % reshape
 X0 = reshape(X0,[],1);
-% Pf = reshape(Pf,p.snp,p.snp);
+% Pf = reshape(Pf,in.snp,in.snp);
 % residual equations
-res1 = X0 - p.x0;
-res2 = Pf - p.M(p.Ilower);
+res1 = X0 - x0;
+res2 = Pf - M(in.Ilower);
 % reshape
 res1 = reshape(res1,[],1);
 res2 = reshape(res2,[],1);
@@ -190,21 +190,21 @@ res2 = reshape(res2,[],1);
 res = [res1; res2];
 end
 % calculate the optimal control from states and costates
-function U = calcU(Y,P,p,T)
+function U = calcU(Y,P,B,iR,in,T)
     % intialize
-    U = zeros(size(p.B,2),length(T));
+    U = zeros(size(B,2),length(T));
     for k = 1:length(T)
         % states
         YY = reshape(Y(k,:),[],1);
         % costates
         q = P(k,:);
-        PP = zeros(p.snp,p.snp);
-        PP(p.Ilower) = q;
+        PP = zeros(in.snp,in.snp);
+        PP(in.Ilower) = q;
         Pdiag = diag(PP);
         PP = PP+PP';
-        PP(p.Idiag) = Pdiag;
+        PP(in.Idiag) = Pdiag;
         % control equation
-        U(:,k) = -p.iR*p.B'*PP*YY;
+        U(:,k) = -iR*B'*PP*YY;
     end
     % transpose
     U = U';

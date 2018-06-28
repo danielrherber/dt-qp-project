@@ -8,13 +8,16 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [I,V] = DTQP_bnds(bnd,p)
+function [I,V] = DTQP_bnds(bnd,in)
+
+    % extract some of the variables
+    nt = in.nt; nu = in.nu; ny = in.ny;
 
     % find time dependent matrix (column vector)
-    Bndt = DTQP_tmatrix(bnd.matrix,p);
+    Bndt = DTQP_tmatrix(bnd.matrix,in.p,in.t);
 
     % variable locations for the variable type
-    C = p.i{bnd.right};
+    C = in.i{bnd.right};
 
     % initialize storage arrays
     Isav = cell(length(C),1); Vsav = Isav;
@@ -27,7 +30,7 @@ function [I,V] = DTQP_bnds(bnd,p)
             % control or states
             case {1,2} 
                 % rows in lb/ub
-                Isav{k} = DTQP_getQPIndex(C(k),bnd.right,1,p);
+                Isav{k} = DTQP_getQPIndex(C(k),bnd.right,1,nt,nu,ny);
 
                 % nt values assigned
                 if length(size(Bndt))==3
@@ -42,7 +45,7 @@ function [I,V] = DTQP_bnds(bnd,p)
             % parameters, initial states, or final states
             case {3,4,5,6,7}
                 % row in lb/ub
-                Isav{k} = DTQP_getQPIndex(C(k),bnd.right,0,p);
+                Isav{k} = DTQP_getQPIndex(C(k),bnd.right,0,nt,nu,ny);
 
                 % single value assigned
                 if length(size(Bndt))==3

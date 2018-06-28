@@ -17,12 +17,12 @@ function varargout = BrysonHo109(varargin)
 
 %% tunable parameters
 p.x0 = 1; p.a = 2; % 1
-p.tf = 1; % time horizon
+tf = 1; % time horizon
 p.g = @(t) t.*cos(20*pi*t) - 1/4;
 
 %% setup
 % time horizon
-p.t0 = 0; 
+t0 = 0; 
 
 % system dynamics
 A = 0; B{1,1} = p.g;
@@ -41,19 +41,19 @@ LB(2).right = 1; LB(2).matrix = -1;
 
 % combine structures
 setup.A = A; setup.B = B; setup.L = L; setup.M = M;
-setup.UB = UB; setup.LB = LB; setup.p = p;
+setup.UB = UB; setup.LB = LB; setup.t0 = t0; setup.tf = tf; setup.p = p;
 
 %% solve
-[T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
+[T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = BrysonHo109_output(T,U,Y,P,F,p,opts);
+[O,sol] = BrysonHo109_output(T,U,Y,P,F,in,setup,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-BrysonHo109_plot(T,U,Y,P,F,p,opts,sol)
+BrysonHo109_plot(T,U,Y,P,F,in,opts,sol)
 
 end
 % User options function for BrysonHo109 example

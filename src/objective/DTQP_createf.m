@@ -8,20 +8,20 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function f = DTQP_createf(l,m,p,opts)
+function f = DTQP_createf(l,m,in,opts)
 
     % initialize
 	fJ = []; fV = [];
 
     % Lagrange terms
     if ~isempty(l)
-        [~,J,V] = DTQP_L(l,p,opts);
+        [~,J,V] = DTQP_L(l,in,opts);
         fJ = [fJ;J]; fV = [fV;V];
     end
 
     % Mayer terms
     if ~isempty(m)
-        [~,J,V] = DTQP_M(m,p,opts);
+        [~,J,V] = DTQP_M(m,in,opts);
         fJ = [fJ;J]; fV = [fV;V];
     end
 
@@ -30,7 +30,7 @@ function f = DTQP_createf(l,m,p,opts)
         f = []; % no Hessian
     else
         % sparse matrix for gradient
-        f = sparse(fJ,1,fV,p.nx,1);
+        f = sparse(fJ,1,fV,in.nx,1);
     end
 
 end

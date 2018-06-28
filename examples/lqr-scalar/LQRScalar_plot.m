@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function LQRScalar_plot(T,U,Y,P,F,p,opts,sol)
+function LQRScalar_plot(T,U,Y,P,F,in,opts,sol)
 
 if opts.general.plotflag
 

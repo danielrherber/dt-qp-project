@@ -8,11 +8,11 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,p,opts)
+function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,in,opts)
 
-    % extract some of the variables in p
-    nt = p.nt; nu = p.nu; ny = p.ns; np = p.np;
-    nd = p.nd; h = p.h; nx = p.nx;
+    % extract some of the variables in p   
+    nu = in.nu; ny = in.ny; np = in.np; nd = in.nd; nx = in.nx;
+    nt = in.nt; h = in.h; 
 
     % matrix form of I in the formulas
     K = kron(eye(ny),ones(nt-1,1));
@@ -38,9 +38,9 @@ function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,p,opts)
     else
        error('A matrix cannot be time varying with ZOH defect method') 
     end   
-    Bt = DTQP_convolution(A,B,p,opts);
-    Gt = DTQP_convolution(A,G,p,opts);
-    dt = DTQP_convolution(A,d,p,opts);
+    Bt = DTQP_convolution(A,B,in,opts);
+    Gt = DTQP_convolution(A,G,in,opts);
+    dt = DTQP_convolution(A,d,in,opts);
 
     Jy = DTQP_indexcolumns(nt,ny,nu); % optimization variable (column) locations
     Jys = [Jy;Jy+1]; % combine to create paired optimization variable locations

@@ -15,7 +15,7 @@ function varargout = LQRScalar(varargin)
 [p,opts] = DTQP_standardizedinputs(@LQRScalar_opts,varargin);
 
 %% tunable parameters
-p.t0 = 0; p.tf = 1; % time horizon
+t0 = 0; tf = 1; % time horizon
 p.x0 = 10; % initial state
 p.a = -1;
 p.b = 1;
@@ -49,19 +49,19 @@ UB(1).matrix = p.x0;
 
 % combine
 setup.A = A; setup.B = B; setup.L = L; setup.M = M; 
-setup.LB = LB; setup.UB = UB; setup.p = p;
+setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.p = p;
 
 %% solve
-[T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
+[T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = LQRScalar_output(T,U,Y,P,F,p,opts);
+[O,sol] = LQRScalar_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-LQRScalar_plot(T,U,Y,P,F,p,opts,sol)
+LQRScalar_plot(T,U,Y,P,F,in,opts,sol)
 
 end
 % User options function for LQRScalar example

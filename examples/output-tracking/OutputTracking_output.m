@@ -8,17 +8,13 @@
 % Illinois at Urbana-Champaign
 % Project link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [O,sol] = OutputTracking_output(T,U,Y,P,F,p,setup,opts)
+function [O,sol] = OutputTracking_output(T,U,Y,P,F,in,setup,opts)
 
 % initialize
 sol = [];
 
-% combine
-prob.setup = setup; prob.opts = opts;
-prob.opts = rmfield(prob.opts,'QPcreatetime'); prob.opts = rmfield(prob.opts,'QPsolvetime');
-
 % hash the input file to determine if the solution is available
-filehash = DataHash(prob);
+filehash = DataHash(setup);
 
 % hashed file name
 filename = [opts.general.mname,'_solution_',filehash,'.mat'];
@@ -41,7 +37,7 @@ else % construct the solution for later use
     opts.tolode = 1e-8;
     opts.tolbvp = 1e-8;
 
-    D = OutputTracking_solution(p,opts);
+    D = OutputTracking_solution(in,opts);
 
     % save the solution
     save(fullname,'D');
@@ -56,7 +52,7 @@ sol(1).F = D.F;
 
 % solution on high resolution T
 if opts.general.plotflag
-    sol(2).T = linspace(p.t0,p.tf,1e4)';
+    sol(2).T = linspace(in.t0,in.tf,1e4)';
     sol(2).U = interp1(D.T,D.U,sol(2).T,'PCHIP');
     sol(2).Y = interp1(D.T,D.Y,sol(2).T,'PCHIP');
     sol(2).F = D.F;
@@ -74,8 +70,8 @@ O(2).value = max(errorU(:));
 O(2).label = 'Umax';
 O(3).value = max(errorF);
 O(3).label = 'F';
-O(4).value = max(opts.QPcreatetime);
+O(4).value = max(in.QPcreatetime);
 O(4).label = 'QPcreatetime';
-O(5).value = max(opts.QPsolvetime);
+O(5).value = max(in.QPsolvetime);
 O(5).label = 'QPsolvetime';
 end

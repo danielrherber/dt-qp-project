@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function Cart_plot(T,U,Y,P,F,p,opts,sol)
+function Cart_plot(T,U,Y,P,F,in,opts,sol)
 
 if opts.general.plotflag
 

@@ -18,7 +18,7 @@ function varargout = BettsBiehnCampbell1(varargin)
 [p,opts] = DTQP_standardizedinputs(@BettsBiehnCampbell1_opts,varargin);
 
 %% setup
-p.t0 = 34/15; p.tf =4;
+t0 = 34/15; tf = 4;
 
 % system dynamics
 A = [0 1; 0 0]; 
@@ -44,19 +44,19 @@ LB(2).matrix = {@(t) 15 - (t-4).^4;-Inf};
 
 % combine
 setup.A = A; setup.B = B; setup.L = L; 
-setup.LB = LB; setup.UB = UB; setup.p = p;
+setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.p = p;
 
 %% solve
-[T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
+[T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = BettsBiehnCampbell1_output(T,U,Y,P,F,p,opts);
+[O,sol] = BettsBiehnCampbell1_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-BettsBiehnCampbell1_plot(T,U,Y,P,F,p,opts,sol)
+BettsBiehnCampbell1_plot(T,U,Y,P,F,in,opts,sol)
 
 end
 % User options function for BettsBiehnCampbell1 example

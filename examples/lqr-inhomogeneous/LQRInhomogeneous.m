@@ -18,8 +18,8 @@ function varargout = LQRInhomogeneous(varargin)
 %% tunable parameters
 p.ns = 20; % number of states
 p.nu = 10; % number of controls
-p.t0 = 0; % time horizon
-p.tf = 10; % time horizon
+t0 = 0; % time horizon
+tf = 10; % time horizon
 p.x0 = linspace(-5,5,p.ns)'; % initial states
 rng(393872382,'twister') % specific random seed
 p.A = sprand(p.ns,p.ns,0.5,1);
@@ -55,19 +55,19 @@ LB(1).right = 4; LB(1).matrix = p.x0;
 
 % combine structures
 setup.A = p.A; setup.B = p.B; setup.d = p.d; setup.L = L; setup.M = M;
-setup.UB = UB; setup.LB = LB; setup.p = p;
+setup.UB = UB; setup.LB = LB; setup.t0 = t0; setup.tf = tf; setup.p = p;
 
 %% solve
-[T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
+[T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = LQRInhomogeneous_output(T,U,Y,P,F,p,opts);
+[O,sol] = LQRInhomogeneous_output(T,U,Y,P,F,in,opts,setup);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-LQRInhomogeneous_plot(T,U,Y,P,F,p,opts,sol)
+LQRInhomogeneous_plot(T,U,Y,P,F,in,opts,sol)
 
 end
 % User options function for LQRInhomogeneous example
