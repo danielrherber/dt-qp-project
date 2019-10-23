@@ -1,0 +1,23 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{u(t)} \quad & -\xi_1(t_f) \\
+\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix} 0 & 1 \\ -k/m & 0 \end{bmatrix} \bm{\xi} +  \begin{bmatrix} 0 \\ 1/m \end{bmatrix} u \\
+& \xi_1(0) = x_0 \\
+& \xi_2(0) = v_0 \\
+& |u(t)| \leq u_{\max}
+\end{align*}
+}}
+\end{document}
+
+% solution

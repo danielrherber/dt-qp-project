@@ -1,11 +1,12 @@
 ## README (dt-qp-project)
 
 [![GitHub release](https://img.shields.io/github/release/danielrherber/dt-qp-project.svg)](https://github.com/danielrherber/dt-qp-project/releases/latest)
+[![license](https://img.shields.io/github/license/danielrherber/dt-qp-project.svg)](https://github.com/danielrherber/dt-qp-project/blob/master/License)
+
 [![](https://img.shields.io/badge/language-matlab-EF963C.svg)](https://www.mathworks.com/products/matlab.html)
 [![](https://img.shields.io/github/issues-raw/danielrherber/dt-qp-project.svg)](https://github.com/danielrherber/dt-qp-project/issues)
 [![GitHub contributors](https://img.shields.io/github/contributors/danielrherber/dt-qp-project.svg)](https://github.com/danielrherber/dt-qp-project/graphs/contributors)
-
-[![license](https://img.shields.io/github/license/danielrherber/dt-qp-project.svg)](https://github.com/danielrherber/dt-qp-project/blob/master/License)
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/dt-qp-project/community)
 
 This project solves linear-quadratic dynamic optimization (LQDO) problems using direct transcription (DT) and quadratic programming (QP)
 
@@ -45,7 +46,7 @@ See [INSTALL_DTQP.m](INSTALL_DTQP.m) for more information.
 #### Contributors
 - [Daniel R. Herber](https://github.com/danielrherber) (primary)
 - [Yong Hoon Lee](https://github.com/yonghoonlee)
-- James T. Allison
+- [James T. Allison](https://github.com/jamestallison)
 
 #### Project Links
 - [https://github.com/danielrherber/dt-qp-project](https://github.com/danielrherber/dt-qp-project)

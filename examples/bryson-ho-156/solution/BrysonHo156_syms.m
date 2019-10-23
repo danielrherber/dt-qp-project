@@ -37,5 +37,5 @@ path = msavename(mfilename('fullpath'),'');
 prob = 'BrysonHo156';
 
 aU = matlabFunction(u,'file',[path,prob,'_U']);
-aX = matlabFunction([x,v],'file',[path,prob,'_Y']);
-aPSI = matlabFunction(I,'file',[path,prob,'_F']);
+aY = matlabFunction([x,v],'file',[path,prob,'_Y']);
+aF = matlabFunction(I,'file',[path,prob,'_F']);

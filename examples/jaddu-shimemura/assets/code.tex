@@ -1,0 +1,28 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{u(t)} \quad & \int_{0}^{1}\left[ \xi_1^2 + \xi_2^1 + 0.005u^2 \right] dt \\
+\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}0 & 1 \\ 0& -1 \end{bmatrix} \bm{\xi} +\begin{bmatrix} 0 \\ 1 \end{bmatrix} u \\
+& \xi_1(0) = 0 \\
+& \xi_2(0) = -1 \\
+& \begin{cases} 
+ & \text{Example 0} \\
+\xi_2 - 8(t-0.5)^2 + 0.5 \leq 0 & \text{Example 1} \\
+\xi_1 - 8(t-0.5)^2 + 0.5 \leq 0 & \text{Example 2} \\
+\xi_1(0.5) = 0.5 & \text{Example 3}
+\end{cases}
+\end{align*}
+}}
+\end{document}
+
+% solution

@@ -21,7 +21,9 @@ function c =  DTQP_createc(cL,cM,in,opts)
 
     % add constant Mayer term
     if ~isempty(cM)
-        c = c + cM;
+        for idx = 1:length(cM)
+            c = c + cM(idx).matrix;
+        end
     end
 
 end

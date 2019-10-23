@@ -14,29 +14,39 @@
 % Illinois at Urbana-Champaign
 % Additional contributors: Yong Hoon Lee (yonghoonlee)
 %--------------------------------------------------------------------------
-function INSTALL_DTQP
+function INSTALL_DTQP(varargin)
+
+    % intialize
+    silentflag = 0; % don't be silent
+    
+    % parse inputs
+    if ~isempty(varargin)
+        if any(strcmpi(varargin,'silent'))
+            silentflag = 1; % be silent
+        end
+    end
 
     % add contents to path
-    AddSubmissionContents(mfilename)
+    RunSilent('AddSubmissionContents(mfilename)',silentflag)
     
     % download required web files
-    RequiredWebFiles
+    RunSilent('RequiredWebFiles',silentflag)
 
     % download required web zips
-    RequiredWebZips
+    RunSilent('RequiredWebZips',silentflag)
     
     % add contents to path (files have been downloaded)
-    AddSubmissionContents(mfilename)
+    RunSilent('AddSubmissionContents(mfilename)',silentflag)
     
     % open an example
-    OpenThisFile('BrysonHo166')
+    if ~silentflag, OpenThisFile('BrysonHo166'); end
     
     % close this file
-    CloseThisFile(mfilename) % this will close this file
+    RunSilent('CloseThisFile(mfilename)',silentflag) % this will close this file
 
 end
 %--------------------------------------------------------------------------
-function RequiredWebFiles
+function RequiredWebFiles %#ok<DEFNU>
     disp('--- Obtaining required web files')
 
     % initialize index
@@ -65,7 +75,7 @@ function RequiredWebFiles
     disp(' ')
 end
 %--------------------------------------------------------------------------
-function RequiredWebZips
+function RequiredWebZips %#ok<DEFNU>
     disp('--- Obtaining required web zips')
 
     % initialize index
@@ -114,7 +124,7 @@ function RequiredWebZips
     disp(' ')
 end
 %--------------------------------------------------------------------------
-function AddSubmissionContents(name)
+function AddSubmissionContents(name) %#ok<DEFNU>
 	disp('--- Adding submission contents to path')
 	disp(' ')
 
@@ -134,7 +144,7 @@ function AddSubmissionContents(name)
     warning('on','MATLAB:dispatcher:nameConflict')
 end
 %--------------------------------------------------------------------------
-function CloseThisFile(name)
+function CloseThisFile(name) %#ok<DEFNU>
     disp(['--- Closing ', name])
     disp(' ')
 
@@ -288,4 +298,12 @@ function DownloadWebZips(zips,outputdir)
     
     % change back to the original directory
     cd(olddir)
+end
+%--------------------------------------------------------------------------
+function RunSilent(str,silentflag)
+    if silentflag
+        O = evalc(str); %#ok<NASGU>
+    else
+        eval(str);
+    end
 end
