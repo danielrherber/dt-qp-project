@@ -5,15 +5,19 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary contributor: Daniel R. Herber (danielrherber), University of 
-% Illinois at Urbana-Champaign
-% Project link: https://github.com/danielrherber/dt-qp-project
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = AndersonMoore64(varargin)
-
-% set p and opts (see AndersonMoore64_opts)
 % input arguments can be provided in the format 'AndersonMoore64(p,opts)'
-[p,opts] = DTQP_standardizedinputs(@AndersonMoore64_opts,varargin);
+
+% set local functions
+ex_opts = @AndersonMoore64_opts; % options function
+ex_output = @AndersonMoore64_output; % output function
+ex_plot = @AndersonMoore64_plot; % plot function
+
+% set p and opts (see local_opts)
+[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 t0 = 0; tf = 10; % time horizon
@@ -46,13 +50,13 @@ setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.p = p;
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = AndersonMoore64_output(T,U,Y,P,F,in,opts);
+[O,sol] = ex_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-AndersonMoore64_plot(T,U,Y,P,F,in,opts,sol)
+ex_plot(T,U,Y,P,F,in,opts,sol)
 
 end
 % User options function for AndersonMoore64 example
@@ -77,4 +81,5 @@ case 3
     opts.dt.mesh = 'ED';
     opts.dt.nt = 100;
 end
+
 end

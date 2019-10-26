@@ -4,9 +4,8 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary contributor: Daniel R. Herber (danielrherber), University of 
-% Illinois at Urbana-Champaign
-% Project link: https://github.com/danielrherber/dt-qp-project
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function [Aeq,beq] = DTQP_defects_RK4(A,B,G,d,in,opts)
 

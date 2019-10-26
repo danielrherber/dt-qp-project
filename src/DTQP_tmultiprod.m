@@ -41,9 +41,8 @@
 % A1*A2*A3 = [ sin(t)*(exp(-t) + 1), sin(t)]
 %            [          exp(-t) + 1,      1]
 %--------------------------------------------------------------------------
-% Primary contributor: Daniel R. Herber (danielrherber), University of 
-% Illinois at Urbana-Champaign
-% Project link: https://github.com/danielrherber/dt-qp-project
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function A = DTQP_tmultiprod(matrices,p,varargin)
 

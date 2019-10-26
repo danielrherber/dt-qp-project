@@ -36,9 +36,8 @@
 %     2.5244
 %     2.7279
 %--------------------------------------------------------------------------
-% Primary contributor: Daniel R. Herber (danielrherber), University of 
-% Illinois at Urbana-Champaign
-% Project link: https://github.com/danielrherber/dt-qp-project
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function At = DTQP_tmatrix(A,p,varargin)
 

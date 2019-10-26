@@ -5,9 +5,8 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary contributor: Daniel R. Herber (danielrherber), University of 
-% Illinois at Urbana-Champaign
-% Project link: https://github.com/danielrherber/dt-qp-project
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function [T,U,Y,P,F,in,opts] = DTQP_meshr_richardson_doubling(setup,opts,solvefun)
 

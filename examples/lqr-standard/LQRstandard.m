@@ -5,15 +5,19 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary contributor: Daniel R. Herber (danielrherber), University of 
-% Illinois at Urbana-Champaign
-% Project link: https://github.com/danielrherber/dt-qp-project
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = LQRstandard(varargin)
-
-% set p and opts (see LQRstandard_opts)
 % input arguments can be provided in the format 'LQRstandard(p,opts)'
-[p,opts] = DTQP_standardizedinputs(@LQRstandard_opts,varargin);
+
+% set local functions
+ex_opts = @LQRstandard_opts; % options function
+ex_output = @LQRstandard_output; % output function
+ex_plot = @LQRstandard_plot; % plot function
+
+% set p and opts (see local_opts)
+[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 p.ns = 20; % number of states
@@ -49,16 +53,16 @@ setup.UB = UB; setup.LB = LB; setup.t0 = t0; setup.tf = tf; setup.p = p;
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = LQRstandard_output(T,U,Y,P,F,in,opts,setup);
+[O,sol] = ex_output(T,U,Y,P,F,in,opts,setup);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-LQRstandard_plot(T,U,Y,P,F,in,opts,sol)
+ex_plot(T,U,Y,P,F,in,opts,sol)
 
 end
-% User options function for LQRstandard example
+% User options function for this example
 function opts = LQRstandard_opts
 % test number
 num = 1;
@@ -84,4 +88,5 @@ case 2
     opts.dt.mesh = 'ED';
     opts.dt.nt = 20;
 end
+
 end

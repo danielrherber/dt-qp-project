@@ -5,15 +5,19 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary contributor: Daniel R. Herber (danielrherber), University of 
-% Illinois at Urbana-Champaign
-% Project link: https://github.com/danielrherber/dt-qp-project
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = Cart(varargin)
-
-% set p and opts (see Cart_opts)
 % input arguments can be provided in the format 'Cart(p,opts)'
-[p,opts] = DTQP_standardizedinputs(@Cart_opts,varargin);
+
+% set local functions
+ex_opts = @Cart_opts; % options function
+ex_output = @Cart_output; % output function
+ex_plot = @Cart_plot; % plot function
+
+% set p and opts (see local_opts)
+[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 t0 = 0;
@@ -49,16 +53,16 @@ setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf;
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = Cart_output(T,U,Y,P,F,in,opts);
+[O,sol] = ex_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-Cart_plot(T,U,Y,P,F,in,opts,sol)
+ex_plot(T,U,Y,P,F,in,opts,sol)
 
 end
-% User options function for Cart example
+% User options function for this example
 function opts = Cart_opts
 % test number
 num = 1;
@@ -67,4 +71,5 @@ switch num
 case 1
     opts.dt.nt = 100; % number of nodes
 end
+
 end

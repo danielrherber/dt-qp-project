@@ -5,15 +5,19 @@
 % pp. 192-195 of J. T. Betts, Practical Methods for Optimal Control and
 % Estimation Using Nonlinear Programming. SIAM, 2010, isbn: 9780898716887.
 %--------------------------------------------------------------------------
-% Primary contributor: Daniel R. Herber (danielrherber), University of 
-% Illinois at Urbana-Champaign
-% Project link: https://github.com/danielrherber/dt-qp-project
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = HDAE(varargin)
-
-% set p and opts (see HDAE_opts)
 % input arguments can be provided in the format 'HDAE(p,opts)'
-[p,opts] = DTQP_standardizedinputs(@HDAE_opts,varargin);
+
+% set local functions
+ex_opts = @HDAE_opts; % options function
+ex_output = @HDAE_output; % output function
+ex_plot = @HDAE_plot; % plot function
+
+% set p and opts (see local_opts)
+[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 n = 20;
@@ -105,16 +109,16 @@ setup.LB = LB; setup.UB = UB; setup.tf = tf; setup.p = p;
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = HDAE_output(T,U,Y,P,F,in,opts);
+[O,sol] = ex_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-HDAE_plot(T,U,Y,P,F,in,opts,sol)
+ex_plot(T,U,Y,P,F,in,opts,sol)
 
 end
-% User options function for HDAE example
+% User options function for this example
 function opts = HDAE_opts
 % test number
 num = 1;
@@ -131,4 +135,5 @@ case 2
     opts.dt.mesh = 'LGL';
     opts.dt.nt = 100; % number of nodes
 end
+
 end

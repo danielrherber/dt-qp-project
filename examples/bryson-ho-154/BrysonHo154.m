@@ -5,15 +5,19 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary contributor: Daniel R. Herber (danielrherber), University of 
-% Illinois at Urbana-Champaign
-% Project link: https://github.com/danielrherber/dt-qp-project
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = BrysonHo154(varargin)
-
-% set p and opts (see BrysonHo154_opts)
 % input arguments can be provided in the format 'BrysonHo154(p,opts)'
-[p,opts] = DTQP_standardizedinputs(@BrysonHo154_opts,varargin);
+
+% set local functions
+ex_opts = @BrysonHo154_opts; % options function
+ex_output = @BrysonHo154_output; % output function
+ex_plot = @BrysonHo154_plot; % plot function
+
+% set p and opts (see local_opts)
+[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 t0 = 0; tf = 100; % time horizon
@@ -49,16 +53,16 @@ setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.p = p;
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = BrysonHo154_output(T,U,Y,P,F,in,opts);
+[O,sol] = ex_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-BrysonHo154_plot(T,U,Y,P,F,in,opts,sol)
+ex_plot(T,U,Y,P,F,in,opts,sol)
 
 end
-% User options function for BrysonHo154 example
+% User options function for this example
 function opts = BrysonHo154_opts
 % test number
 num = 1;
@@ -68,4 +72,5 @@ case 1
     % default parameters
     opts = [];
 end
+
 end

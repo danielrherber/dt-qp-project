@@ -3,15 +3,19 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary contributor: Daniel R. Herber (danielrherber), University of 
-% Illinois at Urbana-Champaign
-% Project link: https://github.com/danielrherber/dt-qp-project
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = DTQP2(varargin)
-
-% set p and opts (see DTQP2_opts)
 % input arguments can be provided in the format 'DTQP2(p,opts)'
-[p,opts] = DTQP_standardizedinputs(@DTQP2_opts,varargin);
+
+% set local functions
+ex_opts = @DTQP2_opts; % options function
+ex_output = @DTQP2_output; % output function
+ex_plot = @DTQP2_plot; % plot function
+
+% set p and opts (see local_opts)
+[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 tf = 15; % time horizon
@@ -53,16 +57,16 @@ setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.p = p;
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = DTQP2_output(T,U,Y,P,F,in,opts);
+[O,sol] = ex_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-DTQP2_plot(T,U,Y,P,F,in,opts,sol)
+ex_plot(T,U,Y,P,F,in,opts,sol)
 
 end
-% User options function for DTQP2 example
+% User options function for this example
 function opts = DTQP2_opts
 % test number
 num = 1;
@@ -71,4 +75,5 @@ switch num
 case 1
     opts.dt.nt = 1000; % number of time points
 end
+
 end

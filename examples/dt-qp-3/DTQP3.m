@@ -3,15 +3,19 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary contributor: Daniel R. Herber (danielrherber), University of 
-% Illinois at Urbana-Champaign
-% Project link: https://github.com/danielrherber/dt-qp-project
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = DTQP3(varargin)
-
-% set p and opts (see DTQP3_opts)
 % input arguments can be provided in the format 'DTQP3(p,opts)'
-[p,opts] = DTQP_standardizedinputs(@DTQP3_opts,varargin);
+
+% set local functions
+ex_opts = @DTQP3_opts; % options function
+ex_output = @DTQP3_output; % output function
+ex_plot = @DTQP3_plot; % plot function
+
+% set p and opts (see local_opts)
+[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 tf = 10; % time horizon
@@ -66,16 +70,16 @@ setup.t0 = t0; setup.tf = tf; setup.p = p;
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = DTQP3_output(T,U,Y,P,F,in,opts);
+[O,sol] = ex_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-DTQP3_plot(T,U,Y,P,F,in,opts,sol)
+ex_plot(T,U,Y,P,F,in,opts,sol)
 
 end
-% User options function for DTQP3 example
+% User options function for this example
 function opts = DTQP3_opts
 % test number
 num = 1;
@@ -97,4 +101,5 @@ case 3
     opts.dt.mesh = 'ED';
     opts.dt.nt = 100;
 end
+
 end

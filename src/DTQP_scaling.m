@@ -4,9 +4,8 @@
 %--------------------------------------------------------------------------
 % NOTE: constraint row scaling is currently commented
 %--------------------------------------------------------------------------
-% Primary contributor: Daniel R. Herber (danielrherber), University of 
-% Illinois at Urbana-Champaign
-% Project link: https://github.com/danielrherber/dt-qp-project
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function [H,f,A,b,Aeq,beq,lb,ub,in,s] = DTQP_scaling(H,f,A,b,Aeq,beq,lb,ub,in,s)
     

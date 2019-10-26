@@ -22,7 +22,7 @@ ex_plot = @JadduShimemura_plot; % plot function
 [p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
-p.examplenum = 1; % see below
+p.examplenum = 2; % see below
 
 %% setup
 % system dynamics
@@ -102,7 +102,6 @@ end
 
 %% plot
 ex_plot(T,U,Y,P,F,in,opts,sol)
-
 
 end
 % User options function for this example

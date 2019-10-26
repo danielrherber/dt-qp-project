@@ -5,9 +5,8 @@
 % See http://cvxr.com/cvx/
 % NOTE: initial implementation
 %--------------------------------------------------------------------------
-% Primary contributor: Daniel R. Herber (danielrherber), University of 
-% Illinois at Urbana-Champaign
-% Project link: https://github.com/danielrherber/dt-qp-project
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function [X,F,in,opts] = DTQP_solver_cvx(H,f,A,b,Aeq,beq,lb,ub,in,opts)
 % number of optimization variables

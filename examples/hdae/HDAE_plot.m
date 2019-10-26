@@ -4,8 +4,7 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function HDAE_plot(T,U,Y,P,F,in,opts,sol)
@@ -15,75 +14,50 @@ if opts.general.plotflag
 % extract parameter structure
 p = in.p;
 
-close all
-
-set(0,'DefaultTextInterpreter','latex'); % change the text interpreter
-set(0,'DefaultLegendInterpreter','latex'); % change the legend interpreter
-set(0,'DefaultAxesTickLabelInterpreter','latex'); % change the tick interpreter
-
-fontsize = 16;
+% preliminary plot options
+flag = 'preliminary'; DTQP_plotCommon %#ok<NASGU>
 
 %% state
-figure('Color',[1 1 1]);
+figure('Color',wcolor); hold on
+
+% line colors
+cArray = flipud(parula(size(Y,2)));
 
 % plot state
-cArray = flipud(parula(size(Y,2)));
 for i = 1:size(Y,2)
-    plot(T,Y(:,i),'.-','color',cArray(i,:),'markersize',12); hold on
-%     plot(sol(2).T,sol(2).Y(:,i),'linewidth',2,'color',cArray(i,:)); hold on
+    plot(T,Y(:,i),'.-','color',cArray(i,:),'markersize',12);
 end
 
 % axis
-xlabel('$t$ (s)','fontsize',fontsize)
-ylabel('$\xi$','fontsize',fontsize)
+xlabel('$t$ (s)')
+ylabel('$\xi$')
 
-% legend
-% Lv = {};
-% for i = 1:size(Y,2)
-%     Lv{end+1} = ['$\xi^{DT}_{',num2str(i),'}$'];
-% %     Lv{end+1} = ['$\xi^*_',num2str(i),'$'];
-% end
-% hL = legend(Lv{end}); % only the last entry
-% set(hL,'interpreter','latex','location','best','fontsize',fontsize-4,'box','on')
+% configure axis
+flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 
 % save
-if opts.general.saveflag
-    path = msavename(mfilename('fullpath'),'plots');
-    filename = [path,'figure-state'];
-    str = ['export_fig ''',filename,''' -png -pdf'];
-    eval(str)
-end
+figname = 'figure-state'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
+flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
 %% control
-figure('Color',[1 1 1]);
+figure('Color',wcolor); hold on
 
 % plot control
 cArray = flipud(parula(size(U,2)));
 for i = 1:size(U,2)
-    plot(T,U(:,i),'.-','color',cArray(i,:),'markersize',12); hold on
-%     plot(sol(2).T,sol(2).U(:,i),'linewidth',2,'color',cArray(i,:)); hold on
+    plot(T,U(:,i),'.-','color',cArray(i,:),'markersize',12);
 end
 
 % axis
-xlabel('$t$ (s)','fontsize',fontsize)
-ylabel('$u$','fontsize',fontsize)
+xlabel('$t$ (s)')
+ylabel('$u$')
 
-% legend
-% Lv = {};
-% for i = 1:size(U,2)
-%     Lv{end+1} = ['$u^{DT}_{',num2str(i),'}$'];
-% %     Lv{end+1} = ['$u^*_',num2str(i),'$'];
-% end
-% hL = legend(Lv{end}); % only the last entry
-% set(hL,'interpreter','latex','location','best','fontsize',fontsize-4,'box','on')
+% configure axis
+flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 
 % save
-if opts.general.saveflag
-    path = msavename(mfilename('fullpath'),'plots');
-    filename = [path,'figure-control'];
-    str = ['export_fig ''',filename,''' -png -pdf'];
-    eval(str)
-end
+figname = 'figure-control'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
+flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
 %% states and controls (surf)
 hf = figure('Color',[1 1 1]);

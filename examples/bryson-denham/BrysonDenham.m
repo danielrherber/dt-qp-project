@@ -5,15 +5,19 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary contributor: Daniel R. Herber (danielrherber), University of 
-% Illinois at Urbana-Champaign
-% Project link: https://github.com/danielrherber/dt-qp-project
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = BrysonDenham(varargin)
-
-% set p and opts (see BrysonDenham_opts)
 % input arguments can be provided in the format 'BrysonDenham(p,opts)'
-[p,opts] = DTQP_standardizedinputs(@BrysonDenham_opts,varargin);
+
+% set local functions
+ex_opts = @BrysonDenham_opts; % options function
+ex_output = @BrysonDenham_output; % output function
+ex_plot = @BrysonDenham_plot; % plot function
+
+% set p and opts (see local_opts)
+[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 p.ell = 1/9;
@@ -43,16 +47,16 @@ setup.t0 = t0; setup.tf = tf; setup.p = p;
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = BrysonDenham_output(T,U,Y,P,F,in,opts);
+[O,sol] = ex_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-BrysonDenham_plot(T,U,Y,P,F,in,opts,sol)
+ex_plot(T,U,Y,P,F,in,opts,sol)
 
 end
-% User options function for BrysonDenham example
+% User options function for this example
 function opts = BrysonDenham_opts
 % test number
 num = 1;
@@ -61,7 +65,7 @@ switch num
 case 1
     % default parameters
     opts.general.plotflag = 1; % create the plots
-    opts.general.saveflag = 0;
+    opts.general.saveflag = false;
     opts.general.displevel = 2;
     opts.dt.defects = 'HS';
     opts.dt.quadrature = 'CQHS';
@@ -83,4 +87,5 @@ case 3
     opts.dt.mesh = 'LGL';
     opts.dt.nt = 9; % number of nodes
 end
+
 end

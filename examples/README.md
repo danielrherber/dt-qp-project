@@ -3,7 +3,6 @@
 | Name | Link | Reference | Solution Type |
 | ---- | ---- | ---- | ---- |
 | Anderson Moore 64 | [anderson-moore-64](anderson-moore-64/) | And89 | closed-form |
-| Arbitrary Transfer | [arbitrary-transfer](arbitrary-transfer/) | |
 | Betts Biehn Campbell 1 | [betts-biehn-campbell-1](betts-biehn-campbell-1/) | Betts02 | closed-form |
 | Bryson-Denham | [bryson-denham](bryson-denham/) | Bry75 | closed-form |
 | Bryson Ho 109 | [bryson-ho-109](bryson-ho-109/) | Bry75 | simple implicit |
@@ -25,6 +24,8 @@
 | LQR Scalar | [lqr-scalar](lqr-scalar/) | | closed-form |
 | LQR Scalar Transfer | [lqr-scalar-transfer](lqr-scalar-transfer/) | | closed-form |
 | LQR Standard | [lqr-standard](lqr-standard/) | Bry75 | boundary value problem |
+| Minimum Energy Transfer | [minimum-energy-transfer](minimum-energy-transfer/) | Bry75 | matrix integral |
+| Multiphase Parameter | [multiphase-parameter](multiphase-parameter/) | | finite optimization |
 | Output Tracking | [output-tracking](output-tracking/) | Bry75 | boundary value problem |
 | Tavallaei Tousi 1 | [tavallaei-tousi-1](tavallaei-tousi-1/) | Tav08 | boundary value problem |
 | Turner Chun Juang 1 | [turner-chun-juang-1](turner-chun-juang-1/) | Turn85 | closed-form |

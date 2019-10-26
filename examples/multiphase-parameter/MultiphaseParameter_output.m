@@ -4,9 +4,8 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary contributor: Daniel R. Herber (danielrherber), University of 
-% Illinois at Urbana-Champaign
-% Project link: https://github.com/danielrherber/dt-qp-project
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function [O,sol] = MultiphaseParameter_output(T,U,Y,P,F,in,opts)
 
@@ -60,3 +59,5 @@ O(4).value = max(in(end).QPcreatetime);
 O(4).label = 'QPcreatetime';
 O(5).value = max(in(end).QPsolvetime);
 O(5).label = 'QPsolvetime';
+
+end

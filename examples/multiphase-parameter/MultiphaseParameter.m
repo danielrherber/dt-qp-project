@@ -3,15 +3,19 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary contributor: Daniel R. Herber (danielrherber), University of 
-% Illinois at Urbana-Champaign
-% Project link: https://github.com/danielrherber/dt-qp-project
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = MultiphaseParameter(varargin)
-
-% set p and opts (see MultiphaseParameter_opts)
 % input arguments can be provided in the format 'MultiphaseParameter(p,opts)'
-[p,opts] = DTQP_standardizedinputs(@MultiphaseParameter_opts,varargin);
+
+% set local functions
+ex_opts = @MultiphaseParameter_opts; % options function
+ex_output = @MultiphaseParameter_output; % output function
+ex_plot = @MultiphaseParameter_plot; % plot function
+
+% set p and opts (see local_opts)
+[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 tf1 = 5; % end of phase 1
@@ -109,16 +113,16 @@ setup(2).LY = LY;
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
 %% output
-[O,sol] = MultiphaseParameter_output(T,U,Y,P,F,in,opts);
+[O,sol] = ex_output(T,U,Y,P,F,in,opts);
 if nargout == 1
 	varargout{1} = O;
 end
 
 %% plot
-MultiphaseParameter_plot(T,U,Y,P,F,in,opts,sol)
+ex_plot(T,U,Y,P,F,in,opts,sol)
 
 end
-% User options function for MultiphaseParameter example
+% User options function for this example
 function opts = MultiphaseParameter_opts
 % test number
 num = 1;
@@ -146,4 +150,5 @@ case 3
     opts.dt.quadrature = 'CQHS';
     opts.dt.mesh = 'ED';
 end
+
 end
