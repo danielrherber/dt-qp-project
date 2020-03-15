@@ -4,7 +4,6 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% TODO: add scaling (see DTQP_singlephase)
 % TODO: add reordering (see DTQP_singlephase)
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
@@ -12,44 +11,93 @@
 %--------------------------------------------------------------------------
 function [T,U,Y,P,F,in,opts] = DTQP_multiphase(setup,opts)
 
-    % number of phases
-    nphs = length(setup);
-    
-    % initialize storage arrays and constants
-    Hs = cell(nphs,1); fs = Hs; c = 0;
-    As = Hs; bs = Hs; Aeqs = Hs; beqs = Hs; lbs = Hs; ubs = Hs;
-    LALs = Hs; LARs = Hs; Lbs = Hs;  LAeqLs = Hs; LAeqRs = Hs; Lbeqs = Hs;
+% number of phases
+nphs = length(setup);
 
-    %----------------------------------------------------------------------
-    % TASK: transcribe the problem for each phase and combine
-    %----------------------------------------------------------------------
-    % save current displevel
-    displevel = opts.general.displevel;
-    opts.general.displevel = 0;
-    
-    % potentially start the timer
-    if (displevel > 0) % minimal
-        tic % start timer
+% initialize storage arrays and constants
+Hs = cell(nphs,1); fs = Hs; c = 0; s = Hs;
+As = Hs; bs = Hs; Aeqs = Hs; beqs = Hs; lbs = Hs; ubs = Hs;
+LALs = Hs; LARs = Hs; Lbs = Hs; LAeqLs = Hs; LAeqRs = Hs; Lbeqs = Hs;
+
+% determine flags
+scaleflag = isfield(setup,"scaling");
+reorderflag = opts.qp.reorder;
+multiphaseflag = nphs > 1;
+
+%----------------------------------------------------------------------
+% TASK: transcribe the problem for each phase and combine
+%----------------------------------------------------------------------
+% save current displevel
+displevel = opts.general.displevel;
+opts.general.displevel = 0;
+
+% potentially start the timer
+if (displevel > 0) % minimal
+    tic % start timer
+end
+
+% go through each phase structure
+for phs = 1:nphs
+    % pass the options for the current phase
+    phsopts = opts;
+    phsopts.dt = opts.dt(phs);
+
+    % transcribe the problem for the current phase
+    [Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,setupi,in(phs),phsopts] = ...
+        DTQP_create(setup(phs),phsopts);
+
+    % transcribe linkage constraints (only in multiphase problems)
+    if multiphaseflag
+        % check if the linkage constraint fields are empty
+        if ~isfield(setup,'LZ')
+            setup(phs).LZ = [];
+        end
+        if ~isfield(setup,'LY')
+            setup(phs).LY = [];
+        end
+
+        % transcribe the inequality linkage constraints for the current phase
+        if phs == 1
+            [LALi,Lbi,LARi,~] = DTQP_linkage(setup(phs).LZ,[],in(phs));
+        else
+            [LALi,Lbi,LARi,~] = DTQP_linkage(setup(phs).LZ,setup(phs-1).LZ,in(phs));
+        end
+
+        % transcribe the equality linkage constraints for the current phase
+        if phs == 1
+            [LAeqLi,Lbeqi,LAeqRi,~] = DTQP_linkage(setup(phs).LY,[],in(phs));
+        else
+            [LAeqLi,Lbeqi,LAeqRi,~] = DTQP_linkage(setup(phs).LY,setup(phs-1).LY,in(phs));
+        end
     end
 
-    % go through each phase structure
-    for phs = 1:nphs
-        % pass the options for the current phase
-        phsopts = opts;
-        phsopts = rmfield(phsopts,'dt');
-        phsopts.dt = opts.dt(phs);
-        
-        % transcribe the problem for the current phase
-        [Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,~,in(phs),phsopts] = ...
-            DTQP_create(setup(phs),phsopts);
+    % (optional) simple scaling
+    if scaleflag
+        if multiphaseflag
+            [Hi,fi,ci,Ai,bi,LALi,LARi,Aeqi,beqi,LAeqLi,LAeqRi,lbi,ubi,in(phs),s{phs}] = DTQP_scaling(...
+                Hi,fi,ci,Ai,bi,LALi,LARi,Aeqi,beqi,LAeqLi,LAeqRi,lbi,ubi,in(phs),setupi.scaling);
+        else
+            [Hi,fi,ci,Ai,bi,~,~,Aeqi,beqi,~,~,lbi,ubi,in(phs),s{phs}] = DTQP_scaling(...
+                Hi,fi,ci,Ai,bi,[],[],Aeqi,beqi,[],[],lbi,ubi,in(phs),setupi.scaling);
+        end
+    end
 
+    % (optional) reordering of optimization variables
+    if ~multiphaseflag
+        if reorderflag
+            [Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi] = DTQP_reorder(in(phs),Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi);
+        end
+    end
+
+    % store problem elements
+    if multiphaseflag
         % store linear term
         if isempty(fi) % handle empty case
             fs{phs} = sparse([],[],[],in(phs).nx,1);
         else
             fs{phs} = fi;
         end
-        
+
         % store lower bounds
         if isempty(lbi) % handle empty case
             lbs{phs} = -inf(in(phs).nx,1);
@@ -64,135 +112,128 @@ function [T,U,Y,P,F,in,opts] = DTQP_multiphase(setup,opts)
             ubs{phs} = ubi;
         end
 
-        % store other terms
         Hs{phs} = Hi;
-        As{phs} = Ai;
-        bs{phs} = bi;
-        Aeqs{phs} = Aeqi;
-        beqs{phs} = beqi;
-
-        % combine constants
-        c = c + ci;
-        
-        %------------------------------------------------------------------
-        % set left/right based on current phase
-        if ~isfield(setup,'LZ')
-            setup(phs).LZ = [];
-        end
-        left = setup(phs).LZ;
-        if phs == 1
-            right = []; % empty
-        else
-            right = setup(phs-1).LZ;
-        end
-        
-        % transcribe the inequality linkage constraints for the current phase
-        [LALi,Lbi,LARi,~] = DTQP_linkage(left,right,in(phs));
-        
-        % store
-        LALs{phs} = LALi;
-        LARs{phs} = LARi;
-        Lbs{phs} = Lbi;
-        %------------------------------------------------------------------
-        
-        %------------------------------------------------------------------
-        % set left/right based on current phase
-        if ~isfield(setup,'LY')
-            setup(phs).LY = [];
-        end
-        left = setup(phs).LY;
-        if phs == 1
-            right = []; % empty
-        else
-            right = setup(phs-1).LY;
-        end
-        
-        % transcribe the equality linkage constraints for the current phase
-        [LAeqLi,Lbeqi,LAeqRi,~] = DTQP_linkage(left,right,in(phs));
-        
-        % store
-        LAeqLs{phs} = LAeqLi;
-        LAeqRs{phs} = LAeqRi;
-        Lbeqs{phs} = Lbeqi;
-        %------------------------------------------------------------------
-
+        As{phs} = Ai; bs{phs} = bi;
+        Aeqs{phs} = Aeqi; beqs{phs} = beqi;
+        LALs{phs} = LALi; LARs{phs} = LARi; Lbs{phs} = Lbi;
+        LAeqLs{phs} = LAeqLi; LAeqRs{phs} = LAeqRi; Lbeqs{phs} = Lbeqi;
+    else
+        H = Hi; f = fi;
+        A = Ai; b = bi;
+        Aeq = Aeqi; beq = beqi;
+        lb = lbi; ub = ubi;
     end
+
+    % combine constants
+    c = c + ci;
+
+end
+
+% combine problem elements (only for multiphase problems)
+if multiphaseflag
 
     % combine to create complete equality linkage constraints
     LAeqL = blkdiag(LAeqLs{:});
     LAeqL = [LAeqL,sparse([],[],[],size(LAeqL,1),size(LAeqRs{end},2))];
     LAeqR = blkdiag(LAeqRs{:});
     LAeqR = [sparse([],[],[],size(LAeqR,1),size(LAeqLs{1},2)),LAeqR];
-    LAeq = LAeqL+LAeqR;
-    
+    LAeq = LAeqL + LAeqR;
+
     % combine to create complete inequality linkage constraints
     LAL = blkdiag(LALs{:});
     LAL = [LAL,sparse([],[],[],size(LAL,1),size(LARs{end},2))];
     LAR = blkdiag(LARs{:});
     LAR = [sparse([],[],[],size(LAR,1),size(LALs{1},2)),LAR];
-    LA = LAL+LAR;
-    
-    % combine
-    H = blkdiag(Hs{:});
-    f = vertcat(fs{:});
-    A = vertcat(blkdiag(As{:}),LA);
-    b = vertcat(bs{:},Lbs{:});
-    Aeq = vertcat(blkdiag(Aeqs{:}),LAeq);
-    beq = vertcat(beqs{:},Lbeqs{:});
-    lb = vertcat(lbs{:});
-    ub = vertcat(ubs{:});
+    LA = LAL + LAR;
 
-    % end the timer
-    if (displevel > 0) % minimal
-        in(end).QPcreatetime = toc;
+    % all problem elements
+    H = blkdiag(Hs{:}); f = vertcat(fs{:});
+    A = vertcat(blkdiag(As{:}),LA); b = vertcat(bs{:},Lbs{:});
+    Aeq = vertcat(blkdiag(Aeqs{:}),LAeq); beq = vertcat(beqs{:},Lbeqs{:});
+    lb = vertcat(lbs{:}); ub = vertcat(ubs{:});
+
+end
+
+% end the timer
+if (displevel > 0) % minimal
+    ttoc = toc;
+    in(nphs).QPcreatetime = ttoc;
+end
+
+% display to the command window
+if (displevel > 1) % verbose
+    disp(strcat("QP creation time: ",string(ttoc)," s"))
+end
+
+% previous displevel
+opts.general.displevel = displevel;
+%--------------------------------------------------------------------------
+% END TASK: transcribe the problem for each phase and combine
+%--------------------------------------------------------------------------
+
+%--------------------------------------------------------------------------
+% TASK: solve the QP
+%--------------------------------------------------------------------------
+% solve the optimization problem
+[X,F,in,opts] = DTQP_solver(H,f,A,b,Aeq,beq,lb,ub,in,opts);
+%--------------------------------------------------------------------------
+% END TASK: solve the QP
+%--------------------------------------------------------------------------
+
+%--------------------------------------------------------------------------
+% TASK: obtain outputs
+%--------------------------------------------------------------------------
+% (optional) restore ordering
+if ~multiphaseflag % currently doesn't work for multiphase problems
+    if reorderflag
+        X = DTQP_reorder(in,X);
     end
+end
 
-    % display to the command window
-    if (displevel > 1) % verbose
-        disp(['QP creation time: ', num2str(in(end).QPcreatetime), ' s'])
+% (optional) unscale solution
+if scaleflag
+    s = vertcat(s{:}); % scaling vector
+    X = X.*s; % unscale optimization variables
+end
+
+% add the constant term to objective function
+F = F + c;
+
+% return optimal controls, states, and parameters
+nx = 0;
+T = cell(nphs,1); U = cell(nphs,1); Y = cell(nphs,1); P = cell(nphs,1);
+for phs = 1:nphs
+    % extract
+    inphs = in(phs);
+    nt = inphs.nt; nu = inphs.nu; ny = inphs.ny; np = inphs.np;
+
+    % extract and reshape
+    T{phs} = inphs.t;
+    U{phs} = reshape(X(nx+(1:nu*nt)),nt,nu); % controls
+    Y{phs} = reshape(X(nx+(nu*nt+1:(nu+ny)*nt)),nt,ny); % states
+    P{phs} = reshape(X(nx+((nu+ny)*nt+1:(nu+ny)*nt+np)),np,1); % parameters
+
+    % increment phase optimization variable number starting point
+    nx = nx + inphs.nx;
+end
+
+% combine
+T = vertcat(T{:}); U = vertcat(U{:}); Y = vertcat(Y{:}); P = vertcat(P{:});
+
+% check for zero-order hold method and nan final controls
+if nphs == 1
+    if strcmpi(opts.dt.defects,'ZO') || strcmpi(opts.dt.defects,'EF')
+        U(end,:) = nan;
     end
+end
 
-    % previous displevel
-    opts.general.displevel = displevel;
-    %----------------------------------------------------------------------
-    % END TASK: transcribe the problem for each phase and combine
-    %----------------------------------------------------------------------
-
-    %----------------------------------------------------------------------
-    % TASK: solve the QP
-    %----------------------------------------------------------------------
-    % solve the optimization problem
-    [X,F,in,opts] = DTQP_solver(H,f,A,b,Aeq,beq,lb,ub,in,opts);
-    %----------------------------------------------------------------------
-    % END TASK: solve the QP
-    %----------------------------------------------------------------------
-
-    %----------------------------------------------------------------------
-    % TASK: obtain outputs
-    %----------------------------------------------------------------------
-    % add the constant term to objective function
-    F = F + c;
-
-    % return optimal controls, states, and parameters
-    nx = 0;
-    T = []; U = []; Y = []; P = [];
-    for phs = 1:length(setup)
-        inphs = in(phs);
-        T = [T; in(phs).t];
-        U = [U; reshape(X(nx+(1:inphs.nu*inphs.nt)),inphs.nt,inphs.nu)]; % controls
-        Y = [Y; reshape(X(nx+(inphs.nu*inphs.nt+1:(inphs.nu+inphs.ny)*inphs.nt)),inphs.nt,inphs.ny)]; % states
-        P = [P; reshape(X(nx+((inphs.nu+inphs.ny)*inphs.nt+1:(inphs.nu+inphs.ny)*inphs.nt+inphs.np)),inphs.np,1)]; % parameters
-        % increment phase optimization variable number starting point
-        nx = nx + inphs.nx;
-    end
-
-    % get unique time values (assumes continuity constraints are satisfied)
-    % [T, IT, ~] = unique(T);
-    % 
-    % U = U(IT,:);
-    % Y = Y(IT,:);
-    %----------------------------------------------------------------------
-    % END TASK: obtain outputs
-    %----------------------------------------------------------------------
+% get unique time values (assumes continuity constraints are satisfied)
+% [T, IT, ~] = unique(T);
+%
+% U = U(IT,:);
+% Y = Y(IT,:);
+%--------------------------------------------------------------------------
+% END TASK: obtain outputs
+%--------------------------------------------------------------------------
 
 end

@@ -8,7 +8,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [T,U,Y,P,F,in,opts] = DTQP_meshr_richardson_doubling(setup,opts,solvefun)
+function [T,U,Y,P,F,in,opts] = DTQP_meshr_richardson_doubling(setup,opts)
 
 % extract options
 dt = opts.dt;
@@ -43,7 +43,7 @@ opts.general.displevel = displevel > 0;
 while (eRel > etol) && (nt < ntmax)
     % multiplicative factor
     m = t^iter; ms(end+1) = m; % store
-    
+
     % calculate the new number of time points
     nt = round(m*ntinit);
 
@@ -53,7 +53,7 @@ while (eRel > etol) && (nt < ntmax)
     % try to solve the problem with the specified mesh
     try
         % solve
-        [T,U,Y,P,F,in,opts] = solvefun(setup,opts);
+        [T,U,Y,P,F,in,opts] = DTQP_multiphase(setup,opts);
 
         % combine timers (NOTE: this currently misses timers with errors)
         if (opts.general.displevel > 0) % minimal
@@ -86,7 +86,7 @@ while (eRel > etol) && (nt < ntmax)
         R = richardson(Fs,Ks,t);
 
         % relative error using Richardson extrapolation
-        eRel = abs(1 - F/R); 
+        eRel = abs(1 - F/R);
 
         % store values
         k0s(end+1) = k0;

@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQPtest_scaling.m
+% DTQP_TEST_scaling.m
 % Testing scaling function
 %--------------------------------------------------------------------------
 %
@@ -15,11 +15,11 @@ p.ell = 1/9;
 opts.dt.nt = 10000;
 opts.general.displevel = 0;
 
-% time horizon 
+% time horizon
 setup.t0 = 0; setup.tf = 1;
 
 % system dynamics
-A = [0 1; 0 0]; 
+A = [0 1; 0 0];
 B = [0;1];
 
 % Lagrange term
@@ -71,3 +71,11 @@ setup.scaling(2).matrix = [6];
 [T3,U3,Y3,P3,F3] = DTQP_solve(setup,opts);
 toc
 disp(F3)
+
+% figures
+hf = figure; hold on; hf.Color = 'w';
+Yactual0 = BrysonDenham_Y(T0,p.ell); plot(T0,abs(Y0-Yactual0),'linewidth',2);
+Yactual1 = BrysonDenham_Y(T1,p.ell); plot(T1,abs(Y1-Yactual1),'linewidth',2);
+Yactual2 = BrysonDenham_Y(T2,p.ell); plot(T2,abs(Y2-Yactual2),'linewidth',2);
+Yactual3 = BrysonDenham_Y(T3,p.ell); plot(T3,abs(Y3-Yactual3),'linewidth',2);
+legend({'Y01','Y02','Y11','Y12','Y21','Y22','Y31','Y32'})
