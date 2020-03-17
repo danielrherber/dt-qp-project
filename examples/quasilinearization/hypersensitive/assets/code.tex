@@ -1,0 +1,22 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\max_{u(t)} \quad & \int_{0}^{t_f} \xi^2 + u^2 dt \\
+\text{subject to:} \quad & \dot{\xi} = -\xi^3 + u \\
+& \xi(0) = 1.5 \\
+& \xi(t_f) = 1 \\
+\end{align*}
+}}
+\end{document}
+
+% solution

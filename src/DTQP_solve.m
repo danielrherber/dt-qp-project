@@ -17,7 +17,18 @@ if (opts.general.displevel > 0) % minimal
     tic % start timer
 end
 
-% solve the problem potentially using mesh refinement
-[T,U,Y,P,F,in,opts] = DTQP_meshr(setup,opts);
+% initialize some stuff for quasilinearization
+[setup,opts] = DTQP_qlin_initialize(setup,opts);
+
+% check if quasilinearization is needed
+if opts.qlin.qlinflag
+    % solve the problem with quasilinearization
+    [T,U,Y,P,F,in,opts] = DTQP_qlin(setup,opts);
+
+else
+    % solve the LQDO problem (potentially) using mesh refinement
+    [T,U,Y,P,F,in,opts] = DTQP_meshr(setup,opts);
+
+end
 
 end

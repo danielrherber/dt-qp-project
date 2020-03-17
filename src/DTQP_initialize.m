@@ -33,7 +33,7 @@ h = diff(t); in.h = h; % time steps
 % setup = rmfield(setup,'tf'); % kind of slow, removing for now
 
 % calculate required interior points in time mesh
-if strcmpi(dt.quadrature,'CQHS') || any(strcmpi(dt.defects,{'HS','RK4'}))   
+if strcmpi(dt.quadrature,'CQHS') || any(strcmpi(dt.defects,{'HS','RK4'}))
     in.tm = t(1:end-1) + h/2; % midpoints
 elseif strcmpi(dt.defects,'Huen')
     in.tm = t(1:end-1) + (2/3)*h;
@@ -104,7 +104,7 @@ for k = 1:length(Ltemp)
             Rflag = 1;
         end
     end
-    
+
     % determine correct structure
     if (Lflag == 0) && (Rflag == 0) % constant term
         cL(end+1).left = 0;
@@ -114,13 +114,14 @@ for k = 1:length(Ltemp)
         l(end+1).left = 0;
         l(end).right = Ltemp(k).right;
         l(end).matrix = Ltemp(k).matrix;
-    elseif (Lflag == 1) && (Rflag == 0) % linear term (improper ordering)        
+    elseif (Lflag == 1) && (Rflag == 0) % linear term (improper ordering)
         l(end+1).right = Ltemp(k).left; % move left to right
+        l(end).left = 0;
         l(end).matrix = Ltemp(k).matrix'; % transpose
     else % quadratic term
         L(end+1) = Ltemp(k); % copy all fields
     end
-    
+
 end
 
 % assign to setup structure
@@ -172,7 +173,7 @@ for k = 1:length(Mtemp)
     else % quadratic term
         M(end+1) = Mtemp(k); % copy all fields
     end
-    
+
 end
 
 % assign to setup structure
