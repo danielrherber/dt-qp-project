@@ -179,6 +179,56 @@ end
 % assign to setup structure
 setup.M = M; setup.m = m; setup.cM = cM;
 
+%% go through scaling terms
+% add fields if not present
+if ~isfield(setup,'scaling')
+    setup.scaling = [];
+    scaling = [];
+else
+    scaling = setup.scaling;
+end
+
+% initialize
+stemp = struct('right',{},'matrix',{},'constant',{});
+
+% go through each entry in scaling
+for k = 1:length(scaling)
+
+    % extract
+    s = scaling(k);
+
+    % determine number of variables
+    switch s.right
+        case 1
+            n = in.nu;
+        case 2
+            n = in.ny;
+        case 3
+            n = in.np;
+    end
+
+    % check matrix field
+    if ~isfield(s,'matrix')
+        s.matrix = ones(1,n);
+    elseif isempty(s.matrix)
+        s.matrix = ones(1,n);
+    end
+
+    % check constant field
+    if ~isfield(s,'constant')
+        s.constant = zeros(1,n);
+    elseif isempty(s.constant)
+        s.constant = zeros(1,n);
+    end
+
+    % assign
+    stemp(k) = s;
+
+end
+
+% assign to setup structure
+setup.scaling = stemp;
+
 %% add empty fields if not present
 if ~isfield(setup,'Y'), setup.Y = []; end
 if ~isfield(setup,'Z'), setup.Z = []; end
@@ -186,4 +236,3 @@ if ~isfield(setup,'LB'), setup.LB = []; end
 if ~isfield(setup,'UB'), setup.UB = []; end
 if ~isfield(setup,'LY'), setup.LY = []; end
 if ~isfield(setup,'LZ'), setup.LZ = []; end
-if ~isfield(setup,'scaling'), setup.scaling = []; end

@@ -7,42 +7,39 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [H,f,c,A,b,LAL,LAR,Aeq,beq,LAeqL,LAeqR,lb,ub,in,s] = ...
-    DTQP_scaling(H,f,c,A,b,LAL,LAR,Aeq,beq,LAeqL,LAeqR,lb,ub,in,s)
+function [H,f,c,A,b,Aeq,beq,lb,ub,LAL,LAR,Lb,LAeqL,LAeqR,Lbeq,in,sm,sc] = ...
+    DTQP_scaling(H,f,c,A,b,Aeq,beq,lb,ub,LAL,LAR,Lb,LAeqL,LAeqR,Lbeq,in,s)
 
 %--------------------------------------------------------------------------
 % START: simple scaling
 %--------------------------------------------------------------------------
-% initialize as unity linear scaling
-s1 = ones(in.nu*in.nt,1); s2 = ones(in.ny*in.nt,1); s3 = ones(in.np,1);
+% extract
+T = in.t; nt = in.nt; nu = in.nu; ny = in.ny; np = in.np;
 
-% scale
+% initialize as unity matrix scaling and zero constant shift
+s1mat = ones(nu*nt,1); s2mat = ones(ny*nt,1); s3mat = ones(np,1);
+s1con = zeros(nu*nt,1); s2con = zeros(ny*nt,1); s3con = zeros(np,1);
+
+% obtain scaling vectors
 for k = 1:length(s)
-    % extract matrix
-    m = s(k).matrix(:);
+
+    % extract
+    mat = s(k).matrix;
+    sc = s(k).constant;
 
     switch s(k).right
         % controls
         case 1
-            if in.nu == length(m)
-                s1 = repelem(m,in.nt,1);
-            else
-                error('wrong size')
-            end
+            s1mat = createScalingVector(mat,nu,T,nt);
+            s1con = createScalingVector(sc,nu,T,nt);
         % states
         case 2
-            if in.ny == length(m)
-                s2 = repelem(m,in.nt,1);
-            else
-                error('wrong size')
-            end
+            s2mat = createScalingVector(mat,ny,T,nt);
+            s2con = createScalingVector(sc,ny,T,nt);
         % parameters
         case 3
-            if in.np == length(m)
-                s3 = m;
-            else
-                error('wrong size')
-            end
+            s3mat = createScalingVector(mat,np,[],1);
+            s3con = createScalingVector(sc,np,[],1);
         % otherwise
         otherwise
             error(' ')
@@ -50,65 +47,106 @@ for k = 1:length(s)
 end
 
 % combine
-s = [s1;s2;s3];
+sm = [s1mat;s2mat;s3mat];
 
-% diagonal scaling matrix
-nx = length(s);
+% scaling diagonal matrix
+nx = length(sm);
 Is = 1:nx;
-S = sparse(Is,Is,s,nx,nx);
+sM = sparse(Is,Is,sm,nx,nx);
 
-% scale the matrices
-% H
+% scaling constant vector
+sc = sparse([s1con;s2con;s3con]);
+
+%--------------------------------------------------------------------------
+% c
+if isempty(c)
+	c = 0
+end
+
+if ~isempty(f)
+    c = c + f'*sc;
+end
+
 if ~isempty(H)
-    H = S*H*S;
+    c = c + sc'*H*sc/2;
 end
 
 % f
 if ~isempty(f)
-    f = s.*f;
+    f = sm.*f;
+end
+
+% H
+if ~isempty(H)
+    if ~isempty(f)
+        f = f + sM*H*sc;
+    else
+        f = sM*H*sc;
+    end
+
+    H = sM*H*sM;
+end
+
+% b
+if ~isempty(b)
+    b = b - A*sc;
 end
 
 % A
 if ~isempty(A)
-    A = A*S;
+    A = A*sM;
 end
 
-% LAL
-if ~isempty(LAL)
-    LAL = LAL*S;
-end
-
-% LAR
-if ~isempty(LAR)
-    LAR = LAR*S;
+% beq
+if ~isempty(beq)
+    beq = beq - Aeq*sc;
 end
 
 % Aeq
 if ~isempty(Aeq)
-    Aeq = Aeq*S;
-end
-
-% LAeqL
-if ~isempty(LAeqL)
-    LAeqL = LAeqL*S;
-end
-
-% LAeqR
-if ~isempty(LAeqR)
-    LAeqR = LAeqR*S;
+    Aeq = Aeq*sM;
 end
 
 % lb
 if ~isempty(lb)
-    lb = lb./s;
+    lb = (lb - sc)./sm;
 end
 
 % ub
 if ~isempty(ub)
-    ub = ub./s;
+    ub = (ub - sc)./sm;
 end
 
-% Note: b and beq are not scaled
+%--------------------------------------------------------------------------
+% Lb
+if ~isempty(Lb)
+    Lb = Lb - LAL*sc; % not verified
+end
+
+% LAL
+if ~isempty(LAL)
+    LAL = LAL*sM; % not verified
+end
+
+% LAR
+if ~isempty(LAR)
+    LAR = LAR*sM; % not verified
+end
+
+% Lbeq
+if ~isempty(Lbeq)
+    Lbeq = Lbeq - LAeqL*sc; % not verified
+end
+
+% LAeqL
+if ~isempty(LAeqL)
+    LAeqL = LAeqL*sM; % not verified
+end
+
+% LAeqR
+if ~isempty(LAeqR)
+    LAeqR = LAeqR*sM; % not verified
+end
 
 %--------------------------------------------------------------------------
 % END: simple scaling
@@ -143,4 +181,27 @@ end
 %--------------------------------------------------------------------------
 % END: constraint row scaling
 %--------------------------------------------------------------------------
+end
+% create the scaling vector for the particular input
+function Y = createScalingVector(y,ny,T,nt)
+
+if isa(y,'function_handle')
+    % evaluate time-varying function
+    Y = y(T);
+
+    % reshape time-based matrix to column vector
+    Y = Y(:);
+
+elseif numel(y) == ny
+    % expand scalar scaling
+    Y = repelem(y(:),nt,1);
+
+elseif all(size(y) == [nt ny])
+    % reshape time-based matrix to column vector
+    Y = y(:);
+
+else
+    error('wrong size')
+end
+
 end

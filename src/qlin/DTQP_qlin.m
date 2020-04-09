@@ -23,6 +23,9 @@ symb = setup.symb;
 param = symb.param;
 o = symb.o;
 
+% optional constant scaling using previous solution
+scaleflag = false; % need to expose value
+
 % check if this is an lqdo problem
 if lqdoflag
     imax = 0; % only the initial iteration needed
@@ -84,6 +87,16 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
     % TODO: update all other constraints
     % setup = DTQP_qlin_updateControlConstraint(setup,opts);
     % setup = DTQP_qlin_updateStateConstraint(setup,opts);
+
+    % (potentially) shift optimization variables by previous solution
+    if scaleflag
+        setupi.scaling(1).right = 1; % controls
+        setupi.scaling(1).constant = U;
+        setupi.scaling(2).right = 2; % states
+        setupi.scaling(2).constant = Y;
+        setupi.scaling(3).right = 3; % parameters
+        setupi.scaling(3).constant = P;
+    end
 
     % solve the LQDO problem using DT and (potentially) mesh refinement
     [T,U,Y,P,F,in,opts] = DTQP_meshr(setupi,opts);

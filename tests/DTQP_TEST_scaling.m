@@ -9,10 +9,18 @@
 %--------------------------------------------------------------------------
 close all; clear; clc
 
+%% setup
+% tests to run (see below)
+tests = [0:12]; % all tests
+% tests = [0,1:7]; % scalar tests
+% tests = [0,8:9]; % time-varying function tests
+% tests = [0,10:12]; % time-based matrix tests
+
+% BrysonDenham path constraint parameter
 p.ell = 1/9;
 
 % options
-opts.dt.nt = 10000;
+opts.dt.nt = 1000; % 10000
 opts.general.displevel = 0;
 
 % time horizon
@@ -36,46 +44,133 @@ UB(3).right = 2; UB(3).matrix = [p.ell;Inf]; % states
 % combine structures
 setup.A = A; setup.B = B; setup.L = L; setup.UB = UB; setup.LB = LB; setup.p = p;
 
-% normal
-tic
-disp('normal')
-[T0,U0,Y0,P0,F0] = DTQP_solve(setup,opts);
-toc
-disp(F0)
+%% tests
+% number of tests
+ntests = length(tests);
 
-% scale 1
-tic
-disp('scale 1')
-setup.scaling(1).right = 1; % controls
-setup.scaling(1).matrix = [6];
-[T1,U1,Y1,P1,F1] = DTQP_solve(setup,opts);
-toc
-disp(F1)
+% initialize
+[T,U,Y,P,F] = deal(cell(ntests,1));
 
-% scale 2
-tic
-disp('scale 2')
-setup.scaling(1).right = 2; % states
-setup.scaling(1).matrix = [1/9 1];
-[T2,U2,Y2,P2,F2] = DTQP_solve(setup,opts);
-toc
-disp(F2)
+% go through each test
+for k = 1:length(tests)
 
-% scale 3
-tic
-disp('scale 3')
-setup.scaling(1).right = 2; % states
-setup.scaling(1).matrix = [1/9 1];
-setup.scaling(2).right = 1; % controls
-setup.scaling(2).matrix = [6];
-[T3,U3,Y3,P3,F3] = DTQP_solve(setup,opts);
-toc
-disp(F3)
+    % potentially remove the scaling field from previous tests
+    if isfield(setup,'scaling')
+        setup = rmfield(setup,'scaling');
+    end
 
-% figures
+    % determine the scaling structure for the test
+    switch tests(k)
+        case 0 % no scaling
+
+        case 1 % scalar (controls)
+            setup.scaling(1).right = 1; % controls
+            setup.scaling(1).matrix = [6];
+        case 2 % scalar (states)
+            setup.scaling(1).right = 2; % states
+            setup.scaling(1).matrix = [1/9 1];
+        case 3 % scalar (states and controls)
+            setup.scaling(1).right = 2; % states
+            setup.scaling(1).matrix = [1/9 1];
+            setup.scaling(2).right = 1; % controls
+            setup.scaling(2).matrix = [6];
+        case 4 % scalar (controls)
+            setup.scaling(1).right = 1; % controls
+            setup.scaling(1).matrix = [1];
+            setup.scaling(1).constant = [4];
+        case 5 % scalar (controls)
+            setup.scaling(1).right = 1; % controls
+            setup.scaling(1).matrix = [pi*1e-7];
+            setup.scaling(1).constant = [-exp(1)];
+        case 6 % scalar (states)
+            setup.scaling(1).right = 2; % states
+            setup.scaling(1).matrix = [1/9 pi];
+            setup.scaling(1).constant = [-exp(1) 7];
+        case 7 % scalar (states and controls)
+            setup.scaling(1).right = 1; % controls
+            setup.scaling(1).matrix = [2];
+            setup.scaling(1).constant = [-0.5];
+            setup.scaling(2).right = 2; % states
+            setup.scaling(2).matrix = [1/9 pi];
+            setup.scaling(2).constant = [-exp(1) 7];
+        case 8 % time-varying function (controls)
+            Told = linspace(setup.t0,setup.tf,10);
+            Uold = rand(length(Told),1);
+            setup.scaling(1).right = 1; % controls
+            setup.scaling(1).matrix = @(t) interp1(Told,Uold,t);
+            setup.scaling(1).constant = @(t) interp1(Told,Uold,t);
+        case 9 % time-varying function (controls and states)
+            Told = linspace(setup.t0,setup.tf,10000);
+            Uold = BrysonDenham_U(Told,p.ell);
+            Yold = BrysonDenham_Y(Told,p.ell);
+            setup.scaling(1).right = 1; % controls
+            setup.scaling(1).constant = @(t) interp1(Told,Uold,t);
+            setup.scaling(2).right = 2; % states
+            setup.scaling(2).constant = @(t) interp1(Told,Yold,t);
+        case 10 % time-based matrix (controls)
+            setup.scaling(1).right = 1; % controls
+            setup.scaling(1).matrix = rand(opts.dt.nt,1);
+            setup.scaling(1).constant = -10000*rand(opts.dt.nt,1);
+        case 11 % time-based matrix (controls and states)
+            Told = linspace(setup.t0,setup.tf,opts.dt.nt);
+            Uold = BrysonDenham_U(Told,p.ell);
+            Yold = BrysonDenham_Y(Told,p.ell);
+            setup.scaling(1).right = 1; % controls
+            setup.scaling(1).constant = Uold;
+            setup.scaling(2).right = 2; % states
+            setup.scaling(2).constant = Yold;
+        case 12 % time-based matrix (controls and states)
+            Told = linspace(setup.t0,setup.tf,opts.dt.nt);
+            setup.scaling(1).right = 1; % controls
+            setup.scaling(1).matrix = 100*rand(opts.dt.nt,1);
+            setup.scaling(1).constant = 100*rand(opts.dt.nt,1);
+            setup.scaling(2).right = 2; % states
+            setup.scaling(2).matrix = 100*rand(opts.dt.nt,2);
+            setup.scaling(2).constant = -100*rand(opts.dt.nt,2);
+
+    end
+
+    disp(strcat("Test #",string(tests(k))))
+
+    % solve the scaled problem
+    t1 = tic;
+    [T{k},U{k},Y{k},P{k},F{k}] = DTQP_solve(setup,opts);
+    toc(t1)
+
+    disp(strcat("F: ",string(F{k})))
+
+end
+
+%% figures
+% state 1
 hf = figure; hold on; hf.Color = 'w';
-Yactual0 = BrysonDenham_Y(T0,p.ell); plot(T0,abs(Y0-Yactual0),'linewidth',2);
-Yactual1 = BrysonDenham_Y(T1,p.ell); plot(T1,abs(Y1-Yactual1),'linewidth',2);
-Yactual2 = BrysonDenham_Y(T2,p.ell); plot(T2,abs(Y2-Yactual2),'linewidth',2);
-Yactual3 = BrysonDenham_Y(T3,p.ell); plot(T3,abs(Y3-Yactual3),'linewidth',2);
-legend({'Y01','Y02','Y11','Y12','Y21','Y22','Y31','Y32'})
+legendstr = strings(ntests,1);
+for k = 1:ntests
+    Yactual = BrysonDenham_Y(T{k},p.ell);
+    plot(T{k},abs(Y{k}(:,1)-Yactual(:,1)),'linewidth',2);
+    legendstr(k) = string(tests(k));
+end
+legend(strcat("test ",legendstr))
+xlabel("t"); ylabel("Y1 error")
+
+% state 2
+hf = figure; hold on; hf.Color = 'w';
+legendstr = strings(ntests,1);
+for k = 1:ntests
+    Yactual = BrysonDenham_Y(T{k},p.ell);
+    plot(T{k},abs(Y{k}(:,2)-Yactual(:,2)),'linewidth',2);
+    legendstr(k) = string(tests(k));
+end
+legend(strcat("test ",legendstr))
+xlabel("t"); ylabel("Y2 error")
+
+% control 1
+hf = figure; hold on; hf.Color = 'w';
+legendstr = strings(ntests,1);
+for k = 1:ntests
+    Uactual = BrysonDenham_U(T{k},p.ell);
+    plot(T{k},abs(U{k}(:,1)-Uactual(:,1)),'linewidth',2);
+    legendstr(k) = string(tests(k));
+end
+legend(strcat("test ",legendstr))
+xlabel("t"); ylabel("U1 error")

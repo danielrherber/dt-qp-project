@@ -15,7 +15,7 @@ function [T,U,Y,P,F,in,opts] = DTQP_multiphase(setup,opts)
 nphs = length(setup);
 
 % initialize storage arrays and constants
-Hs = cell(nphs,1); fs = Hs; c = 0; s = Hs;
+Hs = cell(nphs,1); fs = Hs; c = 0; SM = Hs; SC = Hs;
 As = Hs; bs = Hs; Aeqs = Hs; beqs = Hs; lbs = Hs; ubs = Hs;
 LALs = Hs; LARs = Hs; Lbs = Hs; LAeqLs = Hs; LAeqRs = Hs; Lbeqs = Hs;
 
@@ -74,11 +74,11 @@ for phs = 1:nphs
     % (optional) simple scaling
     if scaleflag
         if multiphaseflag
-            [Hi,fi,ci,Ai,bi,LALi,LARi,Aeqi,beqi,LAeqLi,LAeqRi,lbi,ubi,in(phs),s{phs}] = DTQP_scaling(...
-                Hi,fi,ci,Ai,bi,LALi,LARi,Aeqi,beqi,LAeqLi,LAeqRi,lbi,ubi,in(phs),setupi.scaling);
+            [Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,LALi,LARi,Lbi,LAeqLi,LAeqRi,Lbeqi,in(phs),SM{phs},SC{phs}] = DTQP_scaling(...
+                Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,LALi,LARi,Lbi,LAeqLi,LAeqRi,Lbeqi,in(phs),setupi.scaling);
         else
-            [Hi,fi,ci,Ai,bi,~,~,Aeqi,beqi,~,~,lbi,ubi,in(phs),s{phs}] = DTQP_scaling(...
-                Hi,fi,ci,Ai,bi,[],[],Aeqi,beqi,[],[],lbi,ubi,in(phs),setupi.scaling);
+            [Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,~,~,~,~,~,~,in(phs),SM{phs},SC{phs}] = DTQP_scaling(...
+                Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,[],[],[],[],[],[],in(phs),setupi.scaling);
         end
     end
 
@@ -192,8 +192,9 @@ end
 
 % (optional) unscale solution
 if scaleflag
-    s = vertcat(s{:}); % scaling vector
-    X = X.*s; % unscale optimization variables
+    SM = vertcat(SM{:}); % scaling vector
+    SC = vertcat(SC{:}); % scaling vector
+    X = X.*SM + SC; % unscale optimization variables
 end
 
 % add the constant term to objective function

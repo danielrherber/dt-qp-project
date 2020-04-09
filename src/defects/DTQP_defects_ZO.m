@@ -9,9 +9,9 @@
 %--------------------------------------------------------------------------
 function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,in,opts)
 
-    % extract some of the variables in p   
+    % extract some of the variables in p
     nu = in.nu; ny = in.ny; np = in.np; nd = in.nd; nx = in.nx;
-    nt = in.nt; h = in.h; 
+    nt = in.nt; h = in.h;
 
     % matrix form of I in the formulas
     K = kron(eye(ny),ones(nt-1,1));
@@ -21,7 +21,7 @@ function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,in,opts)
 
     %----------------------------------------------------------------------
     % calculate matrices and sequencing vectors
-    %----------------------------------------------------------------------   
+    %----------------------------------------------------------------------
     % find time dependent matrices
     if isa(A,'double') % not time varying
         % initialize
@@ -29,14 +29,14 @@ function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,in,opts)
             Aexpm(1,:,:) = expm( A*h(1) );
             At = repmat(Aexpm,nt-1,1,1);
         else
-            At = zeros(nt-1,ns,ns);
+            At = zeros(nt-1,ny,ny);
             for i = 1:nt-1
                 At(i,:,:) = expm( A*h(i) );
             end
         end
     else
-       error('A matrix cannot be time varying with ZOH defect method') 
-    end   
+       error('A matrix cannot be time varying with ZOH defect method')
+    end
     Bt = DTQP_convolution(A,B,in,opts);
     Gt = DTQP_convolution(A,G,in,opts);
     dt = DTQP_convolution(A,d,in,opts);
@@ -78,7 +78,7 @@ function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,in,opts)
             ZeroIndex = find(~Vs);
             Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
 
-            % combine 
+            % combine
             Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
 
         end
@@ -105,7 +105,7 @@ function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,in,opts)
             ZeroIndex = find(~Vs);
             Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
 
-            % combine 
+            % combine
             Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
 
         % end
@@ -122,7 +122,7 @@ function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,in,opts)
             Gv = reshape(Gt(:,i,:),[],1);
 
             % theta values
-            Vs = -Gv; % theta 5  
+            Vs = -Gv; % theta 5
 
             % combine
             Js = Jp;
@@ -131,7 +131,7 @@ function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,in,opts)
             ZeroIndex = find(~Vs);
             Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
 
-            % combine 
+            % combine
             Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
 
         end
@@ -143,7 +143,7 @@ function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,in,opts)
     Jf = vertcat(Jsav{:});
     Vf = vertcat(Vsav{:});
 
-	% output sparse matrix   
+	% output sparse matrix
     Aeq = sparse(If,Jf,Vf,ny*(nt-1),nx);
 
     %------------------------------------------------------------------
@@ -168,7 +168,7 @@ function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,in,opts)
             ZeroIndex = find(~Vs);
             Is(ZeroIndex) = []; Vs(ZeroIndex) = [];
 
-            % combine 
+            % combine
             Isav{end+1} = Is; Vsav{end+1} = Vs;
 
         end
@@ -178,7 +178,7 @@ function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,in,opts)
         Vf = vertcat(Vsav{:});
 
         % output sparse matrix
-        beq = sparse(If,1,Vf,ny*(nt-1),1); 
+        beq = sparse(If,1,Vf,ny*(nt-1),1);
     else
         % output sparse matrix
         beq = sparse([],[],[],ny*(nt-1),1);

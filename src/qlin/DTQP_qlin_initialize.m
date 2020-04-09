@@ -16,7 +16,7 @@ lqdoflag = true; % LQDO problem elements only
 
 % check if the symbolic field is present
 if ~isfield(setup,'symb')
-    setup.symb = [];
+    setup(1).symb = [];
     opts.qlin.qlinflag = qlinflag;
     opts.qlin.lqdoflag = lqdoflag;
     return % no symbolic operations needed
