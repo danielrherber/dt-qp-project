@@ -10,6 +10,11 @@
 %--------------------------------------------------------------------------
 function [setup,opts] = DTQP_qlin_initialize(setup,opts)
 
+% (potentially) start the timer
+if (opts.general.displevel > 0) % minimal
+    opts.timer.t2 = tic; % start timer
+end
+
 % initialize
 qlinflag = false; % quasilinearization not needed
 lqdoflag = true; % LQDO problem elements only
@@ -26,6 +31,7 @@ end
 
 % extract
 o = symb.o; % NOTE: is this always present?
+sqpflag = opts.qlin.sqpflag;
 
 % set default field values if not present
 if ~isfield(o,'ny')
@@ -50,7 +56,7 @@ if isfield(symb,'Ob')
     form = 4;
 
     % quadracize
-    L = DTQP_qlin_taylor(symb.Ob,form,o);
+    L = DTQP_qlin_taylor(symb.Ob,form,o,sqpflag);
 
     % assign
     symb.L = L;
@@ -68,7 +74,7 @@ if isfield(symb,'D')
     form = 3;
 
     % linearize
-    Linf = DTQP_qlin_taylor(symb.D,form,o);
+    Linf = DTQP_qlin_taylor(symb.D,form,o,sqpflag);
 
     % assign
     symb.Linf = Linf;
@@ -86,7 +92,7 @@ if isfield(symb,'C')
     form = 3;
 
     % linearize
-    Linc = DTQP_qlin_taylor(symb.C,form,o);
+    Linc = DTQP_qlin_taylor(symb.C,form,o,sqpflag);
 
     % assign
     symb.c = Linc;
@@ -101,7 +107,7 @@ if isfield(symb,'Y')
     form = 3;
 
     % linearize
-    Liny = DTQP_qlin_taylor(symb.Yi,form,o);
+    Liny = DTQP_qlin_taylor(symb.Yi,form,o,sqpflag);
 
     % assign
     symb.y = Liny;
@@ -114,6 +120,11 @@ end
 setup.symb = symb;
 opts.qlin.qlinflag = qlinflag;
 opts.qlin.lqdoflag = lqdoflag;
+
+% (potentially) end the timer
+if (opts.general.displevel > 0) % minimal
+    opts.timer.sym = toc(opts.timer.t2); % start timer
+end
 
 end
 

@@ -9,9 +9,19 @@
 %--------------------------------------------------------------------------
 function [X,F,in,opts] = DTQP_solver(H,f,A,b,Aeq,beq,lb,ub,in,opts)
 
-% potentially start the timer
-if (opts.general.displevel > 0) % minimal
-    tstart = toc; % start timer
+% extract
+displevel = opts.general.displevel;
+
+% (potentially) stop create timer and start qpsolver timer
+if (displevel > 0) % minimal
+    ctime = toc(opts.timer.t3);
+    opts.timer.create = opts.timer.create + ctime; % add
+    opts.timer.t3 = tic; % start timer
+end
+
+% (potentially) display to the command window
+if (displevel > 1) % verbose
+    disp(strcat("-> Creation time: ",string(ctime)," s"))
 end
 
 switch upper(opts.qp.solver)
@@ -19,24 +29,25 @@ switch upper(opts.qp.solver)
     case {'QUADPROG','BUILT-IN'} % built-in MATLAB solvers
         [X,F,in,opts] = DTQP_solver_quadprog(H,f,A,b,Aeq,beq,lb,ub,in,opts);
     %----------------------------------------------------------------------
-    case 'CVX' % 
+    case 'CVX' %
         [X,F,in,opts] = DTQP_solver_cvx(H,f,A,b,Aeq,beq,lb,ub,in,opts);
     %----------------------------------------------------------------------
-    case 'QPOASES' % 
+    case 'QPOASES' %
         [X,F,in,opts] = DTQP_solver_qpoases(H,f,A,b,Aeq,beq,lb,ub,in,opts);
     %----------------------------------------------------------------------
     otherwise
         error('Error: solver not found')
 end
 
-% end the timer
-if (opts.general.displevel > 0) % minimal
-    in(end).QPsolvetime = toc - tstart; % end the timer
+% (potentially) stop qpsolver timer and start create qpsolver timer
+if (displevel > 0) % minimal
+    opts.timer.qpsolver = opts.timer.qpsolver + toc(opts.timer.t3); % add
+    opts.timer.t3 = tic; % start timer
 end
 
-% display to the command window
-if (opts.general.displevel > 1) % verbose
-    disp(['QP solving time: ', num2str(in(end).QPsolvetime), ' s'])
+% (potentially) display to the command window
+if (displevel > 1) % verbose
+    disp(['-> QP solver time: ', num2str(opts.timer.qpsolver), ' s'])
 end
 
 end

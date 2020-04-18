@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
-% DTQP_qlin_guess.m
-% Construct and solve the quasilinearization problem
+% DTQP_qlin_sqpMatrix.m
+% Construct sqp penalty matrix from sequences
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -8,14 +8,21 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [T,U,Y,P] = DTQP_qlin_guess(setup,opts,o)
+function H = DTQP_qlin_sqpMatrix(D2matrix,in,opts)
 
-% initial guess values for controls, states, and parameters
-T = linspace(setup.t0,setup.tf,opts.dt.nt)';
-U = ones(opts.dt.nt,o.nu);
-Y = ones(opts.dt.nt,o.ny);
-P = ones(o.np,1);
+% initialize
+HI = []; HJ = []; HV = [];
 
-% TODO: add more initial guess options
+% create indices for Lagrangian penalty matrix
+[I,J,V] = DTQP_SQP_lagrangianPenaltyMatrix(D2matrix,in,opts);
+HI = [HI;I]; HJ = [HJ;J]; HV = [HV;V];
+
+% sparse matrix for Hessian
+if isempty(HV)
+    H = []; % no Hessian
+else
+    H = sparse(HI,HJ,HV,in.nx,in.nx);
+    H = (H+H'); % make symmetric, then times 2 for 1/2*x'*H*x form
+end
 
 end

@@ -10,21 +10,20 @@
 %--------------------------------------------------------------------------
 function [T,U,Y,P,F,in,opts] = DTQP_qlin(setup,opts)
 
-% get default options
-opts = DTQP_qlin_default_opts(opts);
-
 % extract
 displevel = opts.general.displevel;
 plotflag = opts.general.plotflag;
 lqdoflag = opts.qlin.lqdoflag;
 tolerance = opts.qlin.tolerance;
+deltascaleflag = opts.qlin.deltascaleflag;
+sqpflag = opts.qlin.sqpflag;
 imax = opts.qlin.imax;
 symb = setup.symb;
 param = symb.param;
 o = symb.o;
 
-% optional constant scaling using previous solution
-scaleflag = false; % need to expose value
+% improve initial guess flag (need to expose)
+improveflag = true;
 
 % check if this is an lqdo problem
 if lqdoflag
@@ -36,6 +35,9 @@ if isfield(symb,'Linf')
     Dflag = true;
     D = symb.Linf;
     DA = D.A; DB = D.B; DG = D.G; Dd = D.d;
+    if sqpflag
+       D2 = D.D2;
+    end
 else
     Dflag = false;
 end
@@ -53,6 +55,9 @@ end
 
 % initial guess values for controls, states, and parameters
 [T,U,Y,P] = DTQP_qlin_guess(setup,opts,o);
+if sqpflag
+    opts.lambda = zeros(length(T)-1,length(D2));
+end
 
 % initialize
 iter = 0;
@@ -68,13 +73,32 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
     % copy setup
     setupi = setup;
 
+    if iter == 0
+    	if improveflag
+	        [U,Y,P,lambda] = DTQP_qlin_improveInitialPoint(setupi,opts,T,U,Y,P,param,Dflag,DA,DB,DG,Dd);
+	        opts.lambda = lambda;
+    	end
+    end
+
     % construct previous solution vector
-    P = repelem(P',opts.dt.nt,1);
-    X = [U,Y,P];
+    Pe = repelem(P',opts.dt.nt,1);
+    X = [U,Y,Pe];
 
     % update dynamics based on previous solution vector
     if Dflag
         setupi = DTQP_qlin_updateDynamics(setupi,DA,DB,DG,Dd,T,X,param);
+
+        % update second derivative matrix for state derivative function
+        if sqpflag
+            % NEED
+            D2s = cell(size(D2));
+            for i = 1:length(D2)
+                D2s{i} = DTQP_qlin_update4tmatrix(D2{i},T,X,param);
+            end
+            setupi.D2 = D2s;
+
+        end
+
     end
 
     % update Lagrange terms
@@ -89,7 +113,7 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
     % setup = DTQP_qlin_updateStateConstraint(setup,opts);
 
     % (potentially) shift optimization variables by previous solution
-    if scaleflag
+    if deltascaleflag
         setupi.scaling(1).right = 1; % controls
         setupi.scaling(1).constant = U;
         setupi.scaling(2).right = 2; % states
@@ -108,7 +132,7 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
 
     % (potentially) display to  command window
     if (displevel > 0) % minimal
-        qlinDispFun(iter,F,abs(F-Fold))
+        qlinDispFun(iter,F,abs(F-Fold),in)
     end
 
     % increment iteration counter
@@ -123,7 +147,7 @@ end
 
 end
 
-function qlinDispFun(iter,F,E)
+function qlinDispFun(iter,F,E,in)
 
 % handle edge cases
 if isinf(E)
@@ -136,17 +160,23 @@ if isinf(F)
 else
     Fstr = sprintf('%1.3e',F);
 end
+if isfield(in.output,'sqppenalty')
+    Pstr = sprintf('%1.3e',in.output.sqppenalty);
+else
+    Pstr = blanks(length(sprintf('%1.3e',1)));
+end
 
 % initial headers
 if iter == 0
-    disp('-------- qlin progress ---------')
-    disp('| iter |         F |        dF |')
+    disp('-------------- qlin progress ---------------')
+    disp('| iter |         F |        dF |  sqp pen  |')
 end
 
 % values
 disp(['| ',sprintf(' %3i',iter),...
     ' | ', Fstr,...
     ' | ', Estr,...
+    ' | ', Pstr,...
     ' | ']);
 
 end

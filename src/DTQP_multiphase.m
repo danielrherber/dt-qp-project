@@ -21,6 +21,7 @@ LALs = Hs; LARs = Hs; Lbs = Hs; LAeqLs = Hs; LAeqRs = Hs; Lbeqs = Hs;
 
 % determine flags
 scaleflag = isfield(setup,"scaling");
+sqpflag = opts.qlin.sqpflag;
 reorderflag = opts.qp.reorder;
 multiphaseflag = nphs > 1;
 
@@ -74,11 +75,54 @@ for phs = 1:nphs
     % (optional) simple scaling
     if scaleflag
         if multiphaseflag
+            error('Scaling is not currently supported for multiphase problems')
             [Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,LALi,LARi,Lbi,LAeqLi,LAeqRi,Lbeqi,in(phs),SM{phs},SC{phs}] = DTQP_scaling(...
                 Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,LALi,LARi,Lbi,LAeqLi,LAeqRi,Lbeqi,in(phs),setupi.scaling);
         else
             [Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,~,~,~,~,~,~,in(phs),SM{phs},SC{phs}] = DTQP_scaling(...
                 Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,[],[],[],[],[],[],in(phs),setupi.scaling);
+        end
+    end
+
+    % (optional) add SQP penalty matrix
+    if sqpflag
+        if multiphaseflag
+            error('SQP is not currently supported for multiphase problems')
+        else
+            if isfield(setup,'D2')
+                % create sqp penalty matrix
+                Hsqpi = DTQP_qlin_sqpMatrix(setup.D2,in,opts);
+
+                % combine with original hessian
+                if isempty(Hi)
+                    Hi = Hsqpi;
+                else
+                    % combine
+                    Hi = Hi + Hsqpi;
+
+                    % flags (need to expose)
+                    mirrorflag = true;
+                    etol = sqrt(eps);
+
+                    if mirrorflag
+                        % check if the matrix is symmetric positive semidefinite
+                        if eigs(Hi,1,'smallestreal') >= -etol
+                            % disp('Matrix is symmetric positive definite')
+                        else
+                            % disp('Matrix is not symmetric positive definite')
+
+                            % mirrored version
+                            [Um,Tm] = schur(full(Hi));
+                            Hi = Um*abs(Tm)*Um';
+                        end
+
+                        Hi = (Hi+Hi')/2; % make symmetric, then times 2 for 1/2*x'*H*x form
+                    end
+                end
+
+            else
+                Hsqpi = [];
+            end
         end
     end
 
@@ -154,17 +198,6 @@ if multiphaseflag
 
 end
 
-% end the timer
-if (displevel > 0) % minimal
-    ttoc = toc;
-    in(nphs).QPcreatetime = ttoc;
-end
-
-% display to the command window
-if (displevel > 1) % verbose
-    disp(strcat("QP creation time: ",string(ttoc)," s"))
-end
-
 % previous displevel
 opts.general.displevel = displevel;
 %--------------------------------------------------------------------------
@@ -183,6 +216,18 @@ opts.general.displevel = displevel;
 %--------------------------------------------------------------------------
 % TASK: obtain outputs
 %--------------------------------------------------------------------------
+if isempty(X)
+    T = []; U = []; Y = []; P = [];
+    return
+end
+
+% SQP penalty value
+if sqpflag
+    if ~isempty(Hsqpi)
+        in.output.sqppenalty = X'*Hsqpi*(X/2);
+    end
+end
+
 % (optional) restore ordering
 if ~multiphaseflag % currently doesn't work for multiphase problems
     if reorderflag

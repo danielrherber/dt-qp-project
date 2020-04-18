@@ -20,6 +20,9 @@ OffFlag = any(strcmpi(quadrature,'CQHS'));
 Isav = {}; Jsav = {}; HWsav = {}; Qsav = {}; Qmsav = {};
 IUsav = {}; ILsav = {}; JUsav = {}; JLsav = {}; Hoffsav = {}; Qoffsav = {};
 
+% augmented step size vector
+h0 = [h; 0];
+
 % go through each Lagrange term
 for k = 1:length(Lfull)
     % obtain current substructure
@@ -32,7 +35,7 @@ for k = 1:length(Lfull)
 
     % find time dependent matrix at time grid midpoints
     if OffFlag
-        Lm = DTQP_tmultiprod(Lmatrix,p,tm); 
+        Lm = DTQP_tmultiprod(Lmatrix,p,tm);
     end
 
     % check if both left and right fields are equal to 0
@@ -48,7 +51,7 @@ for k = 1:length(Lfull)
             % check if this entry is always 0
             if any(Lv)
                 r = DTQP_getQPIndex(R(i),Lleft,1,nt,nu,ny); % Hessian row index sequence
-                c = DTQP_getQPIndex(C(j),Lright,1,nt,nu,ny); % Hessian column index sequence 
+                c = DTQP_getQPIndex(C(j),Lright,1,nt,nu,ny); % Hessian column index sequence
 
                 Isav{end+1} = r; % main diagonal rows
                 Jsav{end+1} = c; % main diagonal columns
@@ -57,11 +60,11 @@ for k = 1:length(Lfull)
                 if any(strcmpi(quadrature,{'G','CC'}))
                     HWsav{end+1} = w;
                 else
-                    HWsav{end+1} = [h; 0];
+                    HWsav{end+1} = h0;
                 end
 
                 % main diagonal matrix values
-                Qsav{end+1} = Lv;   
+                Qsav{end+1} = Lv;
 
                 % off-diagonal sequences
                 if OffFlag
@@ -99,13 +102,13 @@ if OffFlag
 end
 
 % begin method specific
-switch upper(opts.dt.quadrature)
+switch upper(quadrature)
     case 'CEF'
         V = HW.*Q;
     case 'CTR'
-        V = ( (HW.*Q) + (circshift(HW,[1,1]).*Q) )/2;
+        V = ( HW + circshift(HW,[1,1]) ).*Q/2;
     case 'CQHS'
-        V = ( (HW.*Q) + (circshift(HW,[1,1]).*Q) + (HW.*Qm) + circshift(HW.*Qm,[1,1]) )/6;
+        V = ( (HW + circshift(HW,[1,1])).*Q + (HW.*Qm) + circshift(HW.*Qm,[1,1]) )/6;
         Voff = Hoff.*Qoff/6;
     case 'G'
         V = (in.tf - in.t0)/2*HW.*Q;

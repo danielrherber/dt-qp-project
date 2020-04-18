@@ -90,6 +90,7 @@ case 1
     opts.dt.quadrature = 'CQHS';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 100; % number of nodes
+    opts.qlin.sqpflag = false;
 end
 
 end

@@ -75,6 +75,7 @@ case 1
     opts.dt.quadrature = 'CQHS';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 40; % number of nodes
+    opts.qlin.sqpflag = false;
 case 2
     opts.general.displevel = 1;
     opts.dt.defects = 'PS';

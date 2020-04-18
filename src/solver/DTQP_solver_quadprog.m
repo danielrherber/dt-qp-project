@@ -24,8 +24,8 @@ if isempty(H) && isempty(f) % feasibility problem (solved using quadprog)
         'OptimalityTolerance',qp.tolerance,...
         'StepTolerance',qp.tolerance);
 
-    % solve the feasbility problem
-    [X, F, EXITFLAG] = quadprog([],[],A,b,Aeq,beq,lb,ub,[],options);
+    % solve the feasibility problem
+    [X, F, EXITFLAG, OUTPUT, LAMBDA] = quadprog([],[],A,b,Aeq,beq,lb,ub,[],options);
 
 elseif isempty(H) % linear program (solved using quadprog)
     % options
@@ -37,7 +37,7 @@ elseif isempty(H) % linear program (solved using quadprog)
         'StepTolerance',qp.tolerance);
 
     % solve the LP
-    [X, F, EXITFLAG] = quadprog([],f,A,b,Aeq,beq,lb,ub,[],options);
+    [X, F, EXITFLAG, OUTPUT, LAMBDA] = quadprog([],f,A,b,Aeq,beq,lb,ub,[],options);
 
 else % quadratic program
     % options
@@ -49,12 +49,16 @@ else % quadratic program
         'StepTolerance',qp.tolerance);
 
     % solve the QP
-    [X, F, EXITFLAG] = quadprog(H,f,A,b,Aeq,beq,lb,ub,[],options);
+    [X, F, EXITFLAG, OUTPUT, LAMBDA] = quadprog(H,f,A,b,Aeq,beq,lb,ub,[],options);
 
 end
 
 % turn on warning
 warning('on','optim:quadprog:NullHessian');
+
+% store output structure and multipliers
+in.output = OUTPUT;
+opts.lambda = LAMBDA;
 
 % return Nan if bad exit flag
 if EXITFLAG < 0

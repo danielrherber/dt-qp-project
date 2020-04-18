@@ -18,7 +18,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function E = DTQP_qlin_taylor(f,form,in)
+function E = DTQP_qlin_taylor(f,form,in,D2flag)
 
 %--------------------------------------------------------------------------
 % go through the options
@@ -44,13 +44,15 @@ else
     np = 0;
 end
 
+% number of optimization variables
+nx = nu + ny + np;
+
 % extra symbolic parameters
 if isfield(in,'param')
 	param = in.param;
 else
     param = [];
 end
-%
 
 if isfield(in,'output')
     output = in.output;
@@ -126,9 +128,12 @@ end
 % create the symbolic function
 F = eval(f);
 
+% vector of optimization variables
+X = [U,Y,P];
+
 if linflag
     % Taylor polynomial approximation of F about X=A of order norder
-    T = taylor(F,[U,Y,P],[AU,AY,AP],'Order',norder);
+    T = taylor(F,X,[AU,AY,AP],'Order',norder);
 else
     % no Taylor approximation
     T = F;
@@ -141,7 +146,7 @@ switch form
     %----------------------------------------------------------------------
     case 1
         % convert linear equations to matrix notation
-        [L,O] = equationsToMatrix(T,[Y,U,P]);
+        [L,O] = equationsToMatrix(T,X);
 
         % put matrices in the form f = A*y + B*u + G*p + d
         A = L(:,nu+1:nu+ny);
@@ -164,9 +169,9 @@ switch form
     %----------------------------------------------------------------------
     case 2
         % put matrices in the form X'*h*X + g'*X + c
-        h = hessian(T,[U,Y,P])/2; % hessian
-        Tred = simplify(T-[U,Y,P]*h*[U,Y,P]'); % remove quadratic terms
-        [g,c] = equationsToMatrix(Tred,[U,Y,P]); % gradient and constant
+        h = hessian(T,X)/2; % hessian
+        Tred = simplify(T-X*h*X'); % remove quadratic terms
+        [g,c] = equationsToMatrix(Tred,X); % gradient and constant
 
         % create the requested output structure
         if output == 1
@@ -181,8 +186,10 @@ switch form
 
     %----------------------------------------------------------------------
     case 3
+        in1 = {t,PARAM,[AU,AY,AP]};
+
         % convert linear equations to matrix notation
-        [L,O] = equationsToMatrix(T,[U,Y,P]);
+        [L,O] = equationsToMatrix(T,X);
 
         % put matrices in the form f = A*y + B*u + G*p + d
         A = L(:,nu+1:nu+ny);
@@ -196,18 +203,36 @@ switch form
             E.A = A; E.B = B; E.G = G; E.d = d;
         else % output == 1 or 2
             %
-            E.A = sym2matrixfun(A,{t,PARAM,[AU,AY,AP]},output);
-            E.B = sym2matrixfun(B,{t,PARAM,[AU,AY,AP]},output);
-            E.G = sym2matrixfun(G,{t,PARAM,[AU,AY,AP]},output);
-            E.d = sym2matrixfun(d,{t,PARAM,[AU,AY,AP]},output);
+            E.A = sym2matrixfun(A,in1,output);
+            E.B = sym2matrixfun(B,in1,output);
+            E.G = sym2matrixfun(G,in1,output);
+            E.d = sym2matrixfun(d,in1,output);
+        end
+
+        % (potentially) determine second derivative matrix
+        if D2flag
+            % jacobian (first partial derivatives)
+            DF = jacobian(F,X);
+
+            % reshape into row vector
+            DF = reshape(DF.',1,[]);
+
+            % jacobian again (second partial derivatives)
+            symD2 = jacobian(DF,X);
+
+            % convert to a cell array of functions
+            D2 = sym2matrixfun(symD2,{t,PARAM,X},2);
+
+            % reshape and store
+            E.D2 = mat2cell(D2,repmat(nx,1,length(F)),nx);
         end
 
     %----------------------------------------------------------------------
     case 4
         % put matrices in the form X'*h*X + g'*X + c
-        h = hessian(T,[U,Y,P])/2; % hessian
-        Tred = simplify(T-[U,Y,P]*h*[U,Y,P]','steps',1000); % remove quadratic terms
-        [g,c] = equationsToMatrix(Tred,[U,Y,P]); % gradient and constant
+        h = hessian(T,X)/2; % hessian
+        Tred = simplify(T-X*h*X','steps',1000); % remove quadratic terms
+        [g,c] = equationsToMatrix(Tred,X); % gradient and constant
 
         % create the requested output structure
         if output == 3
