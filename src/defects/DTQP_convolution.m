@@ -10,7 +10,7 @@
 function Q = DTQP_convolution(A,B,in,opts)
 
 % extract
-p = in.p; nt = in.nt; t = in.t; h = in.h; 
+p = in.p; nt = in.nt; t = in.t; h = in.h;
 
 % number of states
 ny = size(A,1);
@@ -20,13 +20,13 @@ Q = zeros(nt-1,ny,size(B,2));
 
 %--------------------------------------------------------------------------
 if isempty(B)
-    return    
+    return
 %--------------------------------------------------------------------------
 elseif iscell(A)
         error('A should not be a function with the zero-hold method')
 %--------------------------------------------------------------------------
 % check if B is a cell (time-varying function)
-elseif iscell(B)
+elseif iscell(B) || isa(B,'function_handle')
     for k = 1:nt-1
         t0 = t(k); tf = t(k+1);
         if ~any(A(:)) % check if any elements of A are nonzero

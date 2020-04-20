@@ -11,58 +11,68 @@
 %--------------------------------------------------------------------------
 clc; clear; close all
 
-testnum = 3;
+tests = 1:4;
+% tests = 4;
 
-% system dynamics
-symb.D = '[0]';
+% go through the tests
+for k = 1:length(tests)
 
-% Lagrange term
-switch testnum
-    case 1
+    % fmincon options
+    options = optimoptions('fmincon','Algorithm','sqp','Display','none',...
+        'ScaleProblem',false);
+
+    % test setup
+    switch tests(k)
+        %------------------------------------------------------------------
+        case 1
         symb.Ob = '(p1-1)^4 + p1^2 + (p2-pi)^2';
-    case 2
+        [P2,F2] = fmincon(@(x) (x(1)-1)^4 + x(1)^2 + (x(2)-pi)^2,[1,1],[],[],[],[],[],[],[],options);
+        %------------------------------------------------------------------
+        case 2
         symb.Ob = '(p1-1)^4 + log(p1+4)^2 + (p2-pi)^2';
-    case 3
+        [P2,F2] = fmincon(@(x) (x(1)-1)^4 + log(x(1)+4)^2 + (x(2)-pi)^2,[1,1],[],[],[],[],[],[],[],options);
+        %------------------------------------------------------------------
+        case 3
         symb.Ob = '(p1-1)^4 + (p2-3)^2 + p1^2*p2';
+        [P2,F2] = fmincon(@(x) (x(1)-1)^4 + (x(2)-3)^2 + x(1)^2*x(2),[1,1],[],[],[],[],[],[],[],options);
+        %------------------------------------------------------------------
+        case 4
+        symb.Ob = '(p1-1)^2 + (p2-3)^2 + p1*p2';
+        [P2,F2] = fmincon(@(x) (x(1)-1)^2 + (x(2)-3)^2 + x(1)*x(2),[1,1],[],[],[],[],[],[],[],options);
+    end
+
+    % problem structure
+    [setup,opts] = problem(symb);
+
+    % run the test and time
+    [T,U,Y,P1,F1,in,opts] = DTQP_solve(setup,opts);
+
+    % test analysis
+    disp(strcat("Case ",string(tests(k))))
+    disp("DTQP | F"); disp(F1); disp("P1"); disp(P1(:)')
+    disp("FMINCON | F"); disp(F2); disp("P2"); disp(P2(:)')
 end
+
+% problem structure
+function [setup,opts] = problem(symb)
 
 symb.o.ny = 1; % number of states
 symb.o.np = 2; % number of parameters
 symb.o.output = 2; % interp1 compatible
 
-p.t0 = 0; p.tf = 1;
+% system dynamics
+symb.D = '[0]';
 
-% simple bounds
-LB(1).right = 3; LB(1).matrix = [1e-10,1e-10]; % parameters
+% time horizon
+t0 = 0; tf = 1;
 
 % combine structures
-setup.symb = symb; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p;
+setup.symb = symb;
+setup.t0 = t0; setup.tf = tf; setup.p = [];
 
-opts = [];
-opts.general.displevel = 1;
-opts.general.plotflag = 1;
+% options
+opts.general.displevel = 0;
+opts.general.plotflag = 0;
 opts.dt.nt = 2;
 
-% solve
-t1 = tic;
-[T,U,Y,P1,F1,in,opts] = DTQP_solve(setup,opts);
-toc(t1)
-
-disp("F1"); disp(F1); disp("P1"); disp(P1(:)')
-
-% fmincon options
-options = optimoptions('fmincon','Algorithm','sqp','Display','iter',...
-    'ScaleProblem',false);
-
-% solve with fmincon and an sqp algorithm
-switch testnum
-    case 1
-        [P2,F2] = fmincon(@(x) (x(1)-1)^4 + x(1)^2 + (x(2)-pi)^2,[1,1],[],[],[],[],[],[],[],options);
-    case 2
-        [P2,F2] = fmincon(@(x) (x(1)-1)^4 + log(x(1)+4)^2 + (x(2)-pi)^2,[1,1],[],[],[],[],[],[],[],options);
-    case 3
-        [P2,F2] = fmincon(@(x) (x(1)-1)^4 + (x(2)-3)^2 + x(1)^2*x(2),[1,1],[],[],[],[],[],[],[],options);
 end
-
-disp("F2"); disp(F2); disp("P2"); disp(P2(:)')

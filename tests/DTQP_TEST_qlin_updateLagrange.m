@@ -10,49 +10,91 @@
 %--------------------------------------------------------------------------
 clc; clear; close all
 
-testnum = 3;
+% tests = 1:5;
+tests = 3;
 
-switch testnum
-    case 1
-        setup.symb.Ob = '1';
+% go through the tests
+for k = 1:length(tests)
 
-    case 2
-        setup.symb.Ob = 'y1*u1';
+    % test setup
+    switch tests(k)
+        %------------------------------------------------------------------
+        case 1
+        symb.Ob = '1';
+        symb.o.nu = 2;
+        symb.o.ny = 3;
+        symb.o.np = 1;
+        %------------------------------------------------------------------
+        case 2
+        symb.Ob = 'y1*u1';
+        symb.o.nu = 1;
+        symb.o.ny = 1;
+        symb.o.np = 0;
+        %------------------------------------------------------------------
+        case 3
+        symb.Ob = 'y1^2 - y2^2 - u1^2 + u2^2 + y1*u1';
+        symb.o.nu = 2;
+        symb.o.ny = 2;
+        symb.o.np = 0;
+        %------------------------------------------------------------------
+        case 4
+        symb.Ob = 'y1*u1^2 ';
+        symb.o.nu = 1;
+        symb.o.ny = 2;
+        symb.o.np = 0;
+        %------------------------------------------------------------------
+        case 5
+        symb.Ob = 'y1^3 + y1*y2 + p1*u1';
+        symb.o.nu = 2;
+        symb.o.ny = 3;
+        symb.o.np = 1;
+    end
 
-    case 3
-        setup.symb.Ob = 'y1^3 + y1*y2 + p1*u1';
+    % problem structure
+    [setup,opts,T,X,param] = problem(symb);
+    symb = setup.symb; L = setup.symb.L; o = symb.o;
+
+    % run the test and time
+    setup = DTQP_qlin_updateLagrange(setup,L.H,L.G,L.C,o,T,X,param);
+
+    % test analysis
+    disp(strcat("-> Case: ",string(tests(k))))
+    for i = 1:length(setup.L)
+        disp(strcat("Left: ",string(setup.L(i).left)))
+        disp(strcat("Right: ",string(setup.L(i).right)))
+        disp(setup.L(i).matrix)
+        t = linspace(T(1),T(end),3)';
+        A = DTQP_tmultiprod(setup.L(i).matrix,[],t);
+        disp(' ')
+    end
+
 end
 
-o.nu = 2;
-o.ny = 3;
-o.np = 1;
-setup.symb.o = o;
-setup.p.t0 = 0;
-setup.p.tf = 1;
+% problem structure
+function [setup,opts,T,X,param] = problem(symb)
 
+symb.o.output = 2;
+setup.symb = symb;
+setup.t0 = 0;
+setup.tf = 1;
 param = [];
 
 % options
 opts = [];
-opts.dt.nt = 10;
+opts.general.displevel = false;
+opts.dt.nt = 4;
+
+% initialize some stuff
+[setup,opts] = DTQP_default_opts(setup,opts);
+
+% run the test and time
+setup = DTQP_qlin_initialize(setup,opts); % FIX
 
 % initial guess
-[T,U,Y,P] = DTQP_qlin_guess(setup,opts,o);
+[T,U,Y,P] = DTQP_qlin_guess(setup,opts,symb.o);
 
 % construct previous solution vector
 P = repelem(P',opts.dt.nt,1);
 X = [U,Y,P];
 
-% initialize some stuff
-[setup,opts] = DTQP_default_opts(setup,opts);
-
-% modify setup
-setup = DTQP_qlin_initialize(setup,opts); % FIX
-L = setup.symb.L;
-
-setup = DTQP_qlin_updateLagrange(setup,L.H,L.G,L.C,o,T,X,param);
-
-% display the L structure
-for k = 1:length(setup.L)
-    disp(setup.L(k))
 end

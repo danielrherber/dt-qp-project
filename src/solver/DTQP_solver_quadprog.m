@@ -57,7 +57,7 @@ end
 warning('on','optim:quadprog:NullHessian');
 
 % store output structure and multipliers
-in.output = OUTPUT;
+in(1).output = OUTPUT;
 opts.lambda = LAMBDA;
 
 % return Nan if bad exit flag

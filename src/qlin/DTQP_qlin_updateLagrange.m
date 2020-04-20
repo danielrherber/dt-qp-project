@@ -44,10 +44,16 @@ for k = 1:3
     end
 end
 
-% (TODO) check for constant term
-% if any(Ci)
-%     keep(end+1) = 0;
-% end
+% check for constant term
+if isnumeric(Ci)
+    if any(Ci)
+        keep(end+1) = 0;
+    end
+else
+    if ~isequal(Ci{1},0)
+        keep(end+1) = 0;
+    end
+end
 
 % only need unique indices
 keep = unique(keep);
@@ -67,25 +73,39 @@ L = struct('left',{},'right',{},'matrix',{});
 for k = 1:numel(Iright)
 
     % current matrix
+    Hflag = false;
     if (Ileft(k) ~= 0) && (Iright(k) ~= 0) % Hi
         M = Hi(DTQP_getProbIndex(Ileft(k),nu,ny,np),DTQP_getProbIndex(Iright(k),nu,ny,np));
+        Hflag = true;
     elseif (Ileft(k) == 0) && (Iright(k) == 0) % Ci
         M = Ci(1,1);
     else % Gi
         M = Gi(1,DTQP_getProbIndex(Iright(k),nu,ny,np));
     end
 
-    % check if we want to add this term
+    % check if we want to add this term (is it zero)
     if isnumeric(M)
         if any(M,'all')
-            L(end+1).matrix = M;
+            addflag = 1;
         else
             continue % don't add and continue
         end
     elseif any(~cellfun(@(x) isequal(x,0),M),'all')
-        L(end+1).matrix = M;
+        addflag = 2;
     else
         continue % don't add and continue
+    end
+
+    % add the term
+    if Hflag && (Ileft(k) ~= Iright(k))
+        % double off diagonals
+        if addflag == 1
+            L(end+1).matrix = 2*M;
+        elseif addflag == 2
+            L(end+1).matrix = {'prod',2,M};
+        end
+    else
+        L(end+1).matrix = M;
     end
 
     % add left and right indices

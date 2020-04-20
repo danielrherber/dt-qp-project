@@ -1,6 +1,7 @@
 %--------------------------------------------------------------------------
-% DTQPtest_multiphase2.m
-% Test multiple-interval BrysonDenham problem
+% DTQP_TEST_multipleIntervalPS.m
+% Test multiple-interval pseudospectral method approach on the
+% BrysonDenham problem
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -9,13 +10,61 @@
 %--------------------------------------------------------------------------
 close all; clear; clc
 
-%% tunable parameters
+tests = 1:4;
+% tests = 1;
+
+% go through the tests
+for k = 1:length(tests)
+
+    clear opts
+
+    % test setup
+    switch tests(k)
+        %------------------------------------------------------------------
+        case 1
+        t0 = 0; tf = 1;
+        ni = 20;
+        xT = linspace(t0,tf,ni+1);
+        opts.dt.nt = 4;
+        %------------------------------------------------------------------
+        case 2
+        t0 = 0; tf = 1;
+        ni = 4;
+        xT = linspace(t0,tf,ni+1);
+        opts.dt.nt = 7;
+        %------------------------------------------------------------------
+        case 3
+        t0 = 0; tf = 1;
+        ni = 3;
+        xT = linspace(t0,tf,ni+1);
+        opts.dt.nt = 4;
+        %------------------------------------------------------------------
+        case 4
+        t0 = 0; tf = 1;
+        ni = 100;
+        xT = linspace(t0,tf,ni+1);
+        opts.dt.nt = 8;
+    end
+
+    % run the test and time
+    [setup,opts] = problem(opts,xT);
+    [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
+
+    % test analysis
+    figure(1)
+    plot(T,U); hold on
+
+    figure(2)
+    plot(T,Y); hold on
+end
+
+% problem structure
+function [setup,opts] = problem(opts,xT)
+
+% tunable parameters
 p.ell = 1/9;
 
-t0 = 0; tf = 1;
-xT = linspace(t0,tf,20);
-
-opts.dt.nt = 4;
+% options
 opts.dt.defects = 'PS';
 opts.dt.quadrature = 'G';
 opts.dt.mesh = 'LGL';
@@ -64,7 +113,7 @@ for phs = 1:length(xT)-1
 
     setup(phs).UB = UBt;
     if ~isempty(LBt)
-        setup(phs).LB = LBt; 
+        setup(phs).LB = LBt;
     end
 
     setup(phs).t0 = xT(phs);
@@ -74,15 +123,5 @@ for phs = 1:length(xT)-1
     if phs < length(xT)-1
         setup(phs).LY = LY;
     end
-
 end
-
-%% solve
-[T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
-
-%% plot
-figure
-plot(T,U); hold on
-
-figure
-plot(T,Y); hold on
+end

@@ -45,8 +45,8 @@ if (displevel > 0) % minimal
     opts.timer.create = opts.timer.create + toc(opts.timer.t3); % add
     opts.timer.total = toc(opts.timer.t1); % start timer
     opts.timer = rmfield(opts.timer,{'t1','t2','t3'}); % remove fields
-    in.QPcreatetime = opts.timer.sym + opts.timer.create;
-    in.QPsolvetime = opts.timer.qpsolver;
+    in(1).QPcreatetime = opts.timer.sym + opts.timer.create;
+    in(1).QPsolvetime = opts.timer.qpsolver;
 end
 
 % (potentially) display to the command window

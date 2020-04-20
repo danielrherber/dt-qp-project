@@ -54,12 +54,6 @@ while (eRel > etol) && (nt < ntmax)
     try
         % solve
         [T,U,Y,P,F,in,opts] = DTQP_multiphase(setup,opts);
-
-        % combine timers (NOTE: this currently misses timers with errors)
-        if (opts.general.displevel > 0) % minimal
-            QPcreatetime = QPcreatetime + in.QPcreatetime;
-            QPsolvetime = QPsolvetime + in.QPsolvetime;
-        end
     catch
         % reset saved quantities when QP problem fails
         ms = []; Fs = []; k0s = []; F = inf;
@@ -136,19 +130,6 @@ while (eRel > etol) && (nt < ntmax)
 
 	% increment counter
     iter = iter + 1;
-end
-
-% end the timer
-if (displevel > 0) % minimal
-    in.QPtotaltime = toc;
-    in.QPcreatetime = QPcreatetime;
-    in.QPsolvetime = QPsolvetime;
-end
-
-% display to the command window
-if (displevel > 1) % verbose
-    disp('----------------------------------------------------')
-    disp(['QP total time: ', num2str(in.QPtotaltime), ' s'])
 end
 
 % reset display level
