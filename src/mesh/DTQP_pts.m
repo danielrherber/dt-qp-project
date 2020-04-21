@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % DTQP_pts.m
-% Generate the time mesh (vector of discrete time values). Also, 
+% Generate the time mesh (vector of discrete time values). Also,
 % potentially generate the quadrature weights and differentiation matrix
 %--------------------------------------------------------------------------
 %
@@ -9,6 +9,7 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function [t,w,D] = DTQP_pts(in,dt)
+
 % extract
 t0 = in.t0; tf = in.tf;
 
@@ -29,7 +30,7 @@ switch upper(dt.mesh)
             tau = lobpts(dt.nt); % using chebfun
         end
 
-        % differentiation matrix  
+        % differentiation matrix
         if strcmpi(dt.defects,'PS')
             D = legslbdiff(dt.nt,tau);
         else

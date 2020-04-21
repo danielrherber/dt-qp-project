@@ -31,6 +31,7 @@ if lqdoflag
 end
 
 % linearized dynamics
+D2 = [];
 if isfield(symb,'Linf')
     Dflag = true;
     D = symb.Linf;
@@ -54,10 +55,7 @@ end
 % TODO: extract other constraints
 
 % initial guess values for controls, states, and parameters
-[T,U,Y,P] = DTQP_qlin_guess(setup,opts,o);
-if sqpflag
-    opts.lambda = zeros(length(T)-1,length(D2));
-end
+[T,U,Y,P,opts] = DTQP_qlin_guess(setup,opts,o,D2);
 
 % initialize
 iter = 0;
@@ -75,8 +73,7 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
 
     if iter == 0
     	if improveflag
-	        [U,Y,P,lambda] = DTQP_qlin_improveInitialPoint(setupi,opts,T,U,Y,P,param,Dflag,DA,DB,DG,Dd);
-	        opts.lambda = lambda;
+	        [U,Y,P,~] = DTQP_qlin_improveInitialPoint(setupi,opts,T,U,Y,P,param,Dflag,DA,DB,DG,Dd);
     	end
     end
 

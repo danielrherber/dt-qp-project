@@ -31,12 +31,12 @@ end
 
 % potentially set current file name and path
 if ~isfield(opts,'general')
-   opts.general = []; 
+   opts.general = [];
 end
 if ~isfield(opts,'mname')
     mname = char(f);
     mname(end-4:end) = [];
-	opts.general.mname = mname;    
+	opts.general.mname = mname;
 end
 mname = opts.general.mname;
 if ~isfield(opts.general,'mpath')

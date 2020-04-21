@@ -67,13 +67,13 @@ for idx = 1:Nparfor % serial
     opts = options();
     p = [];
 
-    % 
+    % extract options
     opts.dt.quadrature = QuadV{idx};
     opts.dt.defects = DefectV{idx};
-    opts.dt.mesh = MeshV{idx}; 
-    opts.dt.nt = NV(idx); 
+    opts.dt.mesh = MeshV{idx};
+    opts.dt.nt = NV(idx);
 
-    % check if 
+    % check if
     if sum(strcmpi(opts.dt.mesh,{'LGL','CGL'})) && (opts.dt.nt > PSntmax)
         % do nothing, nan already assigned
     else
@@ -104,39 +104,56 @@ for k = 1:nO
 end
 
 end
+
 % plotting function
 function outputPlot(output,narray,LegendArray)
+
+% plot setup
 set(0,'DefaultTextInterpreter','latex'); % change the text interpreter
 set(0,'DefaultLegendInterpreter','latex'); % change the legend interpreter
 set(0,'DefaultAxesTickLabelInterpreter','latex'); % change the tick interpreter
 fontsize = 16;
 map = parula(length(LegendArray));
-figure('color',[1 1 1])
+figure('color',[1 1 1]); hold on
+
+% go through each dataset
 for k = 1:length(LegendArray)
     % data
     y = output.value(:,k);
+
     % check if it is a time calculation
     if contains(output.label,'time','IgnoreCase',true)
         % plot
-        loglog(narray,y,'color',map(k,:),'linewidth',2); hold on
+        loglog(narray,y,'color',map(k,:),'linewidth',2);
+
     else
         % forward-looking moving maximum
         y = movmax(y,[0 3]);
+
         % plot
-        loglog(narray,y,'color',map(k,:),'linewidth',2); hold on
+        loglog(narray,y,'color',map(k,:),'linewidth',2);
+
     end
+
 end
+
 % axis
+ha = gca; ha.XScale = 'log'; ha.YScale = 'log';
 xlim([narray(1) narray(end)])
 xlabel('$n_t$','fontsize',fontsize)
 ylabel(['output: ',output.label],'fontsize',fontsize)
+
 % legend
 legend(LegendArray,'location','best','fontsize',fontsize-8)
+
 end
+
 % create nt test array
 function narray = GenerateNgrid(n,Nmin,Nmax)
+
 % logarithmically spaced integers
 Narray = round(logspace(log10(Nmin),log10(Nmax),n));
+
 % random to prevent sequentially even or odd grids
 Narray = unique(Narray);
 for idx = 1:length(Narray)-3
@@ -145,19 +162,25 @@ for idx = 1:length(Narray)-3
         Narray(idx+1) = Narray(idx+1) + (randi([0,1], 1)*2 - 1);
     end
 end
+
 % remove values outside the defined boundaries
 Narray(Narray<Nmin) = [];
 Narray(Narray>Nmax) = [];
+
 % test only the unique values
 narray = unique([Nmin,Narray,Nmax]);
+
 end
+
 % default options
 function opts = options
+
 opts.general.plotflag = 0;
 opts.general.saveflag = 0;
 opts.general.displevel = 1;
 opts.qp.disp = 'none';
 opts.dt.defects = 'TR';
 opts.dt.quadrature = 'CTR';
-opts.dt.mesh = 'ED'; 
+opts.dt.mesh = 'ED';
+
 end

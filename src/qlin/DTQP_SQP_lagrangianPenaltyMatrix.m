@@ -16,10 +16,8 @@ nu = in.nu; ny = in.ny; np = in.np; ini = in.i;
 t = in.t; h = in.h; nt = in.nt; p = in.p;
 lambda = opts.lambda;
 
-% NO: Move outside
-if isfield(lambda,'eqlin')
-    lambda = reshape(lambda.eqlin,[],ny);
-end
+% extract and reshape multipiers
+lambda = lambda.eqlin(in.multipliers.defects);
 
 % augment step size and multiplier vectors with initial zeros
 h = [0;h];

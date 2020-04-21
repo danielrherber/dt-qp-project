@@ -1,6 +1,6 @@
 %-------------------------------------------------------------------------------
-% This file provides some examples illustrating how to implement different 
-% linear-quadratic dynamic optimization (LQDO) problem elements using the 
+% This file provides some examples illustrating how to implement different
+% linear-quadratic dynamic optimization (LQDO) problem elements using the
 % structure-based syntax of the DT QP Project
 %-------------------------------------------------------------------------------
 % Examples Link: https://github.com/danielrherber/dt-qp-project/examples
@@ -18,7 +18,7 @@
 % setup.A = [0,1;-3,-2]; % ns = 2
 % setup.A = {@(t) sin(t)}; % ns = 1
 % setup.B = [1,2]; % ns = 1, nu = 2
-% setup.B = {@(t) cos(t); @(t) sin(t)}; % ns = 2, nu = 1 
+% setup.B = {@(t) cos(t); @(t) sin(t)}; % ns = 2, nu = 1
 % setup.d = {1;0; @(t) sin(t)}; % ns = 3
 % setup.d = -1; % ns = 1
 %-------------------------------------------------------------------------------

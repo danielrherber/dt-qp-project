@@ -16,30 +16,30 @@ if length(varargin) == 9
     A = varargin{4}; b = varargin{5};
     Aeq = varargin{6}; beq = varargin{7};
     lb = varargin{8}; ub = varargin{9};
-    
+
     %----------------------------------------------------------------------
     % START: reorder opt variables, [U,Y,p] -> [u_1,y_1,...,u_n,y_n,p]
     %----------------------------------------------------------------------
     % final index for continuous variables
     e = (in.nu+in.ny)*in.nt;
-    
+
     % reshape to get sorting vector
     sV = reshape(reshape(1:e,[],in.nu+in.ny)',[],1);
 
     % add the parameters
     sV = [sV;e+1:e+in.np];
-    
+
     % H
     if ~isempty(H)
         H = H(:,sV);
         H = H(sV,:);
     end
-    
+
     % f
     if ~isempty(f)
         f = f(sV);
     end
-    
+
     % A
     if ~isempty(A)
         A = A(:,sV);
@@ -49,7 +49,7 @@ if length(varargin) == 9
     if ~isempty(Aeq)
         Aeq = Aeq(:,sV);
     end
-    
+
     % lb
     if ~isempty(lb)
         lb = lb(sV);
@@ -62,11 +62,11 @@ if length(varargin) == 9
     %----------------------------------------------------------------------
     % END: reorder opt variables, [U,Y,p] -> [u_1,y_1,...,u_n,y_n,p]
     %----------------------------------------------------------------------
-    
+
     %----------------------------------------------------------------------
     % START: reorder linear constraint rows
     %----------------------------------------------------------------------
-    if ~isempty(Aeq)    
+    if ~isempty(Aeq)
         % % sort the rows based on first nonzero entry
         % [~,D] = sortrows(-abs(Aeq));
 
@@ -75,28 +75,28 @@ if length(varargin) == 9
 
         % reshape to get sorting vector
         D = reshape(reshape(1:e,[],in.ny)',[],1);
-        
+
         % sort the matrix rows
         Aeq = Aeq(D,:);
-        
+
         if ~isempty(beq)
             beq = beq(D);
         end
     end
 
-    if ~isempty(A)    
+    if ~isempty(A)
         % % sort the rows based on first nonzero entry
         % [~,D] = sortrows(-abs(A));
-        
+
         % number of constraints
         e = size(A,1);
 
         % reshape to get sorting vector
         D = reshape(reshape(1:e,[],in.ny)',[],1);
-        
+
         % sort the matrix rows
         A = A(D,:);
-        
+
         if ~isempty(b)
             b = b(D);
         end
@@ -110,7 +110,7 @@ if length(varargin) == 9
     varargout{4} = A; varargout{5} = b;
     varargout{6} = Aeq; varargout{7} = beq;
     varargout{8} = lb; varargout{9} = ub;
-    
+
 else
     % original ordering
     % reorder, [u_1, y_1, ... , u_n, y_n, p] -> [U,Y,p]
@@ -119,7 +119,7 @@ else
         sV = [sV, i:(in.nu+in.ny):in.nx];
     end
     % sV = reshape(1:in.nx,in.nu+in.ny,[])'; % alternative implementation
-    
+
     % unsort
     varargout{1} = varargin{1}(sV);
 

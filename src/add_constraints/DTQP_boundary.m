@@ -8,50 +8,51 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function [J,V,b] = DTQP_boundary(yz,in)
-    % extract some of the variables
-    nt = in.nt; nu = in.nu; ny = in.ny; ini = in.i;
 
-    % initialize storage arrays
-    Jsav = cell(0,1); Vsav = cell(0,1);
+% extract some of the variables
+nt = in.nt; nu = in.nu; ny = in.ny; ini = in.i;
 
-    % go through each substructure
-    for j = 1:length(yz.linear) % loop through the extended variables
+% initialize storage arrays
+Jsav = cell(0,1); Vsav = cell(0,1);
 
-        % check if the supplied matrix is a cell (column vector)
-        if ~ismatrix(yz.linear(j).matrix)
-            yzt = cell2mat(yz.linear(j).matrix);
-        else
-            yzt = yz.linear(j).matrix;
-        end
+% go through each substructure
+for j = 1:length(yz.linear) % loop through the extended variables
 
-        % variable locations for the variable type
-        C = ini{yz.linear(j).right};
+    % check if the supplied matrix is a cell (column vector)
+    if ~ismatrix(yz.linear(j).matrix)
+        yzt = cell2mat(yz.linear(j).matrix);
+    else
+        yzt = yz.linear(j).matrix;
+    end
 
-        % go through each variable of the current type
-        for i = 1:length(C)
+    % variable locations for the variable type
+    C = ini{yz.linear(j).right};
 
-            % column location
-            Js = DTQP_getQPIndex(C(i),yz.linear(j).right,0,nt,nu,ny);
+    % go through each variable of the current type
+    for i = 1:length(C)
 
-            % single value assigned
-            Vs = reshape(yzt(i,1),1,[]);
+        % column location
+        Js = DTQP_getQPIndex(C(i),yz.linear(j).right,0,nt,nu,ny);
 
-            % remove zeros
-            ZeroIndex = find(~Vs);
-            Js(ZeroIndex,:) = []; Vs(ZeroIndex,:) = [];
+        % single value assigned
+        Vs = reshape(yzt(i,1),1,[]);
 
-            % combine 
-            Jsav{end+1} = Js; Vsav{end+1} = Vs;  
+        % remove zeros
+        ZeroIndex = find(~Vs);
+        Js(ZeroIndex,:) = []; Vs(ZeroIndex,:) = [];
 
-        end % end for i
+        % combine
+        Jsav{end+1} = Js; Vsav{end+1} = Vs;
 
-    end % end for j
+    end % end for i
 
-    % combine
-    J = vertcat(Jsav{:});
-    V = vertcat(Vsav{:});
-    
-    % assign constant value
-    b = yz.b;
+end % end for j
+
+% combine
+J = vertcat(Jsav{:});
+V = vertcat(Vsav{:});
+
+% assign constant value
+b = yz.b;
 
 end % end function

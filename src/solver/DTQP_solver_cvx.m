@@ -9,6 +9,7 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function [X,F,in,opts] = DTQP_solver_cvx(H,f,A,b,Aeq,beq,lb,ub,in,opts)
+
 % number of optimization variables
 n = in.nx;
 
@@ -32,7 +33,7 @@ ilb = find(~isinf(lb));
 rlb = lb(ilb);
 Alb = sparse(1:length(rlb),ilb,1,length(rlb),n);
 
-% combine 
+% combine
 A = [A;Aub;Alb];
 b = [b;rub;rlb];
 
@@ -61,7 +62,7 @@ if size(Aeq,1) > 0
 end
 
 % construct the cvx problem
-cvx_begin 
+cvx_begin
     variable x(n)
     eval(strObj)
     eval(strA)

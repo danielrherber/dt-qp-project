@@ -9,20 +9,20 @@
 %--------------------------------------------------------------------------
 function c =  DTQP_createc(cL,cM,in,opts)
 
-    % initialize constant term
-	c = 0;            
+% initialize constant term
+c = 0;
 
-    % add constant Lagrange term using same quadrature method as QP
-    if ~isempty(cL)
-        [~,~,V] = DTQP_L(cL,in,opts);
-        c = sum(V); % calculate the integral
-    end
+% add constant Lagrange term using same quadrature method as QP
+if ~isempty(cL)
+    [~,~,V] = DTQP_L(cL,in,opts);
+    c = sum(V); % calculate the integral
+end
 
-    % add constant Mayer term
-    if ~isempty(cM)
-        for idx = 1:length(cM)
-            c = c + cM(idx).matrix;
-        end
+% add constant Mayer term
+if ~isempty(cM)
+    for idx = 1:length(cM)
+        c = c + cM(idx).matrix;
     end
+end
 
 end

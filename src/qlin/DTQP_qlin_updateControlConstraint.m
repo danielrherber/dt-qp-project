@@ -1,6 +1,7 @@
 %--------------------------------------------------------------------------
 % DTQP_qlin_updateControlConstraint.m
-% Convert the nonlinear control constraint to a Linear constraint for the LQDO problem
+% Convert the nonlinear control constraint to a Linear constraint for the
+% LQDO problem
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -10,7 +11,7 @@
 %--------------------------------------------------------------------------
 function [setup] = DTQP_qlin_updateControlConstraint(setup,opts)
 
-% get the Nonlinear variables
+% get the nonlinear variables
 symb = setup.symb;
 Linc = symb.c;
 oc = symb.oc;
@@ -24,7 +25,7 @@ param = [];
 B = TaylorConvert(Linc.B,T,X,param);
 d = TaylorConvert(Linc.d,T,X,param);
 
-% Linear equality constraints
+% linear equality constraints
 Y(1).linear(1).right = 1;Y(1).linear(1).matrix = B;
 Y(1).b = d;
 

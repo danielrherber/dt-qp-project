@@ -22,7 +22,7 @@ end
 
 % maximum number of iterations
 if ~isfield(opts.qlin,'imax')
-    opts.qlin.imax = 500;
+    opts.qlin.imax = 50;
 end
 
 % constant scaling based on previous solution

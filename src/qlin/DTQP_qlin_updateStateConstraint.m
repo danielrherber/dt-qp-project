@@ -1,6 +1,7 @@
 %--------------------------------------------------------------------------
 % DTQP_qlin_updateStateConstraint.m
-% Convert the nonlinear state constraint to a Linear constraint for the LQDO problem
+% Convert the nonlinear state constraint to a Linear constraint for the
+% LQDO problem
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -9,6 +10,7 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function [setup] = DTQP_qlin_updateStateConstraint(setup,opts)
+
 % get the respective Nonlinear variables
 symb = setup.symb;
 Liny = symb.y;

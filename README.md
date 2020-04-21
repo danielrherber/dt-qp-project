@@ -47,6 +47,7 @@ See [INSTALL_DTQP.m](INSTALL_DTQP.m) for more information.
 - [Daniel R. Herber](https://github.com/danielrherber) (primary)
 - [Yong Hoon Lee](https://github.com/yonghoonlee)
 - [James T. Allison](https://github.com/jamestallison)
+- [Athul K. Sundarrajan](https://github.com/AthulKrishnaSundarrajan)
 
 #### Project Links
 - [https://github.com/danielrherber/dt-qp-project](https://github.com/danielrherber/dt-qp-project)

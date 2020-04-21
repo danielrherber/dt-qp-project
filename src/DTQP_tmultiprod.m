@@ -3,7 +3,7 @@
 % Evaluate the product of potentially time-varying matrices
 %--------------------------------------------------------------------------
 % - set 'prod' as the first entry to perform the matrix products
-% - the matrices must be in the appropriate format for DTQP_tmatrix 
+% - the matrices must be in the appropriate format for DTQP_tmatrix
 % - varargin can be used to provide a time mesh different than p.t
 %--------------------------------------------------------------------------
 % Example 1: two constant matrices ----------------------------------------
