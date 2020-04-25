@@ -131,6 +131,7 @@ case 1
     opts.qlin.trustregionflag = true;
     opts.qlin.delta = 2500;
     opts.qp.disp = 'none';
+    opts.general.scalerowflag = true; % enabled
 end
 
 end

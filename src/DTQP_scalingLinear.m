@@ -1,18 +1,15 @@
 %--------------------------------------------------------------------------
-% DTQP_scaling.m
-% Apply scaling to the problem (linear and constraint row)
+% DTQP_scalingLinear.m
+% Apply scaling to the problem based on a linear transformation
 %--------------------------------------------------------------------------
 % NOTE: constraint row scaling is currently commented
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [H,f,c,A,b,Aeq,beq,lb,ub,LAL,LAR,Lb,LAeqL,LAeqR,Lbeq,in,sm,sc] = ...
-    DTQP_scaling(H,f,c,A,b,Aeq,beq,lb,ub,LAL,LAR,Lb,LAeqL,LAeqR,Lbeq,in,s)
+function [H,f,c,A,b,Aeq,beq,lb,ub,LLA,LRA,LLb,LRb,LLAeq,LRAeq,LLbeq,LRbeq,in,sm,sc] = ...
+	DTQP_scalingLinear(H,f,c,A,b,Aeq,beq,lb,ub,LLA,LRA,LLb,LRb,LLAeq,LRAeq,LLbeq,LRbeq,in,s)
 
-%--------------------------------------------------------------------------
-% START: simple scaling
-%--------------------------------------------------------------------------
 % extract
 T = in.t; nt = in.nt; nu = in.nu; ny = in.ny; np = in.np;
 
@@ -50,17 +47,19 @@ end
 sm = [s1mat;s2mat;s3mat];
 
 % scaling diagonal matrix
-nx = length(sm);
-Is = 1:nx;
-sM = sparse(Is,Is,sm,nx,nx);
+nr = length(sm);
+Id = 1:nr;
+sM = sparse(Id,Id,sm,nr,nr);
 
 % scaling constant vector
 sc = sparse([s1con;s2con;s3con]);
 
 %--------------------------------------------------------------------------
+% normal problem elements
+%--------------------------------------------------------------------------
 % c
 if isempty(c)
-	c = 0
+	c = 0;
 end
 
 if ~isempty(f)
@@ -118,70 +117,50 @@ if ~isempty(ub)
 end
 
 %--------------------------------------------------------------------------
-% Lb
-if ~isempty(Lb)
-    Lb = Lb - LAL*sc; % not verified
-end
-
-% LAL
-if ~isempty(LAL)
-    LAL = LAL*sM; % not verified
-end
-
-% LAR
-if ~isempty(LAR)
-    LAR = LAR*sM; % not verified
-end
-
-% Lbeq
-if ~isempty(Lbeq)
-    Lbeq = Lbeq - LAeqL*sc; % not verified
-end
-
-% LAeqL
-if ~isempty(LAeqL)
-    LAeqL = LAeqL*sM; % not verified
-end
-
-% LAeqR
-if ~isempty(LAeqR)
-    LAeqR = LAeqR*sM; % not verified
-end
-
+% linkage constraints
 %--------------------------------------------------------------------------
-% END: simple scaling
-%--------------------------------------------------------------------------
-
-%--------------------------------------------------------------------------
-% START: constraint row scaling
-%--------------------------------------------------------------------------
-% r = 1./full(max(abs([A,b]),[],2));
-% req = 1./full(max(abs([Aeq,beq]),[],2));
-%
-% % b
-% if ~isempty(b)
-%     b = b.*r;
-% end
-%
-% % A
-% if ~isempty(A)
-%     A = bsxfun(@times,A,r);
-% end
-%
-% % beq
-% if ~isempty(beq)
-%     beq = beq.*req;
-% end
-%
-% % Aeq
-% if ~isempty(Aeq)
-%     Aeq = bsxfun(@times,Aeq,req);
-% end
-
-%--------------------------------------------------------------------------
-% END: constraint row scaling
-%--------------------------------------------------------------------------
+% LLb
+if ~isempty(LLb)
+    LLb = LLb - LLA*sc;
 end
+
+% LLA
+if ~isempty(LLA)
+    LLA = LLA*sM;
+end
+
+% LRb
+if ~isempty(LRb)
+    LRb = LRb - LRA*sc;
+end
+
+% LRA
+if ~isempty(LRA)
+    LRA = LRA*sM;
+end
+
+% LLbeq
+if ~isempty(LLbeq)
+    LLbeq = LLbeq - LLAeq*sc;
+end
+
+% LLAeq
+if ~isempty(LLAeq)
+    LLAeq = LLAeq*sM;
+end
+
+% LRbeq
+if ~isempty(LRbeq)
+    LRbeq = LRbeq - LRAeq*sc;
+end
+
+% LRAeq
+if ~isempty(LRAeq)
+    LRAeq = LRAeq*sM;
+end
+
+end
+
 % create the scaling vector for the particular input
 function Y = createScalingVector(y,ny,T,nt)
 

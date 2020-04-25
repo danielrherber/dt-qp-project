@@ -17,10 +17,12 @@ nphs = length(setup);
 % initialize storage arrays and constants
 Hs = cell(nphs,1); fs = Hs; c = 0; SM = Hs; SC = Hs;
 As = Hs; bs = Hs; Aeqs = Hs; beqs = Hs; lbs = Hs; ubs = Hs;
-LALs = Hs; LARs = Hs; Lbs = Hs; LAeqLs = Hs; LAeqRs = Hs; Lbeqs = Hs;
+LALs = Hs; LARs = Hs; LLbs = Hs; LRbs = Hs;
+LAeqLs = Hs; LAeqRs = Hs; LLbeqs = Hs; LRbeqs = Hs;
 
 % determine flags
 scaleflag = isfield(setup,"scaling");
+scalerowflag = opts.general.scalerowflag;
 sqpflag = opts.qlin.sqpflag;
 trustregionflag = opts.qlin.trustregionflag;
 reorderflag = opts.qp.reorder;
@@ -40,49 +42,41 @@ end
 
 % go through each phase structure
 for phs = 1:nphs
+
     % pass the options for the current phase
     phsopts = opts;
     phsopts.dt = opts.dt(phs);
 
     % transcribe the problem for the current phase
-    [Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,setupi,in(phs),phsopts] = ...
+    [Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,setup2(phs+1),in(phs),phsopts] = ...
         DTQP_create(setup(phs),phsopts);
+
+    % NOTE: setup2 shifts phs by +1 compared to setup
 
     % transcribe linkage constraints (only in multiphase problems)
     if multiphaseflag
-        % check if the linkage constraint fields are empty
-        if ~isfield(setup,'LZ')
-            setup(phs).LZ = [];
-        end
-        if ~isfield(setup,'LY')
-            setup(phs).LY = [];
-        end
 
         % transcribe the inequality linkage constraints for the current phase
-        if phs == 1
-            [LALi,Lbi,LARi,~] = DTQP_linkage(setup(phs).LZ,[],in(phs));
-        else
-            [LALi,Lbi,LARi,~] = DTQP_linkage(setup(phs).LZ,setup(phs-1).LZ,in(phs));
-        end
+        [LLAi,LLbi,LRAi,LRbi] = DTQP_linkage(setup2(phs+1).LZ,setup2(phs).LZ,in(phs));
 
         % transcribe the equality linkage constraints for the current phase
-        if phs == 1
-            [LAeqLi,Lbeqi,LAeqRi,~] = DTQP_linkage(setup(phs).LY,[],in(phs));
-        else
-            [LAeqLi,Lbeqi,LAeqRi,~] = DTQP_linkage(setup(phs).LY,setup(phs-1).LY,in(phs));
-        end
+        [LLAeqi,LLbeqi,LRAeqi,LRbeqi] = DTQP_linkage(setup2(phs+1).LY,setup2(phs).LY,in(phs));
+
+    else
+        % empty linkage elements
+        LLAi = []; LLbi= []; LRAi= []; LRbi= [];
+        LLAeqi= []; LLbeqi = []; LRAeqi = []; LRbeqi = [];
     end
 
-    % (optional) simple scaling
+    % (optional) linear transformation scaling
     if scaleflag
-        if multiphaseflag
-            error('Scaling is not currently supported for multiphase problems')
-            [Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,LALi,LARi,Lbi,LAeqLi,LAeqRi,Lbeqi,in(phs),SM{phs},SC{phs}] = DTQP_scaling(...
-                Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,LALi,LARi,Lbi,LAeqLi,LAeqRi,Lbeqi,in(phs),setupi.scaling);
-        else
-            [Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,~,~,~,~,~,~,in(phs),SM{phs},SC{phs}] = DTQP_scaling(...
-                Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,[],[],[],[],[],[],in(phs),setupi.scaling);
-        end
+        [Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,LLAi,LRAi,LLbi,LRbi,LLAeqi,LRAeqi,LLbeqi,LRbeqi,in(phs),SM{phs},SC{phs}] = DTQP_scalingLinear(...
+            Hi,fi,ci,Ai,bi,Aeqi,beqi,lbi,ubi,LLAi,LRAi,LLbi,LRbi,LLAeqi,LRAeqi,LLbeqi,LRbeqi,in(phs),setup2(phs+1).scaling);
+    end
+
+    % (optional) constraint row scaling
+    if scalerowflag
+        [Ai,bi,Aeqi,beqi] = DTQP_scalingRows(Ai,bi,Aeqi,beqi);
     end
 
     % (optional) add SQP penalty matrix
@@ -90,36 +84,10 @@ for phs = 1:nphs
         if multiphaseflag
             error('SQP is not currently supported for multiphase problems')
         else
-            if isfield(setup,'D2')
+            if isfield(setup2(phs+1),'D2')
+
                 % create sqp penalty matrix
-                Hsqpi = DTQP_qlin_sqpMatrix(setup.D2,in,opts);
-
-                % combine with original hessian
-                if isempty(Hi)
-                    Hi = Hsqpi;
-                else
-                    % combine
-                    Hi = Hi + Hsqpi;
-
-                    % flags (need to expose)
-                    mirrorflag = true;
-                    etol = sqrt(eps);
-
-                    if mirrorflag
-                        % check if the matrix is symmetric positive semidefinite
-                        if eigs(Hi,1,'smallestreal') >= -etol
-                            % disp('Matrix is symmetric positive definite')
-                        else
-                            % disp('Matrix is not symmetric positive definite')
-
-                            % mirrored version
-                            [Um,Tm] = schur(full(Hi));
-                            Hi = Um*abs(Tm)*Um';
-                        end
-
-                        Hi = (Hi+Hi')/2; % make symmetric, then times 2 for 1/2*x'*H*x form
-                    end
-                end
+                [Hi,Hsqpi] = DTQP_qlin_sqpMatrix(Hi,setup2(phs+1).D2,in,opts);
 
             else
                 Hsqpi = [];
@@ -136,6 +104,7 @@ for phs = 1:nphs
 
     % store problem elements
     if multiphaseflag
+
         % store linear term
         if isempty(fi) % handle empty case
             fs{phs} = sparse([],[],[],in(phs).nx,1);
@@ -157,16 +126,15 @@ for phs = 1:nphs
             ubs{phs} = ubi;
         end
 
+        % assign
         Hs{phs} = Hi;
         As{phs} = Ai; bs{phs} = bi;
         Aeqs{phs} = Aeqi; beqs{phs} = beqi;
-        LALs{phs} = LALi; LARs{phs} = LARi; Lbs{phs} = Lbi;
-        LAeqLs{phs} = LAeqLi; LAeqRs{phs} = LAeqRi; Lbeqs{phs} = Lbeqi;
+        LALs{phs} = LLAi; LARs{phs} = LRAi; LLbs{phs} = LLbi; LRbs{phs} = LRbi;
+        LAeqLs{phs} = LLAeqi; LAeqRs{phs} = LRAeqi; LLbeqs{phs} = LLbeqi; LRbeqs{phs} = LRbeqi;
     else
-        H = Hi; f = fi;
-        A = Ai; b = bi;
-        Aeq = Aeqi; beq = beqi;
-        lb = lbi; ub = ubi;
+        H = Hi; f = fi; A = Ai; b = bi;
+        Aeq = Aeqi; beq = beqi; lb = lbi; ub = ubi;
     end
 
     % combine constants
@@ -178,11 +146,12 @@ end
 if multiphaseflag
 
     % combine to create complete equality linkage constraints
-    LAeqL = blkdiag(LAeqLs{:});
-    LAeqL = [LAeqL,sparse([],[],[],size(LAeqL,1),size(LAeqRs{end},2))];
-    LAeqR = blkdiag(LAeqRs{:});
-    LAeqR = [sparse([],[],[],size(LAeqR,1),size(LAeqLs{1},2)),LAeqR];
-    LAeq = LAeqL + LAeqR;
+    LLAeq = blkdiag(LAeqLs{:});
+    LLAeq = [LLAeq,sparse([],[],[],size(LLAeq,1),size(LAeqRs{end},2))];
+    LRAeq = blkdiag(LAeqRs{:});
+    LRAeq = [sparse([],[],[],size(LRAeq,1),size(LAeqLs{1},2)),LRAeq];
+    LAeq = LLAeq + LRAeq;
+    Lbeq = vertcat(LLbeqs{:}) + vertcat(LRbeqs{:});
 
     % combine to create complete inequality linkage constraints
     LAL = blkdiag(LALs{:});
@@ -190,11 +159,12 @@ if multiphaseflag
     LAR = blkdiag(LARs{:});
     LAR = [sparse([],[],[],size(LAR,1),size(LALs{1},2)),LAR];
     LA = LAL + LAR;
+    Lb = vertcat(LLbs{:}) + vertcat(LRbs{:});
 
     % all problem elements
     H = blkdiag(Hs{:}); f = vertcat(fs{:});
-    A = vertcat(blkdiag(As{:}),LA); b = vertcat(bs{:},Lbs{:});
-    Aeq = vertcat(blkdiag(Aeqs{:}),LAeq); beq = vertcat(beqs{:},Lbeqs{:});
+    A = vertcat(blkdiag(As{:}),LA); b = vertcat(bs{:},Lb);
+    Aeq = vertcat(blkdiag(Aeqs{:}),LAeq); beq = vertcat(beqs{:},Lbeq);
     lb = vertcat(lbs{:}); ub = vertcat(ubs{:});
 
 end

@@ -106,10 +106,11 @@ switch num
 case 1
     % default parameters
     opts.general.displevel = 1;
+    opts.general.plotflag = 1;
     opts.dt.defects = 'HS';
     opts.dt.quadrature = 'CQHS';
     opts.dt.mesh = 'ED';
-    opts.dt.nt = 4000; % number of nodes
+    opts.dt.nt = 100; % number of nodes
 case 2
     opts.general.displevel = 1;
     opts.dt.defects = 'PS';

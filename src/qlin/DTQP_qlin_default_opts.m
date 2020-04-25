@@ -38,6 +38,13 @@ if ~isfield(opts.qlin,'sqpflag')
 end
 if opts.qlin.sqpflag
 	opts.qlin.deltascaleflag = true; % required to be enabled
+
+    % mirror negative eigenvalues in hessian
+    if ~isfield(opts.qlin,'mirrorflag')
+        % opts.qlin.mirrorflag = true; % enabled
+        opts.qlin.mirrorflag = false; % disabled
+    end
+
 end
 
 % trust region flag

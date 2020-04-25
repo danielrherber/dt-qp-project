@@ -9,8 +9,8 @@
 %--------------------------------------------------------------------------
 close all; clear; clc
 
-% tests = 1:2;
-tests = 4;
+tests = 1:4;
+% tests = 1;
 
 % go through each test
 for k = 1:length(tests)
@@ -81,7 +81,7 @@ LQRScalarTransfer(p,opts)
 % LQRstandard(p,opts)
 MinimumEnergyTransfer(p,opts)
 MultiphaseParameter(p,opts)
-OutputTracking(p,opts)
+% OutputTracking(p,opts)
 TavallaeiTousi1(p,opts)
 TurnerChunJuang1(p,opts)
 

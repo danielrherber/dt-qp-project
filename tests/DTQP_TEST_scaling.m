@@ -10,10 +10,12 @@
 close all; clear; clc
 
 % tests to run (see below)
-tests = 0:12; % all tests
+tests = [-12:12]; % all tests
+% tests = 0:12; % all tests (with row scaling)
 % tests = [0,1:7]; % scalar tests
 % tests = [0,8:9]; % time-varying function tests
 % tests = [0,10:12]; % time-based matrix tests
+% tests = [-1,1]; % row scaling enabled and disabled
 
 % problem structure
 [setup,opts] = problem;
@@ -27,13 +29,21 @@ ntests = length(tests);
 % go through each test
 for k = 1:length(tests)
 
+    rng(6783097)
+
     % potentially remove the scaling field from previous tests
     if isfield(setup,'scaling')
         setup = rmfield(setup,'scaling');
     end
 
+    if tests(k) > 0
+        opts.general.scalerowflag = true; % enabled
+    else
+        opts.general.scalerowflag = false; % disabled
+    end
+
     % test setup
-    switch tests(k)
+    switch abs(tests(k))
         case 0 % no scaling
         %------------------------------------------------------------------
         case 1 % scalar (controls)
@@ -115,7 +125,7 @@ for k = 1:length(tests)
 
     % run the test and time
     t1 = tic;
-    [T{k},U{k},Y{k},P{k},F{k}] = DTQP_solve(setup,opts);
+    [T{k},U{k},Y{k},P{k},F{k},in(k),opts2(k)] = DTQP_solve(setup,opts);
     toc(t1)
 
     % test analysis
@@ -130,8 +140,10 @@ hf = figure; hold on; hf.Color = 'w';
 legendstr = strings(ntests,1);
 for k = 1:ntests
     Yactual = BrysonDenham_Y(T{k},setup.p.ell);
-    plot(T{k},abs(Y{k}(:,1)-Yactual(:,1)),'linewidth',2);
+    d = abs(Y{k}(:,1)-Yactual(:,1));
+    plot(T{k},d,'linewidth',2);
     legendstr(k) = string(tests(k));
+    EY1(k) = max(d);
 end
 legend(strcat("test ",legendstr))
 xlabel("t"); ylabel("Y1 error")
@@ -141,8 +153,10 @@ hf = figure; hold on; hf.Color = 'w';
 legendstr = strings(ntests,1);
 for k = 1:ntests
     Yactual = BrysonDenham_Y(T{k},setup.p.ell);
-    plot(T{k},abs(Y{k}(:,2)-Yactual(:,2)),'linewidth',2);
+    d = abs(Y{k}(:,2)-Yactual(:,2));
+    plot(T{k},d,'linewidth',2);
     legendstr(k) = string(tests(k));
+    EY2(k) = max(d);
 end
 legend(strcat("test ",legendstr))
 xlabel("t"); ylabel("Y2 error")
@@ -152,11 +166,32 @@ hf = figure; hold on; hf.Color = 'w';
 legendstr = strings(ntests,1);
 for k = 1:ntests
     Uactual = BrysonDenham_U(T{k},setup.p.ell);
-    plot(T{k},abs(U{k}(:,1)-Uactual(:,1)),'linewidth',2);
+    d = abs(U{k}(:,1)-Uactual(:,1));
+    plot(T{k},d,'linewidth',2);
     legendstr(k) = string(tests(k));
+    EU(k) = max(d);
 end
 legend(strcat("test ",legendstr))
 xlabel("t"); ylabel("U1 error")
+
+% qp solving time vs. errors
+hf = figure; hold on; hf.Color = 'w';
+ha = gca; ha.YScale = 'log';
+c = lines(3);
+for k = 1:ntests
+    if tests(k) > 0
+        marker = '.';
+    else
+        marker = '*';
+    end
+    Timer = opts2(k).timer.qpsolver;
+    plot(Timer,EY1(k),marker,'color',c(1,:))
+    plot(Timer,EY2(k),marker,'color',c(2,:))
+    plot(Timer,EU(k),marker,'color',c(3,:))
+end
+xlabel("timer (s)"); ylabel("error")
+
+return
 
 % problem structure
 function [setup,opts] = problem
@@ -166,7 +201,7 @@ p.ell = 1/9;
 
 % options
 opts.dt.nt = 1000; % 10000
-opts.general.displevel = 0;
+opts.general.displevel = 1;
 
 % time horizon
 setup.t0 = 0; setup.tf = 1;

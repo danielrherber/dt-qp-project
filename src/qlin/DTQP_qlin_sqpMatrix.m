@@ -8,7 +8,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function H = DTQP_qlin_sqpMatrix(D2matrix,in,opts)
+function [H,Hsqp] = DTQP_qlin_sqpMatrix(H,D2matrix,in,opts)
 
 % initialize
 HI = []; HJ = []; HV = [];
@@ -19,10 +19,39 @@ HI = [HI;I]; HJ = [HJ;J]; HV = [HV;V];
 
 % sparse matrix for Hessian
 if isempty(HV)
-    H = []; % no Hessian
+    Hsqp = []; % no Hessian
 else
-    H = sparse(HI,HJ,HV,in.nx,in.nx);
-    H = (H+H'); % make symmetric, then times 2 for 1/2*x'*H*x form
+    Hsqp = sparse(HI,HJ,HV,in.nx,in.nx);
+    Hsqp = (Hsqp+Hsqp'); % make symmetric, then times 2 for 1/2*x'*H*x form
+end
+
+% combine with original hessian
+if isempty(H)
+    H = Hsqp;
+else
+    % combine
+    H = H + Hsqp;
+
+    % tolerance for symmetric positive semidefiniteness
+    etol = sqrt(eps);
+
+    if opts.qlin.mirrorflag
+
+        % check if the matrix is symmetric positive semidefinite
+        if eigs(H,1,'smallestreal') >= -etol
+            % disp('Matrix is symmetric positive definite')
+        else
+            % disp('Matrix is not symmetric positive definite')
+
+            % mirrored version
+            [Um,Tm] = schur(full(H));
+            H = Um*abs(Tm)*Um';
+        end
+
+        % make symmetric, then times 2 for 1/2*x'*H*x form
+        H = (H+H')/2;
+    end
+
 end
 
 end

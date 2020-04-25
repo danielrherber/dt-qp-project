@@ -46,6 +46,12 @@ if ~isfield(opts.general,'displevel')
     % opts.general.displevel = 1; % minimal
     % opts.general.displevel = 0; % none
 end
+
+% scaling to the constraint rows
+if ~isfield(opts.general,'scalerowflag')
+    opts.general.scalerowflag = true; % enabled
+    % opts.general.scalerowflag = false; % disabled
+end
 %--------------------------------------------------------------------------
 % END: general options
 %--------------------------------------------------------------------------

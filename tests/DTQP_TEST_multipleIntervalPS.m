@@ -10,8 +10,8 @@
 %--------------------------------------------------------------------------
 close all; clear; clc
 
-tests = 1:4;
-% tests = 1;
+tests = 1:5;
+% tests = 5;
 
 % go through the tests
 for k = 1:length(tests)
@@ -44,6 +44,15 @@ for k = 1:length(tests)
         ni = 100;
         xT = linspace(t0,tf,ni+1);
         opts.dt.nt = 8;
+        %------------------------------------------------------------------
+        case 5
+        t0 = 0; tf = 1;
+        ni = 4;
+        xT = linspace(t0,tf,ni+1);
+        opts.dt(1).nt = 4;
+        opts.dt(2).nt = 5;
+        opts.dt(3).nt = 6;
+        opts.dt(4).nt = 10;
     end
 
     % run the test and time
@@ -65,9 +74,9 @@ function [setup,opts] = problem(opts,xT)
 p.ell = 1/9;
 
 % options
-opts.dt.defects = 'PS';
-opts.dt.quadrature = 'G';
-opts.dt.mesh = 'LGL';
+[opts.dt.defects] = deal('PS');
+[opts.dt.quadrature] = deal('G');
+[opts.dt.mesh] = deal('LGL');
 
 %% setup
 % system dynamics
