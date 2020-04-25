@@ -100,7 +100,7 @@ end
 % User options function for this example
 function opts = Vanderpol_opts
 % test number
-num = 3;
+num = 1;
 
 switch num
 case 1
@@ -109,7 +109,7 @@ case 1
     opts.dt.defects = 'HS';
     opts.dt.quadrature = 'CQHS';
     opts.dt.mesh = 'ED';
-    opts.dt.nt = 400; % number of nodes
+    opts.dt.nt = 4000; % number of nodes
 case 2
     opts.general.displevel = 1;
     opts.dt.defects = 'PS';
@@ -126,8 +126,9 @@ case 3
     opts.dt.quadrature = 'CQHS';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 100; % number of nodes
-    opts.qlin.sqpflag = false;
-    opts.qlin.imax = 20;
+    opts.qlin.sqpflag = true;
+    opts.qlin.trustregionflag = true;
+    opts.qlin.delta = 0.1;
 end
 
 end

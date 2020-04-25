@@ -10,49 +10,94 @@
 %--------------------------------------------------------------------------
 function DTQP_qlin_plots(T,Y,U,P,iter)
 
-% figure numbers
-hfY = 1; hfU = 2; hfP = 3;
+% determine what design variable types are present
+n = 0;
+if ~isempty(Y)
+    n = n + 1;
+    IY = n;
+end
+if ~isempty(U)
+    n = n + 1;
+    IU = n;
+end
+if ~isempty(P)
+    n = n + 1;
+    IP = n;
+end
 
 % initial actions
 if (iter==1)
-    close all
+    flag = 'preliminary'; DTQP_plotCommon; %#ok<NASGU>
+    hf = figure(1); hold on; hf.Color = wcolor;
+    hf.Position(3:4) = [1200 420]; hf.Position(1) = 500;
     if ~isempty(Y)
-        hf = figure(hfY); hold on; hf.Color = 'w'; title('States'); xlabel("$t$");
+        subplot(1,n,IY,'align'); hold on; xlabel("$t$");
+        title('States','fontsize',fontsize+2);
+        flag = 'axis'; DTQP_plotCommon; %#ok<NASGU>
+        legend('location','best');
     end
     if ~isempty(U)
-        hf = figure(hfU); hold on; hf.Color = 'w'; title('Controls'); xlabel("$t$");
+        subplot(1,n,IU,'align'); hold on; hf.Color = 'w'; xlabel("$t$");
+        title('Controls','fontsize',fontsize+2);
+        flag = 'axis'; DTQP_plotCommon; %#ok<NASGU>
+        legend('location','best');
     end
     if ~isempty(P)
-        hf = figure(hfP); hold on; hf.Color = 'w'; title('Parameters'); xlabel("iteration");
+        subplot(1,n,IP,'align'); hold on; hf.Color = 'w'; xlabel("iteration");
+        title('Parameters','fontsize',fontsize+2);
+        flag = 'axis'; DTQP_plotCommon; %#ok<NASGU>
+        legend('location','best');
     end
 end
 
 % determine current line color
-switch iter
-    case 0 % final iteration?
-        c = 'r';
-    case 1 % initial iteration?
-        c = 'k';
-    otherwise % intermediate iteration
-        c = [0.5 0.5 0.5];
+if iter == 1 % initial iteration?
+    c = 'k';
+elseif iter < 0 % final iteration?
+    c = 'r';
+else % intermediate iteration
+    c = [0.5 0.5 0.5];
 end
 
 % plot states
 if ~isempty(Y)
-    figure(hfY)
+    ha = subplot(1,n,IY);
     plot(T,Y,'color',c,'linewidth',2);
+    modLegend(ha,iter);
 end
 
 % plot controls
 if ~isempty(U)
-    figure(hfU)
+    ha = subplot(1,n,IU);
     plot(T,U,'color',c,'linewidth',2);
+    modLegend(ha,iter);
 end
 
 % plot parameters
 if ~isempty(P)
-    figure(hfP)
-    plot(iter,P,'.','color',c);
+    ha = subplot(1,n,IP);
+    plot(abs(iter),P,'.','color',c);
+    modLegend(ha,iter);
+end
+
+% draw the current iteration
+drawnow;
+
+end
+
+function modLegend(ha,iter)
+
+if iter == 1
+    ha.Legend.String{1} = 'Initial';
+    ha.Legend.String(2:end) = [];
+elseif iter < 0
+    ha.Legend.String{3} = 'Final';
+    ha.Legend.String(4:end) = [];
+elseif iter == 2
+    ha.Legend.String{2} = 'Intermediate';
+    ha.Legend.String(3:end) = [];
+else
+    ha.Legend.String(3:end) = [];
 end
 
 end

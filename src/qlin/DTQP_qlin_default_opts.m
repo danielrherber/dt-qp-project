@@ -40,4 +40,30 @@ if opts.qlin.sqpflag
 	opts.qlin.deltascaleflag = true; % required to be enabled
 end
 
+% trust region flag
+if ~isfield(opts.qlin,'trustregionflag')
+    % opts.qlin.trustregionflag = true; % enabled
+    opts.qlin.trustregionflag = false; % disabled
+end
+if opts.qlin.trustregionflag
+	opts.qlin.deltascaleflag = true; % required to be enabled
+
+    % default trust region size
+    if ~isfield(opts.qlin,'delta')
+        opts.qlin.delta = 1;
+    end
+
+    % default contraction factor
+    if ~isfield(opts.qlin,'xi')
+        opts.qlin.xi = 0.8;
+    end
+
+end
+
+% try to improve the initial guess value
+if ~isfield(opts.qlin,'improveX0flag')
+    % opts.qlin.improveX0flag = true; % enabled
+    opts.qlin.improveX0flag = false; % disabled
+end
+
 end

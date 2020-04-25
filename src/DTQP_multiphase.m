@@ -22,6 +22,7 @@ LALs = Hs; LARs = Hs; Lbs = Hs; LAeqLs = Hs; LAeqRs = Hs; Lbeqs = Hs;
 % determine flags
 scaleflag = isfield(setup,"scaling");
 sqpflag = opts.qlin.sqpflag;
+trustregionflag = opts.qlin.trustregionflag;
 reorderflag = opts.qp.reorder;
 multiphaseflag = nphs > 1;
 
@@ -196,6 +197,11 @@ if multiphaseflag
     Aeq = vertcat(blkdiag(Aeqs{:}),LAeq); beq = vertcat(beqs{:},Lbeqs{:});
     lb = vertcat(lbs{:}); ub = vertcat(ubs{:});
 
+end
+
+% (optional) update problem elements based on trust region
+if trustregionflag
+    [beq,lb,ub,opts] = DTQP_SQP_trustregion(A,b,Aeq,beq,lb,ub,opts);
 end
 
 % previous displevel

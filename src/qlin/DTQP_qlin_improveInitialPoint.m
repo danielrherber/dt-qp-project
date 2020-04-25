@@ -18,6 +18,14 @@ setup.M = []; setup.L = []; setup.D2 = []; setup.scaling = [];
 Pe = repelem(P',opts.dt.nt,1);
 X = [U,Y,Pe];
 
+% deactivate qlin flags
+trustregionflag = opts.qlin.trustregionflag;
+sqpflag = opts.qlin.sqpflag;
+deltascaleflag = opts.qlin.deltascaleflag;
+opts.qlin.trustregionflag = false;
+opts.qlin.sqpflag = false;
+opts.qlin.deltascaleflag = false;
+
 % initialize
 iter = 0;
 Xold = inf;
@@ -38,6 +46,11 @@ while (tolerance <= norm(X-Xold,inf)) && (iter <= imax)
     % solve the feasibility problem
     [T,U,Y,P,F,in,opts] = DTQP_meshr(setup,opts);
 
+    % terminate if the problem was not solved
+    if isnan(F)
+        break
+    end
+
     % construct previous solution vector
     Pe = repelem(P',opts.dt.nt,1);
     X = [U,Y,Pe];
@@ -51,6 +64,11 @@ while (tolerance <= norm(X-Xold,inf)) && (iter <= imax)
 end
 
 % plot(T,Y,'r','linewidth',2); hold on
+
+% reassign
+opts.qlin.trustregionflag = trustregionflag;
+opts.qlin.sqpflag = sqpflag;
+opts.qlin.deltascaleflag = deltascaleflag;
 
 % return multipliers
 lambda = opts.lambda;

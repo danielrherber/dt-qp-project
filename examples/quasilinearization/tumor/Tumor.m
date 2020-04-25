@@ -32,7 +32,7 @@ p0 = (((b-Mew)/D)^(3/2))/2;
 q0 = p0/2;
 umax = 75;
 y0 = [p0,q0,0];
-ymin = [0.1,10,-inf];
+ymin = [0.1,0.1,-inf];
 
 %% setup
 % time horizon
@@ -86,11 +86,15 @@ switch num
 case 1
     % default parameters
     opts.general.displevel = 1;
+    opts.general.plotflag = 1;
     opts.dt.defects = 'HS';
     opts.dt.quadrature = 'CQHS';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 100; % number of nodes
     opts.qlin.sqpflag = false;
+    opts.qlin.trustregionflag = true;
+    opts.qlin.improveX0flag = false;
+    opts.qlin.delta = 3000;
 end
 
 end

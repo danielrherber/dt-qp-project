@@ -74,13 +74,20 @@ case 1
     opts.dt.quadrature = 'CQHS';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 100; % number of nodes
-    opts.qlin.sqpflag = false;
 case 2
     opts.general.displevel = 1;
     opts.dt.defects = 'PS';
     opts.dt.quadrature = 'G';
     opts.dt.mesh = 'LGL';
     opts.dt.nt = 100; % number of nodes
+case 3
+    opts.general.displevel = 1;
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 100; % number of nodes
+    opts.qlin.sqpflag = false;
+    opts.qlin.trustregionflag = true;
 end
 
 end

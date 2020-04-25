@@ -5,10 +5,12 @@
 | Hypersensitive | [hypersensitive](hypersensitive/) | Rao00 |  |
 | Optimal Consumption | [optimal-consumption](optimal-consumption/) | Evans |  |
 | Simple Co-design Transfer | [simple-co-design-transfer](simple-co-design-transfer/) | Her19 |  |
+| Tuberculosis | [tuberculosis](tuberculosis/) | Betts10 |  |
 | Tumor | [tumor](tumor/) | Led08 |  |
 | van der Pol | [vanderpol](vanderpol/) | Can02 |  |
 
 ### References
+- [**Betts10**] J. T. Betts, *Practical Methods for Optimal Control and Estimation Using Nonlinear Programming*. SIAM, 2010, isbn: 9780898716887
 - [**Can02**] E. B. Canto, et al., "Restricted second order information for the solution of optimal control problems using control vector parameterization", *Journal of Process Control*, vol. 12, no. 2002, pp. 243-255, 2002, doi: 10.1016/S0959-1524(01)00008-7
 - [**Evans**] L. C. Evans, *An Introduction to Mathematical Optimal Control Theory*. Department of Mathematics, University of California, Berkeley, Version 0.2
 - [**Her19**] D. R. Herber and J. T. Allison, "Nested and simultaneous solution strategies for general combined plant and control design problems", *ASME Journal of Mechanical Design*, vol. 141, no. 1, p. 011402, Jan. 2019, doi: 10.1115/1.4040705

@@ -15,15 +15,13 @@ displevel = opts.general.displevel;
 plotflag = opts.general.plotflag;
 lqdoflag = opts.qlin.lqdoflag;
 tolerance = opts.qlin.tolerance;
+improveX0flag = opts.qlin.improveX0flag;
 deltascaleflag = opts.qlin.deltascaleflag;
 sqpflag = opts.qlin.sqpflag;
 imax = opts.qlin.imax;
 symb = setup.symb;
 param = symb.param;
 o = symb.o;
-
-% improve initial guess flag (need to expose)
-improveflag = true;
 
 % check if this is an lqdo problem
 if lqdoflag
@@ -61,6 +59,7 @@ end
 iter = 0;
 Fold = 0;
 F = inf;
+opts.reduction = inf;
 
 % quasilinearization
 while (tolerance <= abs(F-Fold)) && (iter <= imax)
@@ -72,7 +71,7 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
     setupi = setup;
 
     if iter == 0
-    	if improveflag
+    	if improveX0flag
 	        [U,Y,P,~] = DTQP_qlin_improveInitialPoint(setupi,opts,T,U,Y,P,param,Dflag,DA,DB,DG,Dd);
     	end
     end
@@ -122,6 +121,26 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
     % solve the LQDO problem using DT and (potentially) mesh refinement
     [T,U,Y,P,F,in,opts] = DTQP_meshr(setupi,opts);
 
+    % check if the previous problem failed
+    if isnan(F)
+        if (displevel > 0) % minimal
+            disp("WARNING: did not solve with given opts.qp.tolerance")
+        end
+
+        % extract
+        qptolerance = opts.qp.tolerance;
+
+        % new "loose" tolerance
+        opts.qp.tolerance = 1e-4;
+
+        % solve the LQDO problem using DT and (potentially) mesh refinement
+        [T,U,Y,P,F,in,opts] = DTQP_meshr(setupi,opts);
+
+        % reassign
+        opts.qp.tolerance = qptolerance;
+
+    end
+
     % (potentially) plot current iteration
     if (plotflag > 0)
         DTQP_qlin_plots(T,Y,U,P,iter+1)
@@ -135,11 +154,12 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
     % increment iteration counter
     iter = iter + 1;
 
+    opts.reduction = abs(F-Fold);
 end
 
 % (potentially) plot final iteration
 if (plotflag > 0)
-    DTQP_qlin_plots(T,Y,U,P,0)
+    DTQP_qlin_plots(T,Y,U,P,-iter)
 end
 
 end

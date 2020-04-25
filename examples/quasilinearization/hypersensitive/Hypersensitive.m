@@ -80,7 +80,18 @@ case 1
     opts.dt.t = unique([linspace(p.t0,p.t0+S2,N2),linspace(p.t0+S2,p.tf-S2,N2),linspace(p.tf-S2,p.tf,N2)]);
     opts.dt.mesh = 'USER';
     opts.dt.nt = length(opts.dt.t);
+case 2
+    % default parameters
+    opts.general.displevel = 1;
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'ED';
+    S2 = 10; N2 = 300; p.t0 = 0; p.tf = 10000;
+    opts.dt.t = unique([linspace(p.t0,p.t0+S2,N2),linspace(p.t0+S2,p.tf-S2,N2),linspace(p.tf-S2,p.tf,N2)]);
+    opts.dt.mesh = 'USER';
+    opts.dt.nt = length(opts.dt.t);
     opts.qlin.sqpflag = false;
+    opts.qlin.trustregionflag = true;
 end
 
 end

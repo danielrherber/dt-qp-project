@@ -155,28 +155,28 @@ end
 %--------------------------------------------------------------------------
 % START: constraint row scaling
 %--------------------------------------------------------------------------
-%     r = max(abs(A),[],2);
-%     req = max(abs(Aeq),[],2);
+% r = 1./full(max(abs([A,b]),[],2));
+% req = 1./full(max(abs([Aeq,beq]),[],2));
 %
-%     % b
-%     if ~isempty(b)
-%         b = b./r;
-%     end
+% % b
+% if ~isempty(b)
+%     b = b.*r;
+% end
 %
-%     % A
-%     if ~isempty(A)
-%         A = bsxfun(@rdivide,A,r);
-%     end
+% % A
+% if ~isempty(A)
+%     A = bsxfun(@times,A,r);
+% end
 %
-%     % beq
-%     if ~isempty(beq)
-%         beq = beq./req;
-%     end
+% % beq
+% if ~isempty(beq)
+%     beq = beq.*req;
+% end
 %
-%     % Aeq
-%     if ~isempty(Aeq)
-%         Aeq = bsxfun(@rdivide,Aeq,req);
-%     end
+% % Aeq
+% if ~isempty(Aeq)
+%     Aeq = bsxfun(@times,Aeq,req);
+% end
 
 %--------------------------------------------------------------------------
 % END: constraint row scaling
