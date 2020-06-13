@@ -1,0 +1,29 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{mathtools}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=8in, paperwidth=8in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{u_r(t), u_t(t)} \quad & \int_0^{t_f} \| \bm{u}(t) \|_p dt \\
+\text{subject to:} \quad
+& \dot{r} = v_r \\
+& \dot{\theta} = \frac{v_t}{r} \\
+& \dot{v}_r = \frac{v_t^2}{r} - \frac{1}{r^2} + u_r \\
+& \dot{v}_u = -\frac{v_r v_t}{r} + u_t \\
+& (r,\theta,v_r,v_t)(0) = [1, 0, 0, 1] \\
+& (r,v_r,v_t)(t_f) = [4,0,0.5] \\
+& \| \bm{u}(t) \|_q \leq u_{\max} \\
+\text{where:} \quad & \frac{1}{p} + \frac{1}{q} = 1
+\end{align*}
+}}
+\end{document}
+
+% solution

@@ -16,6 +16,7 @@
 | DTQP Example 1 | [dt-qp-1](dt-qp-1/) | Her17 | |
 | DTQP Example 2 | [dt-qp-2](dt-qp-2/) | | simple integral |
 | DTQP Example 3 | [dt-qp-3](dt-qp-3/) | | closed-form |
+| Gas Absorber | [gas-absorber](gas-absorber/) | Lu00 |  |
 | Hager 1 | [hager-1](hager-1/) | Hag00 | closed-form |
 | HDAE | [hdae](hdae/) | Betts10 |  |
 | Jaddu Shimemura | [jaddu-shimemura](jaddu-shimemura/) | Jad98 | finite optimization |
@@ -26,6 +27,7 @@
 | LQR Standard | [lqr-standard](lqr-standard/) | Bry75 | boundary value problem |
 | Minimum Energy Transfer | [minimum-energy-transfer](minimum-energy-transfer/) | Bry75 | matrix integral |
 | Multiphase Parameter | [multiphase-parameter](multiphase-parameter/) | | finite optimization |
+| Nagurka | [nagurka](nagurka/) | Lu00 |  |
 | Output Tracking | [output-tracking](output-tracking/) | Bry75 | boundary value problem |
 | Tavallaei Tousi 1 | [tavallaei-tousi-1](tavallaei-tousi-1/) | Tav08 | boundary value problem |
 | Turner Chun Juang 1 | [turner-chun-juang-1](turner-chun-juang-1/) | Turn85 | closed-form |
@@ -40,6 +42,7 @@
 - [**Hag00**] W. W. Hager, "Runge-Kutta Methods in Optimal Control and the Transformed Adjoint System", *Numerische Mathematik*, vol. 87, no. 2, pp. 247-282, Dec. 2000, doi: 10.1007/s002110000178
 - [**Her17**] D. R. Herber, *Advances in Combined Architecture, Plant, and Control Design.* PhD Dissertation, University of Illinois at Urbana-Champaign, Urbana, IL, USA, Dec. 2017
 - [**Jad98**] H. Jaddu and E. Shimemura, "Solution of Constrained Linear Quadratic Optimal Control Problem Using State Parameterization," *Trans. of the Society of Instrument and Control Engineers*, vol. 34, no. 9, pp. 1164-1169, 1998, doi: 10.9746/sicetr1965.34.1164
+- [**Lu00**] R. Luus, *Iterative Dynamic Programming*. CRC Press, 2000, isbn: 1584881488
 - [**Tav08**] M. A. Tavallaei and B. Tousi, "Closed Form Solution to an Optimal Control Problem by Orthogonal Polynomial Expansion," *American J. of Engineering and Applied Sciences*, vol. 1, no. 2, pp. 104-109, 2008. doi: 10.3844/ajeassp.2008.104.109
 - [**Turn85**] J. D. Turner, H. M. Chun, J. N. Juang, "Closed-Form Solutions for a Class of Optimal Quadratic Tracking Problems", Journal of Optimization Theory and Applications, vol. 47, no. 4, pp. 465-481, Dec. 1985, doi: 10.1007/BF00942192
 

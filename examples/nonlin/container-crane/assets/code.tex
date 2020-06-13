@@ -1,0 +1,33 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{u_1(t),u_2(t)} \quad & \frac{1}{2} \ \int_{0}^{t_f} [\xi_3^2 + \xi_6^2 + \rho(u_1^2 +u_2^2)] dt\\
+\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}
+ \xi_4 \\
+\xi_5\\
+\xi_6 \\
+u_1 + c_4\xi_3\\
+u_2\\
+-\frac{1}{\xi_2}[u_1 + c_5\xi_3 + 2\xi_5 \xi_6]
+\end{bmatrix} \\
+& \bm{\xi}(0) = \bm{\xi}_0 \\
+& \bm{\xi}(t_f) = \bm{\xi}_f\\
+& \xi_{4,\min} \leq \xi_4(t) \leq \xi_{4,\max} \\
+& \xi_{5,\min} \leq \xi_5(t) \leq \xi_{5,\max} \\
+& u_{1,\min} \leq u_1(t) \leq u_{1,\max} \\
+& u_{2,\min} \leq u_2(t) \leq u_{2,\max}
+\end{align*}
+}}
+\end{document}
+
+% solution

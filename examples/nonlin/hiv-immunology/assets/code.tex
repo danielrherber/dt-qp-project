@@ -1,0 +1,28 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{u_1(t),u_2(t)} \quad & \int_{0}^{t_f} [-\xi_1 + (A_1u_i^2 +A_2u_2^2)] dt\\
+\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}
+ s_1 - \frac{s_2\xi_2}{b_1+\xi_2} - \mu \xi_1 - k \xi_1 \xi_2 + u_1 \xi_1 \\
+\frac{g(1-u_2)\xi_2}{b_2 + \xi_2} - c \xi_1 \xi_2\\
+\end{bmatrix} \\
+& \bm{\xi}(0) = \bm{\xi}_0 \\
+& \xi_{1,\min} \leq \xi_1(t) \leq \xi_{1,\max} \\
+& \xi_{2,\min} \leq \xi_2(t) \leq \xi_{2,\max} \\
+& u_{1,\min} \leq u_1(t) \leq u_{1,\max} \\
+& u_{2,\min} \leq u_2(t) \leq u_{2,\max}
+\end{align*}
+}}
+\end{document}
+
+% solution

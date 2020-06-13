@@ -1,0 +1,27 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{\bm{u}(t)} \quad & \int_0^{1} \left[ \bm{\xi}^T \bm{I}_n \bm{\xi} + \bm{u}^T \bm{I}_n \bm{u} \right] dt + 10 [\xi_1(1)]^2 \\
+\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}
+0 & 1 & 0 & \cdots & 0 \\
+0 & 0 & 1 & \cdots & 0 \\
+\cdots & \cdots & \cdots & \cdots & \cdots \\
+0 & 0 & 0 & \cdots & 1 \\
+1 & -2 & 3 & \cdots & (-1)^{n+1}n
+\end{bmatrix} \bm{\xi} + \bm{I}_n \bm{u} \\
+& \bm{\xi}(0) = \begin{bmatrix} 1 & 2 & \cdots & n \end{bmatrix}
+\end{align*}
+}}
+\end{document}
+
+% solution

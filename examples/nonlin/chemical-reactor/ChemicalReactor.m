@@ -1,0 +1,149 @@
+%--------------------------------------------------------------------------
+% ChemicalReactor.m
+% S. J. Citron, Elements of Optimal Control, Holt, Rinehart and Winston,
+% New York, 1969
+%--------------------------------------------------------------------------
+%
+%--------------------------------------------------------------------------
+% Contributor: Athul K. Sundarrajan (AthulKrishnaSundarrajan on GitHub)
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Link: https://github.com/danielrherber/dt-qp-project
+%--------------------------------------------------------------------------
+function varargout = ChemicalReactor(varargin)
+% input arguments can be provided in the format 'ChemicalReactor(p,opts)'
+
+% set local functions
+ex_opts = @ChemicalReactor_opts; % options function
+ex_output = @ChemicalReactor_output; % output function
+ex_plot = @ChemicalReactor_plot; % plot function
+
+% set p and opts (see local_opts)
+[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+
+%% tunable parameters
+testnum = 1;
+
+switch testnum
+    case 1
+	al = 0.1; au = 0.5; tf = 2; kc = 1.5;
+    case 2
+	al = 0.1; au = 0.5; tf = 4; kc = 1.5;
+    case 3
+	al = 0.1; au = 0.5; tf = 8; kc = 1.5;
+    case 4
+	al = 0.1; au = 0.2; tf = 2; kc = 1.5;
+    case 5
+	al = 0.1; au = 0.3; tf = 2; kc = 1.5;
+    case 6
+	al = 0.1; au = 0.4; tf = 2; kc = 1.5;
+    case 7
+	al = 0.01; au = 8; tf = 2; kc = 1.5;
+    case 8
+	al = 0.01; au = 8; tf = 4; kc = 1.5;
+    case 9
+	al = 0.01; au = 8; tf = 8; kc = 1.5;
+    case 10
+	al = 0.1; au = 0.5; tf = 2; kc = 0.5;
+    otherwise
+end
+
+rho = 2.5;
+y0 = [1;0.01];
+
+%% setup
+% time horizon
+p.t0 = 0; p.tf = tf;
+
+% number of controls, states, and parameters
+n.nu = 1; n.ny = 2;
+
+% Mayer term
+M(1).left = 0; % singleton
+M(1).right = 5; % final states
+M(1).matrix = [0,-1];
+
+% system dynamics
+symb.D = '[-u1*y1; u1*y1 - rho*u1^kc*y2]';
+symb.paramstr = 'rho kc';
+symb.param = [rho kc];
+
+% simple bounds
+UB(1).right = 4; UB(1).matrix = y0'; % initial states
+LB(1).right = 4; LB(1).matrix = y0';
+UB(2).right = 1; UB(2).matrix = au; % controls
+LB(2).right = 1; LB(2).matrix = al;
+UB(3).right = 2; UB(3).matrix = [1.1;1.1]; % states
+LB(3).right = 2; LB(3).matrix = [-0.1;-0.1];
+
+% guess
+Y0 = [[y0'];[y0']];
+U0 = [[au];[al]];
+p.guess = [U0,Y0];
+
+% combine structures
+setup.symb = symb; setup.M = M; setup.UB = UB; setup.LB = LB;
+setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+
+%% solve
+[T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
+
+%% output
+[O,sol] = ex_output(T,U,Y,P,F,in,opts);
+if nargout == 1
+	varargout{1} = O;
+end
+
+%% plot
+% disp("paused"); pause % for quasilinearization plots
+ex_plot(T,U,Y,P,F,in,opts,sol)
+
+end
+% User options function for this example
+function opts = ChemicalReactor_opts
+% test number
+num = 1;
+
+switch num
+case 1
+    opts.general.plotflag = 1; % create the plots
+    opts.general.saveflag = false;
+    opts.general.displevel = 2;
+    opts.dt.defects = 'TR';
+    opts.dt.quadrature = 'CTR';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 100; % number of nodes
+    opts.qp.tolerance = 1e-8;
+    opts.qp.maxiters = 200;
+    opts.qp.disp = 'iter';
+    opts.qp.solver = 'ipfmincon';
+    opts.qlin.method = 'ipfmincon';
+case 2
+    opts.general.plotflag = 1; % create the plots
+    opts.general.saveflag = false;
+    opts.general.displevel = 2;
+    opts.dt.defects = 'PS';
+    opts.dt.quadrature = 'G';
+    opts.dt.mesh = 'LGL';
+    opts.dt.nt = 30; % number of nodes
+    opts.qp.tolerance = 1e-8;
+    opts.qp.maxiters = 200;
+    opts.qp.disp = 'iter';
+    opts.qp.solver = 'ipfmincon';
+    opts.qlin.method = 'ipfmincon';
+case 3 % qlin method
+    opts.general.plotflag = 1; % create the plots
+    opts.general.displevel = 1;
+    opts.dt.defects = 'TR';
+    opts.dt.quadrature = 'CTR';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 100; % number of nodes
+    opts.qp.maxiters = 200;
+    opts.qp.disp = 'none';
+    opts.qlin.method = 'qlin';
+    opts.qlin.trustregionflag = false;
+    opts.qlin.sqpflag = false;
+    opts.qlin.delta = inf;
+    opts.qlin.improveX0flag = false; % disabled
+end
+
+end

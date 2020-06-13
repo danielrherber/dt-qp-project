@@ -1,0 +1,26 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{u(t)} \quad & -\xi_2(t_f) \\
+\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}
+- u \xi_1 \\ u \xi_1 - \rho u^k \xi_2
+\end{bmatrix} \\
+& -0.1 \leq \xi_1(t) \leq 1.1 \\
+& -0.1 \leq \xi_2(t) \leq 1.1 \\
+& a_L \leq u(t) \leq a_U \\
+& \bm{\xi}(0) = \begin{bmatrix}1 \\ 0.01\end{bmatrix} \\
+\end{align*}
+}}
+\end{document}
+
+% solution
