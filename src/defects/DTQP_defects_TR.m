@@ -13,6 +13,16 @@ function [Aeq,beq] = DTQP_defects_TR(A,B,G,d,in,opts)
 nu = in.nu; ny = in.ny; np = in.np; nd = in.nd; nx = in.nx;
 p = in.p; nt = in.nt; t = in.t; h = in.h;
 
+% states with linear dynamics
+if isfield(in,'IDlin')
+	IDlin = in.IDlin;
+else
+    IDlin = 1:ny;
+end
+
+% number of defect constraints
+nz = length(IDlin);
+
 % matrix form of I in the formulas
 K = kron(eye(ny),ones(nt-1,1));
 
@@ -54,7 +64,10 @@ end
 %--------------------------------------------------------------------------
 
 % defect constraint of row continuous constraints
-for i = 1:ny
+for i = 1:nz
+
+    yi = IDlin(i);
+
     % current defect constraint row indices
     DefectIndices = reshape((i-1)*(nt-1)+1:i*(nt-1),[],1);
 
@@ -62,79 +75,94 @@ for i = 1:ny
     % controls
     %----------------------------------------------------------------------
     if nu > 0
-        % defect constraint (row) locations
-        Iu = repmat(DefectIndices,nu,1);
 
         % extract matrices
         Bv = reshape(Bt(:,i,:),[],1);
 
-        % theta values
-        V3 = -0.5*Hu.*Bv(Tu); % theta 3
-        V4 = -0.5*Hu.*Bv(Tu+1); % theta 4
+        % check if any entries are nonzero
+        if any(Bv)
 
-        % combine
-        Is = [Iu;Iu]; Js = Jus; Vs = [V3;V4];
+            % defect constraint (row) locations
+            Iu = repmat(DefectIndices,nu,1);
 
-        % remove zeros
-        ZeroIndex = find(~Vs);
-        Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
+            % theta values
+            V3 = -0.5*Hu.*Bv(Tu); % theta 3
+            V4 = -0.5*Hu.*Bv(Tu+1); % theta 4
 
-        % combine
-        Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
+            % combine
+            Is = [Iu;Iu]; Js = Jus; Vs = [V3;V4];
 
+            % remove zeros
+            ZeroIndex = ~Vs;
+            Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
+
+            % combine
+            Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
+
+        end
     end
     %----------------------------------------------------------------------
 
     %----------------------------------------------------------------------
     % states
     %----------------------------------------------------------------------
-    % if ny > 0 % there always is at least one state
-        % defect constraint (row) locations
-        Iy = repmat(DefectIndices,ny,1);
+    if ny > 0 % there always is at least one state
 
         % extract matrices
         Av = reshape(At(:,i,:),[],1);
 
-        % theta values
-        V1 = -K(:,i) - 0.5*Hy.*Av(Ty); % theta 1
-        V2 = K(:,i) - 0.5*Hy.*Av(Ty+1); % theta 2
+        % check if any entries are nonzero
+        if any(K(:,yi)) || any(Av)
 
-        % combine
-        Is = [Iy;Iy]; Js = Jys; Vs = [V1;V2];
+            % defect constraint (row) locations
+            Iy = repmat(DefectIndices,ny,1);
 
-        % remove zeros
-        ZeroIndex = find(~Vs);
-        Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
+            % theta values
+            V1 = -K(:,yi) - 0.5*Hy.*Av(Ty); % theta 1
+            V2 = K(:,yi) - 0.5*Hy.*Av(Ty+1); % theta 2
 
-        % combine
-        Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
+            % combine
+            Is = [Iy;Iy]; Js = Jys; Vs = [V1;V2];
 
-    % end
+            % remove zeros
+            ZeroIndex = ~Vs;
+            Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
+
+            % combine
+            Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
+
+        end
+    end
     %----------------------------------------------------------------------
 
     %----------------------------------------------------------------------
     % parameters
     %----------------------------------------------------------------------
     if np > 0
-        % defect constraint (row) locations
-        Is = repmat(DefectIndices,np,1);
 
         % extract matrices
         Gv = reshape(Gt(:,i,:),[],1);
 
-        % theta values
-        Vs = -0.5*Hp.*( Gv(Tp) + Gv(Tp+1) ); % theta 5
+        % check if any entries are nonzero
+        if any(Gv)
 
-        % combine
-        Js = Jp;
+            % defect constraint (row) locations
+            Is = repmat(DefectIndices,np,1);
 
-        % remove zeros
-        ZeroIndex = find(~Vs);
-        Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
+            % theta values
+            Vs = -0.5*Hp.*( Gv(Tp) + Gv(Tp+1) ); % theta 5
 
-        % combine
-        Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
+            % combine
+            Js = Jp;
 
+            % remove zeros
+            ZeroIndex = ~Vs;
+            Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
+
+            % combine
+            Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
+
+        end
     end
     %----------------------------------------------------------------------
 end
@@ -145,7 +173,7 @@ Jf = vertcat(Jsav{:});
 Vf = vertcat(Vsav{:});
 
 % output sparse matrix
-Aeq = sparse(If,Jf,Vf,ny*(nt-1),nx);
+Aeq = sparse(If,Jf,Vf,nz*(nt-1),nx);
 
 %--------------------------------------------------------------------------
 % disturbance
@@ -155,23 +183,29 @@ if nd > 0
     Isav = {}; Vsav = {};
 
     % defect constraint of row continuous constraints
-    for i = 1:ny
-        % defect constraint (row) locations
-        Is = reshape((i-1)*(nt-1)+1:i*(nt-1),[],1);
+    for i = 1:nz
 
         % extract matrices
         dv = reshape(dt(:,i,:),[],1);
 
-        % nu values
-        Vs = 0.5*Hd.*( dv(Td) + dv(Td+1) ); % nu
+        % check if any entries are nonzero
+        if any(dv)
 
-        % remove zeros
-        ZeroIndex = find(~Vs);
-        Is(ZeroIndex) = []; Vs(ZeroIndex) = [];
+            yi = IDlin(i);
 
-        % combine
-        Isav{end+1} = Is; Vsav{end+1} = Vs;
+            % defect constraint (row) locations
+            Is = reshape((yi-1)*(nt-1)+1:yi*(nt-1),[],1);
 
+            % nu values
+            Vs = 0.5*Hd.*( dv(Td) + dv(Td+1) ); % nu
+
+            % remove zeros
+            ZeroIndex = ~Vs;
+            Is(ZeroIndex) = []; Vs(ZeroIndex) = [];
+
+            % combine
+            Isav{end+1} = Is; Vsav{end+1} = Vs;
+        end
     end
 
     % combine
@@ -179,10 +213,10 @@ if nd > 0
     Vf = vertcat(Vsav{:});
 
     % output sparse matrix
-    beq = sparse(If,1,Vf,ny*(nt-1),1);
+    beq = sparse(If,1,Vf,nz*(nt-1),1);
 else
     % output sparse matrix
-    beq = sparse([],[],[],ny*(nt-1),1);
+    beq = sparse(nz*(nt-1),1);
 end
 %--------------------------------------------------------------------------
 end

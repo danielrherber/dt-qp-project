@@ -105,13 +105,6 @@ for phs = 1:nphs
     % store problem elements
     if multiphaseflag
 
-        % store linear term
-        if isempty(fi) % handle empty case
-            fs{phs} = sparse([],[],[],in(phs).nx,1);
-        else
-            fs{phs} = fi;
-        end
-
         % store lower bounds
         if isempty(lbi) % handle empty case
             lbs{phs} = -inf(in(phs).nx,1);

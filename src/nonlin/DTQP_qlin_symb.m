@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_qlin_taylor.m
+% DTQP_qlin_symb.m
 % Perform variable-order Taylor polynomial approximation on a matrix of
 % functions with states, inputs, and parameters
 %--------------------------------------------------------------------------
@@ -18,7 +18,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function E = DTQP_qlin_taylor(f,form,in,D2flag)
+function E = DTQP_qlin_symb(f,form,in,D2flag)
 
 %--------------------------------------------------------------------------
 % go through the options
@@ -48,8 +48,8 @@ end
 nx = nu + ny + np;
 
 % extra symbolic parameters
-if isfield(in,'param')
-	param = in.param;
+if isfield(in,'paramstr')
+	param = in.paramstr;
 else
     param = [];
 end
@@ -57,8 +57,8 @@ end
 if isfield(in,'output')
     output = in.output;
 else
-    output = 1; % vectorized matlab function
-    % output = 2; % interp1-compatible matlab function
+    % output = 1; % vectorized matlab function
+    output = 2; % interp1-compatible matlab function
     % output = 3; % symbolic functions
 end
 

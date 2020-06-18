@@ -13,12 +13,25 @@ function [Aeq,beq] = DTQP_defects_PS(A,B,G,d,in,opts)
 nu = in.nu; ny = in.ny; np = in.np; nd = in.nd; nx = in.nx;
 p = in.p; nt = in.nt; t = in.t; h = in.tf - in.t0;
 
+% indices for linear defect constraints
+if isfield(in,'IDlin')
+	IDlin = in.IDlin;
+else
+    IDlin = 1:ny;
+end
+
+% number of linear defect constraints
+nz = length(IDlin);
+
 % differentiation matrix
 D = in.D;
 D = sparse(D);
-Dns = cell(1,ny);
-Dns(:) = {D};
-Dadd = [sparse([],[],[],ny*nt,nu*nt),blkdiag(Dns{:}),sparse([],[],[],ny*nt,np)];
+Dns = cell(ny,1);
+Dns(:) = {sparse(0,nt)};
+Dns(IDlin) = {D};
+
+% combine with controls and parameters (empty matrices)
+Dadd = [sparse(nz*nt,nu*nt),blkdiag(Dns{:}),sparse(nz*nt,np)];
 
 % initialize storage arrays
 Isav = {}; Jsav = {}; Vsav = {};
@@ -39,12 +52,13 @@ if nu > 0
 end
 
 if np > 0
-    Jp = kron(nt*(nu+ny)+(1:np)', ones(nt,1)); % optimization variable (column) locations
+    Jp = kron(nt*(nu+ny)+(1:np)',ones(nt,1)); % optimization variable (column) locations
 end
 %--------------------------------------------------------------------------
 
 % defect constraint of row continuous constraints
-for i = 1:ny
+for i = 1:nz
+
     % current defect constraint row indices
     DefectIndices = reshape((i-1)*nt+1:i*nt,[],1);
 
@@ -52,77 +66,71 @@ for i = 1:ny
     % controls
     %----------------------------------------------------------------------
     if nu > 0
-        % defect constraint (row) locations
-        Is = repmat(DefectIndices,nu,1);
 
         % extract matrices
-        Bv = reshape(Bt(:,i,:),[],1);
+        Vs = reshape(Bt(:,i,:),[],1);
 
-        % values
-        Vs = -0.5*h*Bv;
+        % check if any entries are nonzero
+        if any(Vs)
 
-        % combine
-        Js = Ju;
+            % defect constraint (row) locations
+            Is = repmat(DefectIndices,nu,1);
 
-        % remove zeros
-        ZeroIndex = find(~Vs);
-        Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
+            % combine
+            Js = Ju;
 
-        % combine
-        Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
+            % combine
+            Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
 
+        end
     end
     %----------------------------------------------------------------------
 
     %----------------------------------------------------------------------
     % states
     %----------------------------------------------------------------------
-    % if ny > 0 % there always is at least one state
-        % defect constraint (row) locations
-        Is = repmat(DefectIndices,ny,1);
+    if ny > 0
 
         % extract matrices
-        Av = reshape(At(:,i,:),[],1);
+        Vs = reshape(At(:,i,:),[],1);
 
-        % values
-        Vs = -0.5*h*Av;
+        % check if any entries are nonzero
+        if any(Vs)
 
-        % combine
-        Js = Jy;
+            % defect constraint (row) locations
+            Is = repmat(DefectIndices,ny,1);
 
-        % remove zeros
-        ZeroIndex = find(~Vs);
-        Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
+            % combine
+            Js = Jy;
 
-        % combine
-        Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
+            % combine
+            Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
 
-    % end
+        end
+    end
     %----------------------------------------------------------------------
 
     %----------------------------------------------------------------------
     % parameters
     %----------------------------------------------------------------------
     if np > 0
-        % defect constraint (row) locations
-        Is = repmat(DefectIndices,np,1);
 
         % extract matrices
-        Gv = reshape(Gt(:,i,:),[],1);
+        Vs = reshape(Gt(:,i,:),[],1);
 
-        % values
-        Vs = -0.5*h*Gv;
+        % check if any entries are nonzero
+        if any(Vs)
 
-        % combine
-        Js = Jp;
+            % defect constraint (row) locations
+            Is = repmat(DefectIndices,np,1);
 
-        % remove zeros
-        ZeroIndex = find(~Vs);
-        Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
+            % combine
+            Js = Jp;
 
-        % combine
-        Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
+            % combine
+            Isav{end+1} = Is; Jsav{end+1} = Js; Vsav{end+1} = Vs;
 
+        end
     end
     %----------------------------------------------------------------------
 end
@@ -132,45 +140,50 @@ If = vertcat(Isav{:});
 Jf = vertcat(Jsav{:});
 Vf = vertcat(Vsav{:});
 
+% product with half time horizon length
+Vf = -0.5*h*Vf;
+
 % output sparse matrix
-Aeq = sparse(If,Jf,Vf,ny*nt,nx) + Dadd;
+Aeq = sparse(If,Jf,Vf,nz*nt,nx) + Dadd;
 
 %--------------------------------------------------------------------------
 % disturbance
 %--------------------------------------------------------------------------
 if nd > 0
+
     % initialize storage arrays
     Isav = {}; Vsav = {};
 
     % defect constraint of row continuous constraints
     for i = 1:ny
-        % defect constraint (row) locations
-        Is = reshape((i-1)*nt+1:i*nt,[],1);
 
         % extract matrices
-        dv = reshape(dt(:,i,:),[],1);
+        Vs = reshape(dt(:,i,:),[],1);
 
-        % values
-        Vs = 0.5*h*dv;
+        % check if any entries are nonzero
+        if any(Vs)
 
-        % remove zeros
-        ZeroIndex = find(~Vs);
-        Is(ZeroIndex) = []; Vs(ZeroIndex) = [];
+            % defect constraint (row) locations
+            Is = reshape((i-1)*nt+1:i*nt,[],1);
 
-        % combine
-        Isav{end+1} = Is; Vsav{end+1} = Vs;
+            % combine
+            Isav{end+1} = Is; Vsav{end+1} = Vs;
 
+        end
     end
 
     % combine
     If = vertcat(Isav{:});
     Vf = vertcat(Vsav{:});
 
+    % product with half time horizon length
+    Vf = 0.5*h*Vf;
+
     % output sparse matrix
-    beq = sparse(If,1,Vf,ny*nt,1);
+    beq = sparse(If,1,Vf,nz*nt,1);
 else
     % output sparse matrix
-    beq = sparse([],[],[],ny*nt,1);
+    beq = sparse(nz*nt,1);
 end
 %--------------------------------------------------------------------------
 end

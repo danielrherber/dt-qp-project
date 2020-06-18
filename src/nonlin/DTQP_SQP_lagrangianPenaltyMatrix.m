@@ -16,11 +16,11 @@ nu = in.nu; ny = in.ny; np = in.np; ini = in.i;
 t = in.t; h = in.h; nt = in.nt; p = in.p;
 lambda = opts.lambda;
 
-% extract and reshape multipiers
+% extract and reshape multipliers
 lambda = lambda.eqlin(in.multipliers.defects);
 
 % augment step size and multiplier vectors with initial zeros
-h = [0;h];
+h = [0;h/2];
 lambda = vertcat(zeros(1,ny),lambda);
 
 % initialize row and column indices
@@ -59,11 +59,7 @@ for k = 1:length(Lmatrix)
                 Lsav{end+1} = lambda(:,k);
 
                 % main diagonal values
-                if i == j
-                     Qsav{end+1} = Lv;
-                else
-                     Qsav{end+1} = 0.5*Lv;
-                end
+                Qsav{end+1} = -Lv;
 
             end
 
@@ -80,6 +76,6 @@ Q = vertcat(Qsav{:});
 
 % compute main diagonal values
 LH = L.*H;
-V = (0.5*(LH + circshift(LH,[-1,1]))).*Q;
+V = ((LH + circshift(LH,[-1,0]))).*Q;
 
 end

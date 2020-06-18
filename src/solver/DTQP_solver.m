@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % DTQP_solver.m
-% Obtain the solution to the QP using the selected solver
+% Obtain the solution to the DO problem using the selected solver
 %--------------------------------------------------------------------------
 % NOTE: using quadprog even for linear programs
 %--------------------------------------------------------------------------
@@ -34,6 +34,9 @@ switch upper(opts.qp.solver)
     %----------------------------------------------------------------------
     case 'QPOASES' %
         [X,F,in,opts] = DTQP_solver_qpoases(H,f,A,b,Aeq,beq,lb,ub,in,opts);
+    %----------------------------------------------------------------------
+    case 'IPFMINCON' % MATLAB fmincon solver with interior point algorithm
+        [X,F,in,opts] = DTQP_solver_ipfmincon(H,f,A,b,Aeq,beq,lb,ub,in,opts);
     %----------------------------------------------------------------------
     otherwise
         error('Error: solver not found')

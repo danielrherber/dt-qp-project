@@ -7,7 +7,6 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-% function [H,f,c,A,b,Aeq,beq,lb,ub,in,X] = DTQP_reorder(H,f,c,A,b,Aeq,beq,lb,ub,in,X,flag)
 function varargout = DTQP_reorder(in,varargin)
 
 if length(varargin) == 9
@@ -30,33 +29,33 @@ if length(varargin) == 9
     sV = [sV;e+1:e+in.np];
 
     % H
-    if ~isempty(H)
+    if ~isempty(find(H,1))
         H = H(:,sV);
         H = H(sV,:);
     end
 
     % f
-    if ~isempty(f)
+    if ~isempty(find(f,1))
         f = f(sV);
     end
 
     % A
-    if ~isempty(A)
+    if ~isempty(find(A,1))
         A = A(:,sV);
     end
 
     % Aeq
-    if ~isempty(Aeq)
+    if ~isempty(find(Aeq,1))
         Aeq = Aeq(:,sV);
     end
 
     % lb
-    if ~isempty(lb)
+    if ~isempty(find(lb,1))
         lb = lb(sV);
     end
 
     % ub
-    if ~isempty(ub)
+    if ~isempty(find(ub,1))
         ub = ub(sV);
     end
     %----------------------------------------------------------------------
@@ -66,7 +65,7 @@ if length(varargin) == 9
     %----------------------------------------------------------------------
     % START: reorder linear constraint rows
     %----------------------------------------------------------------------
-    if ~isempty(Aeq)
+    if ~isempty(find(Aeq,1))
         % % sort the rows based on first nonzero entry
         % [~,D] = sortrows(-abs(Aeq));
 
@@ -79,12 +78,12 @@ if length(varargin) == 9
         % sort the matrix rows
         Aeq = Aeq(D,:);
 
-        if ~isempty(beq)
+        if ~isempty(find(beq,1))
             beq = beq(D);
         end
     end
 
-    if ~isempty(A)
+    if ~isempty(find(A,1))
         % % sort the rows based on first nonzero entry
         % [~,D] = sortrows(-abs(A));
 
@@ -97,7 +96,7 @@ if length(varargin) == 9
         % sort the matrix rows
         A = A(D,:);
 
-        if ~isempty(b)
+        if ~isempty(find(b,1))
             b = b(D);
         end
     end

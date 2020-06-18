@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % DTQP_solver_default_opts.m
-% Defaults options for the QP solvers
+% Defaults options for the optimization solvers
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -55,7 +55,30 @@ switch upper(opts.qp.solver)
         end
     end
     %----------------------------------------------------------------------
+    case 'IPFMINCON' % see DTQP_solver_ipfmincon.m
+    % tolerance
+    if ~isfield(opts.qp,'tolerance')
+        opts.qp.tolerance = 1e-8;
+    end
+
+    % maximum iterations
+    if ~isfield(opts.qp,'maxiters')
+        opts.qp.maxiters = 200;
+    end
+
+    % display level in the optimization routine
+    if ~isfield(opts.qp,'disp')
+        opts.qp.disp = 'none'; % none
+        if opts.general.displevel > 1 % verbose
+            opts.qp.disp = 'iter'; % iterations
+        end
+        if ~strcmpi(opts.dt(1).meshr.method,'none')
+            opts.qp.disp = 'none'; % iterations
+        end
+    end
+    %----------------------------------------------------------------------
     otherwise
-        error('ERROR: unknown solver')
+    error('ERROR: unknown solver')
+    %----------------------------------------------------------------------
 end
 end

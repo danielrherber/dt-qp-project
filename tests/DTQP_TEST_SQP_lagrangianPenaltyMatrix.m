@@ -102,6 +102,6 @@ opts.lambda = lambda;
 
 % evaluate the elements of the SQP problem
 form = 3; D2flag = true;
-E = DTQP_qlin_taylor(f,form,in,D2flag);
+E = DTQP_qlin_symb(f,form,in,D2flag);
 
 end

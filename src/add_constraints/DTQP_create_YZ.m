@@ -14,7 +14,7 @@ nYZ = length(YZ);
 
 % initialize storage arrays
 AeqIsav = cell(nYZ,1); AeqJsav = AeqIsav; AeqVsav = AeqIsav;
-beqIsav = AeqIsav; beqVsav =AeqIsav;
+beqIsav = AeqIsav; beqVsav = AeqIsav;
 
 % initialize the number of mixed linear constraints
 N = 0;

@@ -48,12 +48,39 @@ if ~isfield(setup,'B'), setup.B = []; end
 if ~isfield(setup,'G'), setup.G = []; end
 if ~isfield(setup,'d'), setup.d = []; end
 
-% counts
-in.ny = max([size(setup.A,1),size(setup.B,1),size(setup.G,1),size(setup.d,1)]); % states
-in.nu = size(setup.B,2); % controls
-in.np = size(setup.G,2); % parameters
-in.nd = size(setup.d,2); % disturbances
-in.nx = (in.nu+in.ny)*in.nt + in.np; % optimization variables
+% field containing number of controls, states, and parameters
+if ~isfield(setup,'n')
+    ns = [];
+else
+    ns = setup.n;
+end
+
+% states
+if isfield(ns,'ny')
+    in.ny = ns.ny;
+else
+    in.ny = max([size(setup.A,1),size(setup.B,1),size(setup.G,1),size(setup.d,1)]);
+end
+
+% controls
+if isfield(ns,'nu')
+    in.nu = ns.nu;
+else
+    in.nu = size(setup.B,2);
+end
+
+% parameters
+if isfield(ns,'np')
+    in.np = ns.np;
+else
+    in.np = size(setup.G,2);
+end
+
+% disturbances
+in.nd = size(setup.d,2);
+
+% optimization variables
+in.nx = (in.nu+in.ny)*in.nt + in.np;
 
 % create a zero A matrix when not present
 if isempty(setup.A)

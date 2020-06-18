@@ -10,6 +10,9 @@
 %--------------------------------------------------------------------------
 function [T,U,Y,P,F,in,opts] = DTQP_qlin(setup,opts)
 
+% initialize some stuff for quasilinearization
+[setup,opts] = DTQP_qlin_initialize(setup,opts);
+
 % extract
 displevel = opts.general.displevel;
 plotflag = opts.general.plotflag;
@@ -20,8 +23,8 @@ deltascaleflag = opts.qlin.deltascaleflag;
 sqpflag = opts.qlin.sqpflag;
 imax = opts.qlin.imax;
 symb = setup.symb;
-param = symb.param;
-o = symb.o;
+o = setup.n;
+param = o.param;
 
 % check if this is an lqdo problem
 if lqdoflag
@@ -77,7 +80,7 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
     end
 
     % construct previous solution vector
-    Pe = repelem(P',opts.dt.nt,1);
+    Pe = repelem(P(:)',opts.dt.nt,1);
     X = [U,Y,Pe];
 
     % update dynamics based on previous solution vector

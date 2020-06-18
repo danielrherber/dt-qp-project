@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
-% DTQP_qlin_default_opts.m
-% Default options for the quasilinearization methods
+% DTQP_nonlin_defaultOpts.m
+% Default options for the NLDO methods
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -8,13 +8,43 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function opts = DTQP_qlin_default_opts(opts)
+function opts = DTQP_nonlin_defaultOpts(opts)
 
 % initialize quasilinearization-specific options structure
 if ~isfield(opts,'qlin')
     opts.qlin = [];
 end
 
+% method to solve the nonlinear dynamic optimization problem
+if ~isfield(opts.qlin,'method')
+    opts.qlin.method = 'none';
+    % opts.qlin.method = 'ipfmincon'; % fmincon nonlinear solver
+    % opts.qlin.method = 'qlin'; % quasilinearization
+end
+
+% handle OLQ elements properly
+if ~isfield(opts.qlin,'olqflag')
+    % opts.qlin.olqflag = false; % everything nonlinear
+    opts.qlin.olqflag = true; % direct incorporation of OLQ elements
+end
+
+%--------------------------------------------------------------------------
+% ipfmincon options
+%-------------------------------------------------------------------------
+if strcmpi(opts.qlin.method,'ipfmincon')
+    opts.qp.solver = 'ipfmincon';
+
+    % optimization problem derivatives flag
+    if ~isfield(opts.qlin,'derivativeflag')
+        % opts.qlin.derivativeflag = false; % use finite differencing
+        opts.qlin.derivativeflag = true; % use symbolic derivatives
+    end
+
+end
+
+%--------------------------------------------------------------------------
+% quasilinearization options
+%--------------------------------------------------------------------------
 % relative function tolerance
 if ~isfield(opts.qlin,'tolerance')
     opts.qlin.tolerance = 1e-6;

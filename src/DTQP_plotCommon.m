@@ -94,7 +94,9 @@ switch flag
     Lv = {};
     for i = 1:size(U,2)
         Lv{end+1} = ['$u^{DT}_{',num2str(i),'}$'];
-        Lv{end+1} = ['$u^*_{',num2str(i),'}$'];
+        if solutionflag
+            Lv{end+1} = ['$u^*_{',num2str(i),'}$'];
+        end
     end
     hL = legend(Lv);
     set(hL,'interpreter','latex','location','best',...

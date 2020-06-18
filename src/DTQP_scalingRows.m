@@ -23,22 +23,22 @@ Id = 1:nr; % indices of diagonal
 reqM = sparse(Id,Id,req,nr,nr);
 
 % b
-if ~isempty(b)
+if ~isempty(find(b,1))
     b = r.*b;
 end
 
 % A
-if ~isempty(A)
+if ~isempty(find(A,1))
     A = rM*A;
 end
 
 % beq
-if ~isempty(beq)
+if ~isempty(find(beq,1))
     beq = req.*beq;
 end
 
 % Aeq
-if ~isempty(Aeq)
+if ~isempty(find(Aeq,1))
     Aeq = reqM*Aeq;
 end
 

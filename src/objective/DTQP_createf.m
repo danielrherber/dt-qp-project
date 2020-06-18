@@ -24,9 +24,9 @@ if ~isempty(m)
     fJ = [fJ;J]; fV = [fV;V];
 end
 
-% sparse matrix for Hessian
+% sparse matrix for gradient
 if isempty(fV)
-    f = []; % no Hessian
+    f = sparse(in.nx,1); % no gradient
 else
     % sparse matrix for gradient
     f = sparse(fJ,1,fV,in.nx,1);

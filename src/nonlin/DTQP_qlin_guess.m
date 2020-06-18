@@ -10,16 +10,36 @@
 %--------------------------------------------------------------------------
 function [T,U,Y,P,opts] = DTQP_qlin_guess(setup,opts,o,D2)
 
-% initial guess values for controls, states, and parameters
-T = linspace(setup.t0,setup.tf,opts.dt.nt)';
-U = ones(opts.dt.nt,o.nu);
-Y = ones(opts.dt.nt,o.ny);
-P = ones(o.np,1);
+% extract
+n = setup.n; nu = n.nu; ny = n.ny; np = n.np;
+nt = opts.dt.nt;
+
+T = linspace(setup.t0,setup.tf,nt)';
 
 % (potentially) initial guess values for multipliers
 if opts.qlin.sqpflag
-    opts = guessMultipliers(opts,o,T,D2);
+    opts = guessMultipliers(opts,n,T,D2);
 end
+
+% (potentially) used-defined initial guess
+if isfield(setup.p,'guess')
+
+    % interpolate initial guess matrix
+    X0 = interp1([setup.t0 setup.tf],setup.p.guess,T);
+
+    % extract
+    U = X0(:,1:nu);
+    Y = X0(:,nu+1:nu+ny);
+    P = X0(1,nu+ny+1:end);
+
+    return
+end
+
+% initial guess values for controls, states, and parameters
+T = linspace(setup.t0,setup.tf,nt)';
+U = ones(nt,nu);
+Y = ones(nt,ny);
+P = ones(np,1);
 
 % TODO: add more initial guess options
 
@@ -28,7 +48,7 @@ end
 % construct a guess multiplier structure
 function opts = guessMultipliers(opts,o,T,D2)
 
-% number of optimization variablesa
+% number of optimization variables
 nx = opts.dt.nt*(o.nu + o.ny);
 
 % determine the number of defect constraints

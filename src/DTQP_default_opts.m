@@ -259,8 +259,8 @@ opts = DTQP_solver_default_opts(opts);
 % START: other
 %--------------------------------------------------------------------------
 
-% get default options for quasilinearization
-opts = DTQP_qlin_default_opts(opts);
+% get default options for NLDO problem
+opts = DTQP_nonlin_defaultOpts(opts);
 
 %--------------------------------------------------------------------------
 % END: other

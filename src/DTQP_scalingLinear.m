@@ -62,22 +62,22 @@ if isempty(c)
 	c = 0;
 end
 
-if ~isempty(f)
+if ~isempty(find(f,1))
     c = c + f'*sc;
 end
 
-if ~isempty(H)
+if ~isempty(find(H,1))
     c = c + sc'*H*sc/2;
 end
 
 % f
-if ~isempty(f)
+if ~isempty(find(f,1))
     f = sm.*f;
 end
 
 % H
-if ~isempty(H)
-    if ~isempty(f)
+if ~isempty(find(H,1))
+    if ~isempty(find(f,1))
         f = f + sM*H*sc;
     else
         f = sM*H*sc;
@@ -87,32 +87,32 @@ if ~isempty(H)
 end
 
 % b
-if ~isempty(b)
+if ~isempty(find(b,1))
     b = b - A*sc;
 end
 
 % A
-if ~isempty(A)
+if ~isempty(find(A,1))
     A = A*sM;
 end
 
 % beq
-if ~isempty(beq)
+if ~isempty(find(beq,1))
     beq = beq - Aeq*sc;
 end
 
 % Aeq
-if ~isempty(Aeq)
+if ~isempty(find(Aeq,1))
     Aeq = Aeq*sM;
 end
 
 % lb
-if ~isempty(lb)
+if ~isempty(find(lb,1))
     lb = (lb - sc)./sm;
 end
 
 % ub
-if ~isempty(ub)
+if ~isempty(find(ub,1))
     ub = (ub - sc)./sm;
 end
 
@@ -120,42 +120,42 @@ end
 % linkage constraints
 %--------------------------------------------------------------------------
 % LLb
-if ~isempty(LLb)
+if ~isempty(find(LLb,1))
     LLb = LLb - LLA*sc;
 end
 
 % LLA
-if ~isempty(LLA)
+if ~isempty(find(LLA,1))
     LLA = LLA*sM;
 end
 
 % LRb
-if ~isempty(LRb)
+if ~isempty(find(LRb,1))
     LRb = LRb - LRA*sc;
 end
 
 % LRA
-if ~isempty(LRA)
+if ~isempty(find(LRA,1))
     LRA = LRA*sM;
 end
 
 % LLbeq
-if ~isempty(LLbeq)
+if ~isempty(find(LLbeq,1))
     LLbeq = LLbeq - LLAeq*sc;
 end
 
 % LLAeq
-if ~isempty(LLAeq)
+if ~isempty(find(LLAeq,1))
     LLAeq = LLAeq*sM;
 end
 
 % LRbeq
-if ~isempty(LRbeq)
+if ~isempty(find(LRbeq,1))
     LRbeq = LRbeq - LRAeq*sc;
 end
 
 % LRAeq
-if ~isempty(LRAeq)
+if ~isempty(find(LRAeq,1))
     LRAeq = LRAeq*sM;
 end
 

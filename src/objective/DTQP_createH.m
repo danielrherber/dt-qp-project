@@ -26,7 +26,7 @@ end
 
 % sparse matrix for Hessian
 if isempty(HV)
-    H = []; % no Hessian
+    H = sparse(in.nx,in.nx); % no Hessian
 else
     H = sparse(HI,HJ,HV,in.nx,in.nx);
     H = (H+H'); % make symmetric, then times 2 for 1/2*x'*H*x form
