@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % DTQP_TEST_qlin_updateLagrange.m
-% Test function for DTQP_qlin_updateLagrange.m
+% Test function for DTQP_QLIN_update_lagrange.m
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -55,7 +55,7 @@ for k = 1:length(tests)
     symb = setup.symb; L = setup.symb.L; o = symb.o;
 
     % run the test and time
-    setup = DTQP_qlin_updateLagrange(setup,L.H,L.G,L.C,o,T,X,param);
+    setup = DTQP_QLIN_update_lagrange(setup,L.H,L.G,L.C,o,T,X,param);
 
     % test analysis
     disp(strcat("-> Case: ",string(tests(k))))
@@ -88,10 +88,10 @@ opts.dt.nt = 4;
 [setup,opts] = DTQP_default_opts(setup,opts);
 
 % run the test and time
-setup = DTQP_qlin_initialize(setup,opts); % FIX
+setup = DTQP_QLIN_initialize(setup,opts); % FIX
 
 % initial guess
-[T,U,Y,P] = DTQP_qlin_guess(setup,opts,symb.o);
+[T,U,Y,P] = DTQP_QLIN_guess(setup,opts,symb.o);
 
 % construct previous solution vector
 P = repelem(P',opts.dt.nt,1);

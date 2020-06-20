@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_ipfmincon_symb.m
+% DTQP_IPFMINCON_symb.m
 % Construct MATLAB function and its derivatives for use with ipfmincon
 % method
 %--------------------------------------------------------------------------
@@ -18,7 +18,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [E,opts] = DTQP_ipfmincon_symb(f,in,linflag,opts)
+function [E,opts] = DTQP_IPFMINCON_symb(f,in,linflag,opts)
 
 % (potentially) start the timer
 if (opts.general.displevel > 0) % minimal

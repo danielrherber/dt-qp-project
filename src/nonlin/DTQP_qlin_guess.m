@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_qlin_guess.m
+% DTQP_QLIN_guess.m
 % Construct and solve the quasilinearization problem
 %--------------------------------------------------------------------------
 %
@@ -8,7 +8,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [T,U,Y,P,opts] = DTQP_qlin_guess(setup,opts,o,D2)
+function [T,U,Y,P,opts] = DTQP_QLIN_guess(setup,opts,o,D2)
 
 % extract
 n = setup.n; nu = n.nu; ny = n.ny; np = n.np;

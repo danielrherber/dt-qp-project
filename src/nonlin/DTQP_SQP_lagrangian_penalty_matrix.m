@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_SQP_lagrangianPenaltyMatrix.m
+% DTQP_SQP_lagrangian_penalty_matrix.m
 % Create sequences for Hessian matrix for the Lagrangian penalty matrix in
 % the SQP method
 %--------------------------------------------------------------------------
@@ -9,7 +9,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [I,J,V] = DTQP_SQP_lagrangianPenaltyMatrix(Lmatrix,in,opts)
+function [I,J,V] = DTQP_SQP_lagrangian_penalty_matrix(Lmatrix,in,opts)
 
 % extract some of the variables
 nu = in.nu; ny = in.ny; np = in.np; ini = in.i;

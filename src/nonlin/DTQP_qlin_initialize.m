@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_qlin_initialize.m
+% DTQP_QLIN_initialize.m
 % Construct the quasilinearization problem
 %--------------------------------------------------------------------------
 %
@@ -8,7 +8,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [setup,opts] = DTQP_qlin_initialize(setup,opts)
+function [setup,opts] = DTQP_QLIN_initialize(setup,opts)
 
 % (potentially) start the timer
 if (opts.general.displevel > 0) % minimal
@@ -56,11 +56,11 @@ switch opts.qlin.method
     %----------------------------------------------------------------------
     case 'qlin'
     % quasilinearization
-    [setup.symb,opts] = DTQP_qlin_initialize_qlin(symb,n,opts);
+    [setup.symb,opts] = DTQP_QLIN_initialize_qlin(symb,n,opts);
     %----------------------------------------------------------------------
     case 'fmincon'
     % fmincon nonlinear solver
-%     [setup.symb,opts] = DTQP_qlin_initialize_fmincon(symb,nopts);
+%     [setup.symb,opts] = DTQP_QLIN_initialize_fmincon(symb,nopts);
 end
 
 % (potentially) end the timer
@@ -70,7 +70,7 @@ end
 
 end
 
-function [symb,opts] = DTQP_qlin_initialize_qlin(symb,n,opts)
+function [symb,opts] = DTQP_QLIN_initialize_qlin(symb,n,opts)
 
 % extract
 sqpflag = opts.qlin.sqpflag;
@@ -86,7 +86,7 @@ if isfield(symb,'Ob')
     form = 4;
 
     % quadracize
-    L = DTQP_qlin_symb(symb.Ob,form,n,sqpflag);
+    L = DTQP_QLIN_symb(symb.Ob,form,n,sqpflag);
 
     % assign
     symb.L = L;
@@ -105,7 +105,7 @@ if isfield(symb,'D')
     form = 3;
 
     % linearize
-    Linf = DTQP_qlin_symb(symb.D,form,n,sqpflag);
+    Linf = DTQP_QLIN_symb(symb.D,form,n,sqpflag);
 
     % assign
     symb.Linf = Linf;

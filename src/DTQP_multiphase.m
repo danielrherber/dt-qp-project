@@ -87,7 +87,7 @@ for phs = 1:nphs
             if isfield(setup2(phs+1),'D2')
 
                 % create sqp penalty matrix
-                [Hi,Hsqpi] = DTQP_qlin_sqpMatrix(Hi,setup2(phs+1).D2,in,opts);
+                [Hi,Hsqpi] = DTQP_QLIN_sqp_matrix(Hi,setup2(phs+1).D2,in,opts);
 
             else
                 Hsqpi = [];
@@ -164,7 +164,7 @@ end
 
 % (optional) update problem elements based on trust region
 if trustregionflag
-    [beq,lb,ub,opts] = DTQP_SQP_trustregion(A,b,Aeq,beq,lb,ub,opts);
+    [beq,lb,ub,opts] = DTQP_SQP_trust_region(A,b,Aeq,beq,lb,ub,opts);
 end
 
 % previous displevel
@@ -177,7 +177,7 @@ opts.general.displevel = displevel;
 % TASK: solve the QP
 %--------------------------------------------------------------------------
 % solve the optimization problem
-[X,F,in,opts] = DTQP_solver(H,f,A,b,Aeq,beq,lb,ub,in,opts);
+[X,F,in,opts] = DTQP_SOLVER(H,f,A,b,Aeq,beq,lb,ub,in,opts);
 %--------------------------------------------------------------------------
 % END TASK: solve the QP
 %--------------------------------------------------------------------------

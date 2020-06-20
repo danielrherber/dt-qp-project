@@ -1,5 +1,5 @@
 %%-------------------------------------------------------------------------
-% DTQP_defects_ZO.m
+% DTQP_DEFECTS_ZO.m
 % Create matrices for the zero-order hold method
 %--------------------------------------------------------------------------
 %
@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [Aeq,beq] = DTQP_defects_ZO(A,B,G,d,in,opts)
+function [Aeq,beq] = DTQP_DEFECTS_ZO(A,B,G,d,in,opts)
 
 % extract some of the variables in p
 nu = in.nu; ny = in.ny; np = in.np; nd = in.nd; nx = in.nx;
@@ -37,15 +37,15 @@ if isa(A,'double') % not time varying
 else
    error('A matrix cannot be time varying with ZOH defect method')
 end
-Bt = DTQP_convolution(A,B,in,opts);
-Gt = DTQP_convolution(A,G,in,opts);
-dt = DTQP_convolution(A,d,in,opts);
+Bt = DTQP_DEFECTS_convolution(A,B,in,opts);
+Gt = DTQP_DEFECTS_convolution(A,G,in,opts);
+dt = DTQP_DEFECTS_convolution(A,d,in,opts);
 
-Jy = DTQP_indexcolumns(nt,ny,nu); % optimization variable (column) locations
+Jy = DTQP_DEFECTS_index_columns(nt,ny,nu); % optimization variable (column) locations
 Jys = [Jy;Jy+1]; % combine to create paired optimization variable locations
 
 if nu > 0
-    Ju = DTQP_indexcolumns(nt,nu,0); % optimization variable (column) locations
+    Ju = DTQP_DEFECTS_index_columns(nt,nu,0); % optimization variable (column) locations
 end
 
 if np > 0

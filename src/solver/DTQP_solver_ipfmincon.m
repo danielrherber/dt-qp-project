@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_solver_ipfmincon.m
+% DTQP_SOLVER_ipfmincon.m
 % Interface to fmincon solver in Matlab Optimization Toolbox
 %--------------------------------------------------------------------------
 %
@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [X,F,in,opts] = DTQP_solver_ipfmincon(H,f,A,b,Aeq,beq,lb,ub,in,opts)
+function [X,F,in,opts] = DTQP_SOLVER_ipfmincon(H,f,A,b,Aeq,beq,lb,ub,in,opts)
 
 % extract
 X0 = in.X0; dyn = in.dyn; obj = in.obj; cin = in.cin; ceq = in.ceq;
@@ -37,7 +37,7 @@ if opts.qlin.derivativeflag
     o{end+1} = 'SpecifyObjectiveGradient';
     o{end+1} = true;
     o{end+1} = 'HessianFcn';
-    o{end+1} = @(x,lambda) DTQP_ipfmincon_hessian(x,lambda,obj,dyn,cin,ceq,H,in,opts);
+    o{end+1} = @(x,lambda) DTQP_IPFMINCON_hessian(x,lambda,obj,dyn,cin,ceq,H,in,opts);
 else
     o{end+1} = 'SpecifyConstraintGradient';
     o{end+1} = false;
@@ -61,13 +61,13 @@ options = optimoptions(@fmincon,o{:});
 % TODO: handle other constraint cases
 if isempty(dyn)
     % solve the NLDO problem
-    [X,F,EXITFLAG,OUTPUT,LAMBDA] = fmincon(@(X) DTQP_ipfmincon_objective(X,obj,in,opts,H,f),...
+    [X,F,EXITFLAG,OUTPUT,LAMBDA] = fmincon(@(X) DTQP_IPFMINCON_objective(X,obj,in,opts,H,f),...
         X0,A,b,Aeq,beq,lb,ub,[],options);
 else
     % solve the NLDO problem
-    [X,F,EXITFLAG,OUTPUT,LAMBDA] = fmincon(@(X) DTQP_ipfmincon_objective(X,obj,in,opts,H,f),...
+    [X,F,EXITFLAG,OUTPUT,LAMBDA] = fmincon(@(X) DTQP_IPFMINCON_objective(X,obj,in,opts,H,f),...
         X0,A,b,Aeq,beq,lb,ub,...
-        @(X)DTQP_ipfmincon_constraints(X,dyn,cin,ceq,in,opts),options);
+        @(X)DTQP_IPFMINCON_constraints(X,dyn,cin,ceq,in,opts),options);
 end
 
 % store output structure and multipliers

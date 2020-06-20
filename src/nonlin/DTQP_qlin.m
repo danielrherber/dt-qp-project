@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_qlin.m
+% DTQP_QLIN.m
 % Construct and solve the quasilinearization problem
 %--------------------------------------------------------------------------
 %
@@ -8,10 +8,10 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [T,U,Y,P,F,in,opts] = DTQP_qlin(setup,opts)
+function [T,U,Y,P,F,in,opts] = DTQP_QLIN(setup,opts)
 
 % initialize some stuff for quasilinearization
-[setup,opts] = DTQP_qlin_initialize(setup,opts);
+[setup,opts] = DTQP_QLIN_initialize(setup,opts);
 
 % extract
 displevel = opts.general.displevel;
@@ -56,7 +56,7 @@ end
 % TODO: extract other constraints
 
 % initial guess values for controls, states, and parameters
-[T,U,Y,P,opts] = DTQP_qlin_guess(setup,opts,o,D2);
+[T,U,Y,P,opts] = DTQP_QLIN_guess(setup,opts,o,D2);
 
 % initialize
 iter = 0;
@@ -75,7 +75,7 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
 
     if iter == 0
     	if improveX0flag
-	        [U,Y,P,~] = DTQP_qlin_improveInitialPoint(setupi,opts,T,U,Y,P,param,Dflag,DA,DB,DG,Dd);
+	        [U,Y,P,~] = DTQP_QLIN_improve_initial_point(setupi,opts,T,U,Y,P,param,Dflag,DA,DB,DG,Dd);
     	end
     end
 
@@ -85,14 +85,14 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
 
     % update dynamics based on previous solution vector
     if Dflag
-        setupi = DTQP_qlin_updateDynamics(setupi,DA,DB,DG,Dd,T,X,param);
+        setupi = DTQP_QLIN_update_dynamics(setupi,DA,DB,DG,Dd,T,X,param);
 
         % update second derivative matrix for state derivative function
         if sqpflag
             % NEED
             D2s = cell(size(D2));
             for i = 1:length(D2)
-                D2s{i} = DTQP_qlin_update4tmatrix(D2{i},T,X,param);
+                D2s{i} = DTQP_QLIN_update_tmatrix(D2{i},T,X,param);
             end
             setupi.D2 = D2s;
 
@@ -102,14 +102,14 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
 
     % update Lagrange terms
     if Lflag
-        setupi = DTQP_qlin_updateLagrange(setupi,LH,LG,LC,o,T,X,param);
+        setupi = DTQP_QLIN_update_lagrange(setupi,LH,LG,LC,o,T,X,param);
     end
 
     % TODO: update Mayer terms
 
     % TODO: update all other constraints
-    % setup = DTQP_qlin_updateControlConstraint(setup,opts);
-    % setup = DTQP_qlin_updateStateConstraint(setup,opts);
+    % setup = DTQP_QLIN_update_control_constraint(setup,opts);
+    % setup = DTQP_QLIN_update_state_constraint(setup,opts);
 
     % (potentially) shift optimization variables by previous solution
     if deltascaleflag
@@ -122,7 +122,7 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
     end
 
     % solve the LQDO problem using DT and (potentially) mesh refinement
-    [T,U,Y,P,F,in,opts] = DTQP_meshr(setupi,opts);
+    [T,U,Y,P,F,in,opts] = DTQP_MESH(setupi,opts);
 
     % check if the previous problem failed
     if isnan(F)
@@ -137,7 +137,7 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
         opts.qp.tolerance = 1e-4;
 
         % solve the LQDO problem using DT and (potentially) mesh refinement
-        [T,U,Y,P,F,in,opts] = DTQP_meshr(setupi,opts);
+        [T,U,Y,P,F,in,opts] = DTQP_MESH(setupi,opts);
 
         % reassign
         opts.qp.tolerance = qptolerance;
@@ -146,7 +146,7 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
 
     % (potentially) plot current iteration
     if (plotflag > 0)
-        DTQP_qlin_plots(T,Y,U,P,iter+1)
+        DTQP_QLIN_plots(T,Y,U,P,iter+1)
     end
 
     % (potentially) display to  command window
@@ -162,7 +162,7 @@ end
 
 % (potentially) plot final iteration
 if (plotflag > 0)
-    DTQP_qlin_plots(T,Y,U,P,-iter)
+    DTQP_QLIN_plots(T,Y,U,P,-iter)
 end
 
 end

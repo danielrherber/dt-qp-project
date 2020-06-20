@@ -68,13 +68,13 @@ end
 % mesh refinement algorithm (first phase)
 defaultflag = 0; % initialize
 if ~isfield(opts.dt(1),'meshr') % not present
-    opts.dt(1).meshr = DTQP_meshr_default_opts([]); % set as the default
+    opts.dt(1).meshr = DTQP_MESH_default_opts([]); % set as the default
     defaultflag = 1;
 elseif isempty(opts.dt(1).meshr) % empty
-    opts.dt(1).meshr = DTQP_meshr_default_opts([]); % set as the default
+    opts.dt(1).meshr = DTQP_MESH_default_opts([]); % set as the default
     defaultflag = 1;
 else
-    opts.dt(1).meshr = DTQP_meshr_default_opts(opts.dt(1).meshr); %
+    opts.dt(1).meshr = DTQP_MESH_default_opts(opts.dt(1).meshr); %
 end
 if defaultflag && (opts.general.displevel > 1) % minimal
     disp(['using default mesh refinement ',opts.dt(1).meshr.method])
@@ -152,7 +152,7 @@ default = 100; % 100 nodes
 
 if isfield(opts.dt(1).meshr,'method')
     if ~strcmpi(opts.dt(1).meshr.method,'none')
-        default = nan; % will be set in DTQP_meshr_default_opts.m
+        default = nan; % will be set in DTQP_MESH_default_opts.m
     end
 end
 
@@ -186,7 +186,7 @@ for phs = 2:nphase
     elseif isempty(DT.meshr)
         DT.meshr = opts.dt(1).meshr; % from first phase
     else
-        DT.meshr = DTQP_meshr_default_opts(DT.meshr); %
+        DT.meshr = DTQP_MESH_default_opts(DT.meshr); %
     end
 
     % defect constraint method
@@ -243,14 +243,14 @@ end
 % solver
 if ~isfield(opts.qp,'solver')
     opts.qp.solver = 'quadprog'; % MATLAB quadprog
-    % opts.qp.solver = 'cvx'; % see DTQP_solver_cvx.m
-    % opts.qp.solver = 'qpoases'; % see DTQP_solver_qpoases.m
+    % opts.qp.solver = 'cvx'; % see DTQP_SOLVER_cvx.m
+    % opts.qp.solver = 'qpoases'; % see DTQP_SOLVER_qpoases.m
     % opts.qp.solver = 'qpip'; % (to be added)
     % opts.qp.solver = 'ooqp'; % (to be added)
 end
 
 % get default options for the selected solver
-opts = DTQP_solver_default_opts(opts);
+opts = DTQP_SOLVER_default_opts(opts);
 %--------------------------------------------------------------------------
 % END: quadratic programming specific
 %--------------------------------------------------------------------------
@@ -260,7 +260,7 @@ opts = DTQP_solver_default_opts(opts);
 %--------------------------------------------------------------------------
 
 % get default options for NLDO problem
-opts = DTQP_nonlin_defaultOpts(opts);
+opts = DTQP_NONLIN_default_opts(opts);
 
 %--------------------------------------------------------------------------
 % END: other

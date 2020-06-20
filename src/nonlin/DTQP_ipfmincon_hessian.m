@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_ipfmincon_hessian.m
+% DTQP_IPFMINCON_hessian.m
 % Compute Hessian of the Lagrangian
 %--------------------------------------------------------------------------
 %
@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function Ho = DTQP_ipfmincon_hessian(X,lambda,obj,dyn,cin,ceq,Hin,in,opts)
+function Ho = DTQP_IPFMINCON_hessian(X,lambda,obj,dyn,cin,ceq,Hin,in,opts)
 
 % extract
 nu = in.nu; ny = in.ny; np = in.np; ini = in.i; nx = in.nx;
@@ -57,7 +57,7 @@ if isfield(obj,'D2f')
     end
 
     % calculate second derivative values
-    D2fi = DTQP_qlin_update4tmatrix(D2f{1},[],X,param);
+    D2fi = DTQP_QLIN_update_tmatrix(D2f{1},[],X,param);
     D2ft = DTQP_tmultiprod(D2fi,p,t);
 
     % go through each row entry in the original problem form
@@ -136,7 +136,7 @@ if isfield(dyn,'D2f')
     for k = 1:nz
 
         % calculate second derivative values
-        D2fi = DTQP_qlin_update4tmatrix(D2f{k},[],X,param);
+        D2fi = DTQP_QLIN_update_tmatrix(D2f{k},[],X,param);
         D2ft = DTQP_tmultiprod(D2fi,p,t);
 
         % go through each row entry in the original problem form
@@ -187,7 +187,7 @@ if isfield(ceq,'D2f')
     for k = 1:nz
 
         % calculate second derivative values
-        D2fi = DTQP_qlin_update4tmatrix(D2f{k},[],X,param);
+        D2fi = DTQP_QLIN_update_tmatrix(D2f{k},[],X,param);
         D2ft = DTQP_tmultiprod(D2fi,p,t);
 
         % extract relevant multipliers
@@ -241,7 +241,7 @@ if isfield(cin,'D2f')
     for k = 1:nz
 
         % calculate second derivative values
-        D2fi = DTQP_qlin_update4tmatrix(D2f{k},[],X,param);
+        D2fi = DTQP_QLIN_update_tmatrix(D2f{k},[],X,param);
         D2ft = DTQP_tmultiprod(D2fi,p,t);
 
         % extract relevant multipliers

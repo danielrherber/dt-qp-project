@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_qlin_improveInitialPoint.m
+% DTQP_QLIN_improve_initial_point.m
 % Improve the initial guess for the controls, states, and parameters using
 % a feasibility problem with sequential linearization
 %--------------------------------------------------------------------------
@@ -9,7 +9,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [U,Y,P,lambda] = DTQP_qlin_improveInitialPoint(setup,opts,T,U,Y,P,param,Dflag,DA,DB,DG,Dd)
+function [U,Y,P,lambda] = DTQP_QLIN_improve_initial_point(setup,opts,T,U,Y,P,param,Dflag,DA,DB,DG,Dd)
 
 % remove objective function terms and scaling
 setup.M = []; setup.L = []; setup.D2 = []; setup.scaling = [];
@@ -40,11 +40,11 @@ while (tolerance <= norm(X-Xold,inf)) && (iter <= imax)
 
     % update dynamics based on previous solution vector
     if Dflag
-        setup = DTQP_qlin_updateDynamics(setup,DA,DB,DG,Dd,T,X,param);
+        setup = DTQP_QLIN_update_dynamics(setup,DA,DB,DG,Dd,T,X,param);
     end
 
     % solve the feasibility problem
-    [T,U,Y,P,F,in,opts] = DTQP_meshr(setup,opts);
+    [T,U,Y,P,F,in,opts] = DTQP_MESH(setup,opts);
 
     % terminate if the problem was not solved
     if isnan(F)

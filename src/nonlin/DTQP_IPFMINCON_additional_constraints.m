@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_constraints_general_nonlin.m
+% DTQP_IPFMINCON_additional_constraints.m
 % Compute nonlinear constraint values and Jacobian
 %--------------------------------------------------------------------------
 %
@@ -9,7 +9,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [G,DG] = DTQP_constraints_general_nonlin(X,con,in,opts,Dflag)
+function [G,DG] = DTQP_IPFMINCON_additional_constraints(X,con,in,opts,Dflag)
 
 % extract
 nu = in.nu; ny = in.ny; np = in.np; nt = in.nt; nX = in.nx;
@@ -30,7 +30,7 @@ R = horzcat(ini{1:3});
 % compute constraint value
 %--------------------------------------------------------------------------
 % calculate constraint function values
-fi = DTQP_qlin_update4tmatrix(f,[],X,param);
+fi = DTQP_QLIN_update_tmatrix(f,[],X,param);
 ft = DTQP_tmultiprod(fi,p,t);
 
 % ensure column vector
@@ -46,7 +46,7 @@ if ~Dflag
 end
 
 % calculate Jacobian of the constraints
-Dfi = DTQP_qlin_update4tmatrix(Df,[],X,param);
+Dfi = DTQP_QLIN_update_tmatrix(Df,[],X,param);
 Dft = DTQP_tmultiprod(Dfi,p,t);
 
 % number of constraints

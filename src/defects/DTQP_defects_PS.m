@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_defects_PS.m
+% DTQP_DEFECTS_PS.m
 % Create matrices for the pseudospectral method
 %--------------------------------------------------------------------------
 %
@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [Aeq,beq] = DTQP_defects_PS(A,B,G,d,in,opts)
+function [Aeq,beq] = DTQP_DEFECTS_PS(A,B,G,d,in,opts)
 
 % extract some of the variables
 nu = in.nu; ny = in.ny; np = in.np; nd = in.nd; nx = in.nx;

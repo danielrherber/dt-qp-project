@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_ipfmincon.m
+% DTQP_IPFMINCON.m
 % Prepare and solve NLDO problem using interior point fmincon
 %--------------------------------------------------------------------------
 %
@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [T,U,Y,P,F,in,opts] = DTQP_ipfmincon(setup,opts)
+function [T,U,Y,P,F,in,opts] = DTQP_IPFMINCON(setup,opts)
 
 % initialize some stuff
 [setup,in] = DTQP_initialize(setup,opts.dt);
@@ -39,7 +39,7 @@ if isfield(symb,'Ob')
     linflagOb = false; % false only at the moment
 
     % calculate derivatives
-	[obj,opts] = DTQP_ipfmincon_symb(symb.Ob,in,linflagOb,opts);
+	[obj,opts] = DTQP_IPFMINCON_symb(symb.Ob,in,linflagOb,opts);
 
     % initialize empty QP objective terms
     H = sparse([],[],[],in.nx,in.nx); f = sparse([],[],[],in.nx,1); c = 0;
@@ -83,7 +83,7 @@ end
 if isfield(symb,'D')
 
     % calculate derivatives
-	[dyn,opts] = DTQP_ipfmincon_symb(symb.D,in,linflag,opts);
+	[dyn,opts] = DTQP_IPFMINCON_symb(symb.D,in,linflag,opts);
 
     % number of constraints
     nz = length(dyn.f);
@@ -120,16 +120,16 @@ if isfield(symb,'D')
 
             % convert to DTQP compatible functions
             if ~isempty(dyn.A)
-                setup.A = DTQP_qlin_update4tmatrix(dyn.A,[],[],in.param);
+                setup.A = DTQP_QLIN_update_tmatrix(dyn.A,[],[],in.param);
             end
             if ~isempty(dyn.B)
-                setup.B = DTQP_qlin_update4tmatrix(dyn.B,[],[],in.param);
+                setup.B = DTQP_QLIN_update_tmatrix(dyn.B,[],[],in.param);
             end
             if ~isempty(dyn.G)
-                setup.G = DTQP_qlin_update4tmatrix(dyn.G,[],[],in.param);
+                setup.G = DTQP_QLIN_update_tmatrix(dyn.G,[],[],in.param);
             end
             if ~isempty(dyn.d)
-                setup.d = DTQP_qlin_update4tmatrix(dyn.d,[],[],in.param);
+                setup.d = DTQP_QLIN_update_tmatrix(dyn.d,[],[],in.param);
             end
 
             % assign
@@ -137,7 +137,7 @@ if isfield(symb,'D')
             in.IDnon = dyn.Inon;
 
             % construct linear defect constraints
-            [Aeq1,beq1,in] = DTQP_defects(setup.A,setup.B,setup.G,setup.d,in,opts);
+            [Aeq1,beq1,in] = DTQP_DEFECTS(setup.A,setup.B,setup.G,setup.d,in,opts);
 
         end
     end
@@ -149,7 +149,7 @@ if isfield(symb,'D')
 else % only LQDO dynamic equations
 
     % construct linear defect constraint matrices
-    [Aeq1,beq1,in] = DTQP_defects(setup.A,setup.B,setup.G,setup.d,in,opts);
+    [Aeq1,beq1,in] = DTQP_DEFECTS(setup.A,setup.B,setup.G,setup.d,in,opts);
 
     % default field value
     in.dyn = [];
@@ -162,7 +162,7 @@ end
 if isfield(symb,'ceq')
 
     % calculate derivatives
-	[ceq,opts] = DTQP_ipfmincon_symb(symb.ceq,in,linflag,opts);
+	[ceq,opts] = DTQP_IPFMINCON_symb(symb.ceq,in,linflag,opts);
 
     pathboundary = true(length(ceq),1); % NOT CORRECT
 
@@ -217,7 +217,7 @@ beq = [beq1;beq2]; % Aeq*X = beq
 if isfield(symb,'cin')
 
     % calculate derivatives
-	[cin,opts] = DTQP_ipfmincon_symb(symb.cin,in,linflag,opts);
+	[cin,opts] = DTQP_IPFMINCON_symb(symb.cin,in,linflag,opts);
 
     pathboundary = true(length(cin),1); % NOT CORRECT
 
@@ -273,7 +273,7 @@ end
 %--------------------------------------------------------------------------
 % initial guess
 %--------------------------------------------------------------------------
-% TODO: create initial guess using DTQP_qlin_guess.m
+% TODO: create initial guess using DTQP_QLIN_guess.m
 if isfield(in.p,'guess')
 
     % interpolate initial guess
@@ -302,7 +302,7 @@ if ldqoflag
 end
 
 % solve
-[X,F,in,opts] = DTQP_solver(H,f,A,b,Aeq,beq,lb,ub,in,opts);
+[X,F,in,opts] = DTQP_SOLVER(H,f,A,b,Aeq,beq,lb,ub,in,opts);
 
 %--------------------------------------------------------------------------
 % obtain outputs

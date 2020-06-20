@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_ipfmincon_objective.m
+% DTQP_IPFMINCON_objective.m
 % Compute objective function value and gradient
 %--------------------------------------------------------------------------
 %
@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [fo,go] = DTQP_ipfmincon_objective(X,obj,in,opts,Hin,fin)
+function [fo,go] = DTQP_IPFMINCON_objective(X,obj,in,opts,Hin,fin)
 
 % extract
 p = in.p; t = in.t; np = in.np; nt = in.nt; param = in.param;
@@ -35,7 +35,7 @@ if isfield(obj,'f')
     f = obj.f;
 
     % calculate state derivative function values
-    fi = DTQP_qlin_update4tmatrix(f,[],X,param);
+    fi = DTQP_QLIN_update_tmatrix(f,[],X,param);
     ft = DTQP_tmultiprod(fi,p,t);
 
     % integrate nonlinear term
@@ -89,7 +89,7 @@ if nargout > 1
         Df = obj.Df; h = in.h; w = in.w;
 
         % calculate state derivative function values
-        Dfi = DTQP_qlin_update4tmatrix(Df,[],X,param);
+        Dfi = DTQP_QLIN_update_tmatrix(Df,[],X,param);
         Dft = DTQP_tmultiprod(Dfi,p,t);
 
         % integrate nonlinear term

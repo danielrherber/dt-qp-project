@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_solver_qpoases.m
+% DTQP_SOLVER_qpoases.m
 % Interface to qpOASES software
 %--------------------------------------------------------------------------
 % See https://projects.coin-or.org/qpOASES
@@ -8,7 +8,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [X,F,in,opts] = DTQP_solver_qpoases(H,f,A,b,Aeq,beq,lb,ub,in,opts)
+function [X,F,in,opts] = DTQP_SOLVER_qpoases(H,f,A,b,Aeq,beq,lb,ub,in,opts)
 
 % qp options
 qp = opts.qp;

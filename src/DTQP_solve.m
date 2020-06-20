@@ -28,12 +28,12 @@ end
 if isfield(setup,'symb')
 
     % solve the NLDO problem
-    [T,U,Y,P,F,in,opts] = DTQP_nonlin(setup,opts);
+    [T,U,Y,P,F,in,opts] = DTQP_NONLIN(setup,opts);
 
 else
 
     % solve the LQDO problem
-    [T,U,Y,P,F,in,opts] = DTQP_meshr(setup,opts);
+    [T,U,Y,P,F,in,opts] = DTQP_MESH(setup,opts);
 
 end
 

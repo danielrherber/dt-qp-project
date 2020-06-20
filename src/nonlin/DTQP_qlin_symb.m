@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_qlin_symb.m
+% DTQP_QLIN_symb.m
 % Perform variable-order Taylor polynomial approximation on a matrix of
 % functions with states, inputs, and parameters
 %--------------------------------------------------------------------------
@@ -18,7 +18,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function E = DTQP_qlin_symb(f,form,in,D2flag)
+function E = DTQP_QLIN_symb(f,form,in,D2flag)
 
 %--------------------------------------------------------------------------
 % go through the options

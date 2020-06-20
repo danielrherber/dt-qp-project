@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_solver.m
+% DTQP_SOLVER.m
 % Obtain the solution to the DO problem using the selected solver
 %--------------------------------------------------------------------------
 % NOTE: using quadprog even for linear programs
@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [X,F,in,opts] = DTQP_solver(H,f,A,b,Aeq,beq,lb,ub,in,opts)
+function [X,F,in,opts] = DTQP_SOLVER(H,f,A,b,Aeq,beq,lb,ub,in,opts)
 
 % extract
 displevel = opts.general.displevel;
@@ -27,16 +27,16 @@ end
 switch upper(opts.qp.solver)
     %----------------------------------------------------------------------
     case {'QUADPROG','BUILT-IN'} % built-in MATLAB solvers
-        [X,F,in,opts] = DTQP_solver_quadprog(H,f,A,b,Aeq,beq,lb,ub,in,opts);
+        [X,F,in,opts] = DTQP_SOLVER_quadprog(H,f,A,b,Aeq,beq,lb,ub,in,opts);
     %----------------------------------------------------------------------
     case 'CVX' %
-        [X,F,in,opts] = DTQP_solver_cvx(H,f,A,b,Aeq,beq,lb,ub,in,opts);
+        [X,F,in,opts] = DTQP_SOLVER_cvx(H,f,A,b,Aeq,beq,lb,ub,in,opts);
     %----------------------------------------------------------------------
     case 'QPOASES' %
-        [X,F,in,opts] = DTQP_solver_qpoases(H,f,A,b,Aeq,beq,lb,ub,in,opts);
+        [X,F,in,opts] = DTQP_SOLVER_qpoases(H,f,A,b,Aeq,beq,lb,ub,in,opts);
     %----------------------------------------------------------------------
     case 'IPFMINCON' % MATLAB fmincon solver with interior point algorithm
-        [X,F,in,opts] = DTQP_solver_ipfmincon(H,f,A,b,Aeq,beq,lb,ub,in,opts);
+        [X,F,in,opts] = DTQP_SOLVER_ipfmincon(H,f,A,b,Aeq,beq,lb,ub,in,opts);
     %----------------------------------------------------------------------
     otherwise
         error('Error: solver not found')

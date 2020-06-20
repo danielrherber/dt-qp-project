@@ -23,7 +23,7 @@ c = DTQP_createc(setup.cL,setup.cM,in,opts); % determine constants
 % constraints (maximum linear terms)
 %--------------------------------------------------------------------------
 % create defect constraints
-[Aeq1,beq1,in] = DTQP_defects(setup.A,setup.B,setup.G,setup.d,in,opts);
+[Aeq1,beq1,in] = DTQP_DEFECTS(setup.A,setup.B,setup.G,setup.d,in,opts);
 
 % create linear path and boundary equality constraints
 [Aeq2,beq2] = DTQP_create_YZ(setup.Y,in);

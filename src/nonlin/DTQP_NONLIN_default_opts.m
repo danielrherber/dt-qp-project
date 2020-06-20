@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_nonlin_defaultOpts.m
+% DTQP_NONLIN_default_opts.m
 % Default options for the NLDO methods
 %--------------------------------------------------------------------------
 %
@@ -8,7 +8,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function opts = DTQP_nonlin_defaultOpts(opts)
+function opts = DTQP_NONLIN_default_opts(opts)
 
 % initialize quasilinearization-specific options structure
 if ~isfield(opts,'qlin')

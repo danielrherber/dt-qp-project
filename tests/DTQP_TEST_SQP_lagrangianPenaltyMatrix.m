@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % DTQP_TEST_SQP_lagrangianPenaltyMatrix.m
-% Test function for DTQP_SQP_lagrangianPenaltyMatrix.m
+% Test function for DTQP_SQP_lagrangian_penalty_matrix.m
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -64,11 +64,11 @@ for k = 1:length(tests)
     % go through each state derivative function
     D2matrix = cell(size(E.D2));
     for i = 1:length(E.D2)
-        D2matrix{i} = DTQP_qlin_update4tmatrix(E.D2{i},in.t,X,param);
+        D2matrix{i} = DTQP_QLIN_update_tmatrix(E.D2{i},in.t,X,param);
     end
 
     % create indices for Lagrangian penalty matrix
-    [I,J,V] = DTQP_SQP_lagrangianPenaltyMatrix(D2matrix,in,opts);
+    [I,J,V] = DTQP_SQP_lagrangian_penalty_matrix(D2matrix,in,opts);
 
     % test analysis
     spy(sparse(I,J,1)); % display the sparsity pattern
@@ -102,6 +102,6 @@ opts.lambda = lambda;
 
 % evaluate the elements of the SQP problem
 form = 3; D2flag = true;
-E = DTQP_qlin_symb(f,form,in,D2flag);
+E = DTQP_QLIN_symb(f,form,in,D2flag);
 
 end

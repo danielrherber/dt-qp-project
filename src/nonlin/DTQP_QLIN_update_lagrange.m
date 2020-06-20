@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_qlin_updateLagrange.m
+% DTQP_QLIN_update_lagrange.m
 % Update Lagrange terms in the quasilinearization process
 %--------------------------------------------------------------------------
 %
@@ -8,15 +8,15 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function setup = DTQP_qlin_updateLagrange(setup,H,G,C,o,T,X,param)
+function setup = DTQP_QLIN_update_lagrange(setup,H,G,C,o,T,X,param)
 
 % extract
 nu = o.nu; ny = o.ny; np = o.np;
 
 % convert to DTQP compatible functions
-Hi = DTQP_qlin_update4tmatrix(H,T,X,param);
-Gi = DTQP_qlin_update4tmatrix(G,T,X,param);
-Ci = DTQP_qlin_update4tmatrix(C,T,X,param);
+Hi = DTQP_QLIN_update_tmatrix(H,T,X,param);
+Gi = DTQP_QLIN_update_tmatrix(G,T,X,param);
+Ci = DTQP_QLIN_update_tmatrix(C,T,X,param);
 
 % initialize
 keep = [];

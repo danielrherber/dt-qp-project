@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_SQP_trustregion.m
+% DTQP_SQP_trust_region.m
 % Construct and solve a trust region problem for qlin/sqp
 %--------------------------------------------------------------------------
 %
@@ -8,7 +8,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [beq,lb,ub,opts] = DTQP_SQP_trustregion(A,b,Aeq,beq,lb,ub,opts)
+function [beq,lb,ub,opts] = DTQP_SQP_trust_region(A,b,Aeq,beq,lb,ub,opts)
 
 % extract
 reduction = opts.reduction;

@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_meshr_richardson_doubling.m
+% DTQP_MESH_richardson_doubling.m
 % Simple mesh refinement scheme based on Richardson extrapolation and
 % approximately doubling the number of time points
 %--------------------------------------------------------------------------
@@ -8,7 +8,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [T,U,Y,P,F,in,opts] = DTQP_meshr_richardson_doubling(setup,opts)
+function [T,U,Y,P,F,in,opts] = DTQP_MESH_richardson_doubling(setup,opts)
 
 % extract options
 dt = opts.dt;

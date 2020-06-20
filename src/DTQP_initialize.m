@@ -24,7 +24,7 @@ else
     in.t0 = setup.t0;
 end
 in.tf = setup.tf; % final time
-[t,w,D] = DTQP_pts(in,dt); % mesh, quadrature wights, differentiation matrix
+[t,w,D] = DTQP_MESH_pts(in,dt); % mesh, quadrature wights, differentiation matrix
 in.nt = length(t); % number of time points
 in.t = t; in.w = w(:); in.D = D;
 h = diff(t); in.h = h; % time steps

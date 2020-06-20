@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_qlin_sqpMatrix.m
+% DTQP_QLIN_sqp_matrix.m
 % Construct sqp penalty matrix from sequences
 %--------------------------------------------------------------------------
 %
@@ -8,13 +8,13 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [H,Hsqp] = DTQP_qlin_sqpMatrix(H,D2matrix,in,opts)
+function [H,Hsqp] = DTQP_QLIN_sqp_matrix(H,D2matrix,in,opts)
 
 % initialize
 HI = []; HJ = []; HV = [];
 
 % create indices for Lagrangian penalty matrix
-[I,J,V] = DTQP_SQP_lagrangianPenaltyMatrix(D2matrix,in,opts);
+[I,J,V] = DTQP_SQP_lagrangian_penalty_matrix(D2matrix,in,opts);
 HI = [HI;I]; HJ = [HJ;J]; HV = [HV;V];
 
 % sparse matrix for Hessian

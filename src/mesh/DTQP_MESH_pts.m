@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_pts.m
+% DTQP_MESH_pts.m
 % Generate the time mesh (vector of discrete time values). Also,
 % potentially generate the quadrature weights and differentiation matrix
 %--------------------------------------------------------------------------
@@ -8,7 +8,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [t,w,D] = DTQP_pts(in,dt)
+function [t,w,D] = DTQP_MESH_pts(in,dt)
 
 % extract
 t0 = in.t0; tf = in.tf;

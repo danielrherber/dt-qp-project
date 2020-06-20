@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_defects_HS.m
+% DTQP_DEFECTS_HS.m
 % Create matrices for the Hermite-Simpson method
 %--------------------------------------------------------------------------
 %
@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [Aeq,beq] = DTQP_defects_HS(A,B,G,d,in,opts)
+function [Aeq,beq] = DTQP_DEFECTS_HS(A,B,G,d,in,opts)
 
 % extract some of the variables
 nu = in.nu; ny = in.ny; np = in.np; nd = in.nd; nx = in.nx;
@@ -41,7 +41,7 @@ Ip = 2:nt;
 % calculate matrix products
 AmA0 = multiprod(Am,At(Im,:,:),[2 3],[2 3]);
 AmA1 = multiprod(Am,At(Ip,:,:),[2 3],[2 3]);
-Jy = DTQP_indexcolumns(nt,ny,nu); % optimization variable (column) locations
+Jy = DTQP_DEFECTS_index_columns(nt,ny,nu); % optimization variable (column) locations
 Jys = [Jy;Jy+1]; % combine to create paired optimization variable locations
 Ty = Jy - nt*nu; % time indexing vectors
 Hy = repmat(h,ny,1); % vector of time steps
@@ -49,7 +49,7 @@ Hy = repmat(h,ny,1); % vector of time steps
 if nu > 0
     AmB0 = multiprod(Am,Bt(Im,:,:),[2 3],[2 3]);
     AmB1 = multiprod(Am,Bt(Ip,:,:),[2 3],[2 3]);
-    Ju = DTQP_indexcolumns(nt,nu,0); % optimization variable (column) locations
+    Ju = DTQP_DEFECTS_index_columns(nt,nu,0); % optimization variable (column) locations
     Jus = [Ju;Ju+1]; % combine to create paired optimization variable locations
     Tu = Ju; % time indexing vectors
     Hu = repmat(h,nu,1); % vector of time steps
@@ -59,7 +59,7 @@ if np > 0
     AbGm = multiprod(Am,Gt(Im,:,:),[2 3],[2 3]);
     AbGp = multiprod(Am,Gt(Ip,:,:),[2 3],[2 3]);
     Jp = kron(nt*(nu+ny)+(1:np)', ones(nt-1,1)); % optimization variable (column) locations
-    Tp = DTQP_indexcolumns(nt,np,0); % time indexing vectors
+    Tp = DTQP_DEFECTS_index_columns(nt,np,0); % time indexing vectors
     Hp = repmat(h,np,1); % vector of time steps
 end
 

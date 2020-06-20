@@ -1,12 +1,12 @@
 %--------------------------------------------------------------------------
-% DTQP_qlin_update4tmatrix.m
+% DTQP_QLIN_update_tmatrix.m
 % Convert the linearized/quadracized function to DTQP_tmatrix form
 %--------------------------------------------------------------------------
 % Contributor: Athul K. Sundarrajan (AthulKrishnaSundarrajan on GitHub)
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function B = DTQP_qlin_update4tmatrix(A,T,X,param)
+function B = DTQP_QLIN_update_tmatrix(A,T,X,param)
 
 % check if interp1 is needed
 if isempty(T) && isempty(X)

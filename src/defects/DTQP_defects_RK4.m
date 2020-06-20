@@ -1,5 +1,5 @@
 %%--------------------------------------------------------------------------
-% DTQP_defects_RK4.m
+% DTQP_DEFECTS_RK4.m
 % Create matrices for the fourth-order Runge-Kutta method
 %--------------------------------------------------------------------------
 %
@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [Aeq,beq] = DTQP_defects_RK4(A,B,G,d,in,opts)
+function [Aeq,beq] = DTQP_DEFECTS_RK4(A,B,G,d,in,opts)
 
 % extract some of the variables
 nu = in.nu; ny = in.ny; np = in.np; nd = in.nd; nx = in.nx;
@@ -43,7 +43,7 @@ A1AmAm = multiprod(A1,AmAm,[2 3],[2 3]); % 3
 AmA0 = multiprod(Am,A0,[2 3],[2 3]); % 4
 A1Am = multiprod(A1,Am,[2 3],[2 3]); % 5
 A1AmAmA0 = multiprod(A1Am,AmA0,[2 3],[2 3]); % 6
-Jy = DTQP_indexcolumns(nt,ny,nu); % optimization variable (column) locations
+Jy = DTQP_DEFECTS_index_columns(nt,ny,nu); % optimization variable (column) locations
 Jys = [Jy;Jy+1]; % combine to create paired optimization variable locations
 Ty = Jy - nt*nu; % time indexing vectors
 Hy = repmat(h,ny,1); % vector of time steps
@@ -56,7 +56,7 @@ if nu > 0
     AmAmB0 = multiprod(AmAm,B0,[2 3],[2 3]); % 10
     A1AmBm = multiprod(A1Am,Bm,[2 3],[2 3]); % 11
     A1AmAmB0 = multiprod(A1,AmAmB0,[2 3],[2 3]); % 12
-    Ju = DTQP_indexcolumns(nt,nu,0); % optimization variable (column) locations
+    Ju = DTQP_DEFECTS_index_columns(nt,nu,0); % optimization variable (column) locations
     Jus = [Ju;Ju+1]; % combine to create paired optimization variable locations
     Tu = Ju; % time indexing vectors
     Hu = repmat(h,nu,1); % vector of time steps
@@ -71,7 +71,7 @@ if np > 0
     A1AmGm = multiprod(A1Am,Gm,[2 3],[2 3]); % 17
     A1AmAmG0 = multiprod(A1,AmAmG0,[2 3],[2 3]); % 18
     Jp = kron(nt*(nu+ny)+(1:np)', ones(nt-1,1)); % optimization variable (column) locations
-    Tp = DTQP_indexcolumns(nt,np,0); % time indexing vectors
+    Tp = DTQP_DEFECTS_index_columns(nt,np,0); % time indexing vectors
     Hp = repmat(h,np,1); % vector of time steps
 end
 

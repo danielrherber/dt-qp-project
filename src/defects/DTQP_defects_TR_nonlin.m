@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_defects_TR_nonlin.m
+% DTQP_DEFECTS_TR_nonlin.m
 % Create matrices for the trapezoidal method for nonlinear dynamics
 %--------------------------------------------------------------------------
 %
@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [Z,DZ] = DTQP_defects_TR_nonlin(X,dyn,in,opts,Dflag)
+function [Z,DZ] = DTQP_DEFECTS_TR_nonlin(X,dyn,in,opts,Dflag)
 
 % extract
 nu = in.nu; ny = in.ny; np = in.np; nt = in.nt; nX = in.nx;
@@ -49,7 +49,7 @@ R = horzcat(ini{1:3});
 % compute defect constraints
 %--------------------------------------------------------------------------
 % calculate state derivative function values
-fi = DTQP_qlin_update4tmatrix(f,[],X,param);
+fi = DTQP_QLIN_update_tmatrix(f,[],X,param);
 ft = DTQP_tmultiprod(fi,p,t);
 
 % sum neighboring values
@@ -74,7 +74,7 @@ if ~Dflag
 end
 
 % calculate Jacobian of state derivative function values
-Dfi = DTQP_qlin_update4tmatrix(Df,[],X,param);
+Dfi = DTQP_QLIN_update_tmatrix(Df,[],X,param);
 Dft = DTQP_tmultiprod(Dfi,p,t);
 
 % go through each defect constraint

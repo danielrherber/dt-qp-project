@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_solver_default_opts.m
+% DTQP_SOLVER_default_opts.m
 % Defaults options for the optimization solvers
 %--------------------------------------------------------------------------
 %
@@ -7,11 +7,11 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function opts = DTQP_solver_default_opts(opts)
+function opts = DTQP_SOLVER_default_opts(opts)
 
 switch upper(opts.qp.solver)
     %----------------------------------------------------------------------
-    case {'QUADPROG','BUILT-IN'} % see DTQP_solver_quadprog.m
+    case {'QUADPROG','BUILT-IN'} % see DTQP_SOLVER_quadprog.m
     % tolerance
     if ~isfield(opts.qp,'tolerance')
         opts.qp.tolerance = 1e-12;
@@ -33,9 +33,9 @@ switch upper(opts.qp.solver)
         end
     end
     %----------------------------------------------------------------------
-    case 'CVX' % see DTQP_solver_cvx.m
+    case 'CVX' % see DTQP_SOLVER_cvx.m
     %----------------------------------------------------------------------
-    case 'QPOASES' % see DTQP_solver_qpoases.m
+    case 'QPOASES' % see DTQP_SOLVER_qpoases.m
     % maximum iterations
     if ~isfield(opts.qp,'maxIter')
         opts.qp.maxIter = -1; % value chosen heuristically
@@ -55,7 +55,7 @@ switch upper(opts.qp.solver)
         end
     end
     %----------------------------------------------------------------------
-    case 'IPFMINCON' % see DTQP_solver_ipfmincon.m
+    case 'IPFMINCON' % see DTQP_SOLVER_ipfmincon.m
     % tolerance
     if ~isfield(opts.qp,'tolerance')
         opts.qp.tolerance = 1e-8;

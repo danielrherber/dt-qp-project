@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % DTQP_TEST_qlin_symb.m
-% Tests for DTQP_qlin_symb.m
+% Tests for DTQP_QLIN_symb.m
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -100,7 +100,7 @@ for k = 1:length(tests)
 
     % run the test and time
     tic
-    E = DTQP_qlin_symb(f,form,o,D2flag);
+    E = DTQP_QLIN_symb(f,form,o,D2flag);
     toc
 
     % test analysis

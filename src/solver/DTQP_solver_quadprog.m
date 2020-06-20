@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_solver_quadprog.m
+% DTQP_SOLVER_quadprog.m
 % Interface to quadprog solver in Matlab Optimization Toolbox
 %--------------------------------------------------------------------------
 % See https://www.mathworks.com/help/optim/ug/quadprog.html
@@ -8,7 +8,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [X,F,in,opts] = DTQP_solver_quadprog(H,f,A,b,Aeq,beq,lb,ub,in,opts)
+function [X,F,in,opts] = DTQP_SOLVER_quadprog(H,f,A,b,Aeq,beq,lb,ub,in,opts)
 
 % qp options
 qp = opts.qp;

@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_qlin_plots.m
+% DTQP_QLIN_plots.m
 % Create the plots for the quasilinearization iterations
 %--------------------------------------------------------------------------
 %
@@ -8,7 +8,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function DTQP_qlin_plots(T,Y,U,P,iter)
+function DTQP_QLIN_plots(T,Y,U,P,iter)
 
 % determine what design variable types are present
 n = 0;

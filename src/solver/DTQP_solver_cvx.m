@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_solver_cvx.m
+% DTQP_SOLVER_cvx.m
 % Interface to cvx software
 %--------------------------------------------------------------------------
 % See http://cvxr.com/cvx/
@@ -8,7 +8,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [X,F,in,opts] = DTQP_solver_cvx(H,f,A,b,Aeq,beq,lb,ub,in,opts)
+function [X,F,in,opts] = DTQP_SOLVER_cvx(H,f,A,b,Aeq,beq,lb,ub,in,opts)
 
 % number of optimization variables
 n = in.nx;

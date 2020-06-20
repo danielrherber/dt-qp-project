@@ -83,6 +83,6 @@ for k = 1:length(tests)
 
     % run the test and time
     tic
-    Q = DTQP_convolution(A,B,in,opts);
+    Q = DTQP_DEFECTS_convolution(A,B,in,opts);
     toc
 end

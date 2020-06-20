@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_convolution.m
+% DTQP_DEFECTS_convolution.m
 % Compute the convolution integral
 %--------------------------------------------------------------------------
 %
@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function Q = DTQP_convolution(A,B,in,opts)
+function Q = DTQP_DEFECTS_convolution(A,B,in,opts)
 
 % extract
 p = in.p; nt = in.nt; t = in.t; h = in.h;
