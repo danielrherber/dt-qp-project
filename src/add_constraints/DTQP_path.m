@@ -22,7 +22,7 @@ Ir = (1:nt)';
 for j = 1:length(YZ.linear) % loop through the extended variables
 
     % find time dependent matrix
-    YZt = DTQP_tmatrix(YZ.linear(j).matrix,p,t);
+    YZt = DTQP_tmultiprod(YZ.linear(j).matrix,p,t);
 
     % variable locations for the variable type
     C = ini{YZ.linear(j).right};
@@ -60,6 +60,6 @@ J = vertcat(Jsav{:});
 V = vertcat(Vsav{:});
 
 % find time dependent vector
-b = DTQP_tmatrix(YZ.b,p,t);
+b = DTQP_tmultiprod(YZ.b,p,t);
 
 end % end function

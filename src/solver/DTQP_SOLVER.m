@@ -26,20 +26,20 @@ end
 
 switch upper(opts.qp.solver)
     %----------------------------------------------------------------------
-    case {'QUADPROG','BUILT-IN'} % built-in MATLAB solvers
-        [X,F,in,opts] = DTQP_SOLVER_quadprog(H,f,A,b,Aeq,beq,lb,ub,in,opts);
+    case {'QUADPROG','BUILT-IN'} % built-in MATLAB qp solver
+    [X,F,in,opts] = DTQP_SOLVER_quadprog(H,f,A,b,Aeq,beq,lb,ub,in,opts);
     %----------------------------------------------------------------------
-    case 'CVX' %
-        [X,F,in,opts] = DTQP_SOLVER_cvx(H,f,A,b,Aeq,beq,lb,ub,in,opts);
+    case 'CVX' % http://cvxr.com/cvx/
+    [X,F,in,opts] = DTQP_SOLVER_cvx(H,f,A,b,Aeq,beq,lb,ub,in,opts);
     %----------------------------------------------------------------------
-    case 'QPOASES' %
-        [X,F,in,opts] = DTQP_SOLVER_qpoases(H,f,A,b,Aeq,beq,lb,ub,in,opts);
+    case 'QPOASES' % https://github.com/coin-or/qpOASES
+    [X,F,in,opts] = DTQP_SOLVER_qpoases(H,f,A,b,Aeq,beq,lb,ub,in,opts);
     %----------------------------------------------------------------------
     case 'IPFMINCON' % MATLAB fmincon solver with interior point algorithm
-        [X,F,in,opts] = DTQP_SOLVER_ipfmincon(H,f,A,b,Aeq,beq,lb,ub,in,opts);
+    [X,F,in,opts] = DTQP_SOLVER_ipfmincon(H,f,A,b,Aeq,beq,lb,ub,in,opts);
     %----------------------------------------------------------------------
     otherwise
-        error('Error: solver not found')
+    error('DTQP error: solver not found')
 end
 
 % (potentially) stop qpsolver timer and start create qpsolver timer

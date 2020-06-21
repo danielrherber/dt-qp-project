@@ -10,14 +10,14 @@
 %--------------------------------------------------------------------------
 clc; clear; close all
 
-tests = 1:9;
-% tests = 1;
+tests = 1:12;
+% tests = 12;
 
 % go through the tests
 for k = 1:length(tests)
 
     clear f o form
-    
+
     % options
     D2flag = true;
     linflag = true;
@@ -89,6 +89,27 @@ for k = 1:length(tests)
         o.nu = 1; % number of controls
         o.np = 1; % number of parameters
         o.paramstr = 'zeta';
+        %------------------------------------------------------------------
+        case 10
+        %
+        f = '[y1;y1^2]';
+        o.ny = 1; % number of states
+        o.nu = 0; % number of controls
+        o.np = 0; % number of parameters
+        %------------------------------------------------------------------
+        case 11
+        % linear initial and final states
+        f = '[yf1;yf1 - yf2 + 1;yi1 - pi;yf1 - u1]';
+        o.ny = 2; % number of states
+        o.nu = 1; % number of controls
+        o.np = 0; % number of parameters
+        %------------------------------------------------------------------
+        case 12
+        % nonlinear initial and final states
+        f = '[sqrt(yf1);yf1^2 - 1/yf2 + 1;exp(-yi1) - pi;sin(yi1) - u1]';
+        o.ny = 2; % number of states
+        o.nu = 1; % number of controls
+        o.np = 0; % number of parameters
     end
 
     % run the test and time

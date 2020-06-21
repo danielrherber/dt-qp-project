@@ -66,16 +66,16 @@ output = 1; % vectorized matlab function
 %--------------------------------------------------------------------------
 % initialize the symbolic variables
 %--------------------------------------------------------------------------
-strY = []; strU = []; strP = [];
-
-% add states
-for idx = 1:ny
-    strY = [strY,'y',num2str(idx),' '];
-end
+strY = []; strU = []; strP = []; strYi = []; strYf = [];
 
 % add controls
 for idx = 1:nu
     strU = [strU,'u',num2str(idx),' '];
+end
+
+% add states
+for idx = 1:ny
+    strY = [strY,'y',num2str(idx),' '];
 end
 
 % add parameters
@@ -83,12 +83,24 @@ for idx = 1:np
     strP = [strP,'p',num2str(idx),' '];
 end
 
+% add initial states
+for idx = 1:ny
+    strYi = [strYi,'yi',num2str(idx),' '];
+end
+
+% add final states
+for idx = 1:ny
+    strYf = [strYf,'yf',num2str(idx),' '];
+end
+
 % create symbolic variables
-eval(['syms t dummy123 ',strU,strY,strP,param,' real'])
+eval(['syms t dummy123 ',strU,strY,strP,strYi,strYf,param,' real'])
 
 eval(['U = [',strU,'];'])
 eval(['Y = [',strY,'];'])
 eval(['P = [',strP,'];'])
+eval(['Yi = [',strYi,'];'])
+eval(['Yf = [',strYf,'];'])
 
 if isempty(param)
     PARAM = dummy123;
@@ -106,7 +118,7 @@ F = eval(f);
 F = reshape(F,[],1);
 
 % vector of optimization variables
-X = [U,Y,P];
+X = [U,Y,P,Yi,Yf];
 
 % collection of t, parameters, and optimization variables
 in1 = {t,PARAM,X};
@@ -145,13 +157,17 @@ if linflag
     % put matrices in the form f = A*y + B*u + G*p + d
     A = L(:,nu+1:nu+ny);
     B = L(:,1:nu);
-    G = L(:,nu+ny+1:end);
+    G = L(:,nu+ny+1:nx);
+    Ai = L(:,nx+1:nx+ny);
+    Af = L(:,nx+ny+1:nx+2*ny);
     d = -O;
 
     % vectorized matlab function
     E.A = sym2matrixfun(A,{t,PARAM},output);
     E.B = sym2matrixfun(B,{t,PARAM},output);
     E.G = sym2matrixfun(G,{t,PARAM},output);
+    E.Ai = sym2matrixfun(Ai,{t,PARAM},output);
+    E.Af = sym2matrixfun(Af,{t,PARAM},output);
     E.d = sym2matrixfun(d,{t,PARAM},output);
 
     % store indices (corresponding state equations)
@@ -176,7 +192,7 @@ D2f = sym2matrixfun(D2F,in1,output);
 
 % reshape and store
 if ~isempty(D2f)
-    E.D2f = mat2cell(D2f,repmat(nx,1,length(F)),nx);
+    E.D2f = mat2cell(D2f,repmat(nx+2*ny,1,length(F)),nx+2*ny);
 else
     E.D2f = [];
 end

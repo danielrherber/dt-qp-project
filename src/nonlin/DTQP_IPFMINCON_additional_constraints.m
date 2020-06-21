@@ -20,11 +20,7 @@ f = con.f; Df = con.Df;
 P = X(end-np+1:end);
 X = reshape(X(1:end-np),nt,[]);
 P = repelem(P',nt,1);
-X = [X,P];
-
-% initialize row and column indices
-LR = repelem([1 2 3],[nu ny np]);
-R = horzcat(ini{1:3});
+X = [X,P,repmat(X(1,ini{2}),nt,1),repmat(X(end,ini{2}),nt,1)];
 
 %--------------------------------------------------------------------------
 % compute constraint value
@@ -45,6 +41,10 @@ if ~Dflag
    return
 end
 
+% initialize row and column indices
+LR = repelem([1 2 3 4 5],[nu ny np ny ny]);
+R = horzcat(ini{1:5});
+
 % calculate Jacobian of the constraints
 Dfi = DTQP_QLIN_update_tmatrix(Df,[],X,param);
 Dft = DTQP_tmultiprod(Dfi,p,t);
@@ -59,7 +59,7 @@ Isav = {}; Jsav = {}; Vsav = {};
 for ix = 1:nz
 
     % go through each column entry in the original problem form
-    for jx = R
+    for jx = 1:length(R)
 
         % get current values
         v = Dft(:,ix,jx);

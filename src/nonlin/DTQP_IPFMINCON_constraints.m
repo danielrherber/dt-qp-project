@@ -39,7 +39,7 @@ end
 
 % compute additional nonlinear equality constraints
 if ~isempty(ceq)
-    [h,Dh] = DTQP_IPFMINCON_additional_constraints(X,ceq,in,opts);
+    [h,Dh] = DTQP_IPFMINCON_additional_constraints(X,ceq,in,opts,Dflag);
 else
     h = []; Dh = [];
 end

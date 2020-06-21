@@ -1,0 +1,24 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{u_1(t),t_f} \quad & t_f \\
+\text{subject to:} \quad & \begin{bmatrix} x^\prime \\ y^\prime \\ v^\prime \end{bmatrix} = \begin{bmatrix}
+t_f v \sin(u_1) \\ t_f v \cos(u_1) \\ t_f g \cos(u_1) \\
+\end{bmatrix} \\
+& (x,y,v)(0) = (0,0,0) \\
+& (x,y)(1) = (x_f,y_f)
+\end{align*}
+}}
+\end{document}
+
+% solution

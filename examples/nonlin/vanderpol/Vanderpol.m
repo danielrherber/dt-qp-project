@@ -94,6 +94,30 @@ switch casenum
         % combine structures
         setup.symb = symb; setup.UB = UB; setup.LB = LB;
         setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+
+    case 3 % completely symbolic formulation
+        % system dynamics
+        symb.D = '[y2; -y1 + y2 - y1^2*y2 + u1]';
+        n.ny = 2; % number of states
+        n.nu = 1; % number of inputs
+
+        % Lagrange term
+        symb.Ob = 'y1^2 + y2^2 + u1^2';
+
+        % equality constraints
+        symb.ceq = '[yi1 - 1; yi2 - 0]';
+
+        % inequality constraints
+        symb.cin = '[u1 - 1; -u1 - 0.3]';
+
+        % guess
+        Y0 = [[1,0];[1,0]];
+        U0 = [[0];[0]];
+        p.guess = [U0,Y0];
+
+        % combine structures
+        setup.symb = symb; % setup.UB = UB; setup.LB = LB; % setup.L = L;
+        setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 end
 
 %% solve

@@ -65,16 +65,19 @@ end
 function problem(p,opts)
 
 % run all examples
+Brachistochrone(p,opts)
 BrysonHo59(p,opts)
 BrysonHo63(p,opts)
 BrysonHo64(p,opts)
 ChemicalReactor(p,opts)
 ContainerCrane(p,opts)
+HangGlider(p,opts)
 HIVImmunology(p,opts)
 Hypersensitive(p,opts)
 OptimalConsumption(p,opts)
 SimpleCoDesignTransfer(p,opts)
 Train(p,opts)
+TransferMaxRadius(p,opts)
 % TransferMinFuel(p,opts) % fails with qlin?
 Tuberculosis(p,opts)
 Tumor(p,opts)

@@ -18,11 +18,11 @@ Ilambda = in.Ilambda; quadrature = opts.dt.quadrature;
 P = X(end-np+1:end);
 X = reshape(X(1:end-np),nt,[]);
 P = repelem(P',nt,1);
-X = [X,P];
+X = [X,P,repmat(X(1,ini{2}),nt,1),repmat(X(end,ini{2}),nt,1)];
 
 % initialize row and column indices
-LR = repelem([1 2 3],[nu ny np]);
-R = horzcat(ini{1:3});
+LR = repelem([1 2 3 4 5],[nu ny np ny ny]);
+R = horzcat(ini{1:5});
 C = R;
 
 % initialize storage arrays

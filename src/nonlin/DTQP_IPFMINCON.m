@@ -82,65 +82,8 @@ end
 %--------------------------------------------------------------------------
 if isfield(symb,'D')
 
-    % calculate derivatives
-	[dyn,opts] = DTQP_IPFMINCON_symb(symb.D,in,linflag,opts);
-
-    % number of constraints
-    nz = length(dyn.f);
-
-    % initialize
-    Idyn = cell(nz,1);
-
-    % go through each constraint
-    for k = 1:nz
-
-        % check the method
-        if strcmpi(opts.dt.defects,'PS')
-            Ii = nI + (1:nt)';
-        else
-            Ii = nI + (1:nt-1)';
-        end
-
-        % update
-        nI = max(Ii);
-
-        % assign
-        Idyn{k} = Ii;
-
-    end
-
-    % initialize linear defect constraint matrices
-    Aeq1 = zeros(0,in.nx); beq1 = zeros(0,1);
-
-    % check if this field is present
-    if isfield(dyn,'Ilin')
-
-        % check if there are any linear dynamic equations
-        if ~isempty(dyn.Ilin)
-
-            % convert to DTQP compatible functions
-            if ~isempty(dyn.A)
-                setup.A = DTQP_QLIN_update_tmatrix(dyn.A,[],[],in.param);
-            end
-            if ~isempty(dyn.B)
-                setup.B = DTQP_QLIN_update_tmatrix(dyn.B,[],[],in.param);
-            end
-            if ~isempty(dyn.G)
-                setup.G = DTQP_QLIN_update_tmatrix(dyn.G,[],[],in.param);
-            end
-            if ~isempty(dyn.d)
-                setup.d = DTQP_QLIN_update_tmatrix(dyn.d,[],[],in.param);
-            end
-
-            % assign
-            in.IDlin = dyn.Ilin;
-            in.IDnon = dyn.Inon;
-
-            % construct linear defect constraints
-            [Aeq1,beq1,in] = DTQP_DEFECTS(setup.A,setup.B,setup.G,setup.d,in,opts);
-
-        end
-    end
+    % determine nonlinear/linear dynamics
+    [Aeq1,beq1,dyn,Idyn,in,opts] = DTQP_IPFMINCON_dyn(symb.D,in,linflag,opts,nI,nt);
 
     % assign
     in.dyn = dyn;
@@ -161,34 +104,11 @@ end
 %--------------------------------------------------------------------------
 if isfield(symb,'ceq')
 
-    % calculate derivatives
-	[ceq,opts] = DTQP_IPFMINCON_symb(symb.ceq,in,linflag,opts);
+    % determine nonlinear/linear equality constraints
+    [Y,ceq,Iceq,opts] = DTQP_IPFMINCON_c(symb.ceq,in,linflag,opts,nI,nt);
 
-    pathboundary = true(length(ceq),1); % NOT CORRECT
-
-    % number of constraints
-    nz = length(ceq.f);
-
-    % initialize
-    Iceq = cell(nz,1);
-
-    % go through each constraint
-    for k = 1:nz
-
-        % check if this is a path constraint
-        if pathboundary
-            Ii = nI + (1:nt)';
-        else
-            Ii = nI + 1;
-        end
-
-        % update
-        nI = max(Ii);
-
-        % assign
-        Iceq{k} = Ii;
-
-    end
+    % combine
+    setup.Y = [setup.Y;Y];
 
     % create linear path and boundary inequality constraints
     [Aeq2,beq2] = DTQP_create_YZ(setup.Y,in);
@@ -197,7 +117,7 @@ if isfield(symb,'ceq')
     in.ceq = ceq;
     in.Ilambda.ceq = Iceq;
 
-else % only LQDO inequality constraints
+else % only LQDO equality constraints
 
     % create linear path and boundary equality constraints
     [Aeq2,beq2] = DTQP_create_YZ(setup.Y,in);
@@ -216,34 +136,11 @@ beq = [beq1;beq2]; % Aeq*X = beq
 %--------------------------------------------------------------------------
 if isfield(symb,'cin')
 
-    % calculate derivatives
-	[cin,opts] = DTQP_IPFMINCON_symb(symb.cin,in,linflag,opts);
+    % determine nonlinear/linear equality constraints
+    [Z,cin,Icin,opts] = DTQP_IPFMINCON_c(symb.cin,in,linflag,opts,0,nt);
 
-    pathboundary = true(length(cin),1); % NOT CORRECT
-
-    % number of constraints
-    nz = length(cin.f);
-
-    % initialize
-    Icin = cell(nz,1); nI = 0;
-
-    % go through each constraint
-    for k = 1:nz
-
-        % check if this is a path constraint
-        if pathboundary
-            Ii = nI + (1:nt)';
-        else
-            Ii = nI + 1;
-        end
-
-        % update
-        nI = max(Ii);
-
-        % assign
-        Icin{k} = Ii;
-
-    end
+    % combine
+    setup.Z = [setup.Z;Z];
 
     % create linear path and boundary inequality constraints
     [A,b] = DTQP_create_YZ(setup.Z,in); % A*X <= b
@@ -255,7 +152,7 @@ if isfield(symb,'cin')
 else % only LQDO inequality constraints
 
     % create linear path and boundary inequality constraints
-    [A,b] = DTQP_create_YZ(setup.Z,in); % A*X <= b
+    [A,b] = DTQP_create_YZ(setup.Z,in);
 
     % default field value
     in.cin = [];
@@ -318,4 +215,199 @@ if strcmpi(opts.dt.defects,'ZO') || strcmpi(opts.dt.defects,'EF')
     U(end,:) = nan;
 end
 
+end
+
+% dynamics
+function [Aeq1,beq1,dyn,Idyn,in,opts] = DTQP_IPFMINCON_dyn(D,in,linflag,opts,nI,nt)
+
+% calculate derivatives
+[dyn,opts] = DTQP_IPFMINCON_symb(D,in,linflag,opts);
+
+% number of constraints
+nz = length(dyn.f);
+
+% initialize
+Idyn = cell(nz,1);
+
+% go through each constraint
+for k = 1:nz
+
+    % check the method
+    if strcmpi(opts.dt.defects,'PS')
+        Ii = nI + (1:nt)';
+    else
+        Ii = nI + (1:nt-1)';
+    end
+
+    % update
+    nI = max(Ii);
+
+    % assign
+    Idyn{k} = Ii;
+
+end
+
+% initialize linear defect constraint matrices
+Aeq1 = zeros(0,in.nx); beq1 = zeros(0,1);
+
+% check if this field is present
+if isfield(dyn,'Ilin')
+
+    % check if there are any linear dynamic equations
+    if ~isempty(dyn.Ilin)
+
+        % convert to DTQP compatible functions
+        if ~isempty(dyn.A)
+            setup.A = DTQP_QLIN_update_tmatrix(dyn.A,[],[],in.param);
+        else
+            setup.A = [];
+        end
+        if ~isempty(dyn.B)
+            setup.B = DTQP_QLIN_update_tmatrix(dyn.B,[],[],in.param);
+        else
+            setup.B = [];
+        end
+        if ~isempty(dyn.G)
+            setup.G = DTQP_QLIN_update_tmatrix(dyn.G,[],[],in.param);
+        else
+            setup.G = [];
+        end
+        if ~isempty(dyn.d)
+            setup.d = DTQP_QLIN_update_tmatrix(dyn.d,[],[],in.param);
+        else
+            setup.d = [];
+        end
+
+        % assign
+        in.IDlin = dyn.Ilin;
+        in.IDnon = dyn.Inon;
+
+        % construct linear defect constraints
+        [Aeq1,beq1,in] = DTQP_DEFECTS(setup.A,setup.B,setup.G,setup.d,in,opts);
+
+    end
+end
+
+end
+
+% additional constraints
+function [YZ,c,Ic,opts] = DTQP_IPFMINCON_c(c,in,linflag,opts,nI,nt)
+
+% calculate derivatives
+[c,opts] = DTQP_IPFMINCON_symb(c,in,linflag,opts);
+
+% TODO: determine if the constraint is a path or boundary constraint
+pathboundary = true(length(c),1); % always a path constraint
+
+% number of constraints
+nz = length(c.f);
+
+% initialize
+Ic = cell(nz,1);
+
+% go through each constraint
+for k = 1:nz
+
+    % check if this is a path constraint
+    if pathboundary
+        Ii = nI + (1:nt)';
+    else
+        Ii = nI + 1;
+    end
+
+    % update
+    nI = max(Ii);
+
+    % assign
+    Ic{k} = Ii;
+
+end
+
+% initialize
+YZ = [];
+
+% add to setup.Y structure
+for k = 1:length(c.Ilin)
+
+    % reset local index
+    idx2 = 0;
+
+    % states
+    if ~isempty(c.A)
+
+        % increment local index
+        idx2 = idx2 + 1;
+
+        % variable
+        YZ(k).linear(idx2).right = 2; % states
+
+        % assign
+        YZ(k).linear(idx2).matrix = c.A(k,:);
+
+    end
+
+    % controls
+    if ~isempty(c.B)
+
+        % increment local index
+        idx2 = idx2 + 1;
+
+        % variable
+        YZ(k).linear(idx2).right = 1; % controls
+
+        % assign
+        YZ(k).linear(idx2).matrix = c.B(k,:);
+
+    end
+
+    % parameters
+    if ~isempty(c.G)
+
+        % increment local index
+        idx2 = idx2 + 1;
+
+        % variable
+        YZ(k).linear(idx2).right = 3; % parameters
+
+        % assign
+        YZ(k).linear(idx2).matrix = c.G(k,:);
+
+    end
+
+    % initial states
+    if ~isempty(c.Ai)
+
+        % increment local index
+        idx2 = idx2 + 1;
+
+        % variable
+        YZ(k).linear(idx2).right = 4; % initial states
+
+        % assign
+        YZ(k).linear(idx2).matrix = c.Ai(k,:);
+
+    end
+
+    % final states
+    if ~isempty(c.Af)
+
+        % increment local index
+        idx2 = idx2 + 1;
+
+        % variable
+        YZ(k).linear(idx2).right = 5; % final states
+
+        % assign
+        YZ(k).linear(idx2).matrix = c.Af(k,:);
+
+    end
+
+    % constant (negative disturbance)
+    if ~isempty(c.d)
+
+        % assign
+        YZ(k).b = {'prod',-1,c.d(k,:)}; % constant
+
+    end
+end
 end
