@@ -18,7 +18,6 @@ symb = setup.symb;
 
 % initialize
 ldqoflag = false;
-nI = 0;
 in.Ilambda = [];
 linflag = opts.qlin.olqflag;
 
@@ -39,7 +38,7 @@ if isfield(symb,'Ob')
     linflagOb = false; % false only at the moment
 
     % calculate derivatives
-	[obj,opts] = DTQP_IPFMINCON_symb(symb.Ob,in,linflagOb,opts);
+	[obj,opts] = DTQP_IPFMINCON_symb(symb.Ob,in,linflagOb,false,opts);
 
     % initialize empty QP objective terms
     H = sparse([],[],[],in.nx,in.nx); f = sparse([],[],[],in.nx,1); c = 0;
@@ -83,11 +82,14 @@ end
 if isfield(symb,'D')
 
     % determine nonlinear/linear dynamics
-    [Aeq1,beq1,dyn,Idyn,in,opts] = DTQP_IPFMINCON_dyn(symb.D,in,linflag,opts,nI,nt);
+    [Aeq1,beq1,dyn,Idyn,in,opts] = DTQP_IPFMINCON_dyn(symb.D,in,linflag,opts,0,nt);
 
     % assign
     in.dyn = dyn;
     in.Ilambda.dyn = Idyn;
+
+    % current number of nonlinear equality constraints
+    nI = max(vertcat(in.Ilambda.dyn{:}));
 
 else % only LQDO dynamic equations
 
@@ -98,6 +100,7 @@ else % only LQDO dynamic equations
     in.dyn = [];
 
 end
+
 
 %--------------------------------------------------------------------------
 % general equality constraints
@@ -221,7 +224,7 @@ end
 function [Aeq1,beq1,dyn,Idyn,in,opts] = DTQP_IPFMINCON_dyn(D,in,linflag,opts,nI,nt)
 
 % calculate derivatives
-[dyn,opts] = DTQP_IPFMINCON_symb(D,in,linflag,opts);
+[dyn,opts] = DTQP_IPFMINCON_symb(D,in,linflag,false,opts);
 
 % number of constraints
 nz = length(dyn.f);
@@ -294,10 +297,11 @@ end
 function [YZ,c,Ic,opts] = DTQP_IPFMINCON_c(c,in,linflag,opts,nI,nt)
 
 % calculate derivatives
-[c,opts] = DTQP_IPFMINCON_symb(c,in,linflag,opts);
+[c,opts] = DTQP_IPFMINCON_symb(c,in,linflag,true,opts);
 
 % TODO: determine if the constraint is a path or boundary constraint
-pathboundary = true(length(c),1); % always a path constraint
+% pathboundary = true(length(c),1); % always a path constraint
+pathboundary = c.pathboundary;
 
 % number of constraints
 nz = length(c.f);
@@ -309,7 +313,7 @@ Ic = cell(nz,1);
 for k = 1:nz
 
     % check if this is a path constraint
-    if pathboundary
+    if pathboundary(k)
         Ii = nI + (1:nt)';
     else
         Ii = nI + 1;

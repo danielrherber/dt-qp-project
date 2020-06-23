@@ -8,6 +8,7 @@
 | Bryson Ho 64 | [bryson-ho-64](bryson-ho-64/) | Bry75 | closed-form |
 | Chemical Reactor | [chemical-reactor](chemical-reactor/) | Cit69 |  |
 | Container Crane | [container-crane](container-crane/) | Aug01 |  |
+| Free Flying Robot | [free-flying-robot](free-flying-robot/) | Bett10 |  |
 | Hang Glider | [hang-glider](hang-glider/) | Bul93 |  |
 | HIV Immunology | [hiv-immunology](hiv-immunology/) | Jo02 |  |
 | Hypersensitive | [hypersensitive](hypersensitive/) | Rao00 |  |
@@ -16,13 +17,13 @@
 | Train | [train](train/) | Van01 |  |
 | Transfer - Maximum Radius | [transfer-max-radius](transfer-max-radius/) | Bry75 |  |
 | Transfer - Minimum Fuel | [transfer-min-fuel](transfer-min-fuel/) | Ross07 |  |
-| Tuberculosis | [tuberculosis](tuberculosis/) | Betts10 |  |
+| Tuberculosis | [tuberculosis](tuberculosis/) | Bett10 |  |
 | Tumor | [tumor](tumor/) | Led08 |  |
 | van der Pol | [vanderpol](vanderpol/) | Can02 |  |
 
 ### References
 - [**Aug01**] D. Augustin and H. Maurer, "*Sensitivity Analysis and Real-Time Control of a Container Crane under State Constraints*," in Online Optimization of Large Scale Systems, Springer Berlin Heidelberg, 2001, pp. 69–82
-- [**Betts10**] J. T. Betts, "*Practical Methods for Optimal Control and Estimation Using Nonlinear Programming*." Society for Industrial and Applied Mathematics, Jan. 2010, doi: 10.1137/1.9780898718577
+- [**Bett10**] J. T. Betts, "*Practical Methods for Optimal Control and Estimation Using Nonlinear Programming*." Society for Industrial and Applied Mathematics, Jan. 2010, doi: 10.1137/1.9780898718577
 - [**Bry75**] A. E. Bryson Jr. and Y.-C. Ho, "*Applied Optimal Control*."" Taylor & Francis, 1975, isbn: 9780891162285
 - [**Bul93**] R. Bulirsch, E. Nerz, H. J. Pesch, and O. von Stryk, "*Combining Direct and Indirect Methods in Optimal Control: Range Maximization of a Hang Glider,*" in Optimal Control, Birkhäuser Basel, 1993, pp. 273–288 [Online]. Available: http://dx.doi.org/10.1007/978-3-0348-7539-4_20
 - [**Can02**] E. Balsa Canto, J. R. Banga, A. A. Alonso, and V. S. Vassiliadis, "*Restricted second order information for the solution of optimal control problems using control vector parameterization*," Journal of Process Control, vol. 12, no. 2, pp. 243–255, Feb. 2002, doi: 10.1016/s0959-1524(01)00008-7

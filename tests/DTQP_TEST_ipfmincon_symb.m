@@ -114,7 +114,7 @@ for k = 1:length(tests)
 
     % run the test and time
     tic
-    E = DTQP_IPFMINCON_symb(f,o,linflag,opts);
+    E = DTQP_IPFMINCON_symb(f,o,linflag,true,opts);
     toc
 
     % test analysis

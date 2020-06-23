@@ -18,7 +18,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [E,opts] = DTQP_IPFMINCON_symb(f,in,linflag,opts)
+function [E,opts] = DTQP_IPFMINCON_symb(f,in,linflag,pathboundaryflag,opts)
 
 % (potentially) start the timer
 if (opts.general.displevel > 0) % minimal
@@ -175,6 +175,25 @@ if linflag
     E.Inon = find(~Ilin);
 end
 
+% classify the functions as path or boundary types
+if pathboundaryflag
+
+    % sparsity pattern
+    S = double(DF~=0);
+
+    % continuous variable sparsity pattern
+    Sc = S(:,1:(nu+ny));
+
+    % time-varying dependency pattern
+    St = hasSymType(DF,'symfunOf',t);
+
+    % determine if a function is path or boundary
+    E.pathboundary = any(Sc,2) | any(St,2);
+
+else
+    E.pathboundary = [];
+end
+
 % vectorized matlab function
 E.f = sym2matrixfun(F,in1,output);
 
@@ -210,39 +229,57 @@ end
 
 end
 
-function A = sym2matrixfun(Ain,vars,output)
+function [A,zeroflag] = sym2matrixfun(Ain,vars,output)
 
+% return if input is empty
 if isempty(Ain)
     A = [];
+    zeroflag = true;
+    return
+end
+
+% initialize with zeros
+A = cell(size(Ain));
+[A{:}] = deal(0);
+
+% find nonzero entries
+I = find(double(Ain~=0));
+
+% return if all entries are zero
+if isempty(I)
+    A = [];
+    zeroflag = true;
+    return
 else
+    zeroflag = false;
+end
 
-    % initialize
-    A = cell(size(Ain));
+% go through each nonzero entry
+for k = I(:)'
 
-    % go through each row
-    for i = 1:size(Ain,1)
+    % extract
+    g = Ain(k);
 
-        % go through each column
-        for j = 1:size(Ain,2)
+    % first see if it is a constant
+    try
+        A{k} = double(g);
+    catch
 
-            % get current function
-            g = Ain(i,j);
+        % construct appropriate matlab function
+        if output == 1
 
-            % first see if it is a constant
-            try
-                g = double(g);
-                A{i,j} = g;
-            catch
-                if output == 1
-                    Ai = matlabFunction(g,'Vars',vars);
-                elseif output == 2
-                    Ai = matlabFunction(g,'Vars',vars);
-                    Ai = @(t,T,X,param) Ai(t,param,interp1(T,X,t));
-                end
-                A{i,j} = Ai;
-            end
+            % convert to matlab function
+            A{k} = matlabFunction(g,'Vars',vars);
+
+        elseif output == 2
+
+            % convert to matlab function
+            Ai = matlabFunction(g,'Vars',vars);
+
+            % interpolate optimization variables
+            A{k} = @(t,T,X,param) Ai(t,param,interp1(T,X,t));
+
         end
     end
 end
-
 end

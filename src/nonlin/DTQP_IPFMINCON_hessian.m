@@ -175,7 +175,7 @@ end
 if isfield(ceq,'D2f')
 
     % extract
-    D2f = ceq.D2f; Ilambda_ceq = Ilambda.ceq;
+    D2f = ceq.D2f; Ilambda_ceq = Ilambda.ceq; pathboundary = ceq.pathboundary;
 
     % number of constraints
     nz = length(D2f);
@@ -205,12 +205,26 @@ if isfield(ceq,'D2f')
                 % check there are nonzero entries
                 if any(v)
 
-                    % compute multiplier and second derivative product
-                    v = v.*lambda_ceq;
+                    % check if a path or boundary constraint
+                    if pathboundary(k)
 
-                    % Hessian row and column index sequences
-                    r = DTQP_getQPIndex(R(ix),LR(ix),1,nt,nu,ny);
-                    c = DTQP_getQPIndex(C(jx),LR(jx),1,nt,nu,ny);
+                        % compute multiplier and second derivative product
+                        v = v.*lambda_ceq;
+
+                        % Hessian row and column index sequences
+                        r = DTQP_getQPIndex(R(ix),LR(ix),1,nt,nu,ny);
+                        c = DTQP_getQPIndex(C(jx),LR(jx),1,nt,nu,ny);
+
+                    else % boundary constraint
+
+                        % compute multiplier and second derivative product
+                        v = v(1).*lambda_ceq;
+
+                        % Hessian row and column index sequences
+                        r = DTQP_getQPIndex(R(ix),LR(ix),0,nt,nu,ny);
+                        c = DTQP_getQPIndex(C(jx),LR(jx),0,nt,nu,ny);
+
+                    end
 
                     % main diagonal
                     Isav{end+1} = r; % rows
@@ -229,7 +243,7 @@ end
 if isfield(cin,'D2f')
 
     % extract
-    D2f = cin.D2f; Ilambda_cin = Ilambda.cin;
+    D2f = cin.D2f; Ilambda_cin = Ilambda.cin; pathboundary = cin.pathboundary;
 
     % number of constraints
     nz = length(D2f);
@@ -259,12 +273,26 @@ if isfield(cin,'D2f')
                 % check there are nonzero entries
                 if any(v)
 
-                    % compute multiplier and second derivative product
-                    v = v.*lambda_cin;
+                    % check if a path or boundary constraint
+                    if pathboundary(k)
 
-                    % Hessian row and column index sequences
-                    r = DTQP_getQPIndex(R(ix),LR(ix),1,nt,nu,ny);
-                    c = DTQP_getQPIndex(C(jx),LR(jx),1,nt,nu,ny);
+                        % compute multiplier and second derivative product
+                        v = v.*lambda_cin;
+
+                        % Hessian row and column index sequences
+                        r = DTQP_getQPIndex(R(ix),LR(ix),1,nt,nu,ny);
+                        c = DTQP_getQPIndex(C(jx),LR(jx),1,nt,nu,ny);
+
+                    else % boundary constraint
+
+                        % compute multiplier and second derivative product
+                        v = v(1).*lambda_cin;
+
+                        % Hessian row and column index sequences
+                        r = DTQP_getQPIndex(R(ix),LR(ix),0,nt,nu,ny);
+                        c = DTQP_getQPIndex(C(jx),LR(jx),0,nt,nu,ny);
+
+                    end
 
                     % main diagonal
                     Isav{end+1} = r; % rows

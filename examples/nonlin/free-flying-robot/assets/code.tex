@@ -1,0 +1,31 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{u_1,u_2,u_3,u_4} \quad & \ \int_{0}^{t_f} [u_1 + u_2 + u_3 + u_4] dt \\
+\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}
+\xi_4 \\ \xi_5 \\ \xi_6 \\
+[u_1 - u_2 + u_3 - u_4] \cos(\xi_3) \\
+[u_1 - u_2 + u_3 - u_4] \sin(\xi_3) \\
+\alpha [u_1 - u_2] - \beta [u_3 - u_4]
+\end{bmatrix} \\
+& \bm{\xi}(0) = (-10,-10,\pi/2,0,0,0) \\
+& \bm{\xi}(t_f) = (0,0,0,0,0,0) \\
+& 0 \leq u_1 \\
+& 0 \leq u_2 \\
+& u_1 + u_2 \leq 1 \\
+& u_3 + u_4 \leq 1
+\end{align*}
+}}
+\end{document}
+
+% solution

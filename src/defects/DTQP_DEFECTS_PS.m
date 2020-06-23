@@ -39,11 +39,17 @@ Isav = {}; Jsav = {}; Vsav = {};
 %--------------------------------------------------------------------------
 % calculate matrices and sequencing vectors
 %--------------------------------------------------------------------------
-% find time dependent matrices
+% find time-dependent matrices
 At = DTQP_tmultiprod(A,p,t);
 Bt = DTQP_tmultiprod(B,p,t);
 Gt = DTQP_tmultiprod(G,p,t);
 dt = DTQP_tmultiprod(d,p,t);
+
+% check if time-dependent matrices are empty
+Aflag = ~isempty(At);
+Bflag = ~isempty(Bt);
+Gflag = ~isempty(Gt);
+dflag = ~isempty(dt);
 
 Jy = reshape(nu*nt+1:(nu+ny)*nt,[],1); % optimization variable (column) locations
 
@@ -65,7 +71,7 @@ for i = 1:nz
     %----------------------------------------------------------------------
     % controls
     %----------------------------------------------------------------------
-    if nu > 0
+    if nu > 0 && Bflag
 
         % extract matrices
         Vs = reshape(Bt(:,i,:),[],1);
@@ -89,7 +95,7 @@ for i = 1:nz
     %----------------------------------------------------------------------
     % states
     %----------------------------------------------------------------------
-    if ny > 0
+    if ny > 0 && Aflag
 
         % extract matrices
         Vs = reshape(At(:,i,:),[],1);
@@ -113,7 +119,7 @@ for i = 1:nz
     %----------------------------------------------------------------------
     % parameters
     %----------------------------------------------------------------------
-    if np > 0
+    if np > 0 && Gflag
 
         % extract matrices
         Vs = reshape(Gt(:,i,:),[],1);
@@ -149,7 +155,7 @@ Aeq = sparse(If,Jf,Vf,nz*nt,nx) + Dadd;
 %--------------------------------------------------------------------------
 % disturbance
 %--------------------------------------------------------------------------
-if nd > 0
+if nd > 0 && dflag
 
     % initialize storage arrays
     Isav = {}; Vsav = {};

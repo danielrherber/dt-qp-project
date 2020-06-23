@@ -14,13 +14,16 @@ function [G,DG] = DTQP_IPFMINCON_additional_constraints(X,con,in,opts,Dflag)
 % extract
 nu = in.nu; ny = in.ny; np = in.np; nt = in.nt; nX = in.nx;
 p = in.p; t = in.t; ini = in.i; param = in.param;
-f = con.f; Df = con.Df;
+f = con.f; Df = con.Df; pathboundary = con.pathboundary;
 
 % reshape optimization variables
 P = X(end-np+1:end);
 X = reshape(X(1:end-np),nt,[]);
 P = repelem(P',nt,1);
 X = [X,P,repmat(X(1,ini{2}),nt,1),repmat(X(end,ini{2}),nt,1)];
+
+% number of constraints
+nz = length(f);
 
 %--------------------------------------------------------------------------
 % compute constraint value
@@ -29,16 +32,36 @@ X = [X,P,repmat(X(1,ini{2}),nt,1),repmat(X(end,ini{2}),nt,1)];
 fi = DTQP_QLIN_update_tmatrix(f,[],X,param);
 ft = DTQP_tmultiprod(fi,p,t);
 
-% ensure column vector
-G = ft(:);
+% initialize
+G = cell(nz,1);
+
+% go through each constraint
+for ix = 1:nz
+
+    % check if the constraint is a path or boundary constraint
+    if pathboundary(ix)
+
+        % path constraint
+        G{ix} = ft(:,ix);
+
+    else
+
+        % boundary constraint
+        G{ix} = ft(1,ix);
+
+    end
+end
+
+% combine
+G = vertcat(G{:});
 
 %--------------------------------------------------------------------------
 % compute Jacobian
 %--------------------------------------------------------------------------
 % check if Jacobian is requested
 if ~Dflag
-   DG = [];
-   return
+	DG = [];
+	return
 end
 
 % initialize row and column indices
@@ -49,11 +72,11 @@ R = horzcat(ini{1:5});
 Dfi = DTQP_QLIN_update_tmatrix(Df,[],X,param);
 Dft = DTQP_tmultiprod(Dfi,p,t);
 
-% number of constraints
-nz = length(f);
-
 % initialize storage arrays
 Isav = {}; Jsav = {}; Vsav = {};
+
+% initialize constraint row
+r0 = 0;
 
 % go through each constraint
 for ix = 1:nz
@@ -67,11 +90,27 @@ for ix = 1:nz
         % check there are nonzero entries
         if any(v)
 
-            % rows in DZ (defect constraints)
-            r = ( (ix-1)*nt + 1:(ix)*nt )';
+            % check if the constraint is a path or boundary constraint
+            if pathboundary(ix)
 
-            % columns in DZ (optimization variables)
-            c = DTQP_getQPIndex(R(jx),LR(jx),1,nt,nu,ny);
+                % rows in DZ
+                r = (r0+1:r0+nt)';
+
+                % columns in DZ (optimization variables)
+                c = DTQP_getQPIndex(R(jx),LR(jx),1,nt,nu,ny);
+
+            else % boundary constraint
+
+                % row in DZ
+                r = r0+1;
+
+                % columns in DZ (optimization variables)
+                c = DTQP_getQPIndex(R(jx),LR(jx),0,nt,nu,ny);
+
+                % only need first value
+                v = v(1);
+
+            end
 
             % main diagonal
             Isav{end+1} = r; % rows
@@ -80,6 +119,10 @@ for ix = 1:nz
 
         end
     end
+
+    % increment constraint row index
+    r0 = r(end);
+
 end
 
 % combine
@@ -88,6 +131,6 @@ J = vertcat(Jsav{:});
 V = vertcat(Vsav{:});
 
 % create sparse matrix
-DG = sparse(I,J,V,nz*nt,nX);
+DG = sparse(I,J,V,sum((pathboundary*nt)+(~pathboundary)),nX);
 
 end
