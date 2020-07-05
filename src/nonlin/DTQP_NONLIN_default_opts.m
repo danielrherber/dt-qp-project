@@ -34,14 +34,20 @@ end
 if strcmpi(opts.qlin.method,'ipfmincon')
     opts.qp.solver = 'ipfmincon';
 
-    % optimization problem derivatives flag
+    % optimization problem derivatives flag (NEED TO REMOVE)
     if ~isfield(opts.qlin,'derivativeflag')
         % opts.qlin.derivativeflag = false; % use finite differencing
         opts.qlin.derivativeflag = true; % use symbolic derivatives
     end
 
-end
+    % optimization problem derivatives method
+    if ~isfield(opts.qlin,'derivativemethod')
+        % opts.qlin.derivativemethod = 'internal'; % use internal fmincon real finite differencing
+        % opts.qlin.derivativemethod = 'complex'; % use complex-step finite differencing
+        opts.qlin.derivativemethod = 'symbolic'; % use symbolic derivatives
+    end
 
+end
 %--------------------------------------------------------------------------
 % quasilinearization options
 %--------------------------------------------------------------------------

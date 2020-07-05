@@ -52,7 +52,8 @@ UB(2).right = 5; UB(2).matrix = [inf,inf,0,inf]; % final states
 LB(2).right = 5; LB(2).matrix = [-inf,-inf,0,-inf];
 
 % equality constraints
-symb.ceq = '[u1^2 + u2^2 - 1; sqrt(xmu/yf1) - yf4]';
+symb.ceq.func = '[u1^2 + u2^2 - 1; sqrt(xmu/yf1) - yf4]';
+symb.ceq.pathboundary = [1 0];
 
 % Mayer term
 M(1).left = 0; M(1).right = 5; M(1).matrix = [-1,0,0,0];

@@ -101,7 +101,6 @@ else % only LQDO dynamic equations
 
 end
 
-
 %--------------------------------------------------------------------------
 % general equality constraints
 %--------------------------------------------------------------------------
@@ -296,15 +295,23 @@ end
 % additional constraints
 function [YZ,c,Ic,opts] = DTQP_IPFMINCON_c(c,in,linflag,opts,nI,nt)
 
-% calculate derivatives
-[c,opts] = DTQP_IPFMINCON_symb(c,in,linflag,true,opts);
+% check if pathboundary was provided
+if isfield(c,'pathboundary')
+    pathboundary = c.pathboundary;
+end
 
-% TODO: determine if the constraint is a path or boundary constraint
-% pathboundary = true(length(c),1); % always a path constraint
-pathboundary = c.pathboundary;
+% calculate derivatives
+[c,opts] = DTQP_IPFMINCON_symb(c.func,in,linflag,true,opts);
 
 % number of constraints
 nz = length(c.f);
+
+% assign pathboundary or extract if determined symbolically
+if isfield(c,'pathboundary')
+	pathboundary = c.pathboundary;
+else
+    c.pathboundary = pathboundary;
+end
 
 % initialize
 Ic = cell(nz,1);

@@ -2,6 +2,7 @@
 
 | Name | Link | Reference | Solution Type |
 | ---- | ---- | ---- | ---- |
+| Alp Rider | [alp-rider](alp-rider/) | Bett10 |  |
 | Brachistochrone | [brachistochrone](brachistochrone/) | Bry75 | closed-form |
 | Bryson Ho 59 | [bryson-ho-59](bryson-ho-59/) | Bry75 | closed-form |
 | Bryson Ho 63 | [bryson-ho-63](bryson-ho-63/) | Bry75 | partial closed-form |

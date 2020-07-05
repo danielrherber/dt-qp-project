@@ -13,6 +13,7 @@ function Ho = DTQP_IPFMINCON_hessian(X,lambda,obj,dyn,cin,ceq,Hin,in,opts)
 nu = in.nu; ny = in.ny; np = in.np; ini = in.i; nx = in.nx;
 p = in.p; t = in.t; np = in.np; nt = in.nt; param = in.param;
 Ilambda = in.Ilambda; quadrature = opts.dt.quadrature;
+derivativeflag = opts.qlin.derivativemethod;
 
 % reshape optimization variables
 P = X(end-np+1:end);
@@ -31,10 +32,10 @@ Isav = {}; Jsav = {}; Vsav = {};
 %--------------------------------------------------------------------------
 % compute objective function Hessian terms
 %--------------------------------------------------------------------------
-if isfield(obj,'D2f')
+if ~isempty(obj)
 
     % extract
-    D2f = obj.D2f; h = in.h; w = in.w;
+    h = in.h; w = in.w;
 
     % integrate nonlinear term
     % TODO: add more methods
@@ -57,8 +58,7 @@ if isfield(obj,'D2f')
     end
 
     % calculate second derivative values
-    D2fi = DTQP_QLIN_update_tmatrix(D2f{1},[],X,param);
-    D2ft = DTQP_tmultiprod(D2fi,p,t);
+    D2ft = DTQP_hessian(obj,p,t,X,param,derivativeflag,1);
 
     % go through each row entry in the original problem form
     for ix = 1:length(R)
@@ -92,13 +92,13 @@ end
 %--------------------------------------------------------------------------
 % compute defect constraints Hessian terms
 %--------------------------------------------------------------------------
-if isfield(dyn,'D2f')
+if ~isempty(dyn)
 
     % extract
-    D2f = dyn.D2f; Ilambdadyn = Ilambda.dyn; h = in.h;
+    Ilambdadyn = Ilambda.dyn; h = in.h;
 
     % number of constraints
-    nz = length(D2f);
+    nz = length(dyn.f);
 
     % extract and reshape multipliers
     lambda0 = full(lambda.eqnonlin(horzcat(Ilambdadyn{:})));
@@ -136,8 +136,12 @@ if isfield(dyn,'D2f')
     for k = 1:nz
 
         % calculate second derivative values
-        D2fi = DTQP_QLIN_update_tmatrix(D2f{k},[],X,param);
-        D2ft = DTQP_tmultiprod(D2fi,p,t);
+        D2ft = DTQP_hessian(dyn,p,t,X,param,derivativeflag,k);
+
+        % continue if all derivatives are zero (so D2ft is empty)
+        if isempty(D2ft)
+           continue
+        end
 
         % go through each row entry in the original problem form
         for ix = 1:length(R)
@@ -172,13 +176,13 @@ end
 %--------------------------------------------------------------------------
 % compute general equality constraints Hessian terms
 %--------------------------------------------------------------------------
-if isfield(ceq,'D2f')
+if ~isempty(ceq)
 
     % extract
-    D2f = ceq.D2f; Ilambda_ceq = Ilambda.ceq; pathboundary = ceq.pathboundary;
+    Ilambda_ceq = Ilambda.ceq; pathboundary = ceq.pathboundary;
 
     % number of constraints
-    nz = length(D2f);
+    nz = length(ceq.f);
 
     % extract multipliers
     lambda_eqnonlin = full(lambda.eqnonlin);
@@ -187,8 +191,7 @@ if isfield(ceq,'D2f')
     for k = 1:nz
 
         % calculate second derivative values
-        D2fi = DTQP_QLIN_update_tmatrix(D2f{k},[],X,param);
-        D2ft = DTQP_tmultiprod(D2fi,p,t);
+        D2ft = DTQP_hessian(ceq,p,t,X,param,derivativeflag,k);
 
         % extract relevant multipliers
         lambda_ceq = lambda_eqnonlin(Ilambda_ceq{k});
@@ -240,13 +243,13 @@ end
 %--------------------------------------------------------------------------
 % compute general inequality constraints Hessian terms
 %--------------------------------------------------------------------------
-if isfield(cin,'D2f')
+if ~isempty(cin)
 
     % extract
-    D2f = cin.D2f; Ilambda_cin = Ilambda.cin; pathboundary = cin.pathboundary;
+    Ilambda_cin = Ilambda.cin; pathboundary = cin.pathboundary;
 
     % number of constraints
-    nz = length(D2f);
+    nz = length(cin.f);
 
     % extract multipliers
     lambda_ineqnonlin = full(lambda.ineqnonlin);
@@ -255,8 +258,7 @@ if isfield(cin,'D2f')
     for k = 1:nz
 
         % calculate second derivative values
-        D2fi = DTQP_QLIN_update_tmatrix(D2f{k},[],X,param);
-        D2ft = DTQP_tmultiprod(D2fi,p,t);
+        D2ft = DTQP_hessian(cin,p,t,X,param,derivativeflag,k);
 
         % extract relevant multipliers
         lambda_cin = lambda_ineqnonlin(Ilambda_cin{k});

@@ -9,7 +9,7 @@
 %--------------------------------------------------------------------------
 close all; clear; clc
 
-tests = 1:3;
+tests = 1:4;
 % tests = 2;
 
 % go through each test
@@ -52,6 +52,15 @@ for k = 1:length(tests)
         opts.qlin.improveX0flag = false; % disabled
         opts.general.displevel = 1;
         %------------------------------------------------------------------
+        case 4
+        opts.dt.defects = 'TR';
+        opts.dt.quadrature = 'CTR';
+        opts.dt.mesh = 'ED';
+        opts.dt.nt = 100; % number of time points
+        opts.qlin.method = 'ipfmincon';
+        opts.qp.solver = 'ipfmincon';
+        opts.qlin.derivativemethod = 'complex'; % complex-step finite differencing
+        %------------------------------------------------------------------
     end
 
     % run the test and time
@@ -65,6 +74,7 @@ end
 function problem(p,opts)
 
 % run all examples
+AlpRider(p,opts)
 Brachistochrone(p,opts)
 BrysonHo59(p,opts)
 BrysonHo63(p,opts)

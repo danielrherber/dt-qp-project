@@ -10,7 +10,7 @@
 function [fo,go] = DTQP_IPFMINCON_objective(X,obj,in,opts,Hin,fin)
 
 % extract
-p = in.p; t = in.t; np = in.np; nt = in.nt; param = in.param;
+p = in.p; t = in.t; np = in.np; nt = in.nt; ini = in.i; param = in.param;
 quadrature = opts.dt.quadrature;
 
 % store initial optimization variable vector
@@ -20,7 +20,7 @@ Xo = X;
 P = X(end-np+1:end);
 X = reshape(X(1:end-np),nt,[]);
 P = repelem(P',nt,1);
-X = [X,P];
+X = [X,P,repmat(X(1,ini{2}),nt,1),repmat(X(end,ini{2}),nt,1)];
 
 %--------------------------------------------------------------------------
 % compute objective
@@ -29,12 +29,12 @@ X = [X,P];
 fo = 0;
 
 % handle nonlinear term
-if isfield(obj,'f')
+if ~isempty(obj)
 
     % extract
     f = obj.f;
 
-    % calculate state derivative function values
+    % calculate objective function values
     fi = DTQP_QLIN_update_tmatrix(f,[],X,param);
     ft = DTQP_tmultiprod(fi,p,t);
 
@@ -83,14 +83,13 @@ if nargout > 1
     go = fin';
 
     % handle nonlinear term
-    if isfield(obj,'Df')
+    if ~isempty(obj)
 
         % extract
-        Df = obj.Df; h = in.h; w = in.w;
+        h = in.h; w = in.w;
 
-        % calculate state derivative function values
-        Dfi = DTQP_QLIN_update_tmatrix(Df,[],X,param);
-        Dft = DTQP_tmultiprod(Dfi,p,t);
+        % calculate gradient of objective function values
+        Dft = DTQP_jacobian(obj,p,t,X,param,opts.qlin.derivativemethod);
 
         % integrate nonlinear term
         % TODO: add more methods

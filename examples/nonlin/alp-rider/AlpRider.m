@@ -1,74 +1,66 @@
 %--------------------------------------------------------------------------
-% FreeFlyingRobot.m
-% 326-330 of J. T. Betts, "Practical Methods for Optimal Control and
-% Estimation Using Nonlinear Programming*." Society for Industrial and
+% AlpRider.m
+% pp. 163-165 in J. T. Betts, "Practical Methods for Optimal Control and
+% Estimation Using Nonlinear Programming." Society for Industrial and
 % Applied Mathematics, Jan. 2010, doi: 10.1137/1.9780898718577
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Contributor: Athul K. Sundarrajan (AthulKrishnaSundarrajan on GitHub)
+% Contributor: Athul K. Sundarrajan(AthulKrishnaSundarrajan on GitHub)
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function varargout = FreeFlyingRobot(varargin)
-% input arguments can be provided in the format 'FreeFlyingRobot(p,opts)'
+function varargout = AlpRider(varargin)
+% input arguments can be provided in the format 'AlpRider(p,opts)'
 
 % set local functions
-ex_opts = @FreeFlyingRobot_opts;
-ex_output = @FreeFlyingRobot_output;
-ex_plot = @FreeFlyingRobot_plot;
+ex_opts = @AlpRider_opts;
+ex_output = @AlpRider_output;
+ex_plot = @AlpRider_plot;
 
-% set p and opts (see local_opts)
+% set p and opts
 [p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
-tf = 12;
-a = 0.2; b = 0.2;
+tf = 20;
 
 %% setup
 % time horizon
 p.t0 = 0; p.tf = tf;
 
 % number of controls, states, and parameters
-n.nu = 4; n.ny = 6;
+n.nu = 2; n.ny = 4;
 
 % system dynamics
 str{1} = '[';
-str{end+1} = 'y4;';
-str{end+1} = 'y5;';
-str{end+1} = 'y6;';
-str{end+1} = '(u1-u2+u3-u4)*cos(y3);';
-str{end+1} = '(u1-u2+u3-u4)*sin(y3);';
-str{end+1} = 'a*(u1-u2) - b*(u3-u4)';
+str{end+1} = '-10*y1 + u1 + u2; ';
+str{end+1} = '-2*y2 + u1 + 2*u2; ';
+str{end+1} = '-3*y3 + 5*y4 + u1 - u2,; ';
+str{end+1} = '5*y3 - 3*y4 + u1 + 3*u2';
 str{end+1} = ']';
 symb.D = horzcat(str{:});
-symb.paramstr = 'a b';
-symb.param = [a b];
 
 % Lagrange term
-% symb.Ob = 'u1+u2+u3+u4';
-L(1).left = 0; L(1).right = 1; L(1).matrix = [1 1 1 1];
-setup.L = L;
+L(1).left = 1; L(1).right = 1; L(1).matrix = diag([1e-2,1e-2]);
+L(2).left = 2; L(2).right = 2; L(2).matrix = diag([1e2,1e2,1e2,1e2]);
 
-% inequality constraints
-symb.cin.func = '[u1+u2-1;u3+u4-1]';
-symb.cin.pathboundary = [1 1];
+% inequality constraint
+symb.cin.func = '3*exp(-12*(t-3)^2) + 3*exp(-10*(t-6)^2) + 3*exp(-6*(t-10)^2) + 8*exp(-4*(t-15)^2) + 0.01 - y1^2 - y2^2 - y3^2 - y4^2';
+symb.cin.pathboundary = 1;
 
 % simple bounds
-UB(1).right = 4; UB(1).matrix = [-10;-10;pi/2;0;0;0]; % initial states
-LB(1).right = 4; LB(1).matrix = [-10;-10;pi/2;0;0;0];
-UB(2).right = 5; UB(2).matrix = [0;0;0;0;0;0]; % final states
-LB(2).right = 5; LB(2).matrix = [0;0;0;0;0;0];
-UB(3).right = 1; UB(3).matrix = 0.3+[1;1;1;1]; % controls
-LB(3).right = 1; LB(3).matrix = [0;0;0;0];
+UB(1).right = 4; UB(1).matrix = [2,1,2,1]; % initial states
+LB(1).right = 4; LB(1).matrix = [2,1,2,1];
+UB(2).right = 5; UB(2).matrix = [2,3,1,-2]; % final states
+LB(2).right = 5; LB(2).matrix = [2,3,1,-2];
 
 % guess
-Y0 = [[-10,-10,pi/2,0,0,0];[0,0,0,0,0,0]];
-U0 = [[0,0,0,0];[0,0,0,0]];
+Y0 = [[2,1,2,1];[2,3,1,-2]];
+U0 = [[0,0];[0,0]];
 p.guess = [U0,Y0];
 
 % combine structures
-setup.symb = symb; setup.UB = UB; setup.LB = LB;
+setup.symb = symb; setup.L = L; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve
@@ -86,9 +78,9 @@ ex_plot(T,U,Y,P,F,in,opts,sol)
 
 end
 % User options function for this example
-function opts = FreeFlyingRobot_opts
+function opts = AlpRider_opts
 % test number
-num = 1;
+num = 2;
 
 switch num
 case 1
@@ -97,12 +89,12 @@ case 1
     opts.dt.defects = 'TR';
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
-    opts.dt.nt = 300; % number of nodes
+    opts.dt.nt = 500; % number of nodes
+    opts.qp.maxiters = 300;
     opts.qp.disp = 'iter';
-    opts.qp.maxiters = 2000;
     opts.qp.solver = 'ipfmincon';
     opts.qlin.method = 'ipfmincon';
-    opts.qlin.olqflag = true;
+    opts.qlin.olqflag = false;
 case 2
     opts.general.displevel = 2;
     opts.general.plotflag = 1;
@@ -110,11 +102,11 @@ case 2
     opts.dt.quadrature = 'G';
     opts.dt.mesh = 'LGL';
     opts.dt.nt = 100; % number of nodes
+    opts.qp.maxiters = 300;
     opts.qp.disp = 'iter';
-    opts.qp.maxiters = 2000;
     opts.qp.solver = 'ipfmincon';
     opts.qlin.method = 'ipfmincon';
-    opts.qlin.olqflag = true;
+    opts.qlin.olqflag = false;
 end
 
 end

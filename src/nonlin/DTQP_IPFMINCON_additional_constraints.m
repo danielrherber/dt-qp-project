@@ -14,7 +14,7 @@ function [G,DG] = DTQP_IPFMINCON_additional_constraints(X,con,in,opts,Dflag)
 % extract
 nu = in.nu; ny = in.ny; np = in.np; nt = in.nt; nX = in.nx;
 p = in.p; t = in.t; ini = in.i; param = in.param;
-f = con.f; Df = con.Df; pathboundary = con.pathboundary;
+f = con.f; pathboundary = con.pathboundary;
 
 % reshape optimization variables
 P = X(end-np+1:end);
@@ -69,8 +69,7 @@ LR = repelem([1 2 3 4 5],[nu ny np ny ny]);
 R = horzcat(ini{1:5});
 
 % calculate Jacobian of the constraints
-Dfi = DTQP_QLIN_update_tmatrix(Df,[],X,param);
-Dft = DTQP_tmultiprod(Dfi,p,t);
+Dft = DTQP_jacobian(con,p,t,X,param,opts.qlin.derivativemethod);
 
 % initialize storage arrays
 Isav = {}; Jsav = {}; Vsav = {};

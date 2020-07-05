@@ -30,21 +30,33 @@ o{end+1} = 'interior-point';
 % o{end+1} = 'Algorithm';
 % o{end+1} = 'sqp';
 
-% use analytic derivatives
-if opts.qlin.derivativeflag
-    o{end+1} = 'SpecifyConstraintGradient';
-    o{end+1} = true;
-    o{end+1} = 'SpecifyObjectiveGradient';
-    o{end+1} = true;
-    o{end+1} = 'HessianFcn';
-    o{end+1} = @(x,lambda) DTQP_IPFMINCON_hessian(x,lambda,obj,dyn,cin,ceq,H,in,opts);
-else
+% determine options for the selected derivative method
+switch opts.qlin.derivativemethod
+    %----------------------------------------------------------------------
+    case 'internal'
     o{end+1} = 'SpecifyConstraintGradient';
     o{end+1} = false;
     o{end+1} = 'SpecifyObjectiveGradient';
     o{end+1} = false;
     o{end+1} = 'Hessian';
     o{end+1} = 'lbfgs';
+    %----------------------------------------------------------------------
+    case 'complex'
+    o{end+1} = 'SpecifyConstraintGradient';
+    o{end+1} = true;
+    o{end+1} = 'SpecifyObjectiveGradient';
+    o{end+1} = true;
+    o{end+1} = 'HessianFcn';
+    o{end+1} = @(x,lambda) DTQP_IPFMINCON_hessian(x,lambda,obj,dyn,cin,ceq,H,in,opts);
+    %----------------------------------------------------------------------
+    case 'symbolic'
+    o{end+1} = 'SpecifyConstraintGradient';
+    o{end+1} = true;
+    o{end+1} = 'SpecifyObjectiveGradient';
+    o{end+1} = true;
+    o{end+1} = 'HessianFcn';
+    o{end+1} = @(x,lambda) DTQP_IPFMINCON_hessian(x,lambda,obj,dyn,cin,ceq,H,in,opts);
+    %----------------------------------------------------------------------
 end
 
 % TODO: expose these options

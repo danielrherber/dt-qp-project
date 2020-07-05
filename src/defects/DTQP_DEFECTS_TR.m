@@ -48,23 +48,23 @@ dflag = ~isempty(dt);
 Jy = DTQP_DEFECTS_index_columns(nt,ny,nu); % optimization variable (column) locations
 Jys = [Jy;Jy+1]; % combine to create paired optimization variable locations
 Ty = Jy - nt*nu; % time indexing vectors
-Hy = repmat(h,ny,1); % vector of time steps
+Hy = repmat(0.5*h,ny,1); % vector of time steps
 
 if nu > 0
     Ju = DTQP_DEFECTS_index_columns(nt,nu,0); % optimization variable (column) locations
     Jus = [Ju;Ju+1]; % combine to create paired optimization variable locations
     Tu = Ju; % time indexing vectors
-    Hu = repmat(h,nu,1); % vector of time steps
+    Hu = repmat(0.5*h,nu,1); % vector of time steps
 end
 
 if np > 0
     Jp = kron(nt*(nu+ny)+(1:np)', ones(nt-1,1)); % optimization variable (column) locations
     Tp = DTQP_DEFECTS_index_columns(nt,np,0); % time indexing vectors
-    Hp = repmat(h,np,1); % vector of time steps
+    Hp = repmat(0.5*h,np,1); % vector of time steps
 end
 
 if nd > 0
-    Hd = h; % vector of time steps
+    Hd = 0.5*h; % vector of time steps
     Td = 1:nt-1; % time indexing vectors
 end
 %--------------------------------------------------------------------------
@@ -92,8 +92,8 @@ for i = 1:nz
             Iu = repmat(DefectIndices,nu,1);
 
             % theta values
-            V3 = -0.5*Hu.*Bv(Tu); % theta 3
-            V4 = -0.5*Hu.*Bv(Tu+1); % theta 4
+            V3 = -Hu.*Bv(Tu); % theta 3
+            V4 = -Hu.*Bv(Tu+1); % theta 4
 
             % combine
             Is = [Iu;Iu]; Js = Jus; Vs = [V3;V4];
@@ -112,10 +112,14 @@ for i = 1:nz
     %----------------------------------------------------------------------
     % states
     %----------------------------------------------------------------------
-    if ny > 0 && Aflag
+    if ny > 0
 
-        % extract matrices
-        Av = reshape(At(:,i,:),[],1);
+        % extract A matrix if nonempty
+        if Aflag
+            Av = reshape(At(:,i,:),[],1); % extract matrices
+        else
+            Av = []; % empty
+        end
 
         % check if any entries are nonzero
         if any(K(:,yi)) || any(Av)
@@ -124,8 +128,13 @@ for i = 1:nz
             Iy = repmat(DefectIndices,ny,1);
 
             % theta values
-            V1 = -K(:,yi) - 0.5*Hy.*Av(Ty); % theta 1
-            V2 = K(:,yi) - 0.5*Hy.*Av(Ty+1); % theta 2
+            if any(Av)
+                V1 = -K(:,yi) - Hy.*Av(Ty); % theta 1
+                V2 = K(:,yi) - Hy.*Av(Ty+1); % theta 2
+            else
+                V1 = -K(:,yi); % theta 1
+                V2 = K(:,yi); % theta 2
+            end
 
             % combine
             Is = [Iy;Iy]; Js = Jys; Vs = [V1;V2];
@@ -156,7 +165,7 @@ for i = 1:nz
             Is = repmat(DefectIndices,np,1);
 
             % theta values
-            Vs = -0.5*Hp.*( Gv(Tp) + Gv(Tp+1) ); % theta 5
+            Vs = -Hp.*( Gv(Tp) + Gv(Tp+1) ); % theta 5
 
             % combine
             Js = Jp;
@@ -204,7 +213,7 @@ if nd > 0  && dflag
             Is = reshape((yi-1)*(nt-1)+1:yi*(nt-1),[],1);
 
             % nu values
-            Vs = 0.5*Hd.*( dv(Td) + dv(Td+1) ); % nu
+            Vs = Hd.*( dv(Td) + dv(Td+1) ); % nu
 
             % remove zeros
             ZeroIndex = ~Vs;

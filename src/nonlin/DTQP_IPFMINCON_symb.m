@@ -123,6 +123,19 @@ X = [U,Y,P,Yi,Yf];
 % collection of t, parameters, and optimization variables
 in1 = {t,PARAM,X};
 
+% return only function unless symbolic method
+if ~strcmpi(opts.qlin.derivativemethod,'symbolic')
+
+    % vectorized matlab function
+    E.f = sym2matrixfun(F,in1,output);
+    
+    % treat all functions as nonlinear
+    E.Ilin = [];
+    E.Inon = 1:length(F);
+
+    return
+end
+
 % Jacobian (first partial derivatives)
 DF = jacobian(F,X');
 
@@ -173,6 +186,10 @@ if linflag
     % store indices (corresponding state equations)
     E.Ilin = find(Ilin);
     E.Inon = find(~Ilin);
+else
+    % treat all functions as nonlinear
+    E.Ilin = [];
+    E.Inon = 1:length(F);
 end
 
 % classify the functions as path or boundary types

@@ -12,7 +12,7 @@ function [Z,DZ] = DTQP_DEFECTS_PS_nonlin(X,dyn,in,opts,Dflag)
 % extract
 nu = in.nu; ny = in.ny; np = in.np; nt = in.nt; nX = in.nx;
 p = in.p; t = in.t; D = in.D; ini = in.i; param = in.param;
-f = dyn.f; Df = dyn.Df;
+f = dyn.f;
 
 % compute time horizon length
 h = in.tf - in.t0;
@@ -37,7 +37,7 @@ Isav = {}; Jsav = {}; Vsav = {};
 P = X(end-np+1:end);
 X = reshape(X(1:end-np),nt,[]);
 P = repelem(P',nt,1);
-X = [X,P];
+X = [X,P,repmat(X(1,ini{2}),nt,1),repmat(X(end,ini{2}),nt,1)];
 
 % extract states for current optimization variables
 Y = X(:,in.i{2});
@@ -68,8 +68,7 @@ if ~Dflag
 end
 
 % calculate Jacobian of state derivative function values
-Dfi = DTQP_QLIN_update_tmatrix(Df,[],X,param);
-Dft = DTQP_tmultiprod(Dfi,p,t);
+Dft = DTQP_jacobian(dyn,p,t,X,param,opts.qlin.derivativemethod);
 
 % go through each defect constraint
 for ix = 1:nz2
