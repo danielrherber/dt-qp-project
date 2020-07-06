@@ -96,10 +96,10 @@ case 1 % ipfmincon method
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 200; % number of nodes
-    opts.qp.tolerance = 1e-8;
-    opts.qp.maxiters = 2000;
-    opts.qp.disp = 'iter';
-    opts.qlin.method = 'ipfmincon';
+    opts.solver.tolerance = 1e-8;
+    opts.solver.maxiters = 2000;
+    opts.solver.display = 'iter';
+    opts.method.form = 'nonlinearprogram';
 end
 
 end

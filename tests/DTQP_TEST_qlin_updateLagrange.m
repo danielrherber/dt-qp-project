@@ -21,38 +21,38 @@ for k = 1:length(tests)
         %------------------------------------------------------------------
         case 1
         symb.Ob = '1';
-        symb.o.nu = 2;
-        symb.o.ny = 3;
-        symb.o.np = 1;
+        n.nu = 2;
+        n.ny = 3;
+        n.np = 1;
         %------------------------------------------------------------------
         case 2
         symb.Ob = 'y1*u1';
-        symb.o.nu = 1;
-        symb.o.ny = 1;
-        symb.o.np = 0;
+        n.nu = 1;
+        n.ny = 1;
+        n.np = 0;
         %------------------------------------------------------------------
         case 3
         symb.Ob = 'y1^2 - y2^2 - u1^2 + u2^2 + y1*u1';
-        symb.o.nu = 2;
-        symb.o.ny = 2;
-        symb.o.np = 0;
+        n.nu = 2;
+        n.ny = 2;
+        n.np = 0;
         %------------------------------------------------------------------
         case 4
         symb.Ob = 'y1*u1^2 ';
-        symb.o.nu = 1;
-        symb.o.ny = 2;
-        symb.o.np = 0;
+        n.nu = 1;
+        n.ny = 2;
+        n.np = 0;
         %------------------------------------------------------------------
         case 5
         symb.Ob = 'y1^3 + y1*y2 + p1*u1';
-        symb.o.nu = 2;
-        symb.o.ny = 3;
-        symb.o.np = 1;
+        n.nu = 2;
+        n.ny = 3;
+        n.np = 1;
     end
 
     % problem structure
-    [setup,opts,T,X,param] = problem(symb);
-    symb = setup.symb; L = setup.symb.L; o = symb.o;
+    [setup,opts,T,X,param] = problem(symb,n);
+    symb = setup.symb; L = setup.symb.L; o = n;
 
     % run the test and time
     setup = DTQP_QLIN_update_lagrange(setup,L.H,L.G,L.C,o,T,X,param);
@@ -71,10 +71,11 @@ for k = 1:length(tests)
 end
 
 % problem structure
-function [setup,opts,T,X,param] = problem(symb)
+function [setup,opts,T,X,param] = problem(symb,n)
 
-symb.o.output = 2;
+n.output = 2;
 setup.symb = symb;
+setup.n = n;
 setup.t0 = 0;
 setup.tf = 1;
 param = [];
@@ -83,6 +84,7 @@ param = [];
 opts = [];
 opts.general.displevel = false;
 opts.dt.nt = 4;
+opts.method.form = 'qlin';
 
 % initialize some stuff
 [setup,opts] = DTQP_default_opts(setup,opts);
@@ -91,7 +93,7 @@ opts.dt.nt = 4;
 setup = DTQP_QLIN_initialize(setup,opts); % FIX
 
 % initial guess
-[T,U,Y,P] = DTQP_QLIN_guess(setup,opts,symb.o);
+[T,U,Y,P] = DTQP_QLIN_guess(setup,opts,n);
 
 % construct previous solution vector
 P = repelem(P',opts.dt.nt,1);

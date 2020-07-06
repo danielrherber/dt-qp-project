@@ -17,20 +17,20 @@ opts.dt.nt = 10000;
 opts.general.displevel = 0;
 
 % warmup
-opts.qp.reorder = 1;
+opts.method.reordervariables = 1;
 [~,~,~,~,~] = DTQP_solve(setup,opts);
 
 % normal
 tic
 disp('normal')
-opts.qp.reorder = 0;
+opts.method.reordervariables = 0;
 [T1,U1,Y1,P1,F1,~,~] = DTQP_solve(setup,opts);
 toc
 
 % reordered
 tic
 disp('reordered')
-opts.qp.reorder = 1;
+opts.method.reordervariables = 1;
 [T2,U2,Y2,P2,F2,~,~] = DTQP_solve(setup,opts);
 toc
 

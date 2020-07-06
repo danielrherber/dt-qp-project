@@ -23,7 +23,7 @@ for k = 1:length(tests)
 
     % options
     opts.general.plotflag = 0;
-    opts.qp.disp = 'none';
+    opts.solver.display = 'none';
     opts.dt.nt = 3; % number of nodes
     opts.dt.meshr.tolerance = 1e-3; % error tolerance
 

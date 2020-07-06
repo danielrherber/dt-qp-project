@@ -29,7 +29,7 @@ switch upper(opts.dt.defects)
 end
 
 % (potentially) store defect constraint indices
-if opts.qlin.sqpflag
+if isfield(opts.method,'sqpflag') && opts.method.sqpflag
     in.multipliers.defects = reshape(1:size(Aeq,1),[],in.ny);
 end
 

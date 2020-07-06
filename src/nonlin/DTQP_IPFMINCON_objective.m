@@ -89,7 +89,7 @@ if nargout > 1
         h = in.h; w = in.w;
 
         % calculate gradient of objective function values
-        Dft = DTQP_jacobian(obj,p,t,X,param,opts.qlin.derivativemethod);
+        Dft = DTQP_jacobian(obj,p,t,X,param,opts.method.derivatives);
 
         % integrate nonlinear term
         % TODO: add more methods

@@ -2,7 +2,7 @@
 % DTQP_SOLVER.m
 % Obtain the solution to the DO problem using the selected solver
 %--------------------------------------------------------------------------
-% NOTE: using quadprog even for linear programs
+%
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
@@ -24,7 +24,7 @@ if (displevel > 1) % verbose
     disp(strcat("-> Creation time: ",string(ctime)," s"))
 end
 
-switch upper(opts.qp.solver)
+switch upper(opts.solver.function)
     %----------------------------------------------------------------------
     case {'QUADPROG','BUILT-IN'} % built-in MATLAB qp solver
     [X,F,in,opts] = DTQP_SOLVER_quadprog(H,f,A,b,Aeq,beq,lb,ub,in,opts);

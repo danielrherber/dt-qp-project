@@ -78,11 +78,11 @@ case 1
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 200; % number of nodes
-    opts.qlin.method = 'ipfmincon';
-    opts.qp.solver = 'ipfmincon';
-    opts.qp.disp = 'iter';
-    opts.qlin.olqflag = true;
-    opts.qlin.derivativeflag = true;
+    opts.method.form = 'nonlinearprogram';
+    opts.solver.function = 'ipfmincon';
+    opts.solver.display = 'iter';
+    opts.method.olqflag = true;
+    opts.method.derivativeflag = true;
 case 2
     opts.general.displevel = 2;
     opts.general.plotflag = 1;
@@ -90,23 +90,23 @@ case 2
     opts.dt.quadrature = 'G';
     opts.dt.mesh = 'LGL';
     opts.dt.nt = 20; % number of nodes
-    opts.qlin.method = 'ipfmincon';
-    opts.qp.solver = 'ipfmincon';
-    opts.qp.disp = 'iter';
-    opts.qlin.olqflag = true;
-    opts.qlin.derivativeflag = true;
+    opts.method.form = 'nonlinearprogram';
+    opts.solver.function = 'ipfmincon';
+    opts.solver.display = 'iter';
+    opts.method.olqflag = true;
+    opts.method.derivativeflag = true;
 case 3
     opts.general.displevel = 1;
     opts.general.plotflag = 1;
     opts.dt.defects = 'TR';
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
-    opts.qlin.imax = 5000;
+    opts.method.maxiters = 5000;
     opts.dt.nt = 200; % number of nodes
-    opts.qlin.method = 'qlin';
-    opts.qp.disp = 'none';
-    opts.qlin.trustregionflag = false;
-    opts.qlin.improveX0flag = false;
+    opts.method.form = 'qlin';
+    opts.solver.display = 'none';
+    opts.method.trustregionflag = false;
+    opts.method.improveguess = false;
 end
 
 end

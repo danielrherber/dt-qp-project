@@ -37,9 +37,9 @@ for k = 1:length(tests)
     end
 
     if tests(k) > 0
-        opts.general.scalerowflag = true; % enabled
+        opts.method.scalematrixrows = true; % enabled
     else
-        opts.general.scalerowflag = false; % disabled
+        opts.method.scalematrixrows = false; % disabled
     end
 
     % test setup

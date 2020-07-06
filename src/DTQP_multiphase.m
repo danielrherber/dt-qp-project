@@ -22,11 +22,18 @@ LAeqLs = Hs; LAeqRs = Hs; LLbeqs = Hs; LRbeqs = Hs;
 
 % determine flags
 scaleflag = isfield(setup,"scaling");
-scalerowflag = opts.general.scalerowflag;
-sqpflag = opts.qlin.sqpflag;
-trustregionflag = opts.qlin.trustregionflag;
-reorderflag = opts.qp.reorder;
+scalerowflag = opts.method.scalematrixrows;
+reorderflag = opts.method.reordervariables;
 multiphaseflag = nphs > 1;
+if strcmpi(opts.method.form,'qlin')
+    sqpflag = opts.method.sqpflag;
+    trustregionflag = opts.method.trustregionflag;
+else
+    opts.method.sqpflag = false;
+    sqpflag = false;
+    opts.method.trustregionflag = false;
+    trustregionflag = false;
+end
 
 %----------------------------------------------------------------------
 % TASK: transcribe the problem for each phase and combine
@@ -237,7 +244,7 @@ T = vertcat(T{:}); U = vertcat(U{:}); Y = vertcat(Y{:}); P = vertcat(P{:});
 
 % check for zero-order hold method and nan final controls
 if nphs == 1
-    if strcmpi(opts.dt.defects,'ZO') || strcmpi(opts.dt.defects,'EF')
+    if strcmpi(opts.dt(1).defects,'ZO') || strcmpi(opts.dt(1).defects,'EF')
         U(end,:) = nan;
     end
 end

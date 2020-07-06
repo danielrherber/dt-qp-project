@@ -56,9 +56,8 @@ end
 % problem structure
 function [setup,opts] = problem(symb)
 
-symb.o.ny = 1; % number of states
-symb.o.np = 2; % number of parameters
-symb.o.output = 2; % interp1 compatible
+n.ny = 1; % number of states
+n.np = 2; % number of parameters
 
 % system dynamics
 symb.D = '[0]';
@@ -67,12 +66,13 @@ symb.D = '[0]';
 t0 = 0; tf = 1;
 
 % combine structures
-setup.symb = symb;
+setup.symb = symb; setup.n = n;
 setup.t0 = t0; setup.tf = tf; setup.p = [];
 
 % options
 opts.general.displevel = 0;
 opts.general.plotflag = 0;
 opts.dt.nt = 2;
+opts.method.form = 'qlin';
 
 end

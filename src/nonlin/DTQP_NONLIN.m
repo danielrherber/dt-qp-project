@@ -10,18 +10,18 @@
 function [T,U,Y,P,F,in,opts] = DTQP_NONLIN(setup,opts)
 
 % determine which nonlinear method should be used
-switch opts.qlin.method
+switch opts.method.form
     %------------------------------------------------------------------
     case 'qlin'
     % solve the NLDO problem with quasilinearization
     [T,U,Y,P,F,in,opts] = DTQP_QLIN(setup,opts);
     %------------------------------------------------------------------
-    case 'ipfmincon'
+    case 'nonlinearprogram'
     % solve the NLDO problem with interior point fmincon
     [T,U,Y,P,F,in,opts] = DTQP_IPFMINCON(setup,opts);
     %------------------------------------------------------------------
     otherwise
-    error('opts.qlin.method not found')
+    error('opts.method.form not found')
     %------------------------------------------------------------------
 end
 

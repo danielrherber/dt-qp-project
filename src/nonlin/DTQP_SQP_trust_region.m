@@ -12,8 +12,8 @@ function [beq,lb,ub,opts] = DTQP_SQP_trust_region(A,b,Aeq,beq,lb,ub,opts)
 
 % extract
 reduction = opts.reduction;
-delta = opts.qlin.delta;
-xi = opts.qlin.xi;
+delta = opts.method.delta;
+xi = opts.method.xi;
 
 % check if the objective function decreased
 % if reduction < 1e-1
@@ -23,7 +23,7 @@ xi = opts.qlin.xi;
 % end
 
 % assign
-opts.qlin.delta = delta;
+opts.method.delta = delta;
 
 % compute reduced trust bound
 xidelta = xi*delta;
@@ -47,7 +47,7 @@ H = Aeq'*Aeq; H = 2*H;
 f = -2*Aeq'*beq;
 
 % quadprog options
-qp = opts.qp;
+qp = opts.solver;
 tol = 1e-14; % change default tolerance
 options = optimoptions(@quadprog,'Algorithm','interior-point-convex',...
     'Display',qp.disp,...

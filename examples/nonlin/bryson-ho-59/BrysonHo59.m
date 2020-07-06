@@ -87,11 +87,11 @@ case 1 % ipfmincon method
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 100; % number of nodes
-    opts.qp.tolerance = 1e-8;
-    opts.qp.maxiters = 30;
-    opts.qp.disp = 'iter';
-    opts.qp.solver = 'ipfmincon';
-    opts.qlin.method = 'ipfmincon';
+    opts.solver.tolerance = 1e-8;
+    opts.solver.maxiters = 30;
+    opts.solver.display = 'iter';
+    opts.solver.function = 'ipfmincon';
+    opts.method.form = 'nonlinearprogram';
 case 2
     opts.general.displevel = 2;
     opts.general.plotflag = 1;
@@ -99,9 +99,9 @@ case 2
     opts.dt.quadrature = 'G';
     opts.dt.mesh = 'LGL';
     opts.dt.nt = 60; % number of nodes
-    opts.qp.disp = 'iter';
-    opts.qp.solver = 'ipfmincon';
-    opts.qlin.method = 'ipfmincon';
+    opts.solver.display = 'iter';
+    opts.solver.function = 'ipfmincon';
+    opts.method.form = 'nonlinearprogram';
 case 3 % qlin method
     opts.general.plotflag = 1; % create the plots
     opts.general.displevel = 1;
@@ -109,13 +109,13 @@ case 3 % qlin method
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 100; % number of nodes
-    opts.qp.maxiters = 200;
-    opts.qp.disp = 'none';
-    opts.qlin.method = 'qlin';
-    opts.qlin.trustregionflag = true;
-    opts.qlin.sqpflag = false;
-    opts.qlin.delta = 1e9;
-    opts.qlin.improveX0flag = true;
+    opts.solver.maxiters = 200;
+    opts.solver.display = 'none';
+    opts.method.form = 'qlin';
+    opts.method.trustregionflag = true;
+    opts.method.sqpflag = false;
+    opts.method.delta = 1e9;
+    opts.method.improveguess = true;
 end
 
 end

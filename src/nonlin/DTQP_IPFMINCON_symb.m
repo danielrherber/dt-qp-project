@@ -124,7 +124,7 @@ X = [U,Y,P,Yi,Yf];
 in1 = {t,PARAM,X};
 
 % return only function unless symbolic method
-if ~strcmpi(opts.qlin.derivativemethod,'symbolic')
+if ~strcmpi(opts.method.derivatives,'symbolic')
 
     % vectorized matlab function
     E.f = sym2matrixfun(F,in1,output);

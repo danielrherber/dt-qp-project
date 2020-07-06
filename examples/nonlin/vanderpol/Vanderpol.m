@@ -68,7 +68,7 @@ switch casenum
         n.np = 2;
 
         % Lagrange term
-        if ~isfield(opts,'qlin') || ~isfield(opts.qlin,'olqflag') || opts.qlin.olqflag
+        if ~isfield(opts,'qlin') || ~isfield(opts.method,'olqflag') || opts.method.olqflag
             L(1).left = 1; L(1).right = 1; L(1).matrix = 1;
             L(2).left = 2; L(2).right = 2; L(2).matrix = eye(2);
             setup.L = L;
@@ -149,12 +149,12 @@ case 1
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 100; % number of nodes
-    opts.qlin.method = 'ipfmincon';
-    opts.qp.solver = 'ipfmincon';
-    opts.qp.maxiters = 4000;
-    opts.qp.disp = 'iter';
-    opts.qlin.olqflag = true;
-    opts.qlin.derivativeflag = true;
+    opts.method.form = 'nonlinearprogram';
+    opts.solver.function = 'ipfmincon';
+    opts.solver.maxiters = 4000;
+    opts.solver.display = 'iter';
+    opts.method.olqflag = true;
+    opts.method.derivativeflag = true;
 case 2
     opts.general.displevel = 2;
     opts.general.plotflag = 1;
@@ -162,11 +162,11 @@ case 2
     opts.dt.quadrature = 'G';
     opts.dt.mesh = 'LGL';
     opts.dt.nt = 40; % number of nodes
-    opts.qlin.method = 'ipfmincon';
-    opts.qp.solver = 'ipfmincon';
-    opts.qp.disp = 'iter';
-    opts.qlin.olqflag = true;
-    opts.qlin.derivativeflag = true;
+    opts.method.form = 'nonlinearprogram';
+    opts.solver.function = 'ipfmincon';
+    opts.solver.display = 'iter';
+    opts.method.olqflag = true;
+    opts.method.derivativeflag = true;
 case 3
     opts.general.displevel = 1;
     opts.general.plotflag = 1;
@@ -176,12 +176,12 @@ case 3
     opts.dt.defects = 'PS';
     opts.dt.quadrature = 'G';
     opts.dt.mesh = 'LGL';
-    opts.qlin.imax = 5000;
+    opts.method.maxiters = 5000;
     opts.dt.nt = 40; % number of nodes
-    opts.qlin.method = 'qlin';
-    opts.qp.disp = 'none';
-    opts.qlin.trustregionflag = false;
-    opts.qlin.improveX0flag = false;
+    opts.method.form = 'qlin';
+    opts.solver.display = 'none';
+    opts.method.trustregionflag = false;
+    opts.method.improveguess = false;
 end
 
 end

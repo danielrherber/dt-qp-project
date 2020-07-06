@@ -16,12 +16,12 @@ function [T,U,Y,P,F,in,opts] = DTQP_QLIN(setup,opts)
 % extract
 displevel = opts.general.displevel;
 plotflag = opts.general.plotflag;
-lqdoflag = opts.qlin.lqdoflag;
-tolerance = opts.qlin.tolerance;
-improveX0flag = opts.qlin.improveX0flag;
-deltascaleflag = opts.qlin.deltascaleflag;
-sqpflag = opts.qlin.sqpflag;
-imax = opts.qlin.imax;
+lqdoflag = opts.method.lqdoflag;
+tolerance = opts.method.tolerance;
+improveX0flag = opts.method.improveguess;
+deltascaleflag = opts.method.deltascaleflag;
+sqpflag = opts.method.sqpflag;
+imax = opts.method.maxiters;
 symb = setup.symb;
 o = setup.n;
 param = o.param;
@@ -127,20 +127,20 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
     % check if the previous problem failed
     if isnan(F)
         if (displevel > 0) % minimal
-            disp("WARNING: did not solve with given opts.qp.tolerance")
+            disp("WARNING: did not solve with given opts.solver.tolerance")
         end
 
         % extract
-        qptolerance = opts.qp.tolerance;
+        qptolerance = opts.solver.tolerance;
 
         % new "loose" tolerance
-        opts.qp.tolerance = 1e-4;
+        opts.solver.tolerance = 1e-4;
 
         % solve the LQDO problem using DT and (potentially) mesh refinement
         [T,U,Y,P,F,in,opts] = DTQP_MESH(setupi,opts);
 
         % reassign
-        opts.qp.tolerance = qptolerance;
+        opts.solver.tolerance = qptolerance;
 
     end
 

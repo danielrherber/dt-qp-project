@@ -19,6 +19,7 @@ for k = 1:length(tests)
 
     % options
     opts.general.displevel = 2; % verbose
+    rng(5349298)
 
     % test setup
     switch tests(k)
@@ -91,7 +92,6 @@ setup(phs).UB.matrix = [1;1];
 if scaleflag
     setup(phs).scaling(1).right = 1; % controls
     setup(phs).scaling(1).matrix = [1 0.5];
-
     setup(phs).scaling(2).right = 2; % states
     setup(phs).scaling(2).matrix = [0.1 2];
     setup(phs).scaling(2).constant = 1000*rand(2,1);

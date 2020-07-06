@@ -35,7 +35,7 @@ else
     % tolerance for symmetric positive semidefiniteness
     etol = sqrt(eps);
 
-    if opts.qlin.mirrorflag
+    if opts.method.mirrorflag
 
         % check if the matrix is symmetric positive semidefinite
         if eigs(H,1,'smallestreal') >= -etol

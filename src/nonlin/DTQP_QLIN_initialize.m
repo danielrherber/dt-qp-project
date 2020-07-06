@@ -18,8 +18,8 @@ end
 % check if the symbolic field is present
 if ~isfield(setup,'symb')
     setup(1).symb = [];
-    opts.qlin.qlinflag = false;
-    opts.qlin.lqdoflag = true;
+    opts.method.qlinflag = false;
+    opts.method.lqdoflag = true;
     return % no symbolic operations needed
 else
     symb = setup.symb;
@@ -52,7 +52,7 @@ end
 setup.n = n;
 
 % initialize the problem data for the selected method
-switch opts.qlin.method
+switch opts.method.form
     %----------------------------------------------------------------------
     case 'qlin'
     % quasilinearization
@@ -73,7 +73,7 @@ end
 function [symb,opts] = DTQP_QLIN_initialize_qlin(symb,n,opts)
 
 % extract
-sqpflag = opts.qlin.sqpflag;
+sqpflag = opts.method.sqpflag;
 
 % initialize
 qlinflag = false; % quasilinearization not needed
@@ -122,7 +122,7 @@ end
 % TODO: linearize nonlinear inequality constraints
 
 % assign
-opts.qlin.qlinflag = qlinflag;
-opts.qlin.lqdoflag = lqdoflag;
+opts.method.qlinflag = qlinflag;
+opts.method.lqdoflag = lqdoflag;
 
 end

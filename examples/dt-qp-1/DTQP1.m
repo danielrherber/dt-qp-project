@@ -99,11 +99,11 @@ case 1
     opts.dt.quadrature = 'CQHS';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 5000; % number of nodes
-    opts.qp.reorder = 0;
-    opts.qp.solver = 'built-in';
-    opts.qp.tolerance = 1e-15;
-    opts.qp.maxiters = 100;
-    opts.qp.disp = 'iter';
+    opts.method.reordervariables = 0;
+    opts.solver.function = 'built-in';
+    opts.solver.tolerance = 1e-15;
+    opts.solver.maxiters = 100;
+    opts.solver.display = 'iter';
 end
 
 end

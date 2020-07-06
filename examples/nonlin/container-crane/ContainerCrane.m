@@ -43,7 +43,7 @@ str{end+1} = ']';
 symb.D = horzcat(str{:});
 
 % Lagrange term
-if ~isfield(opts,'qlin') || ~isfield(opts.qlin,'olqflag') || opts.qlin.olqflag
+if ~isfield(opts,'qlin') || ~isfield(opts.method,'olqflag') || opts.method.olqflag
     L(1).left = 1; L(1).right = 1; L(1).matrix = diag([0.005,0.005]);
     L(2).left = 2; L(2).right = 2; L(2).matrix = diag([0,0,0.5,0,0,0.5]);
     setup.L = L;
@@ -97,12 +97,12 @@ case 1
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 200; % number of nodes
-    opts.qp.maxiters = 4000;
-    opts.qp.disp = 'iter';
-    opts.qp.solver = 'ipfmincon';
-    opts.qlin.method = 'ipfmincon';
-    opts.qlin.olqflag = true;
-    opts.qlin.derivativeflag = true;
+    opts.solver.maxiters = 4000;
+    opts.solver.display = 'iter';
+    opts.solver.function = 'ipfmincon';
+    opts.method.form = 'nonlinearprogram';
+    opts.method.olqflag = true;
+    opts.method.derivativeflag = true;
 case 2
     opts.general.displevel = 2;
     opts.general.plotflag = 1;
@@ -110,12 +110,12 @@ case 2
     opts.dt.quadrature = 'G';
     opts.dt.mesh = 'LGL';
     opts.dt.nt = 30; % number of nodes
-    opts.qp.maxiters = 4000;
-    opts.qp.disp = 'iter';
-    opts.qp.solver = 'ipfmincon';
-    opts.qlin.method = 'ipfmincon';
-    opts.qlin.olqflag = true;
-    opts.qlin.derivativeflag = true;
+    opts.solver.maxiters = 4000;
+    opts.solver.display = 'iter';
+    opts.solver.function = 'ipfmincon';
+    opts.method.form = 'nonlinearprogram';
+    opts.method.olqflag = true;
+    opts.method.derivativeflag = true;
 case 3
     opts.general.displevel = 1;
     opts.general.plotflag = 1;
@@ -123,10 +123,10 @@ case 3
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 200; % number of nodes
-    opts.qlin.method = 'qlin';
-    opts.qp.disp = 'none';
-    opts.qlin.trustregionflag = false;
-    opts.qlin.improveX0flag = false;
+    opts.method.form = 'qlin';
+    opts.solver.display = 'none';
+    opts.method.trustregionflag = false;
+    opts.method.improveguess = false;
 end
 
 end

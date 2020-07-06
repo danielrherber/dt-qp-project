@@ -83,9 +83,9 @@ switch num
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 100+1; % number of nodes
-    opts.qp.disp = 'iter';
-    opts.qp.solver = 'ipfmincon';
-    opts.qlin.method = 'ipfmincon';
+    opts.solver.display = 'iter';
+    opts.solver.function = 'ipfmincon';
+    opts.method.form = 'nonlinearprogram';
 end
 
 end

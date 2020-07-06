@@ -11,13 +11,13 @@
 function [X,F,in,opts] = DTQP_SOLVER_qpoases(H,f,A,b,Aeq,beq,lb,ub,in,opts)
 
 % qp options
-qp = opts.qp;
+solver = opts.solver;
 
 % options
 options = qpOASES_options('default');
-options.printLevel = qp.printLevel;
-options.maxIter = qp.maxIter;
-options.maxCpuTime = qp.maxCpuTime;
+options.printLevel = solver.printLevel;
+options.maxIter = solver.maxiters;
+options.maxCpuTime = solver.maxcputime;
 
 % number of optimization variables
 n = in.nx;

@@ -81,9 +81,9 @@ case 1
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 200; % number of nodes
-    opts.qp.tolerance = 1e-12;
-    opts.qp.maxiters = 100;
-    opts.qp.disp = 'iter';
+    opts.solver.tolerance = 1e-12;
+    opts.solver.maxiters = 100;
+    opts.solver.display = 'iter';
 case 2
     opts.general.plotflag = 1; % create the plots
     opts.general.displevel = 2;
@@ -91,9 +91,9 @@ case 2
     opts.dt.quadrature = 'G';
     opts.dt.mesh = 'LGL';
     opts.dt.nt = 20; % number of nodes
-    opts.qp.tolerance = 1e-12;
-    opts.qp.maxiters = 100;
-    opts.qp.disp = 'iter';
+    opts.solver.tolerance = 1e-12;
+    opts.solver.maxiters = 100;
+    opts.solver.display = 'iter';
 end
 
 end

@@ -10,103 +10,97 @@
 %--------------------------------------------------------------------------
 function opts = DTQP_NONLIN_default_opts(opts)
 
-% initialize quasilinearization-specific options structure
-if ~isfield(opts,'qlin')
-    opts.qlin = [];
-end
-
 % method to solve the nonlinear dynamic optimization problem
-if ~isfield(opts.qlin,'method')
-    opts.qlin.method = 'none';
-    % opts.qlin.method = 'ipfmincon'; % fmincon nonlinear solver
-    % opts.qlin.method = 'qlin'; % quasilinearization
+if ~isfield(opts.method,'form')
+    opts.method.form = 'none';
+    % opts.method.form = 'nonlinearprogram'; % nonlinear programming
+    % opts.method.form = 'qlin'; % quasilinearization
 end
 
 % handle OLQ elements properly
-if ~isfield(opts.qlin,'olqflag')
-    % opts.qlin.olqflag = false; % everything nonlinear
-    opts.qlin.olqflag = true; % direct incorporation of OLQ elements
+if ~isfield(opts.method,'olqflag')
+    % opts.method.olqflag = false; % everything nonlinear
+    opts.method.olqflag = true; % direct incorporation of OLQ elements
 end
 
 %--------------------------------------------------------------------------
 % ipfmincon options
 %-------------------------------------------------------------------------
-if strcmpi(opts.qlin.method,'ipfmincon')
-    opts.qp.solver = 'ipfmincon';
+if strcmpi(opts.method.form,'nonlinearprogram')
 
-    % optimization problem derivatives flag (NEED TO REMOVE)
-    if ~isfield(opts.qlin,'derivativeflag')
-        % opts.qlin.derivativeflag = false; % use finite differencing
-        opts.qlin.derivativeflag = true; % use symbolic derivatives
-    end
+    % set solver function
+    opts.solver.function = 'ipfmincon';
 
     % optimization problem derivatives method
-    if ~isfield(opts.qlin,'derivativemethod')
-        % opts.qlin.derivativemethod = 'internal'; % use internal fmincon real finite differencing
-        % opts.qlin.derivativemethod = 'complex'; % use complex-step finite differencing
-        opts.qlin.derivativemethod = 'symbolic'; % use symbolic derivatives
+    if ~isfield(opts.method,'derivatives')
+        % opts.method.derivatives = 'internal'; % use internal fmincon real finite differencing
+        % opts.method.derivatives = 'complex'; % use complex-step finite differencing
+        opts.method.derivatives = 'symbolic'; % use symbolic derivatives
     end
 
 end
 %--------------------------------------------------------------------------
 % quasilinearization options
 %--------------------------------------------------------------------------
-% relative function tolerance
-if ~isfield(opts.qlin,'tolerance')
-    opts.qlin.tolerance = 1e-6;
-end
+if strcmpi(opts.method.form,'qlin')
 
-% maximum number of iterations
-if ~isfield(opts.qlin,'imax')
-    opts.qlin.imax = 50;
-end
+    % relative function tolerance
+    if ~isfield(opts.method,'tolerance')
+        opts.method.tolerance = 1e-6;
+    end
 
-% constant scaling based on previous solution
-if ~isfield(opts.qlin,'deltascaleflag')
-    % opts.qlin.deltascaleflag = true; % enabled
-    opts.qlin.deltascaleflag = false; % disabled
-end
+    % maximum number of iterations
+    if ~isfield(opts.method,'maxiters')
+        opts.method.maxiters = 50;
+    end
 
-% sequential quadratic programming flag
-if ~isfield(opts.qlin,'sqpflag')
-    % opts.qlin.sqpflag = true; % enabled
-    opts.qlin.sqpflag = false; % disabled
-end
-if opts.qlin.sqpflag
-	opts.qlin.deltascaleflag = true; % required to be enabled
+    % constant scaling based on previous solution
+    if ~isfield(opts.method,'deltascaleflag')
+        % opts.method.deltascaleflag = true; % enabled
+        opts.method.deltascaleflag = false; % disabled
+    end
 
-    % mirror negative eigenvalues in hessian
-    if ~isfield(opts.qlin,'mirrorflag')
-        % opts.qlin.mirrorflag = true; % enabled
-        opts.qlin.mirrorflag = false; % disabled
+    % sequential quadratic programming flag
+    if ~isfield(opts.method,'sqpflag')
+        % opts.method.sqpflag = true; % enabled
+        opts.method.sqpflag = false; % disabled
+    end
+    if opts.method.sqpflag
+        opts.method.deltascaleflag = true; % required to be enabled
+
+        % mirror negative eigenvalues in hessian
+        if ~isfield(opts.method,'mirrorflag')
+            % opts.method.mirrorflag = true; % enabled
+            opts.method.mirrorflag = false; % disabled
+        end
+
+    end
+
+    % trust region flag
+    if ~isfield(opts.method,'trustregionflag')
+        % opts.method.trustregionflag = true; % enabled
+        opts.method.trustregionflag = false; % disabled
+    end
+    if opts.method.trustregionflag
+        opts.method.deltascaleflag = true; % required to be enabled
+
+        % default trust region size
+        if ~isfield(opts.method,'delta')
+            opts.method.delta = 1;
+        end
+
+        % default contraction factor
+        if ~isfield(opts.method,'xi')
+            opts.method.xi = 0.8;
+        end
+
+    end
+
+    % try to improve the initial guess value
+    if ~isfield(opts.method,'improveguess')
+        % opts.method.improveguess = true; % enabled
+        opts.method.improveguess = false; % disabled
     end
 
 end
-
-% trust region flag
-if ~isfield(opts.qlin,'trustregionflag')
-    % opts.qlin.trustregionflag = true; % enabled
-    opts.qlin.trustregionflag = false; % disabled
-end
-if opts.qlin.trustregionflag
-	opts.qlin.deltascaleflag = true; % required to be enabled
-
-    % default trust region size
-    if ~isfield(opts.qlin,'delta')
-        opts.qlin.delta = 1;
-    end
-
-    % default contraction factor
-    if ~isfield(opts.qlin,'xi')
-        opts.qlin.xi = 0.8;
-    end
-
-end
-
-% try to improve the initial guess value
-if ~isfield(opts.qlin,'improveX0flag')
-    % opts.qlin.improveX0flag = true; % enabled
-    opts.qlin.improveX0flag = false; % disabled
-end
-
 end

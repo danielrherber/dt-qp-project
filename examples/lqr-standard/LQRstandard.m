@@ -77,11 +77,11 @@ case 1
     opts.dt.quadrature = 'G';
     opts.dt.mesh = 'LGL';
     opts.dt.nt = 50; % number of nodes
-    opts.qp.reorder = 0;
-    opts.qp.solver = 'built-in';
-    opts.qp.tolerance = 1e-15;
-    opts.qp.maxiters = 200;
-    opts.qp.disp = 'iter';
+    opts.method.reordervariables = 0;
+    opts.solver.function = 'built-in';
+    opts.solver.tolerance = 1e-15;
+    opts.solver.maxiters = 200;
+    opts.solver.display = 'iter';
 case 2
     opts.dt.defects = 'ZO';
     opts.dt.quadrature = 'CEF';

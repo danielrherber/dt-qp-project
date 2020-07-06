@@ -69,7 +69,7 @@ LR = repelem([1 2 3 4 5],[nu ny np ny ny]);
 R = horzcat(ini{1:5});
 
 % calculate Jacobian of the constraints
-Dft = DTQP_jacobian(con,p,t,X,param,opts.qlin.derivativemethod);
+Dft = DTQP_jacobian(con,p,t,X,param,opts.method.derivatives);
 
 % initialize storage arrays
 Isav = {}; Jsav = {}; Vsav = {};

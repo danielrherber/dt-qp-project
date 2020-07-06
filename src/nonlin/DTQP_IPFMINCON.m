@@ -19,7 +19,7 @@ symb = setup.symb;
 % initialize
 ldqoflag = false;
 in.Ilambda = [];
-linflag = opts.qlin.olqflag;
+linflag = opts.method.olqflag;
 
 % set default field value
 if isfield(symb,'param')
@@ -196,7 +196,7 @@ end
 if ldqoflag
 
     % use quadprog instead of fmincon
-    opts.qp.solver = 'quadprog';
+    opts.solver.function = 'quadprog';
 
 end
 

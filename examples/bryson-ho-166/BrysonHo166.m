@@ -79,11 +79,11 @@ case 1
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 100; % number of nodes
-    opts.qp.reorder = 0;
-    opts.qp.solver = 'built-in';
-    opts.qp.tolerance = 1e-12;
-    opts.qp.maxiters = 200;
-    opts.qp.disp = 'iter';
+    opts.method.reordervariables = 0;
+    opts.solver.function = 'built-in';
+    opts.solver.tolerance = 1e-12;
+    opts.solver.maxiters = 200;
+    opts.solver.display = 'iter';
 end
 
 end

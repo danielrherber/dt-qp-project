@@ -22,6 +22,7 @@ for k = 1:length(tests)
     D2flag = true;
     linflag = true;
     opts.general.displevel = 0;
+    opts.method.derivatives = 'symbolic';
 
     % test setup
     switch tests(k)

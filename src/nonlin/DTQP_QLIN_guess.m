@@ -17,12 +17,12 @@ nt = opts.dt.nt;
 T = linspace(setup.t0,setup.tf,nt)';
 
 % (potentially) initial guess values for multipliers
-if opts.qlin.sqpflag
+if isfield(opts.method,'sqpflag') && opts.method.sqpflag
     opts = guessMultipliers(opts,n,T,D2);
 end
 
 % (potentially) used-defined initial guess
-if isfield(setup.p,'guess')
+if isfield(setup,'p') && isfield(setup.p,'guess')
 
     % interpolate initial guess matrix
     X0 = interp1([setup.t0 setup.tf],setup.p.guess,T);

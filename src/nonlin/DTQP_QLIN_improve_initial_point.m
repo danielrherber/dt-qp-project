@@ -19,12 +19,12 @@ Pe = repelem(P',opts.dt.nt,1);
 X = [U,Y,Pe];
 
 % deactivate qlin flags
-trustregionflag = opts.qlin.trustregionflag;
-sqpflag = opts.qlin.sqpflag;
-deltascaleflag = opts.qlin.deltascaleflag;
-opts.qlin.trustregionflag = false;
-opts.qlin.sqpflag = false;
-opts.qlin.deltascaleflag = false;
+trustregionflag = opts.method.trustregionflag;
+sqpflag = opts.method.sqpflag;
+deltascaleflag = opts.method.deltascaleflag;
+opts.method.trustregionflag = false;
+opts.method.sqpflag = false;
+opts.method.deltascaleflag = false;
 
 % initialize
 iter = 0;
@@ -66,9 +66,9 @@ end
 % plot(T,Y,'r','linewidth',2); hold on
 
 % reassign
-opts.qlin.trustregionflag = trustregionflag;
-opts.qlin.sqpflag = sqpflag;
-opts.qlin.deltascaleflag = deltascaleflag;
+opts.method.trustregionflag = trustregionflag;
+opts.method.sqpflag = sqpflag;
+opts.method.deltascaleflag = deltascaleflag;
 
 % return multipliers
 lambda = opts.lambda;

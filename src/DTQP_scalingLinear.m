@@ -86,23 +86,15 @@ if ~isempty(find(H,1))
     H = sM*H*sM;
 end
 
-% b
-if ~isempty(find(b,1))
-    b = b - A*sc;
-end
-
-% A
+% A and b
 if ~isempty(find(A,1))
+    b = b - A*sc;
     A = A*sM;
 end
 
-% beq
-if ~isempty(find(beq,1))
-    beq = beq - Aeq*sc;
-end
-
-% Aeq
+% Aeq and beq
 if ~isempty(find(Aeq,1))
+    beq = beq - Aeq*sc;
     Aeq = Aeq*sM;
 end
 
@@ -119,43 +111,27 @@ end
 %--------------------------------------------------------------------------
 % linkage constraints
 %--------------------------------------------------------------------------
-% LLb
-if ~isempty(find(LLb,1))
-    LLb = LLb - LLA*sc;
-end
-
-% LLA
+% LLA and LLb
 if ~isempty(find(LLA,1))
+    LLb = LLb - LLA*sc;
     LLA = LLA*sM;
 end
 
-% LRb
-if ~isempty(find(LRb,1))
-    LRb = LRb - LRA*sc;
-end
-
-% LRA
+% LRA and LRb
 if ~isempty(find(LRA,1))
+    LRb = LRb - LRA*sc;
     LRA = LRA*sM;
 end
 
-% LLbeq
-if ~isempty(find(LLbeq,1))
-    LLbeq = LLbeq - LLAeq*sc;
-end
-
-% LLAeq
+% LLAeq and LLbeq
 if ~isempty(find(LLAeq,1))
+    LLbeq = LLbeq - LLAeq*sc;
     LLAeq = LLAeq*sM;
 end
 
-% LRbeq
-if ~isempty(find(LRbeq,1))
-    LRbeq = LRbeq - LRAeq*sc;
-end
-
-% LRAeq
+% LRAeq and LRbeq
 if ~isempty(find(LRAeq,1))
+    LRbeq = LRbeq - LRAeq*sc;
     LRAeq = LRAeq*sM;
 end
 

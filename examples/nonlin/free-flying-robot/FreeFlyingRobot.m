@@ -98,11 +98,11 @@ case 1
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 300; % number of nodes
-    opts.qp.disp = 'iter';
-    opts.qp.maxiters = 2000;
-    opts.qp.solver = 'ipfmincon';
-    opts.qlin.method = 'ipfmincon';
-    opts.qlin.olqflag = true;
+    opts.solver.display = 'iter';
+    opts.solver.maxiters = 2000;
+    opts.solver.function = 'ipfmincon';
+    opts.method.form = 'nonlinearprogram';
+    opts.method.olqflag = true;
 case 2
     opts.general.displevel = 2;
     opts.general.plotflag = 1;
@@ -110,11 +110,11 @@ case 2
     opts.dt.quadrature = 'G';
     opts.dt.mesh = 'LGL';
     opts.dt.nt = 100; % number of nodes
-    opts.qp.disp = 'iter';
-    opts.qp.maxiters = 2000;
-    opts.qp.solver = 'ipfmincon';
-    opts.qlin.method = 'ipfmincon';
-    opts.qlin.olqflag = true;
+    opts.solver.display = 'iter';
+    opts.solver.maxiters = 2000;
+    opts.solver.function = 'ipfmincon';
+    opts.method.form = 'nonlinearprogram';
+    opts.method.olqflag = true;
 end
 
 end

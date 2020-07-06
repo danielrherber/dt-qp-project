@@ -79,9 +79,9 @@ case 1 % ipfmincon method
     opts.dt.t = unique([linspace(p.t0,p.t0+S2,N2),linspace(p.t0+S2,p.tf-S2,N2),linspace(p.tf-S2,p.tf,N2)]);
     opts.dt.mesh = 'USER';
     opts.dt.nt = length(opts.dt.t);
-    opts.qp.disp = 'iter'; % iterations
-    opts.qp.solver = 'ipfmincon';
-    opts.qlin.method = 'ipfmincon';
+    opts.solver.display = 'iter'; % iterations
+    opts.solver.function = 'ipfmincon';
+    opts.method.form = 'nonlinearprogram';
 case 2 % qlin method
     opts.general.displevel = 1;
     opts.dt.defects = 'TR';
@@ -91,10 +91,10 @@ case 2 % qlin method
     opts.dt.t = unique([linspace(p.t0,p.t0+S2,N2),linspace(p.t0+S2,p.tf-S2,N2),linspace(p.tf-S2,p.tf,N2)]);
     opts.dt.mesh = 'USER';
     opts.dt.nt = length(opts.dt.t);
-    opts.qp.disp = 'none';
-    opts.qlin.method = 'qlin';
-    opts.qlin.trustregion = false;
-    opts.qlin.sqpflag = false;
+    opts.solver.display = 'none';
+    opts.method.form = 'qlin';
+    opts.method.trustregion = false;
+    opts.method.sqpflag = false;
 end
 
 end

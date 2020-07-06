@@ -107,14 +107,14 @@ case 1
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 500; % number of nodes
-    opts.qlin.sqpflag = false;
-    opts.qlin.trustregionflag = true;
-    opts.qlin.improveX0flag = false;
-    opts.qlin.delta = 3000;
-    opts.qp.disp = 'iter'; % iterations
-    opts.qp.solver = 'ipfmincon';
-    opts.qlin.method = 'ipfmincon';
-    opts.qp.maxiters = 20000;
+    opts.method.sqpflag = false;
+    opts.method.trustregionflag = true;
+    opts.method.improveguess = false;
+    opts.method.delta = 3000;
+    opts.solver.display = 'iter'; % iterations
+    opts.solver.function = 'ipfmincon';
+    opts.method.form = 'nonlinearprogram';
+    opts.solver.maxiters = 20000;
 case 2
     opts.general.displevel = 2;
     opts.general.plotflag = 1;
@@ -122,14 +122,14 @@ case 2
     opts.dt.quadrature = 'G';
     opts.dt.mesh = 'LGL';
     opts.dt.nt = 200; % number of nodes
-    opts.qlin.sqpflag = false;
-    opts.qlin.trustregionflag = true;
-    opts.qlin.improveX0flag = false;
-    opts.qlin.delta = 3000;
-    opts.qp.disp = 'iter'; % iterations
-    opts.qp.solver = 'ipfmincon';
-    opts.qlin.method = 'ipfmincon';
-    opts.qp.maxiters = 20000;
+    opts.method.sqpflag = false;
+    opts.method.trustregionflag = true;
+    opts.method.improveguess = false;
+    opts.method.delta = 3000;
+    opts.solver.display = 'iter'; % iterations
+    opts.solver.function = 'ipfmincon';
+    opts.method.form = 'nonlinearprogram';
+    opts.solver.maxiters = 20000;
 case 3
     opts.general.displevel = 1;
     opts.general.plotflag = 1;
@@ -137,10 +137,10 @@ case 3
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 1000; % number of nodes
-    opts.qlin.method = 'qlin';
-    opts.qp.disp = 'none';
-    opts.qlin.trustregionflag = false;
-    opts.qlin.improveX0flag = false;
+    opts.method.form = 'qlin';
+    opts.solver.display = 'none';
+    opts.method.trustregionflag = false;
+    opts.method.improveguess = false;
 end
 
 end

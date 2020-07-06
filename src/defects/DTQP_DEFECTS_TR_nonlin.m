@@ -74,7 +74,7 @@ if ~Dflag
 end
 
 % calculate Jacobian of state derivative function values
-Dft = DTQP_jacobian(dyn,p,t,X,param,opts.qlin.derivativemethod);
+Dft = DTQP_jacobian(dyn,p,t,X,param,opts.method.derivatives);
 
 % go through each defect constraint
 for ix = 1:nz2

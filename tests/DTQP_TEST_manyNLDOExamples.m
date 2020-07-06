@@ -27,29 +27,29 @@ for k = 1:length(tests)
         opts.dt.quadrature = 'CTR';
         opts.dt.mesh = 'ED';
         opts.dt.nt = 100; % number of time points
-        opts.qlin.method = 'ipfmincon';
-        opts.qp.solver = 'ipfmincon';
+        opts.method.form = 'nonlinearprogram';
+        opts.solver.function = 'ipfmincon';
         %------------------------------------------------------------------
         case 2
         opts.dt.defects = 'PS';
         opts.dt.quadrature = 'G';
         opts.dt.mesh = 'LGL';
         opts.dt.nt = 20; % number of time points
-        opts.qlin.method = 'ipfmincon';
-        opts.qp.solver = 'ipfmincon';
+        opts.method.form = 'nonlinearprogram';
+        opts.solver.function = 'ipfmincon';
         %------------------------------------------------------------------
         case 3
         opts.dt.defects = 'TR';
         opts.dt.quadrature = 'CTR';
         opts.dt.mesh = 'ED';
         opts.dt.nt = 100; % number of time points
-        opts.qp.maxiters = 10;
-        opts.qp.disp = 'none';
-        opts.qlin.method = 'qlin';
-        opts.qlin.trustregionflag = false;
-        opts.qlin.sqpflag = false;
-        opts.qlin.delta = inf;
-        opts.qlin.improveX0flag = false; % disabled
+        opts.solver.maxiters = 10;
+        opts.solver.display = 'none';
+        opts.method.form = 'qlin';
+        opts.method.trustregionflag = false;
+        opts.method.sqpflag = false;
+        opts.method.delta = inf;
+        opts.method.improveguess = false; % disabled
         opts.general.displevel = 1;
         %------------------------------------------------------------------
         case 4
@@ -57,9 +57,9 @@ for k = 1:length(tests)
         opts.dt.quadrature = 'CTR';
         opts.dt.mesh = 'ED';
         opts.dt.nt = 100; % number of time points
-        opts.qlin.method = 'ipfmincon';
-        opts.qp.solver = 'ipfmincon';
-        opts.qlin.derivativemethod = 'complex'; % complex-step finite differencing
+        opts.method.form = 'nonlinearprogram';
+        opts.solver.function = 'ipfmincon';
+        opts.method.derivatives = 'complex'; % complex-step finite differencing
         %------------------------------------------------------------------
     end
 

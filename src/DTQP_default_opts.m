@@ -46,12 +46,6 @@ if ~isfield(opts.general,'displevel')
     % opts.general.displevel = 1; % minimal
     % opts.general.displevel = 0; % none
 end
-
-% scaling to the constraint rows
-if ~isfield(opts.general,'scalerowflag')
-    opts.general.scalerowflag = true; % enabled
-    % opts.general.scalerowflag = false; % disabled
-end
 %--------------------------------------------------------------------------
 % END: general options
 %--------------------------------------------------------------------------
@@ -227,42 +221,50 @@ end
 %--------------------------------------------------------------------------
 
 %--------------------------------------------------------------------------
-% START: quadratic programming specific
+% START: solver specific
 %--------------------------------------------------------------------------
-% initialize quadratic programming-specific options structure
-if ~isfield(opts,'qp')
-    opts.qp = [];
-end
-
-% reordering of the optimization variables (see DTQP_reorder.m)
-if ~isfield(opts.qp,'reorder')
-    opts.qp.reorder = 0; % don't reorder
-    % opts.qp.reorder = 1; % reorder
+% initialize solver-specific options structure
+if ~isfield(opts,'solver')
+    opts.solver = [];
 end
 
 % solver
-if ~isfield(opts.qp,'solver')
-    opts.qp.solver = 'quadprog'; % MATLAB quadprog
-    % opts.qp.solver = 'cvx'; % see DTQP_SOLVER_cvx.m
-    % opts.qp.solver = 'qpoases'; % see DTQP_SOLVER_qpoases.m
-    % opts.qp.solver = 'qpip'; % (to be added)
-    % opts.qp.solver = 'ooqp'; % (to be added)
+if ~isfield(opts.solver,'solver')
+    opts.solver.function = 'quadprog'; % MATLAB quadprog
+    % opts.solver.function = 'cvx'; % see DTQP_SOLVER_cvx.m
+    % opts.solver.function = 'qpoases'; % see DTQP_SOLVER_qpoases.m
+    % opts.solver.function = 'ipfmincon'; % see DTQP_SOLVER_ipfmincon.m
 end
 
 % get default options for the selected solver
 opts = DTQP_SOLVER_default_opts(opts);
 %--------------------------------------------------------------------------
-% END: quadratic programming specific
+% END: solver specific
 %--------------------------------------------------------------------------
 
 %--------------------------------------------------------------------------
-% START: other
+% START: method specific
 %--------------------------------------------------------------------------
+% initialize method-specific options structure
+if ~isfield(opts,'method')
+    opts.method = [];
+end
+
+% reordering of the optimization variables (see DTQP_reorder.m)
+if ~isfield(opts.method,'reordervariables')
+    opts.method.reordervariables = 0; % don't reorder
+    % opts.method.reordervariables = 1; % reorder
+end
+
+% scaling to the constraint rows
+if ~isfield(opts.method,'scalematrixrows')
+    opts.method.scalematrixrows = true; % enabled
+    % opts.method.scalematrixrows = false; % disabled
+end
 
 % get default options for NLDO problem
 opts = DTQP_NONLIN_default_opts(opts);
-
 %--------------------------------------------------------------------------
-% END: other
+% END: method specific
 %--------------------------------------------------------------------------
 end

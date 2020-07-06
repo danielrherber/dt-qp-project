@@ -54,7 +54,8 @@ switch testnum
     case 1 % p = 1, q = inf
 
     % Lagrange term
-    symb.Ob = 'abs(u1) + abs(u2)';
+    % symb.Ob = 'abs(u1) + abs(u2)';
+    symb.Ob = 'sqrt(u1^2) + sqrt(u2^2)'; % works with complex numbers
 
     % linear inequality constraint
     UB(4).right = 1; UB(4).matrix = [umax, umax]; % controls
@@ -68,7 +69,8 @@ switch testnum
     % L(1).left = 1; L(1).right = 1; L(1).matrix = eye(2); setup.L = L; % controls
 
     % nonlinear inequality constraint
-    symb.cin = 'u1^2 + u2^2 - umax^2';
+    symb.cin.func = 'u1^2 + u2^2 - umax^2';
+    symb.cin.pathboundary = 1;
     symb.paramstr = 'umax';
     symb.param = umax;
 
@@ -116,11 +118,11 @@ case 1 % ipfmincon method
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 300; % number of nodes
-    opts.qp.tolerance = 1e-10;
-    opts.qp.maxiters = 2000;
-    opts.qp.disp = 'iter';
-    opts.qp.solver = 'ipfmincon';
-    opts.qlin.method = 'ipfmincon';
+    opts.solver.tolerance = 1e-10;
+    opts.solver.maxiters = 2000;
+    opts.solver.display = 'iter';
+    opts.solver.function = 'ipfmincon';
+    opts.method.form = 'nonlinearprogram';
 end
 
 end

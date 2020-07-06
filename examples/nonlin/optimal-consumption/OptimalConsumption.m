@@ -75,11 +75,11 @@ case 1 % ipfmincon method
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 100; % number of nodes
-    opts.qp.tolerance = 1e-15;
-    opts.qp.maxiters = 200;
-    opts.qp.disp = 'iter';
-    opts.qp.solver = 'ipfmincon';
-    opts.qlin.method = 'ipfmincon';
+    opts.solver.tolerance = 1e-15;
+    opts.solver.maxiters = 200;
+    opts.solver.display = 'iter';
+    opts.solver.function = 'ipfmincon';
+    opts.method.form = 'nonlinearprogram';
 case 2 % qlin method
     opts.general.plotflag = 1; % create the plots
     opts.general.displevel = 2;
@@ -87,11 +87,11 @@ case 2 % qlin method
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 100; % number of nodes
-    opts.qp.maxiters = 200;
-    opts.qp.disp = 'none';
-    opts.qlin.method = 'qlin';
-    opts.qlin.trustregion = false;
-    opts.qlin.sqpflag = false;
+    opts.solver.maxiters = 200;
+    opts.solver.display = 'none';
+    opts.method.form = 'qlin';
+    opts.method.trustregion = false;
+    opts.method.sqpflag = false;
 end
 
 end

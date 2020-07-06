@@ -13,7 +13,7 @@ function Ho = DTQP_IPFMINCON_hessian(X,lambda,obj,dyn,cin,ceq,Hin,in,opts)
 nu = in.nu; ny = in.ny; np = in.np; ini = in.i; nx = in.nx;
 p = in.p; t = in.t; np = in.np; nt = in.nt; param = in.param;
 Ilambda = in.Ilambda; quadrature = opts.dt.quadrature;
-derivativeflag = opts.qlin.derivativemethod;
+derivativeflag = opts.method.derivatives;
 
 % reshape optimization variables
 P = X(end-np+1:end);
