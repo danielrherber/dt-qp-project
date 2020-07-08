@@ -126,6 +126,12 @@ zips(ind).url = 'https://github.com/altmany/export_fig/archive/master.zip';
 zips(ind).folder = 'MFX 23629';
 zips(ind).test = 'export_fig';
 
+% zip 6
+ind = ind + 1; % increment
+zips(ind).url = 'https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/28944/versions/1/download/zip/pchipd.zip';
+zips(ind).folder = 'MFX 28944';
+zips(ind).test = 'pchipd';
+
 % obtain full function path
 full_fun_path = which(mfilename('fullpath'));
 outputdir = fullfile(fileparts(full_fun_path),'include');
