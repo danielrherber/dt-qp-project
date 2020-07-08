@@ -88,7 +88,7 @@ end
 % User options function for this example
 function opts = DTQP1_opts
 % test number
-num = 1;
+num = 2;
 
 switch num
 case 1
@@ -104,6 +104,21 @@ case 1
     opts.solver.tolerance = 1e-15;
     opts.solver.maxiters = 100;
     opts.solver.display = 'iter';
+case 2
+    opts.general.plotflag = 1; % create the plots
+    opts.general.saveflag = false;
+    opts.general.displevel = 2;
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 20; % number of nodes
+    opts.method.reordervariables = 0;
+    opts.solver.function = 'built-in';
+    opts.solver.tolerance = 1e-15;
+    opts.solver.maxiters = 100;
+    opts.solver.display = 'none';
+    opts.dt.meshr.method = 'SS-BETTS';
+    opts.dt.meshr.tolerance = 1e-5;
 end
 
 end

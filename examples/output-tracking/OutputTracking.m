@@ -35,11 +35,7 @@ R = 1e-2*eye(nu); % control penalty
 Q = eye(no); % state penalty
 
 % output to track
-W = linspace(0.1,1,no);
-o = cell(no,1);
-for k = 1:no
-    o{k} = @(t) sin(W(k)*t);
-end
+[o,W] = OutputTracking_o(no);
 
 % save to parameter structure
 p.x0 = x0; p.A = A; p.B = B; p.C = C; p.R = R; p.Q = Q; p.W = W; p.o = o;
@@ -88,6 +84,16 @@ case 2
     opts.dt.quadrature = 'CQHS';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 1000; % number of nodes
+case 3
+    opts = [];
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 50;
+    opts.solver.tolerance = 1e-15;
+    opts.solver.display = 'none';
+    opts.dt.meshr.method = 'SS-BETTS';
+    opts.dt.meshr.tolerance = 1e-3;
 end
 
 end

@@ -55,4 +55,15 @@ flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 figname = 'figure-error'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
 flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
+%% mesh refinement
+if isfield(in,'meshr')
+
+    % step size plot
+    DTQP_MESH_plotStepsize(in.meshr.T)
+
+    % mesh error plot
+    DTQP_MESH_plotError(in.meshr.T,in.meshr.errors,in.meshr.tol)
+
+end
+
 end

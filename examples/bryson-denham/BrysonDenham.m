@@ -40,7 +40,7 @@ LB(2).right = 5; LB(2).matrix = [0;-1];
 UB(3).right = 2; UB(3).matrix = [p.ell;Inf]; % states
 
 % combine structures
-setup.A = A; setup.B = B; setup.L = L; setup.UB = UB; setup.LB = LB; 
+setup.A = A; setup.B = B; setup.L = L; setup.UB = UB; setup.LB = LB;
 setup.t0 = t0; setup.tf = tf; setup.p = p;
 
 %% solve
@@ -59,7 +59,7 @@ end
 % User options function for this example
 function opts = BrysonDenham_opts
 % test number
-num = 1;
+num = 4;
 
 switch num
 case 1
@@ -86,6 +86,21 @@ case 3
     opts.dt.quadrature = 'G';
     opts.dt.mesh = 'LGL';
     opts.dt.nt = 9; % number of nodes
+case 4
+    opts.general.plotflag = 1; % create the plots
+    opts.general.saveflag = false;
+    opts.general.displevel = 2;
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 3; % number of nodes
+    opts.method.reordervariables = 0;
+    opts.solver.function = 'built-in';
+    opts.solver.tolerance = 1e-15;
+    opts.solver.maxiters = 200;
+    opts.solver.display = 'none';
+    opts.dt.meshr.method = 'SS-BETTS';
+    opts.dt.meshr.tolerance = 1e-10;
 end
 
 end

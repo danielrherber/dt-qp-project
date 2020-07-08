@@ -47,7 +47,7 @@ end
 
 % (potentially) display to the command window
 if (displevel > 1) % verbose
-    disp('----------------------------------------')
+    disp('---------------------------------------------------')
     disp(['total time: ', num2str(opts.timer.total), ' s'])
 end
 

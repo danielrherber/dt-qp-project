@@ -245,7 +245,8 @@ T = vertcat(T{:}); U = vertcat(U{:}); Y = vertcat(Y{:}); P = vertcat(P{:});
 % check for zero-order hold method and nan final controls
 if nphs == 1
     if strcmpi(opts.dt(1).defects,'ZO') || strcmpi(opts.dt(1).defects,'EF')
-        U(end,:) = nan;
+        % U(end,:) = nan;
+        U(end,:) = U(end-1,:); % use nearest control point
     end
 end
 

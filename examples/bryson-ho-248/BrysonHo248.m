@@ -27,8 +27,8 @@ p.gamma = 20;
 
 %% setup
 % system dynamics
-A = [0 1; 0 0]; 
-B = [1;-1]; 
+A = [0 1; 0 0];
+B = [1;-1];
 
 % Lagrange term
 L(1).left = 2; % state variables
@@ -37,7 +37,7 @@ L(1).matrix = [1/2,0;0,0];
 
 % L(2).left = 1; % control variables
 % L(2).right = 1; % control variables
-% L(2).matrix = 1e-8;
+% L(2).matrix = 1e-5;
 
 % initial conditions
 LB(1).right = 4; % initial states
@@ -90,11 +90,20 @@ case 2
     opts.dt.defects = 'PS';
     opts.dt.mesh = 'LGL';
     opts.dt.nt = 100;
-case 3      
+case 3
     opts.dt.quadrature = 'CQHS';
     opts.dt.defects = 'HS';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 100;
+case 4
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.defects = 'HS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 10;
+    opts.solver.display = 'none';
+    opts.solver.tolerance = 1e-15;
+    opts.dt.meshr.method = 'SS-BETTS';
+    opts.dt.meshr.tolerance = 1e-2;
 end
 
 end

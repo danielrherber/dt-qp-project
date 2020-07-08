@@ -26,8 +26,8 @@ p.omega = 1;
 
 %% setup
 % system dynamics
-A = [0,1;-p.omega^2,0]; 
-B = [0;1];  
+A = [0,1;-p.omega^2,0];
+B = [0;1];
 
 % Lagrange term
 L(1).left = 1; % control variables
@@ -65,12 +65,22 @@ end
 % User options function for this example
 function opts = BrysonHo156_opts
 % test number
-num = 1;
+num = 2;
 
 switch num
 case 1
     % default parameters
     opts = [];
+case 2
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 5;
+    opts.solver.tolerance = 1e-15;
+    opts.solver.maxiters = 200;
+    opts.solver.display = 'none';
+    opts.dt.meshr.method = 'SS-BETTS';
+    opts.dt.meshr.tolerance = 1e-8;
 end
 
 end

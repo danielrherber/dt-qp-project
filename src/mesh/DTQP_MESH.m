@@ -18,12 +18,11 @@ switch upper(opts.dt(1).meshr.method)
     case 'RICHARDSON-DOUBLING' % doubling the mesh and Richardson extrapolation
         [T,U,Y,P,F,in,opts] = DTQP_MESH_richardson_doubling(setup,opts);
     %----------------------------------------------------------------------
-%     case 'CUBIC-BSPLINES' % in development
-%         [T,U,Y,P,F,in,opts] = DTQP_meshr_cubic_bsplines(setup,opts,solvefun);
+    case 'SS-BETTS' % single-step method mesh refinement from Betts textbook
+        [T,U,Y,P,F,in,opts] = DTQP_MESH_ss_betts(setup,opts);
     %----------------------------------------------------------------------
     case 'TEST' % in development
-%         [T,U,Y,P,F,in,opts] = DTQP_meshr_test(setup,opts);
-        [T,U,Y,P,F,in,opts] = DTQP_MESH_ss_betts(setup,opts);
+        % [T,U,Y,P,F,in,opts] = DTQP_meshr_test(setup,opts);
     %----------------------------------------------------------------------
     otherwise
         error('mesh refinement method invalid')

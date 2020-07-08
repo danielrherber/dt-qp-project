@@ -32,18 +32,7 @@ p.R = eye(p.nu);
 p.Q = sprand(p.ns,p.ns,0.2);
 p.Q = ((p.Q)*((p.Q)'))/100;
 p.M = 10*eye(p.ns); % objective
-
-p.d = cell(p.ns,1);
-p.d{1} = @(t) 10*sin(3*t);
-p.d{3} = @(t) 2*sin(2*t);
-p.d{4} = @(t) 4*sin(6*t);
-p.d{4} = @(t) -3*sin(1*t);
-p.d{5} = @(t) -1*sin(2*t);
-p.d{6} = @(t) 10*sin(3*t);
-p.d{7} = @(t) 2*sin(2*t);
-p.d{8} = @(t) 4*sin(6*t);
-p.d{9} = @(t) -3*sin(1*t);
-p.d{10} = @(t) -1*sin(2*t);
+p.d = LQRInhomogeneous_d(p.ns); % time-varying disturbances
 
 %% setup
 % Lagrange term
@@ -95,6 +84,15 @@ case 3
     opts.dt.defects = 'TR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 100;
+case 4
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.defects = 'HS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 10;
+    opts.solver.tolerance = 1e-15;
+    opts.solver.display = 'none';
+    opts.dt.meshr.method = 'SS-BETTS';
+    opts.dt.meshr.tolerance = 1e-1;
 end
 
 end

@@ -69,11 +69,19 @@ end
 % User options function for this example
 function opts = DTQP2_opts
 % test number
-num = 1;
+num = 2;
 
 switch num
 case 1
     opts.dt.nt = 1000; % number of time points
+case 2
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 10;
+    opts.solver.display = 'none';
+    opts.dt.meshr.method = 'SS-BETTS';
+    opts.dt.meshr.tolerance = 1e-5;
 end
 
 end

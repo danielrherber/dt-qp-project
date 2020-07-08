@@ -92,4 +92,15 @@ ha.YLabel.String = 'distance';
 ha.ZLabel.String = 'temperature';
 ha.YLabel.Rotation = -66;
 
+%% mesh refinement
+if isfield(in,'meshr')
+
+    % step size plot
+    DTQP_MESH_plotStepsize(in.meshr.T)
+
+    % mesh error plot
+    DTQP_MESH_plotError(in.meshr.T,in.meshr.errors,in.meshr.tol)
+
+end
+
 end

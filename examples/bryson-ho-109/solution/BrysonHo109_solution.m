@@ -19,8 +19,8 @@ syms y yf t a
 sat = @(x) (sign(x-1) + sign(x+1) - (x*(sign(x-1)-sign(x+1))))/2;
 
 % optimal control functions
-u = sat(a^2*p.g*yf);
-gu = p.g*u;
+u = sat(a^2*BrysonHo109_g(t)*yf);
+gu = BrysonHo109_g(t)*u;
 ufun = matlabFunction(u,'Vars',{'a','t','yf'});
 gufun = matlabFunction(gu,'Vars',{'a','t','yf'});
 

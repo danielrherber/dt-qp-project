@@ -27,8 +27,8 @@ p.x0 = -0.5; p.v0 = 1; % other
 t0 = 0;
 
 % system dynamics
-A = [0 1;-1 0]; 
-B = [0;1]; 
+A = [0 1;-1 0];
+B = [0;1];
 
 % Lagrange term
 L(1).left = 1; % control variables
@@ -67,7 +67,7 @@ end
 % User options function for this example
 function opts = BrysonHo166_opts
 % test number
-num = 1;
+num = 2;
 
 switch num
 case 1
@@ -83,7 +83,18 @@ case 1
     opts.solver.function = 'built-in';
     opts.solver.tolerance = 1e-12;
     opts.solver.maxiters = 200;
-    opts.solver.display = 'iter';
+case 2
+    opts.dt.defects = 'TR';
+    opts.dt.quadrature = 'CTR';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 5;
+    opts.method.reordervariables = 0;
+    opts.solver.function = 'built-in';
+    opts.solver.tolerance = 1e-15;
+    opts.solver.maxiters = 200;
+    opts.solver.display = 'none';
+    opts.dt.meshr.method = 'SS-BETTS';
+    opts.dt.meshr.tolerance = 1e-4;
 end
 
 end

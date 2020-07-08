@@ -56,7 +56,7 @@ UB(2).right = 1; % controls
 UB(2).matrix = p.umax;
 
 % combine
-setup.A = A; setup.B = B; setup.M = M; 
+setup.A = A; setup.B = B; setup.M = M;
 setup.LB = LB; setup.UB = UB; setup.t0 = 0; setup.tf = tf; setup.p = p;
 
 %% solve
@@ -75,7 +75,7 @@ end
 % User options function for this example
 function opts = LinearPendulum_opts
 % test number
-num = 1;
+num = 3;
 
 switch num
 case 1
@@ -90,6 +90,16 @@ case 2
     opts.dt.quadrature = 'G';
     opts.dt.mesh = 'LGL';
     opts.dt.nt = 100; % number of nodes
+case 3
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 50;
+    opts.solver.display = 'none';
+    opts.solver.tolerance = 1e-15;
+    opts.dt.meshr.method = 'SS-BETTS';
+    opts.dt.meshr.tolerance = 1e-6;
+    opts.dt.meshr.ntmaxinterval = 20;
 end
 
 end

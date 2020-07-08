@@ -26,7 +26,7 @@ p.examplenum = 2; % see below
 
 %% setup
 % system dynamics
-A = [0,1;0,-1]; 
+A = [0,1;0,-1];
 B = [0;1];
 
 % Lagrange term
@@ -52,14 +52,14 @@ switch p.examplenum
     case 1 % path constraint on state 2
         UB(2).right = 2; % states
         UB(2).matrix = {inf, @(t) 8*(t-0.5).^2 - 0.5};
-        
+
         % combine structures
         setup.A = A; setup.B = B; setup.L = L;
         setup.LB = LB; setup.UB = UB; setup.t0 = 0; setup.tf = 1; setup.p = p;
     case 2 % path constraint on state 1
         UB(2).right = 2; % states
         UB(2).matrix = {@(t) 8*(t-0.5).^2 - 0.5,inf};
-        
+
         % combine structures
         setup.A = A; setup.B = B; setup.L = L;
         setup.LB = LB; setup.UB = UB; setup.t0 = 0; setup.tf = 1; setup.p = p;
@@ -68,15 +68,15 @@ switch p.examplenum
         LB(2).matrix = [0.5;-inf];
         UB(2).right = 5; % final states
         UB(2).matrix = [0.5;inf];
-        
+
         %--- combine structures, phase 1
         setup(1).A = A; setup(1).B = B; setup(1).L = L;
         setup(1).LB = LB; setup(1).UB = UB; setup(1).t0 = 0; setup(1).tf = 0.5; setup(1).p = p;
-        
-        %--- combine structures, phase 2 
+
+        %--- combine structures, phase 2
         setup(2).A = A; setup(2).B = B; setup(2).L = L;
         setup(2).t0 = 0.5; setup(2).tf = 1; setup(2).p = p;
-        
+
         %--- phase 1-2 linkage constraints
         n = length(A);
         clear LY
@@ -107,7 +107,7 @@ end
 % User options function for this example
 function opts = JadduShimemura_opts
 % test number
-num = 1;
+num = 2;
 
 switch num
 case 1
@@ -125,6 +125,15 @@ case 3
     opts.dt.defects = 'TR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 1000;
+case 4
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.defects = 'HS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 10;
+    opts.solver.tolerance = 1e-15;
+    opts.solver.display = 'none';
+    opts.dt.meshr.method = 'SS-BETTS';
+    opts.dt.meshr.tolerance = 1e-4;
 end
 
 end

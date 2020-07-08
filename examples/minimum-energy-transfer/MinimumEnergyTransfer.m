@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % MinimumEnergyTransfer.m
-% pp. 21-23 of J.  Klamka, Controllability and Minimum Energy Control, 
+% pp. 21-23 of J.  Klamka, Controllability and Minimum Energy Control,
 % Springer, 2019, doi: 10.1007/978-3-319-92540-0
 % pp. 163-164 of A. E. Bryson Jr. and Y.-C. Ho, Applied Optimal Control.
 % Taylor & Francis, 1975, isbn: 9780891162285
@@ -89,7 +89,7 @@ end
 % User options function for this example
 function opts = MinimumEnergyTransfer_opts
 % test number
-num = 2;
+num = 3;
 
 switch num
 case 1
@@ -104,6 +104,15 @@ case 2
     opts.dt.quadrature = 'G';
     opts.dt.mesh = 'LGL';
     opts.dt.nt = 50; % number of nodes
+case 3
+    opts = [];
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 4; % number of nodes
+    opts.solver.display = 'none';
+    opts.dt.meshr.method = 'SS-BETTS';
+    opts.dt.meshr.tolerance = 1e-8;
 end
 
 end

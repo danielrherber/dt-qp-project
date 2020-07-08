@@ -1,16 +1,16 @@
 %--------------------------------------------------------------------------
 % LQRScalarTransfer.m
-% 
+%
 % Similar behavior to the "Hyper-Sensitive" problem:
 % A. V. Rao and K. D. Mease, Eigenvector Approximate Dichotomic Basis
 % Methods for Solving Hyper-Sensitive Optimal Control Problems, Optimal
 % Control Applications and Methods, Vol. 21, No. 1., January-February,
 % 2000, pp. 1-17.
-% 
+%
 % "Energy-Optimal Control" problem in reference below is a special case:
 % H. P. Geering, Optimal Control with Engineering Applications, Springer,
 % 2007, pp. 46-48, doi: 10.1007/978-3-540-69438-0
-% 
+%
 % "Mass-Spring" problem included in GPOPS-II is a special case.
 %--------------------------------------------------------------------------
 %
@@ -104,7 +104,7 @@ end
 % User options function for this example
 function opts = LQRScalarTransfer_opts
 % test number
-num = 1;
+num = 2;
 
 switch num
 case 1
@@ -112,6 +112,16 @@ case 1
     opts.dt.quadrature = 'CQHS';
     opts.dt.mesh = 'CGL';
     opts.dt.nt = 2000; % number of nodes
+case 2
+    opts.dt.defects = 'HS';
+    opts.dt.quadrature = 'CQHS';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 10; % number of nodes
+    opts.solver.tolerance = 1e-15;
+    opts.solver.display = 'none';
+    opts.dt.meshr.method = 'SS-BETTS';
+    opts.dt.meshr.tolerance = 1e-6;
+    opts.dt.meshr.ntmaxinterval = 5;
 end
 
 end
