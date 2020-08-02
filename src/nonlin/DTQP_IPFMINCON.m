@@ -17,12 +17,19 @@ nu = in.nu; ny = in.ny; np = in.np; nt = in.nt;
 symb = setup.symb;
 
 % initialize
-ldqoflag = false;
+lqdoflag = true;
 in.Ilambda = [];
 linflag = opts.method.olqflag;
 
 % set default field value
 if isfield(symb,'param')
+
+    % convert time-varying cell to matrix on specified mesh
+    % NOTE: this won't work for methods that need the parameters and
+    % different points than the original mesh
+    if isa(symb.param,'cell')
+        symb.param = squeeze(DTQP_tmatrix(symb.param,setup.p,in.t));
+    end
     in.paramstr = symb.paramstr;
 	in.param = symb.param;
 else
@@ -61,6 +68,11 @@ if isfield(symb,'Ob')
     % assign
     in.obj = obj;
 
+    % NLDO problem if any nonlinear elements
+    % if ~isempty()
+        lqdoflag = false;
+    % end
+
 else % only LQDO objective function terms
 
     % construct objective function matrices
@@ -91,6 +103,11 @@ if isfield(symb,'D')
     % current number of nonlinear equality constraints
     nI = max(vertcat(in.Ilambda.dyn{:}));
 
+    % NLDO problem if any nonlinear elements
+    if ~isempty(Idyn)
+        lqdoflag = false;
+    end
+
 else % only LQDO dynamic equations
 
     % construct linear defect constraint matrices
@@ -118,6 +135,11 @@ if isfield(symb,'ceq')
     % assign
     in.ceq = ceq;
     in.Ilambda.ceq = Iceq;
+
+    % NLDO problem if any nonlinear elements
+    if ~isempty(Iceq)
+        lqdoflag = false;
+    end
 
 else % only LQDO equality constraints
 
@@ -150,6 +172,11 @@ if isfield(symb,'cin')
     % assign
     in.cin = cin;
     in.Ilambda.cin = Icin;
+
+    % NLDO problem if any nonlinear elements
+    if ~isempty(Icin)
+        lqdoflag = false;
+    end
 
 else % only LQDO inequality constraints
 
@@ -193,10 +220,13 @@ end
 % solve the optimization problem
 %--------------------------------------------------------------------------
 % check if this ended up as a LQDO problem
-if ldqoflag
+if lqdoflag
 
     % use quadprog instead of fmincon
     opts.solver.function = 'quadprog';
+
+    % double Hessian for quadprog
+    H = 2*H;
 
 end
 
@@ -276,6 +306,7 @@ if isfield(dyn,'Ilin')
         end
         if ~isempty(dyn.d)
             setup.d = DTQP_QLIN_update_tmatrix(dyn.d,[],[],in.param);
+            in.nd = size(setup.d,1); % update number of disturbances
         else
             setup.d = [];
         end

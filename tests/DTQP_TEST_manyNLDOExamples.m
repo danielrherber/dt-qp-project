@@ -87,9 +87,10 @@ HIVImmunology(p,opts)
 Hypersensitive(p,opts)
 OptimalConsumption(p,opts)
 SimpleCoDesignTransfer(p,opts)
+% SimpleSuspensionSimultaneous(p,opts) % time-varying parameter error?
 Train(p,opts)
 TransferMaxRadius(p,opts)
-% TransferMinFuel(p,opts) % fails with qlin?
+TransferMinFuel(p,opts)
 Tuberculosis(p,opts)
 Tumor(p,opts)
 Vanderpol(p,opts)

@@ -22,76 +22,157 @@ ex_plot = @TransferMinFuel_plot; % plot function
 [p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
-testnum = 1; % see below
-umax = 0.01;
+testnum = 22; % see below
+r0 = 1; rf = 4; % initial and final radius
+p.tf = 57; % final time
+umax = 0.01; % maximum thrust
+
+% scaling
+scalenum = 2;
+switch scalenum
+    %----------------------------------------------------------------------
+    case 1
+    Us = 1; Ts = 1; Rs = 1; As = 1; Vrs = 1;
+    %----------------------------------------------------------------------
+    case 2
+	Us = umax; Ts = p.tf; Rs = (r0+rf)/2; As = 10; Vrs = 0.1;
+end
 
 %% setup
-% time horizon
-p.t0 = 0; p.tf = 57;
+% initial time
+p.t0 = 0;
+
+% final time
+p.tf = p.tf/Ts;
 
 % number of controls, states, and parameters
 n.nu = 2; n.ny = 4;
 
+% simple bounds
+Ys = [Rs As Vrs 1];
+UB(1).right = 4; UB(1).matrix = [r0,0,0,1]./Ys; % initial states
+LB(1).right = 4; LB(1).matrix = [r0,0,0,1]./Ys;
+UB(2).right = 5; UB(2).matrix = [rf,inf,0,0.5]./Ys; % final states
+LB(2).right = 5; LB(2).matrix = [rf,-inf,0,0.5]./Ys;
+
 % system dynamics
 str{1} = '[';
-str{end+1} = 'y3; ';
-str{end+1} = 'y4/y1; ';
-str{end+1} = 'y4^2/y1 - 1/y1^2 + u1; ';
-str{end+1} = '-y3*y4/y1 + u2';
+str{end+1} = 'Ts*Vrs/Rs*y3; ';
+str{end+1} = 'Ts/As/Rs*y4/y1; ';
+str{end+1} = 'Ts/Vrs/Rs*y4^2/y1 - Ts/Vrs/Rs^2/y1^2 + Ts/Vrs*Us*u1; ';
+str{end+1} = '-Ts*Vrs/Rs*y3*y4/y1 + Ts*Us*u2';
 str{end+1} = ']';
 symb.D = horzcat(str{:});
-
-% simple bounds
-UB(1).right = 4; UB(1).matrix = [1,0,0,1]; % initial states
-LB(1).right = 4; LB(1).matrix = [1,0,0,1];
-UB(2).right = 5; UB(2).matrix = [4,inf,0,0.5]; % final states
-LB(2).right = 5; LB(2).matrix = [4,-inf,0,0.5];
-UB(3).right = 2; UB(3).matrix = [4,inf,0.5,1]; % states
-LB(3).right = 2; LB(3).matrix = [1,-inf,0,0];
+symb.paramstr = 'umax Us Ts Rs As Vrs';
+symb.param = [umax Us Ts Rs As Vrs];
 
 switch testnum
     %----------------------------------------------------------------------
-    case 1 % p = 1, q = inf
+    case {1,11} % p = 1, q = inf
 
-    % Lagrange term
-    % symb.Ob = 'abs(u1) + abs(u2)';
-    symb.Ob = 'sqrt(u1^2) + sqrt(u2^2)'; % works with complex numbers
+    if testnum == 1 % original formulation
+        % Lagrange term
+        % symb.Ob = 'abs(u1) + abs(u2)';
+        symb.Ob = 'sqrt(u1^2) + sqrt(u2^2)'; % works with complex numbers
 
-    % linear inequality constraint
-    UB(4).right = 1; UB(4).matrix = [umax, umax]; % controls
-    LB(4).right = 1; LB(4).matrix = [-umax, -umax];
+        % linear inequality constraint
+        UB(3).right = 1; UB(3).matrix = [umax, umax]/Us; % controls
+        LB(3).right = 1; LB(3).matrix = [-umax, -umax]/Us;
+
+        % guess
+        Y0 = [[r0,0,0,1];[rf,0,0,0.5]]./Ys;
+        U0 = [[0.01,0.01];[0.01,0.01]]/Us;
+        p.guess = [U0,Y0];
+
+    elseif testnum == 11 % transformed problem
+        % two additional controls
+        n.nu = n.nu + 2;
+
+        % Lagrange term
+        % symb.Ob = 'u3 + u4';
+        L(1).left = 0; L(1).right = 1; L(1).matrix = [0 0 1 1];
+        setup.L = L;
+
+        % general linear inequality constraints
+        Z(1).linear(1).right = 1; Z(1).linear(1).matrix = [1 0 -1 0];
+        Z(1).b = 0; % u1 - u3 < 0
+        Z(2).linear(1).right = 1; Z(2).linear(1).matrix = [-1 0 -1 0];
+        Z(2).b = 0; % -u1 - u3 < 0
+        Z(3).linear(1).right = 1; Z(3).linear(1).matrix = [0 1 0 -1];
+        Z(3).b = 0; % u2 - u4 < 0
+        Z(4).linear(1).right = 1; Z(4).linear(1).matrix = [0 -1 0 -1];
+        Z(4).b = 0; % -u2 - u4 < 0
+        setup.Z = Z;
+
+        % linear inequality constraint
+        UB(3).right = 1; UB(3).matrix = [umax, umax, umax, umax]/Us; % controls
+        LB(3).right = 1; LB(3).matrix = [-umax, -umax, 0, 0]/Us;
+
+        % guess
+        Y0 = [[r0,0,0,1];[rf,0,0,0.5]]./Ys;
+        U0 = [[0,umax,0,umax];[0,umax,0,umax]]/Us;
+        p.guess = [U0,Y0];
+
+    end
+
     %----------------------------------------------------------------------
-    case 2 % p = 2, q = 2
+    case {2,22} % p = 2, q = 2
 
-    % Lagrange term
-    symb.Ob = '(u1^2 + u2^2)^(1/2)';
-    % symb.Ob = 'u1^2 + u2^2';
-    % L(1).left = 1; L(1).right = 1; L(1).matrix = eye(2); setup.L = L; % controls
+    if testnum == 2 % original formulation
+        % Lagrange term
+        symb.Ob = '(u1^2 + u2^2)^(1/2)';
 
-    % nonlinear inequality constraint
-    symb.cin.func = 'u1^2 + u2^2 - umax^2';
-    symb.cin.pathboundary = 1;
-    symb.paramstr = 'umax';
-    symb.param = umax;
+        % nonlinear inequality constraint
+        % symb.cin.func = '(u1^2 + u2^2)^(1/2) - umax/Us';
+        symb.cin.func = '(u1^2 + u2^2) - umax^2/Us^2'; % better form
+        symb.cin.pathboundary = 1;
 
-    % linear inequality constraint
-    UB(4).right = 1; UB(4).matrix = [umax, umax]; % controls
-    LB(4).right = 1; LB(4).matrix = [-umax, -umax];
+        % linear inequality constraint
+        UB(3).right = 1; UB(3).matrix = [umax, umax]/Us; % controls
+        LB(3).right = 1; LB(3).matrix = [-umax, -umax]/Us;
+
+        % guess
+        Y0 = [[r0,0,0,1];[rf,0,0,0.5]]./Ys;
+        U0 = [[0,umax];[0,umax]]/Us;
+        p.guess = [U0,Y0];
+
+    elseif testnum == 22 % transformed problem
+        % one additional control
+        n.nu = n.nu + 1;
+
+        % Lagrange term
+        L(1).left = 0; L(1).right = 1; L(1).matrix = [0,0,1]; setup.L = L;
+
+        % nonlinear inequality constraint
+        % symb.ceq.func = 'u1^2 + u2^2 - u3^2';
+        % symb.ceq.pathboundary = 1;
+        symb.cin.func = 'u1^2 + u2^2 - u3^2'; % better form
+        symb.cin.pathboundary = 1;
+
+        % linear inequality constraint
+        UB(3).right = 1; UB(3).matrix = [1.05*umax, 1.05*umax, umax]/Us; % controls
+        LB(3).right = 1; LB(3).matrix = [-1.05*umax, -1.05*umax, 0]/Us;
+
+        % guess
+        Y0 = [[r0,0,0,1];[rf,20,0,0.5]]./Ys;
+        U0 = [[0,umax,umax];[0,umax,umax]]/Us;
+        p.guess = [U0,Y0];
+
+    end
 end
-
-% guess
-Y0 = [[1,0,0,1];[4,0,0,0.5]];
-U0 = [[0.01,0.01];[0.01,0.01]];
-p.guess = [U0,Y0];
 
 % combine structures
 setup.symb = symb; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve
-t1 = tic;
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
-toc(t1);
+
+% unscale
+T = T*Ts;
+U = U*Us;
+Y = Y.*repmat(Ys,in.nt,1);
+F = F*Ts*Us;
 
 %% output
 [O,sol] = ex_output(T,U,Y,P,F,in,opts);
@@ -123,6 +204,7 @@ case 1 % ipfmincon method
     opts.solver.display = 'iter';
     opts.solver.function = 'ipfmincon';
     opts.method.form = 'nonlinearprogram';
+    opts.olqflag = true;
 end
 
 end

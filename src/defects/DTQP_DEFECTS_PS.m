@@ -161,7 +161,7 @@ if nd > 0 && dflag
     Isav = {}; Vsav = {};
 
     % defect constraint of row continuous constraints
-    for i = 1:ny
+    for i = 1:nz
 
         % extract matrices
         Vs = reshape(dt(:,i,:),[],1);

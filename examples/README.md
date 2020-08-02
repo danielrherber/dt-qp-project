@@ -17,6 +17,7 @@
 | DTQP Example 2 | [dt-qp-2](dt-qp-2/) | | simple integral |
 | DTQP Example 3 | [dt-qp-3](dt-qp-3/) | | closed-form |
 | Gas Absorber | [gas-absorber](gas-absorber/) | Lu00 |  |
+| Greenhouse Climate | [greenhouse-climate](greenhouse-climate/) | Str10 |  |
 | Hager 1 | [hager-1](hager-1/) | Hag00 | closed-form |
 | HDAE | [hdae](hdae/) | Betts10 |  |
 | Jaddu Shimemura | [jaddu-shimemura](jaddu-shimemura/) | Jad98 | finite optimization |
@@ -43,6 +44,7 @@
 - [**Her17**] D. R. Herber, *Advances in Combined Architecture, Plant, and Control Design.* PhD Dissertation, University of Illinois at Urbana-Champaign, Urbana, IL, USA, Dec. 2017
 - [**Jad98**] H. Jaddu and E. Shimemura, "Solution of Constrained Linear Quadratic Optimal Control Problem Using State Parameterization," *Trans. of the Society of Instrument and Control Engineers*, vol. 34, no. 9, pp. 1164-1169, 1998, doi: 10.9746/sicetr1965.34.1164
 - [**Lu00**] R. Luus, *Iterative Dynamic Programming*. CRC Press, 2000, isbn: 1584881488
+- [**Str10**] G. van Straten, G. van Willigenburg, E. van Henten, and R. van Ooteghem, Optimal Control of Greenhouse Cultivation. CRC Press, 2010 [Online]. Available: http://dx.doi.org/10.1201/b10321
 - [**Tav08**] M. A. Tavallaei and B. Tousi, "Closed Form Solution to an Optimal Control Problem by Orthogonal Polynomial Expansion," *American J. of Engineering and Applied Sciences*, vol. 1, no. 2, pp. 104-109, 2008. doi: 10.3844/ajeassp.2008.104.109
 - [**Turn85**] J. D. Turner, H. M. Chun, J. N. Juang, "Closed-Form Solutions for a Class of Optimal Quadratic Tracking Problems", Journal of Optimization Theory and Applications, vol. 47, no. 4, pp. 465-481, Dec. 1985, doi: 10.1007/BF00942192
 

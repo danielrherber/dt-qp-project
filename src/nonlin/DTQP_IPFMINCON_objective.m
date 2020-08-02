@@ -106,24 +106,25 @@ if nargout > 1
                 % compute product
                 Dft = Dft.*H0;
 
-                % FIX:
-                Dft(nt*(in.nu+in.ny)+np+1:end) = [];
-
             case 'CQHS'
                 error(' ')
             case 'G'
                 % compute product
                 Dft = Dft.*w*(in.tf - in.t0)/2;
 
-                % FIX:
-                Dft(nt*(in.nu+in.ny)+np+1:end) = [];
-
             case 'CC'
                 error(' ')
         end
 
-        % ensure column vector
-        Dft = Dft(:)';
+        % extract submatrices
+        Dft_UY = squeeze(Dft(:,:,1:(in.nu+in.ny))); % controls and states
+        Dft_P = Dft(:,:,(in.nu+in.ny+1):(in.nu+in.ny+in.np)); % parameters
+
+        % sum parameter jacobian
+        Dft_P = sum(Dft_P,1);
+
+        % combine
+        Dft = [Dft_UY(:);Dft_P(:)]';
 
         % add to gradient
         go = go + Dft;
