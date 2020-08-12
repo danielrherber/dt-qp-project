@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
-% DTQP_TEST_hessian_complex_step.m
-% Tests for DTQP_hessian_complex_step.m
+% DTQP_TEST_hessian.m
+% Tests for DTQP_hessian.m methods
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -9,12 +9,19 @@
 %--------------------------------------------------------------------------
 close all; clear; clc
 
-tests = 1;
+tests = 1:2;
+% tests = 1;
+
+% derivative method to test
+% deriv = @DTQP_hessian_complex_step;
+% deriv = @DTQP_hessian_real_central;
+deriv = @DTQP_hessian_real_forward;
 
 % go through the tests
 for k = 1:length(tests)
 
     clear f Df X param p t
+    rng(35345690)
 
     % test setup
     switch tests(k)
@@ -25,7 +32,7 @@ for k = 1:length(tests)
         f = @(t,dummy123,in3)in3(:,1)+in3(:,3)-in3(:,4).*in3(:,2)-in3(:,5).*in3(:,2).^2.*in3(:,3);
 
         % exact Hessian
-        D2f = cell(9,9);
+        D2f = cell(5,5);
         [D2f{:}] = deal(0);
 
         D2f{2,2} = @(t,dummy123,in3)in3(:,5).*in3(:,3).*-2.0;
@@ -38,8 +45,25 @@ for k = 1:length(tests)
         D2f{5,2} = @(t,dummy123,in3)in3(:,2).*in3(:,3).*-2.0;
         D2f{5,3} = @(t,dummy123,in3)-in3(:,2).^2;
 
-        nt = 4000; nu = 1; ny = 2; np = 2;
-        X = rand(nt,nu+3*ny+np);
+        nt = 10000; nu = 1; ny = 2; np = 2;
+        X = 100*rand(nt,nu+ny+np);
+        param = [];
+        p = [];
+        t = linspace(0,5,nt)';
+        %------------------------------------------------------------------
+        case 2 %
+
+        % original function
+        f = @(t,dummy123,in3) sin(in3(:,1));
+
+        % exact Hessian
+        D2f = cell(1,1);
+        [D2f{:}] = deal(0);
+
+        D2f{1,1} = @(t,dummy123,in3) -sin(in3(:,1));
+
+        nt = 4000; nu = 0; ny = 1; np = 0;
+        X = rand(nt,nu+ny+np);
         param = [];
         p = [];
         t = linspace(0,5,nt)';
@@ -55,17 +79,13 @@ for k = 1:length(tests)
 
     tic
         % compute complex step Hessian
-        D2ft2 = DTQP_hessian_complex_step(f,X,t,param);
+        D2ft2 = deriv(f,X,t,param);
     toc
 
     % test analysis
-    D2 = (D2ft-D2ft2); % difference
-    D2(isnan(D2)) = 0;
-    D2(isinf(D2)) = 0;
+    D = D2ft-D2ft2; % difference
+    [M,I] = max(abs(D),[],'all','linear');
     disp("Max error:")
-    disp(norm(D2(:),inf)) % error
-    % disp(D2ft)
-    % disp(' ')
-    % disp(D2ft2)
+    disp(M) % error
 
 end

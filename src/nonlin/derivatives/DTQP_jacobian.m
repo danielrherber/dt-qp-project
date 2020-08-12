@@ -1,31 +1,29 @@
 %--------------------------------------------------------------------------
-% DTQP_hessian.m
-% Compute Hessian of the input function
+% DTQP_jacobian.m
+% Compute Jacobian of the input functions
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function D2ft = DTQP_hessian(in,p,t,X,param,flag,k)
+function Dft = DTQP_jacobian(in,p,t,X,param,flag)
 
 % determine which derivative method
 switch flag
     %----------------------------------------------------------------------
     case 'symbolic'
-    % check if empty D2f (so all zeros)
-    if isempty(in.D2f)
-        D2ft = [];
-        return
-    end
-    D2fi = DTQP_QLIN_update_tmatrix(in.D2f{k},[],X,param);
-    D2ft = DTQP_tmultiprod(D2fi,p,t);
+    Dfi = DTQP_QLIN_update_tmatrix(in.Df,[],X,param);
+    Dft = DTQP_tmultiprod(Dfi,p,t);
     %----------------------------------------------------------------------
     case 'complex'
-    D2ft = DTQP_hessian_complex_step(in.f{k},X,t,param);
+    Dft = DTQP_jacobian_complex_step(in.f,X,t,param);
     %----------------------------------------------------------------------
-    case 'real'
-    error("Not implemented")
+    case 'real-forward'
+    Dft = DTQP_jacobian_real_forward(in.f,X,t,param);
+    %----------------------------------------------------------------------
+    case 'real-central'
+    Dft = DTQP_jacobian_real_central(in.f,X,t,param);
     %----------------------------------------------------------------------
 end
 

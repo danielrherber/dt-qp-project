@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
-% DTQP_TEST_jacobian_complex_step.m
-% Tests for DTQP_jacobian_complex_step.m
+% DTQP_TEST_jacobian.m
+% Tests for DTQP_jacobian.m methods
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -12,10 +12,16 @@ close all; clear; clc
 tests = 1:2;
 % tests = 2;
 
+% derivative method to test
+% deriv = @DTQP_jacobian_complex_step;
+% deriv = @DTQP_jacobian_real_central;
+deriv = @DTQP_jacobian_real_forward;
+
 % go through the tests
 for k = 1:length(tests)
 
     clear f Df X param p t
+    rng(824935)
 
     % test setup
     switch tests(k)
@@ -26,16 +32,15 @@ for k = 1:length(tests)
         f{1} = @(t,dummy123,in3)in3(:,1)+in3(:,3)-in3(:,4).*in3(:,2)-in3(:,5).*in3(:,2).^2.*in3(:,3);
 
         % exact Jacobian
-        Df = cell(1,9);
+        Df = cell(1,5);
         Df{1} = 1;
         Df{2} = @(t,dummy123,in3)-in3(:,4)-in3(:,5).*in3(:,2).*in3(:,3).*2.0;
         Df{3} = @(t,dummy123,in3)-in3(:,5).*in3(:,2).^2+1.0;
         Df{4} = @(t,dummy123,in3)-in3(:,2);
         Df{5} = @(t,dummy123,in3)-in3(:,2).^2.*in3(:,3);
-        [Df{6:9}] = deal(0);
 
-        nt = 10; nu = 1; ny = 2; np = 2;
-        X = rand(nt,nu+3*ny+np);
+        nt = 10000; nu = 1; ny = 2; np = 2;
+        X = 100*rand(nt,nu+ny+np);
         param = [];
         p = [];
         t = linspace(0,5,nt)';
@@ -47,7 +52,7 @@ for k = 1:length(tests)
         f{2} = @(t,in2,in3)-in3(:,3).*(in2(:,3)-in2(:,2)+in2(:,5).*in3(:,1)+in2(:,4).*in3(:,2).^(2.0./3.0));
 
         % exact Jacobian
-        Df = cell(2,10);
+        Df = cell(2,4);
         [Df{:}] = deal(0);
         Df{1,2} = @(t,in2,in3)-in2(:,1)-in2(:,1).*log(in3(:,2)./in3(:,3));
         Df{1,3} = @(t,in2,in3)(in3(:,2).*in2(:,1))./in3(:,3);
@@ -56,7 +61,7 @@ for k = 1:length(tests)
         Df{2,3} = @(t,in2,in3)-in2(:,3)+in2(:,2)-in2(:,5).*in3(:,1)-in2(:,4).*in3(:,2).^(2.0./3.0);
 
         nt = 4000; nu = 1; ny = 3; np = 0;
-        X = rand(nt,nu+3*ny+np);
+        X = rand(nt,nu+ny+np);
 
         b = 5.85; % per day
         Mew = 0.02; % per day
@@ -78,14 +83,13 @@ for k = 1:length(tests)
 
     tic
         % compute complex step Jacobian
-        Dft2 = DTQP_jacobian_complex_step(f,X,t,param);
+        Dft2 = deriv(f,X,t,param);
     toc
 
     % test analysis
     D = Dft-Dft2; % difference
+    [M,I] = max(abs(D),[],'all','linear');
     disp("Max error:")
-    disp(norm(D(:),inf)) % error
-    % disp(Dft)
-    % disp(Dft2)
+    disp(M) % error
 
 end

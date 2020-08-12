@@ -34,7 +34,9 @@ if strcmpi(opts.method.form,'nonlinearprogram')
     % optimization problem derivatives method
     if ~isfield(opts.method,'derivatives')
         % opts.method.derivatives = 'internal'; % use internal fmincon real finite differencing
-        % opts.method.derivatives = 'complex'; % use complex-step finite differencing
+        % opts.method.derivatives = 'real-forward'; % use forward real-step finite differencing
+        % opts.method.derivatives = 'real-central'; % use central real-step finite differencing
+        % opts.method.derivatives = 'complex'; % use forward complex-step finite differencing
         opts.method.derivatives = 'symbolic'; % use symbolic derivatives
     end
 

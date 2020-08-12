@@ -100,12 +100,17 @@ opts.general.plotflag = 1;
 opts.dt.defects = 'TR';
 opts.dt.quadrature = 'CTR';
 opts.dt.mesh = 'ED';
-opts.dt.nt = 5000;
+opts.dt.nt = 1000;
 opts.method.form = 'nonlinearprogram';
 opts.method.olqflag = true;
-opts.method.derivatives = 'complex';
 opts.solver.tolerance = 1e-14;
-opts.solver.maxiters = 1000;
+opts.solver.maxiters = 10000;
 opts.solver.function = 'IPFMINCON';
+
+% opts.method.derivatives = 'internal';
+% opts.method.derivatives = 'real-forward';
+% opts.method.derivatives = 'real-central';
+opts.method.derivatives = 'complex';
+% opts.method.derivatives = 'symbolic';
 
 end

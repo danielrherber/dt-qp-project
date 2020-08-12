@@ -19,10 +19,11 @@ nt = length(T);
 D2f = zeros(nt,nx,nx);
 
 % differentiation step size
-h = sqrt(eps);
+hj = eps;
+hi = (eps)^(1/3);
 
 % square of step size
-h2 = h*h*2;
+h2 = hj*hi*2;
 
 % go through each optimization variable
 for jx = 1:nx
@@ -31,7 +32,7 @@ for jx = 1:nx
     X0 = X;
 
     % increment in independent variable
-    X0(:,jx) = X0(:,jx) + h*1i;
+    X0(:,jx) = X0(:,jx) + hj*1i;
 
     % loop for off diagonal Hessian
     for ix = jx:nx
@@ -41,13 +42,13 @@ for jx = 1:nx
         Xm = X0;
 
         % positive real increment
-        Xp(:,ix) = Xp(:,ix) + h;
+        Xp(:,ix) = Xp(:,ix) + hi;
 
         % function call with a double increment
         up = f(T,param,Xp);
 
         % negative real increment
-        Xm(:,ix) = Xm(:,ix) - h;
+        Xm(:,ix) = Xm(:,ix) - hi;
 
         % function call with a double increment
         um = f(T,param,Xm);

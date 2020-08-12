@@ -22,7 +22,26 @@ nt = length(T);
 Df = zeros(nt,nf,nx);
 
 % differentiation step size
-h = nx*eps;
+h = eps;
+
+% create expanded step size matrix
+H2 = zeros(nx*nt,nx);
+for jx = 1:nx
+    H2(((jx-1)*nt+1):(jx*nt),jx) = h;
+end
+
+% reference point matrix
+X0 = repmat(X,[nx 1]);
+
+% compute forward step matrix
+Xf = X0 + H2*1i;
+
+% replicate parameter vector if it is time-dependent
+if size(param,1) == nt
+    PARAM = repmat(param,[nx 1]);
+else
+    PARAM = param;
+end
 
 % go through each function
 for kx = 1:nf
@@ -30,19 +49,15 @@ for kx = 1:nf
     % extract current function
     fun = f{kx};
 
-    % go through each optimization variable
-    for jx = 1:nx
+    % function call with forward increment
+    Uf = fun(T,PARAM,Xf);
 
-        % reference point
-        X0 = X;
+    % forward-step differentiation
+    Dft = imag(Uf)/h;
 
-        % increment optimization variable at each time point
-        X0(:,jx) = X0(:,jx) + h*1i;
+    % reshape and place in Df
+    Df(:,kx,:) = reshape(Dft,nt,1,nx);
 
-        % complex step differentiation
-        Df(:,kx,jx) = imag(fun(T,param,X0))/h;
-
-    end
 end
 
 end

@@ -41,15 +41,7 @@ switch opts.method.derivatives
     o{end+1} = 'Hessian';
     o{end+1} = 'lbfgs';
     %----------------------------------------------------------------------
-    case 'complex'
-    o{end+1} = 'SpecifyConstraintGradient';
-    o{end+1} = true;
-    o{end+1} = 'SpecifyObjectiveGradient';
-    o{end+1} = true;
-    o{end+1} = 'HessianFcn';
-    o{end+1} = @(x,lambda) DTQP_IPFMINCON_hessian(x,lambda,obj,dyn,cin,ceq,H,in,opts);
-    %----------------------------------------------------------------------
-    case 'symbolic'
+    case {'real-forward','real-central','complex','symbolic'}
     o{end+1} = 'SpecifyConstraintGradient';
     o{end+1} = true;
     o{end+1} = 'SpecifyObjectiveGradient';
