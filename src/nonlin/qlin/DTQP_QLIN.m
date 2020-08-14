@@ -64,6 +64,11 @@ Fold = 0;
 F = inf;
 opts.reduction = inf;
 
+% potentially create time-varying parameter matrix
+if isa(param,'cell')
+    param = squeeze(DTQP_tmatrix(param,setup.p,T));
+end
+
 % quasilinearization
 while (tolerance <= abs(F-Fold)) && (iter <= imax)
 
@@ -150,7 +155,7 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
     end
 
     % (potentially) display to  command window
-    if (displevel > 0) % minimal
+    if (displevel > 1) % minimal
         qlinDispFun(iter,F,abs(F-Fold),in)
     end
 
@@ -159,6 +164,10 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
 
     opts.reduction = abs(F-Fold);
 end
+
+% add outputs
+in.output.iterations = iter;
+in.output.funcCount = nan;
 
 % (potentially) plot final iteration
 if (plotflag > 0)

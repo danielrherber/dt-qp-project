@@ -68,7 +68,7 @@ switch casenum
         n.np = 2;
 
         % Lagrange term
-        if ~isfield(opts,'qlin') || ~isfield(opts.method,'olqflag') || opts.method.olqflag
+        if ~isfield(opts.method,'olqflag') || opts.method.olqflag
             L(1).left = 1; L(1).right = 1; L(1).matrix = 1;
             L(2).left = 2; L(2).right = 2; L(2).matrix = eye(2);
             setup.L = L;
@@ -121,9 +121,7 @@ switch casenum
 end
 
 %% solve
-t1 = tic;
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
-toc(t1);
 
 %% output
 [O,sol] = ex_output(T,U,Y,P,F,in,opts);

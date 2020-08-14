@@ -59,8 +59,8 @@ switch flag
     end
 
     % axis
-    xlabel('$t$ (s)','fontsize',fontsize)
-    ylabel('$\xi$','fontsize',fontsize)
+    xlabel('$t$ (time)','fontsize',fontsize)
+    ylabel('$\xi$ (states)','fontsize',fontsize)
 
     % legend
     Lv = {};
@@ -87,8 +87,8 @@ switch flag
     end
 
     % axis
-    xlabel('$t$ (s)','fontsize',fontsize)
-    ylabel('$u$','fontsize',fontsize)
+    xlabel('$t$ (time)','fontsize',fontsize)
+    ylabel('$u$ (controls)','fontsize',fontsize)
 
     % legend
     Lv = {};
@@ -122,7 +122,7 @@ switch flag
 
     % axis
     ylim([1e-17 1e0])
-    xlabel('$t$ (s)')
+    xlabel('$t$ (time)')
     ylabel('$\mathrm{log}_{10}$ error')
     ha = gca;
     ha.YScale = 'log';

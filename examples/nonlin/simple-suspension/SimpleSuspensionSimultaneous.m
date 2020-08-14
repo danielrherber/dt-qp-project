@@ -71,7 +71,7 @@ UB(3).matrix = [inf,inf,p.rmax,inf];
 % guess
 Y0 = [[0,0,0,0];[0,0,0,0]];
 U0 = [[0];[0]];
-P0 = [[LB(2).matrix'];[LB(2).matrix']]/2;
+P0 = [[LB(2).matrix'];[LB(2).matrix']];
 p.guess = [U0,Y0,P0];
 
 % combine structures

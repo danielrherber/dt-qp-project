@@ -202,8 +202,20 @@ end
 % TODO: create initial guess using DTQP_QLIN_guess.m
 if isfield(in.p,'guess')
 
-    % interpolate initial guess
-    X0 = interp1([in.t(1) in.t(end)],in.p.guess,in.t);
+    % NOTE: the fields p.guess and p.Tguess need to be renamed
+
+    % check different guess cases
+    if size(in.p.guess,1) == 2
+
+        % linear interpolation based on guess at end points
+        X0 = interp1([in.t(1) in.t(end)],in.p.guess,in.t);
+
+    else % arbitrary mesh provided
+
+        % spline interpolation based on guess at end points
+        X0 = interp1(in.p.Tguess,in.p.guess,in.t,'spline');
+
+    end
 
     % extract
     X0uy = X0(:,1:(nu+ny));

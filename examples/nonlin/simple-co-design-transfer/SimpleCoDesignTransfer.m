@@ -39,7 +39,12 @@ symb.o.np = 1; % number of parameters
 symb.o.output = 2; % interp1 compatible
 
 % Lagrange term
-L(1).left = 1; L(1).right = 1; L(1).matrix = 1; % u^2
+if ~isfield(opts.method,'olqflag') || opts.method.olqflag
+    L(1).left = 1; L(1).right = 1; L(1).matrix = 1; % u^2
+    setup.L = L;
+else
+    symb.Ob = 'u1^2';
+end
 
 % simple bounds
 UB(1).right = 4; UB(1).matrix = [p.x0;p.v0]; % initial states
@@ -48,7 +53,7 @@ UB(2).right = 5; UB(2).matrix = [0;0]; % final states
 LB(2).right = 5; LB(2).matrix = [0;0];
 
 % combine structures
-setup.L = L; setup.UB = UB; setup.LB = LB; setup.symb = symb;
+setup.UB = UB; setup.LB = LB; setup.symb = symb;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve
@@ -96,7 +101,7 @@ case 2
     opts.method.olqflag = true;
     opts.method.derivativeflag = true;
 case 3
-    opts.general.displevel = 1;
+    opts.general.displevel = 2;
     opts.general.plotflag = 1;
     opts.dt.defects = 'TR';
     opts.dt.quadrature = 'CTR';

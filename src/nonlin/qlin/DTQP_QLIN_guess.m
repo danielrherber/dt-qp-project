@@ -24,8 +24,20 @@ end
 % (potentially) used-defined initial guess
 if isfield(setup,'p') && isfield(setup.p,'guess')
 
-    % interpolate initial guess matrix
-    X0 = interp1([setup.t0 setup.tf],setup.p.guess,T);
+    % NOTE: the fields p.guess and p.Tguess need to be renamed
+
+    % check different guess cases
+    if size(setup.p.guess,1) == 2 % only end points
+
+        % linear interpolation based on guess at end points
+        X0 = interp1([setup.t0 setup.tf],setup.p.guess,T);
+
+    else % arbitrary mesh provided
+
+        % spline interpolation based on guess at end points
+        X0 = interp1(setup.p.Tguess,setup.p.guess,T,'spline');
+
+    end
 
     % extract
     U = X0(:,1:nu);

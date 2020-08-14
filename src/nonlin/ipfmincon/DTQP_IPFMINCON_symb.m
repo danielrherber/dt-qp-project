@@ -128,10 +128,15 @@ if ~strcmpi(opts.method.derivatives,'symbolic')
 
     % vectorized matlab function
     E.f = sym2matrixfun(F,in1,output);
-    
+
     % treat all functions as nonlinear
     E.Ilin = [];
     E.Inon = 1:length(F);
+
+    % (potentially) end the timer
+    if (opts.general.displevel > 0) % minimal
+        opts.timer.sym = opts.timer.sym + toc(opts.timer.t2); % start timer
+    end
 
     return
 end

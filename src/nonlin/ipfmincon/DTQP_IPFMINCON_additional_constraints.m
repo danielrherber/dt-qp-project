@@ -80,6 +80,9 @@ r0 = 0;
 % go through each constraint
 for ix = 1:nz
 
+    % initialize
+    r = r0;
+
     % go through each column entry in the original problem form
     for jx = 1:length(R)
 
