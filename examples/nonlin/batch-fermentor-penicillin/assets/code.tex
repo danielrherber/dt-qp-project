@@ -1,0 +1,33 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{u_1(t),t_f} \quad & -\xi_2(t_f) \xi_4(t_f) \\
+\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}
+h_1\left(\xi_1,\xi_3\right)\xi_1 - u_1\left(\frac{\xi_1}{500 \xi_4} \right) \\
+h_2\left(\xi_3\right) \xi_1 - 0.01\xi_2 - u_1\left(\frac{\xi_2}{500 \xi_4}\right) \\
+-h_1\left(\xi_1,\xi_3\right)\frac{\xi_1}{0.47} - h_2\left(\xi_3\right)\frac{\xi_1}{1.2} - \xi_1\left(\frac{0.029\xi_3}{0.0001+\xi_3}\right) + \frac{u_1}{\xi_4}\left(1 - \frac{\xi_3}{500}\right) \\
+\frac{u_1}{500}
+\end{bmatrix} \\
+& \bm{\xi}(0) = (1.5,0,0,7) \\
+& 0 \leq \xi_1(t) \leq 40 \\
+& 0 \leq \xi_2(t) \leq 50 \\
+& 0 \leq \xi_3(t) \leq 25 \\
+& 0 \leq \xi_4(t) \leq 10 \\
+& 0 \leq u_1(t) \leq 50 \\
+\text{where:} \quad & h_1\left(\xi_1,\xi_3\right) = 0.11\left(\frac{\xi_3}{0.006\xi_1 + \xi_3}\right) \\
+& h_2\left(\xi_3\right) = 0.0055\left(\frac{\xi_3}{0.0001 + \xi_3(1+10\xi_3)}\right)
+\end{align*}
+}}
+\end{document}
+
+% solution

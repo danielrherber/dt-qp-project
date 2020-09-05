@@ -20,6 +20,7 @@ f = @ContainerCrane;
 testcase = "TR";
 % testcase = "PS";
 % testcase = "TR-Suspension";
+% testcase = "QLIN";
 
 % method fragments
 Methods = {'qlin','nonlinearprogram'};
@@ -74,6 +75,22 @@ switch testcase
     % options
     opts.solver.tolerance = 1e-7;
     %----------------------------------------------------------------------
+    case "QLIN"
+    % create nt test array
+    narray = [2000]; % TR
+
+    % method lists
+    MethodArray = Methods([1]);
+    OLQArray = {true};
+    DerivArray = Derivatives([1]);
+    DefectArray = Defects([1]);
+    QuadArray = Quads([1]);
+    MeshArray = Meshes([1]);
+
+    % options
+    opts.solver.tolerance = 1e-12;
+    %----------------------------------------------------------------------
+
 end
 
 % select the methods to test from lists above

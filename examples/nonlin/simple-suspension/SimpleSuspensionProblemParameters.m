@@ -37,5 +37,6 @@ road_t = road_x./p.v;
 PP = spline(road_t,road_z);
 PPd = fnder(PP,1);
 p.z0dot = @(t) ppval(PPd,t);
+p.z0 = @(t) ppval(PP,t);
 
 end

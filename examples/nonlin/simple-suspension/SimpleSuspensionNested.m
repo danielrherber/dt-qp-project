@@ -40,14 +40,14 @@ toc(t1)
 [F,T,U,Y,P,in,opts] = InnerLoop(p,A,Bu,Bz,C1,C2,C3,D1u,D3u);
 
 %% output
-[O,sol] = ex_output(T,U,Y,P,F,in,opts);
-if nargout == 1
-	varargout{1} = O;
-end
+% [O,sol] = ex_output(T,U,Y,P,F,in,opts);
+% if nargout == 1
+% 	varargout{1} = O;
+% end
 
 %% plot
 % disp("paused"); pause % for quasilinearization plots
-ex_plot(T,U,Y,P,F,in,opts,sol)
+ex_plot(T,U,Y,P,F,in,opts,[])
 
 end
 

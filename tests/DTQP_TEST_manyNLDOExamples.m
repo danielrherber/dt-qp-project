@@ -75,6 +75,7 @@ function problem(p,opts)
 
 % run all examples
 AlpRider(p,opts)
+BatchFermentorPenicillin(p,opts)
 Brachistochrone(p,opts)
 BrysonHo59(p,opts)
 BrysonHo63(p,opts)
@@ -86,13 +87,16 @@ HangGlider(p,opts)
 HIVImmunology(p,opts)
 Hypersensitive(p,opts)
 OptimalConsumption(p,opts)
+SecondOrderSingular(p,opts)
 SimpleCoDesignTransfer(p,opts)
-% SimpleSuspensionSimultaneous(p,opts) % time-varying parameter error?
+SimpleSASA(p,opts)
+SimpleSuspensionSimultaneous(p,opts)
 Train(p,opts)
 TransferMaxRadius(p,opts)
 TransferMinFuel(p,opts)
 Tuberculosis(p,opts)
 Tumor(p,opts)
+TwoLinkRobot(p,opts)
 Vanderpol(p,opts)
 
 end

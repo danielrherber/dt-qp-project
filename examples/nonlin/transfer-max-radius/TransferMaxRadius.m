@@ -95,7 +95,7 @@ case 1 % ipfmincon method
     opts.dt.defects = 'TR';
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
-    opts.dt.nt = 200; % number of nodes
+    opts.dt.nt = 40; % number of nodes
     opts.solver.tolerance = 1e-8;
     opts.solver.maxiters = 2000;
     opts.solver.display = 'iter';

@@ -1,0 +1,27 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{u_1(t),p_1} \quad & -\xi_1(t_f) \\
+\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}
+\xi_2 \\
+-\frac{p_1}{J} \xi_1 + \frac{1}{J} u_1
+\end{bmatrix} \\
+& \bm{\xi}(0) = (0,0) \\
+& \xi_2(t_f) = 0 \\
+& 0 \leq p_1 \\
+& -u_{\max} \leq u_1(t) \leq u_{\max}
+\end{align*}
+}}
+\end{document}
+
+% solution

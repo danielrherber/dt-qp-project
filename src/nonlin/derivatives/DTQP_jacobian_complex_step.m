@@ -36,6 +36,9 @@ X0 = repmat(X,[nx 1]);
 % compute forward step matrix
 Xf = X0 + H2*1i;
 
+% replicate time vector
+T = repmat(T,[nx 1]);
+
 % replicate parameter vector if it is time-dependent
 if size(param,1) == nt
     PARAM = repmat(param,[nx 1]);

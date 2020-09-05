@@ -46,6 +46,9 @@ Xf = X0 + H;
 % compute backward step matrix
 Xb = X0 - H;
 
+% replicate time vector
+T = repmat(T,[nx 1]);
+
 % replicate parameter vector if it is time-dependent
 if size(param,1) == nt
     PARAM = repmat(param,[nx 1]);
