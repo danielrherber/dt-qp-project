@@ -1,4 +1,4 @@
-# List of Examples
+# List of Linear-Quadratic Dynamic Optimization (LQDO) Examples
 
 | Name | Link | Reference | Solution Type |
 | ---- | ---- | ---- | ---- |

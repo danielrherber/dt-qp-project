@@ -1,4 +1,4 @@
-# List of Nonlinear Dynamic Optimization Examples
+# List of Nonlinear Dynamic Optimization (NLDO) Examples
 
 | Name | Link | Reference | Solution Type |
 | ---- | ---- | ---- | ---- |
