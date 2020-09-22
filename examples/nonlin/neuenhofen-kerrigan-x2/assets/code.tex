@@ -1,0 +1,22 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{u(t)} \quad & y_2(1) \\
+\text{subject to:} \quad & \dot{\bm{y}}(t) = \begin{bmatrix} \frac{u(t)}{2 y_1(t)} \\ 4 [y_1(t)]^4 + [u(t)]^2 \end{bmatrix} \\
+& \bm{y}(0) = (1,0) \\
+&\sqrt{0.4} \leq  y_1(t) \\
+& -1 \leq u(t)
+\end{align*}
+}}
+\end{document}
+% solution

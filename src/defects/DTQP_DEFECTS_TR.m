@@ -207,10 +207,10 @@ if nd > 0  && dflag
         % check if any entries are nonzero
         if any(dv)
 
-            yi = IDlin(i);
+            % yi = IDlin(i);
 
             % defect constraint (row) locations
-            Is = reshape((yi-1)*(nt-1)+1:yi*(nt-1),[],1);
+            Is = reshape((i-1)*(nt-1)+1:i*(nt-1),[],1);
 
             % nu values
             Vs = Hd.*( dv(Td) + dv(Td+1) ); % nu

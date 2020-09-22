@@ -53,7 +53,7 @@ else
     h = []; Dh = [];
 end
 
-% combine inequality constraints
+% combine equality constraints
 H = [z;h];
 
 % compute additional nonlinear inequality constraints
