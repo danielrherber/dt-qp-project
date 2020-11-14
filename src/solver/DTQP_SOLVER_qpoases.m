@@ -22,10 +22,8 @@ options.maxCpuTime = solver.maxcputime;
 % number of optimization variables
 n = in.nx;
 
-% require f to be the correct size
-if isempty(f)
-    f = zeros(n,1);
-end
+% require f to be full
+f = full(f);
 
 % arbitrary large number
 Nlarge = 1e9;

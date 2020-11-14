@@ -11,7 +11,13 @@ switch flag
     %----------------------------------------------------------------------
     case 'preliminary'
     % requires:
-    close all
+    if exist('closeflag','var')
+        if closeflag
+            close all
+        end
+    else
+        close all
+    end
     fontsize = 16;
     wcolor = [1 1 1]; % white color
     bcolor = [0 0 0]; % black color
@@ -19,11 +25,10 @@ switch flag
     set(0,'DefaultLegendInterpreter','latex'); % change the legend interpreter
     set(0,'DefaultAxesTickLabelInterpreter','latex'); % change the tick interpreter
     %----------------------------------------------------------------------
-    case 'axis'
-    % requires:
+    case 'axis' % requires: bcolor, fontsize
     ha = gca; % get current axis handle
-    ha.XAxis.Color = bcolor; % change the x axis color to black (not a dark grey)
-    ha.YAxis.Color = bcolor; % change the y axis color to black (not a dark grey)
+    ha.XAxis.Color = bcolor; % change the x axis color to black (not a dark gray)
+    ha.YAxis.Color = bcolor; % change the y axis color to black (not a dark gray)
     ha.XAxis.FontSize = fontsize-6; % change x tick font size
     ha.YAxis.FontSize = fontsize-6; % change y tick font size
     ha.XAxis.Label.FontSize = fontsize; % change x label font size
@@ -32,13 +37,11 @@ switch flag
     ha.Layer = 'top'; % place the axes on top of the data
     ha.LineWidth = 1; % increase axis line width
     %----------------------------------------------------------------------
-    case 'legend'
-    % requires:
+    case 'legend' % requires: bcolor, fontsize
     hl.FontSize = fontsize-16; % change legend font size
-    hl.EdgeColor = bcolor; % change the legend border to black (not a dark grey)
+    hl.EdgeColor = bcolor; % change the legend border to black (not a dark gray)
     %----------------------------------------------------------------------
-    case 'save'
-    % requires: pathplots, figname
+    case 'save' % requires: opts, pathplots, figname
     if opts.general.saveflag
         % save a pdf and png version
         filename = fullfile(pathplots,figname);
@@ -74,9 +77,9 @@ switch flag
     set(hL,'interpreter','latex','location','best',...
         'fontsize',fontsize-4)
     %----------------------------------------------------------------------
-    case 'plot-control' % requires:
+    case 'plot-control' % requires: T, U, sol, fontsize, solutionflag
     % line colors
-    cArray = lines(size(Y,2));
+    cArray = lines(size(U,2));
 
     % plot control
     for i = 1:size(U,2)
@@ -102,7 +105,7 @@ switch flag
     set(hL,'interpreter','latex','location','best',...
         'fontsize',fontsize-4)
     %----------------------------------------------------------------------
-    case 'plot-error' % requires:
+    case 'plot-error' % requires: T, Y, U, sol, fontsize, solutionflag
     % initialize
     Hv = []; Lv = {};
 

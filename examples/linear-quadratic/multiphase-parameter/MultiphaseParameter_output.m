@@ -55,9 +55,9 @@ O(2).value = max(errorP);
 O(2).label = 'Umax';
 O(3).value = max(errorF);
 O(3).label = 'F';
-O(4).value = max(in(end).QPcreatetime);
+O(4).value = max(in(1).QPcreatetime);
 O(4).label = 'QPcreatetime';
-O(5).value = max(in(end).QPsolvetime);
+O(5).value = max(in(1).QPsolvetime);
 O(5).label = 'QPsolvetime';
 
 end

@@ -15,6 +15,7 @@ n = in.nx;
 
 % options
 cvx_precision('best');
+cvx_solver_settings('printlevel',-1)
 
 % find simple equality constraints in ub/lb
 ieq = find(lb==ub);
@@ -40,10 +41,10 @@ b = [b;rub;rlb];
 % objective function string
 strObj = '';
 if ~isempty(H)
-    strObj = [strObj,'0.5*quad_form(x,H) '];
+    strObj = [strObj,'0.5*quad_form(x,H)'];
 end
 if ~isempty(f)
-    strObj = [strObj,'f''*x '];
+    strObj = [strObj,'+ f''*x '];
 end
 if ~isempty(strObj)
 	strObj = ['minimize ( ',strObj,')'];

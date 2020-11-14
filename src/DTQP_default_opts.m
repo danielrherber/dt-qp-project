@@ -229,7 +229,7 @@ if ~isfield(opts,'solver')
 end
 
 % solver
-if ~isfield(opts.solver,'solver')
+if ~isfield(opts.solver,'function')
     opts.solver.function = 'quadprog'; % MATLAB quadprog
     % opts.solver.function = 'cvx'; % see DTQP_SOLVER_cvx.m
     % opts.solver.function = 'qpoases'; % see DTQP_SOLVER_qpoases.m

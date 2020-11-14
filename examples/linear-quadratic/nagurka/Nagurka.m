@@ -20,7 +20,7 @@ ex_plot = @Nagurka_plot; % plot function
 [p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
-testnum = 1;
+testnum = 2;
 switch testnum
     case 1
     n = 6;
