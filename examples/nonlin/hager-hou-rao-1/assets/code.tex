@@ -1,0 +1,24 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{u_1(t),u_2(t)} \quad & \int_{0}^{1} \left[ 2 \xi_1^2 \xi_2^2 + \frac{1.25}{\xi_2^2} + \frac{u_2}{\xi_2} + u_1^2 + u_2^2 \right] dt \\
+\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}
+\xi_1 + \frac{u_1}{\xi_2} + \xi_1 \xi_2 u_2 \\
+-\xi_2 [0.5 + \xi_2 u_2]
+\end{bmatrix} \\
+& \bm{\xi}(0) = (1,1)
+\end{align*}
+}}
+\end{document}
+
+% solution

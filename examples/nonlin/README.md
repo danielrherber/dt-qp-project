@@ -11,11 +11,13 @@
 | Chemical Reactor | [chemical-reactor](chemical-reactor/) | Cit69 |  |
 | Container Crane | [container-crane](container-crane/) | Aug01 |  |
 | Free Flying Robot | [free-flying-robot](free-flying-robot/) | Bett10 |  |
+| HagerHouRao1 | [hager-hou-rao-1](hager-hou-rao-1/) | Hag16 | closed-form |
 | Hang Glider | [hang-glider](hang-glider/) | Bul93 |  |
 | HIV Immunology | [hiv-immunology](hiv-immunology/) | Jo02 |  |
 | Hypersensitive | [hypersensitive](hypersensitive/) | Rao00 |  |
 | Neuenhofen Kerrigan X1 | [neuenhofen-kerrigan-x1](neuenhofen-kerrigan-x1/) | Neu20 | partial closed-form |
 | Neuenhofen Kerrigan X2 | [neuenhofen-kerrigan-x2](neuenhofen-kerrigan-x2/) | Neu20 | partial closed-form |
+| Nonlinear 1D | [nonlinear-1d](nonlinear-1d/) | Garg09 | closed-form |
 | Optimal Consumption | [optimal-consumption](optimal-consumption/) | Evans |  |
 | Second Order Singular | [second-order-singular](second-order-singular/) | Aly78 | closed-form |
 | Simple Co-design Transfer | [simple-co-design-transfer](simple-co-design-transfer/) | Her19 |  |
@@ -39,9 +41,11 @@
 - [**Can02**] E. Balsa Canto, J. R. Banga, A. A. Alonso, and V. S. Vassiliadis, "*Restricted second order information for the solution of optimal control problems using control vector parameterization*," Journal of Process Control, vol. 12, no. 2, pp. 243–255, Feb. 2002, doi: 10.1016/s0959-1524(01)00008-7
 - [**Cit69**] S. J. Citron, "*Elements of Optimal Control*.", Holt, Rinehart and Winston, 1969
 - [**Evans**] L. C. Evans, "*An Introduction to Mathematical Optimal Control Theory*." Department of Mathematics, University of California, Berkeley, Version 0.2
+- [**Hag16**] W. W. Hager, H. Hou, and A. V. Rao, "*Convergence Rate for a Gauss Collocation Method Applied to Unconstrained Optimal Control*", J Optim Theory Appl, vol. 169, no. 3, pp. 801–824, Mar. 2016, doi: 10.1007/s10957-016-0929-7
 - [**Her17**] D. R. Herber and J. T. Allison, "*Unified Scaling of Dynamic Optimization Design Formulations*", in Volume 2A: 43rd Design Automation Conference, 2017, doi: 10.1115/detc2017-67676 [Online]. Available: http://dx.doi.org/10.1115/DETC2017-67676
 - [**Her19**] D. R. Herber and J. T. Allison, "*Nested and Simultaneous Solution Strategies for General Combined Plant and Control Design Problems*," Journal of Mechanical Design, vol. 141, no. 1, Oct. 2018, doi: 10.1115/1.4040705
 - [**Her20**] D. R. Herber and A. K. Sundarrajan, "*On the uses of linear-quadratic methods in solving nonlinear dynamic optimization problems with direct transcription*", in ASME International Mechanical Engineering Congress & Exposition, 2020
+- [**Garg09**] D. Garg et al., "*"Direct Trajectory Optimization and Costate Estimation of General Optimal Control Problems Using a Radau Pseudospectral Method*", in AIAA Guidance, Navigation, and Control Conference, 2009, doi: 10.2514/6.2009-5989
 - [**Jo02**] H. R. Joshi, "*Optimal control of an HIV immunology model*," Optimal Control Applications and Methods, vol. 23, no. 4, pp. 199–213, 2002, doi: 10.1002/oca.710
 - [**Led08**] U. Ledzewicz and H. Schättler, "*Analysis of optimal controls for a mathematical model of tumour anti-angiogenesis*,"" Optimal Control Applications and Methods, vol. 29, no. 1, pp. 41–57, Jan. 2008, doi: 10.1002/oca.814
 - [**Lu00**] R. Luus, *Iterative Dynamic Programming*. CRC Press, 2000, isbn: 1584881488

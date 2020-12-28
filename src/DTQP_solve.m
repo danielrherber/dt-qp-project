@@ -24,18 +24,8 @@ if (displevel > 0) % minimal
     opts.timer.t3 = tic; % start timer
 end
 
-% check if there are symbolically defined problem elements
-if isfield(setup,'symb')
-
-    % solve the NLDO problem
-    [T,U,Y,P,F,in,opts] = DTQP_NONLIN(setup,opts);
-
-else
-
-    % solve the LQDO problem
-    [T,U,Y,P,F,in,opts] = DTQP_MESH(setup,opts);
-
-end
+% solve the problem
+[T,U,Y,P,F,in,opts] = DTQP_MESH(setup,opts);
 
 % (potentially) end the timers
 if (displevel > 0) % minimal
@@ -47,11 +37,8 @@ end
 
 % (potentially) display to the command window
 if (displevel > 1) % verbose
-    disp('---------------------------------------------------')
+    disp('----------------------------------------------------------------')
     disp(['total time: ', num2str(opts.timer.total), ' s'])
 end
-
-% disp(opts.timer.total)
-% disp(opts.timer.sym + opts.timer.create + opts.timer.qpsolver)
 
 end

@@ -97,7 +97,7 @@ end
 % User options function for this example
 function opts = HangGlider_opts
 % test number
-num = 1;
+num = 4;
 
 switch num
 case 1
@@ -141,6 +141,20 @@ case 3
     opts.solver.display = 'none';
     opts.method.trustregionflag = false;
     opts.method.improveguess = false;
+case 4
+    opts.general.displevel = 2;
+    opts.general.plotflag = 1;
+    opts.dt.defects = 'TR';
+    opts.dt.quadrature = 'CTR';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 100; % number of nodes
+    opts.solver.display = 'iter'; % iterations
+    opts.solver.function = 'ipfmincon';
+    opts.method.form = 'nonlinearprogram';
+    opts.solver.maxiters = 20000;
+    opts.solver.tolerance = 1e-12;
+    opts.dt.meshr.method = 'RICHARDSON-DOUBLING';
+    opts.dt.meshr.tolerance = 1e-6;
 end
 
 end

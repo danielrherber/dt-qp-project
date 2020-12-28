@@ -13,19 +13,27 @@ function [T,U,Y,P,F,in,opts] = DTQP_MESH(setup,opts)
 switch upper(opts.dt(1).meshr.method)
     %----------------------------------------------------------------------
     case 'NONE' % no mesh refinement
-        [T,U,Y,P,F,in,opts] = DTQP_multiphase(setup,opts);
+    % check if there are symbolically defined problem elements
+    if isfield(setup,'symb')
+        solve_fun = @DTQP_NONLIN; % NLDO problem
+    else
+        solve_fun = @DTQP_multiphase; % LQDO problem
+    end
+
+    % solve the problem
+    [T,U,Y,P,F,in,opts] = solve_fun(setup,opts);
     %----------------------------------------------------------------------
     case 'RICHARDSON-DOUBLING' % doubling the mesh and Richardson extrapolation
-        [T,U,Y,P,F,in,opts] = DTQP_MESH_richardson_doubling(setup,opts);
+    [T,U,Y,P,F,in,opts] = DTQP_MESH_richardson_doubling(setup,opts);
     %----------------------------------------------------------------------
     case 'SS-BETTS' % single-step method mesh refinement from Betts textbook
-        [T,U,Y,P,F,in,opts] = DTQP_MESH_ss_betts(setup,opts);
+    [T,U,Y,P,F,in,opts] = DTQP_MESH_ss_betts(setup,opts);
     %----------------------------------------------------------------------
     case 'TEST' % in development
-        % [T,U,Y,P,F,in,opts] = DTQP_meshr_test(setup,opts);
+    % [T,U,Y,P,F,in,opts] = DTQP_meshr_test(setup,opts);
     %----------------------------------------------------------------------
     otherwise
-        error('mesh refinement method invalid')
+    error('mesh refinement method invalid')
     %----------------------------------------------------------------------
 end
 

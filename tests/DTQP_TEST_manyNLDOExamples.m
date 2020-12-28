@@ -61,6 +61,16 @@ for k = 1:length(tests)
         opts.solver.function = 'ipfmincon';
         opts.method.derivatives = 'complex'; % complex-step finite differencing
         %------------------------------------------------------------------
+        case 5
+        opts.dt.defects = 'TR';
+        opts.dt.quadrature = 'CTR';
+        opts.dt.mesh = 'ED';
+        opts.dt.nt = 20; % number of time points
+        opts.method.form = 'nonlinearprogram';
+        opts.solver.function = 'ipfmincon';
+        opts.dt.meshr.method = 'RICHARDSON-DOUBLING';
+        opts.dt.meshr.tolerance = 1e-4;
+        %------------------------------------------------------------------
     end
 
     % run the test and time
@@ -83,11 +93,13 @@ BrysonHo64(p,opts)
 ChemicalReactor(p,opts)
 ContainerCrane(p,opts)
 FreeFlyingRobot(p,opts)
+% HagerHouRao1(p,opts)  % fails with qlin (divide by 0)
 HangGlider(p,opts)
 HIVImmunology(p,opts)
 Hypersensitive(p,opts)
 NeuenhofenKerriganX1(p,opts)
 NeuenhofenKerriganX2(p,opts)
+Nonlinear1D(p,opts)
 OptimalConsumption(p,opts)
 SecondOrderSingular(p,opts)
 SimpleCoDesignTransfer(p,opts)

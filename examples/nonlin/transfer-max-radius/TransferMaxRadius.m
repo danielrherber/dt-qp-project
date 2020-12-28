@@ -86,7 +86,7 @@ end
 % User options function for this example
 function opts = TransferMaxRadius_opts
 % test number
-num = 1;
+num = 2;
 
 switch num
 case 1 % ipfmincon method
@@ -100,6 +100,19 @@ case 1 % ipfmincon method
     opts.solver.maxiters = 2000;
     opts.solver.display = 'iter';
     opts.method.form = 'nonlinearprogram';
+case 2
+    opts.general.plotflag = 1; % create the plots
+    opts.general.displevel = 2;
+    opts.dt.defects = 'TR';
+    opts.dt.quadrature = 'CTR';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 20; % number of nodes
+    opts.solver.tolerance = 1e-8;
+    opts.solver.maxiters = 2000;
+    opts.solver.display = 'iter';
+    opts.method.form = 'nonlinearprogram';
+    opts.dt.meshr.method = 'RICHARDSON-DOUBLING';
+    opts.dt.meshr.tolerance = 1e-6;
 end
 
 end

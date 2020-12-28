@@ -12,6 +12,14 @@ function [T,U,Y,P,F,in,opts] = DTQP_IPFMINCON(setup,opts)
 % initialize some stuff
 [setup,in] = DTQP_initialize(setup,opts.dt);
 
+% check internal information is already available
+% (likely from previous solve)
+if isfield(setup.p,'internalinfo')
+    in.internalinfo = setup.p.internalinfo; % copy
+else
+    in.internalinfo = []; % empty
+end
+
 % extract
 nu = in.nu; ny = in.ny; np = in.np; nt = in.nt;
 symb = setup.symb;
@@ -44,8 +52,21 @@ if isfield(symb,'Ob')
 
     linflagOb = false; % false only at the moment
 
-    % calculate derivatives
-	[obj,opts] = DTQP_IPFMINCON_symb(symb.Ob,in,linflagOb,false,opts);
+    % check internal information is already available for the objective
+    if isfield(in.internalinfo,'obj')
+
+        % extract
+        obj = in.internalinfo.obj;
+
+    else
+
+        % calculate derivatives
+        [obj,opts] = DTQP_IPFMINCON_symb(symb.Ob,in,linflagOb,false,opts);
+
+        % store to internal information structure
+        in.internalinfo.obj = obj;
+
+    end
 
     % initialize empty QP objective terms
     H = sparse([],[],[],in.nx,in.nx); f = sparse([],[],[],in.nx,1); c = 0;
@@ -124,7 +145,7 @@ end
 if isfield(symb,'ceq')
 
     % determine nonlinear/linear equality constraints
-    [Y,ceq,Iceq,opts] = DTQP_IPFMINCON_c(symb.ceq,in,linflag,opts,nI,nt);
+    [Y,ceq,Iceq,in,opts] = DTQP_IPFMINCON_c(symb.ceq,in,linflag,opts,nI,nt,false);
 
     % combine
     setup.Y = [setup.Y;Y];
@@ -161,7 +182,7 @@ beq = [beq1;beq2]; % Aeq*X = beq
 if isfield(symb,'cin')
 
     % determine nonlinear/linear equality constraints
-    [Z,cin,Icin,opts] = DTQP_IPFMINCON_c(symb.cin,in,linflag,opts,0,nt);
+    [Z,cin,Icin,in,opts] = DTQP_IPFMINCON_c(symb.cin,in,linflag,opts,0,nt,true);
 
     % combine
     setup.Z = [setup.Z;Z];
@@ -208,7 +229,7 @@ if isfield(in.p,'guess')
     if size(in.p.guess,1) == 2
 
         % linear interpolation based on guess at end points
-        X0 = interp1([in.t(1) in.t(end)],in.p.guess,in.t);
+        X0 = interp1([in.t(1) in.t(end)],in.p.guess,in.t,'linear');
 
     else % arbitrary mesh provided
 
@@ -264,8 +285,21 @@ end
 % dynamics
 function [Aeq1,beq1,dyn,Idyn,in,opts] = DTQP_IPFMINCON_dyn(D,in,linflag,opts,nI,nt)
 
-% calculate derivatives
-[dyn,opts] = DTQP_IPFMINCON_symb(D,in,linflag,false,opts);
+% check internal information is already available for the dynamics
+if isfield(in.internalinfo,'dyn')
+
+    % extract
+    dyn = in.internalinfo.dyn;
+
+else
+
+    % calculate derivatives
+    [dyn,opts] = DTQP_IPFMINCON_symb(D,in,linflag,false,opts);
+
+    % store to internal information structure
+    in.internalinfo.dyn = dyn;
+
+end
 
 % number of constraints
 nz = length(dyn.f);
@@ -336,15 +370,43 @@ end
 end
 
 % additional constraints
-function [YZ,c,Ic,opts] = DTQP_IPFMINCON_c(c,in,linflag,opts,nI,nt)
+function [YZ,c,Ic,in,opts] = DTQP_IPFMINCON_c(c,in,linflag,opts,nI,nt,cflag)
 
 % check if pathboundary was provided
 if isfield(c,'pathboundary')
     pathboundary = c.pathboundary;
 end
 
-% calculate derivatives
-[c,opts] = DTQP_IPFMINCON_symb(c.func,in,linflag,true,opts);
+% determine which type of constraint
+if cflag
+    cstr = 'cin';
+else
+    cstr = 'ceq';
+end
+
+% check internal information is already available for the additional constraints
+if isfield(in.internalinfo,cstr)
+
+    % extract
+    if cflag
+        c = in.internalinfo.cin;
+    else
+        c = in.internalinfo.ceq;
+    end
+
+else
+
+    % calculate derivatives
+    [c,opts] = DTQP_IPFMINCON_symb(c.func,in,linflag,true,opts);
+
+    % store to internal information structure
+    if cflag
+        in.internalinfo.cin = c;
+    else
+        in.internalinfo.ceq = c;
+    end
+
+end
 
 % number of constraints
 nz = length(c.f);

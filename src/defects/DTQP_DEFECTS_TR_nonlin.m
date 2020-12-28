@@ -21,7 +21,7 @@ else
     IDnon = 1:ny;
 end
 
-% nubmer of defect constraints
+% number of defect constraints
 nz2 = length(IDnon);
 
 % number of defect constraints per state
@@ -84,12 +84,12 @@ for ix = 1:nz2
 
         % extract
         V = Dft(:,ix,jx);
-        
+
         % break if all entries are zero
         if ~any(V)
-           continue 
+           continue
         end
-        
+
         % rows in DZ (defect constraints)
         I = ( (ix-1)*(nt-1) + 1:(ix*(nt-1)) )';
 
