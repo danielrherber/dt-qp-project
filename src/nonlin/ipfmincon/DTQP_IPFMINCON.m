@@ -14,8 +14,8 @@ function [T,U,Y,P,F,in,opts] = DTQP_IPFMINCON(setup,opts)
 
 % check internal information is already available
 % (likely from previous solve)
-if isfield(setup.p,'internalinfo')
-    in.internalinfo = setup.p.internalinfo; % copy
+if isfield(setup,'internalinfo')
+    in.internalinfo = setup.internalinfo; % copy
 else
     in.internalinfo = []; % empty
 end
@@ -220,34 +220,7 @@ end
 %--------------------------------------------------------------------------
 % initial guess
 %--------------------------------------------------------------------------
-% TODO: create initial guess using DTQP_QLIN_guess.m
-if isfield(in.p,'guess')
-
-    % NOTE: the fields p.guess and p.Tguess need to be renamed
-
-    % check different guess cases
-    if size(in.p.guess,1) == 2
-
-        % linear interpolation based on guess at end points
-        X0 = interp1([in.t(1) in.t(end)],in.p.guess,in.t,'linear');
-
-    else % arbitrary mesh provided
-
-        % spline interpolation based on guess at end points
-        X0 = interp1(in.p.Tguess,in.p.guess,in.t,'spline');
-
-    end
-
-    % extract
-    X0uy = X0(:,1:(nu+ny));
-    X0p = X0(1,end-np+1:end);
-
-    % assign
-    in.X0 = [X0uy(:);X0p(:)];
-
-else % default guess
-    in.X0 = ones(size(lb));
-end
+in = DTQP_guess(setup,in);
 
 %--------------------------------------------------------------------------
 % solve the optimization problem

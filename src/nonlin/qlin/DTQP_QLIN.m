@@ -127,7 +127,7 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
     end
 
     % solve the LQDO problem using DT and (potentially) mesh refinement
-    [T,U,Y,P,F,in,opts] = DTQP_MESH(setupi,opts);
+    [T,U,Y,P,F,in,opts] = DTQP_multiphase(setupi,opts);
 
     % check if the previous problem failed
     if isnan(F)
@@ -142,7 +142,7 @@ while (tolerance <= abs(F-Fold)) && (iter <= imax)
         opts.solver.tolerance = 1e-4;
 
         % solve the LQDO problem using DT and (potentially) mesh refinement
-        [T,U,Y,P,F,in,opts] = DTQP_MESH(setupi,opts);
+        [T,U,Y,P,F,in,opts] = DTQP_multiphase(setupi,opts);
 
         % reassign
         opts.solver.tolerance = qptolerance;

@@ -96,7 +96,7 @@ Y(1).b = Npop;
 % guess
 Y0 = [[S0,L10,I10,L20,I20,T0];[S0,L10,I10,L20,I20,T0]];
 U0 = [[0.95,0.95];[0.95,0.95]];
-p.guess = [U0,Y0];
+setup.guess.X = [U0,Y0];
 
 % combine structures
 setup.symb = symb; setup.L = L; setup.UB = UB; setup.LB = LB; setup.Y = Y;

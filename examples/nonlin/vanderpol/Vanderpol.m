@@ -51,7 +51,7 @@ switch casenum
         % guess
         Y0 = [[1,0];[1,0]];
         U0 = [[0];[0]];
-        p.guess = [U0,Y0];
+        setup.guess.X = [U0,Y0];
 
         % combine structures
         setup.symb = symb; setup.UB = UB; setup.LB = LB; % setup.L = L;
@@ -89,7 +89,7 @@ switch casenum
         Y0 = [[1,0];[0,0]];
         U0 = [[0];[0]];
         P0 = [[1,1];[1,1]];
-        p.guess = [U0,Y0,P0];
+        setup.guess.X = [U0,Y0,P0];
 
         % combine structures
         setup.symb = symb; setup.UB = UB; setup.LB = LB;
@@ -113,7 +113,7 @@ switch casenum
         % guess
         Y0 = [[1,0];[1,0]];
         U0 = [[0];[0]];
-        p.guess = [U0,Y0];
+        setup.guess.X = [U0,Y0];
 
         % combine structures
         setup.symb = symb; % setup.UB = UB; setup.LB = LB; % setup.L = L;

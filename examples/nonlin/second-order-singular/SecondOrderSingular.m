@@ -50,7 +50,7 @@ LB(2).right = 1; LB(2).matrix = -1;
 % guess
 Y0 = [[0,1,0];[0,1,1]];
 U0 = [[-1];[-1]];
-p.guess = [U0,Y0];
+setup.guess.X = [U0,Y0];
 
 % combine structures
 setup.symb = symb; setup.M = M; setup.UB = UB; setup.LB = LB;

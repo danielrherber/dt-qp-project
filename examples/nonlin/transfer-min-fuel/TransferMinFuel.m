@@ -82,7 +82,7 @@ switch testnum
         % guess
         Y0 = [[r0,0,0,1];[rf,0,0,0.5]]./Ys;
         U0 = [[0.01,0.01];[0.01,0.01]]/Us;
-        p.guess = [U0,Y0];
+        setup.guess.X = [U0,Y0];
 
     elseif testnum == 11 % transformed problem
         % two additional controls
@@ -111,7 +111,7 @@ switch testnum
         % guess
         Y0 = [[r0,0,0,1];[rf,0,0,0.5]]./Ys;
         U0 = [[0,umax,0,umax];[0,umax,0,umax]]/Us;
-        p.guess = [U0,Y0];
+        setup.guess.X = [U0,Y0];
 
     end
 
@@ -134,7 +134,7 @@ switch testnum
         % guess
         Y0 = [[r0,0,0,1];[rf,0,0,0.5]]./Ys;
         U0 = [[0,umax];[0,umax]]/Us;
-        p.guess = [U0,Y0];
+        setup.guess.X = [U0,Y0];
 
     elseif testnum == 22 % transformed problem
         % one additional control
@@ -156,7 +156,7 @@ switch testnum
         % guess
         Y0 = [[r0,0,0,1];[rf,20,0,0.5]]./Ys;
         U0 = [[0,umax,umax];[0,umax,umax]]/Us;
-        p.guess = [U0,Y0];
+        setup.guess.X = [U0,Y0];
 
     end
 end

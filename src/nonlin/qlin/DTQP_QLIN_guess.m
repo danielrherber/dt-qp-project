@@ -22,20 +22,21 @@ if isfield(opts.method,'sqpflag') && opts.method.sqpflag
 end
 
 % (potentially) used-defined initial guess
-if isfield(setup,'p') && isfield(setup.p,'guess')
+if isfield(setup,'guess')
 
-    % NOTE: the fields p.guess and p.Tguess need to be renamed
+    % extract
+    guess = setup.guess;
 
     % check different guess cases
-    if size(setup.p.guess,1) == 2 % only end points
+    if size(guess.X,1) == 2 % only end points
 
         % linear interpolation based on guess at end points
-        X0 = interp1([setup.t0 setup.tf],setup.p.guess,T);
+        X0 = interp1([setup.t0 setup.tf],guess.X,T);
 
     else % arbitrary mesh provided
 
         % spline interpolation based on guess at end points
-        X0 = interp1(setup.p.Tguess,setup.p.guess,T,'spline');
+        X0 = interp1(guess.T,guess.X,T,'spline');
 
     end
 

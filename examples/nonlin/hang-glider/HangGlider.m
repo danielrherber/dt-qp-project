@@ -74,7 +74,7 @@ LB(5).right = 3; LB(5).matrix = 0;
 Y0 = [[y0];[1250,yf(2:4)]];
 U0 = [[1];[1]];
 P0 = [[100];[100]];
-p.guess = [U0,Y0,P0];
+setup.guess.X = [U0,Y0,P0];
 
 % combine structures
 setup.symb = symb; setup.M = M; setup.UB = UB; setup.LB = LB;

@@ -64,7 +64,7 @@ LB(4).right = 1; LB(4).matrix = [-2.8337,-0.80865];
 % guess
 Y0 = [[0,22,0,0,-1,0];[10,14,0,2.5,0,0]];
 U0 = [[2.8337,0.71265];[-2.8337,-0.80865]];
-p.guess = [U0,Y0];
+setup.guess.X = [U0,Y0];
 
 % combine structures
 setup.symb = symb; setup.UB = UB; setup.LB = LB;

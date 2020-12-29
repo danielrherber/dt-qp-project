@@ -47,7 +47,7 @@ LB(3).right = 2; LB(3).matrix = [0]; % optional constraint for sqrt(y1)
 % guess
 Y0 = [[2];[1]];
 U0 = [[0];[0]];
-p.guess = [U0,Y0];
+setup.guess.X = [U0,Y0];
 
 % combine structures
 setup.symb = symb; setup.UB = UB; setup.LB = LB; setup.L = L;

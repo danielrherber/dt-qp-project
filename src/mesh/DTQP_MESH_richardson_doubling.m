@@ -26,7 +26,7 @@ eRel = Inf; % initial error
 nt = 0; % initial number of time points
 iter = 0; % iteration counter
 k0 = nan; % convergence rate
-fminbndopts = optimset('Display','none','TolX',1e-10); % fminbnd options
+fminbndopts = optimset('Display','none','TolX',1e-5); % fminbnd options
 
 % storage elements
 ms = []; % scale factors
@@ -48,7 +48,7 @@ while (eRel > etol) && (nt < ntmax)
     m = t^iter; ms(end+1) = m; % store
 
     % calculate the new number of time points
-    nt = round(m*ntinit);
+    nt = round(m*(ntinit-1))+1;
 
     % update number of time points
     opts.dt.nt = nt;
@@ -63,11 +63,11 @@ while (eRel > etol) && (nt < ntmax)
             [T,U,Y,P,F,in,opts] = DTQP_NONLIN(setup,opts);
 
             % store current solution as initial guess for next iteration
-            setup.p.Tguess = T;
-            setup.p.guess = [U,Y,repelem(P',nt,1)];
+            setup.guess.T = T;
+            setup.guess.X = [U,Y,repelem(P',nt,1)];
 
             % store internal information
-            setup.p.internalinfo = in.internalinfo;
+            setup.internalinfo = in.internalinfo;
 
         else
 
@@ -142,7 +142,6 @@ while (eRel > etol) && (nt < ntmax)
 
         % initial headers
         if iter == 0
-            disp('----------------------------------------------------------------')
             disp('| iter |    nt |          F | est_error |    est_k0 |     T_qp |')
         end
 

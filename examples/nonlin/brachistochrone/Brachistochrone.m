@@ -75,7 +75,7 @@ switch p.casenum
     Y0 = [[0,0,0];[p.xf,p.yf,0]];
     U0 = [[0];[0]];
     P0 = [[1];[1]];
-    p.guess = [U0,Y0,P0];
+    setup.guess.X = [U0,Y0,P0];
 
     case {3,4}
     % system dynamics
@@ -91,7 +91,7 @@ switch p.casenum
     Y0 = [[0,0,0];[p.xf,0,0]];
     U0 = [[0];[0]];
     P0 = [[1];[1]];
-    p.guess = [U0,Y0,P0];
+    setup.guess.X = [U0,Y0,P0];
 
 end
 
