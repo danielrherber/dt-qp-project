@@ -15,6 +15,7 @@
 | Hang Glider | [hang-glider](hang-glider/) | Bul93 |  |
 | HIV Immunology | [hiv-immunology](hiv-immunology/) | Jo02 |  |
 | Hypersensitive | [hypersensitive](hypersensitive/) | Rao00 |  |
+| Multiextremal | [multiextremal](multiextremal/) | Yu12 |  |
 | Neuenhofen Kerrigan X1 | [neuenhofen-kerrigan-x1](neuenhofen-kerrigan-x1/) | Neu20 | partial closed-form |
 | Neuenhofen Kerrigan X2 | [neuenhofen-kerrigan-x2](neuenhofen-kerrigan-x2/) | Neu20 | partial closed-form |
 | Nonlinear 1D | [nonlinear-1d](nonlinear-1d/) | Garg09 | closed-form |
@@ -23,6 +24,7 @@
 | Simple Co-design Transfer | [simple-co-design-transfer](simple-co-design-transfer/) | Her19 |  |
 | Simple SASA | [simple-sasa](simple-sasa/) | Her17 | closed-form |
 | Simple Suspension | [simple-suspension](simple-suspension/) | Her20 |  |
+| Space Shuttle Reentry | [space-shuttle-reentry](space-shuttle-reentry/) | Bett10 |  |
 | Train | [train](train/) | Van01 |  |
 | Transfer - Maximum Radius | [transfer-max-radius](transfer-max-radius/) | Bry75 |  |
 | Transfer - Minimum Fuel | [transfer-min-fuel](transfer-min-fuel/) | Ross07 |  |
@@ -53,3 +55,4 @@
 - [**Rao00**] A. V. Rao and K. D. Mease, "*Eigenvector approximate dichotomic basis method for solving hyper-sensitive optimal control problems*, Optimal Control Applications and Methods, vol. 21, no. 1, pp. 1–19, Jan. 2000, doi: 10.1002/(SICI)1099-1514(200001/02)21:1<1::AID-OCA646>3.0.CO;2-V
 - [**Ross07**] I. M. Ross, Q. Gong, and P. Sekhavat, "*Low-Thrust, High-Accuracy Trajectory Optimization*," Journal of Guidance, Control, and Dynamics, vol. 30, no. 4, pp. 921–933, Jul. 2007, doi: 10.2514/1.23181
 - [**Van01**] R. J. Vanderbei, "*Case Studies in Trajectory Optimization: Trains, Planes, and Other Pastimes*," Optimization and Engineering, vol. 2, no. 2, pp. 215-243, 2001, doi: 10.1023/a:1013145328012
+- [**Yu12**] A. Yu. Gornov, T. S. Zarodnyuk, T. I. Madzhara, A. V. Daneeva, and I. A. Veyalko, "*A Collection of Test Multiextremal Optimal Control Problems*", in Optimization, Simulation, and Control, Springer New York, 2012, pp. 257–274 [Online]. Available: http://dx.doi.org/10.1007/978-1-4614-5131-0_16
