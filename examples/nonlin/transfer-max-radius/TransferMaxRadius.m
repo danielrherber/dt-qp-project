@@ -63,6 +63,12 @@ Y0 = [[1,0,0,1];[1.5,pi,0,0.5]];
 U0 = [[0,1];[-1,0]];
 setup.guess.X = [U0,Y0];
 
+% scaling
+setup.scaling(1).right = 1; % controls
+setup.scaling(1).matrix = [1,1];
+setup.scaling(2).right = 2; % states
+setup.scaling(2).matrix = [1.5,2.5,0.3,1];
+
 % combine structures
 setup.symb = symb; setup.UB = UB; setup.LB = LB; setup.M = M;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;

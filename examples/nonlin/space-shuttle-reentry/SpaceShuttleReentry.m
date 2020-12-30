@@ -55,21 +55,21 @@ end
 
 % parameters
 Re = 6371203.92;
-cd0 = 0.0785;
-cd1 = -0.3529;
-cd2 = 2.0400;
+cd0 = 0.07854;
+cd1 = -0.35289616517697663074;
+cd2 = 2.039962128348097688027;
 rho0 = 1.225570827014494;
 H = 7254.24;
-cl0 = -0.2070;
-cl1 = 1.6756;
+cl0 = -0.20704;
+cl1 = 1.6755577760805793917210;
 S = 249.9091776;
 mass = 92079.2525560557;
-xmu = 3.986031954093051e14;
+xmu = 3.9860319540930508801e14;
 qu = 70;
 
 % scaling
-rads = Re + 79248;
-vs = 7802.88;
+% rads = Re + 79248; vs = 7802.88;
+rads = 1; vs = 1;
 p.rads = rads; p.vs = vs; p.Re = Re; % store for later
 
 % initial conditions
@@ -137,6 +137,14 @@ U0 = [[deg2rad(0),deg2rad(0)];[deg2rad(0),deg2rad(0)]];
 P0 = [1000;1000];
 setup.guess.X = [U0,Y0,P0];
 
+% scaling
+setup.scaling(1).right = 1; % controls
+setup.scaling(1).matrix = [aoamax abs(bankmin)];
+setup.scaling(2).right = 2; % states
+setup.scaling(2).matrix = [(Re + 79248) abs(lonmin) latmax (7802.88) fpamax azimax];
+setup.scaling(3).right = 3; % parameters
+setup.scaling(3).matrix = [4000];
+
 % combine structures
 setup.symb = symb; setup.M = M; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
@@ -174,7 +182,6 @@ case 1
     opts.method.form = 'nonlinearprogram';
     opts.dt.meshr.method = 'RICHARDSON-DOUBLING';
     opts.dt.meshr.tolerance = 1e-5;
-
 case 2
     opts.general.displevel = 2;
     opts.general.plotflag = 1;

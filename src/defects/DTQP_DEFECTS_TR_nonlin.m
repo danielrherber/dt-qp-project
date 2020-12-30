@@ -12,7 +12,30 @@ function [Z,DZ] = DTQP_DEFECTS_TR_nonlin(X,dyn,in,opts,Dflag)
 % extract
 nu = in.nu; ny = in.ny; np = in.np; nt = in.nt; nX = in.nx;
 p = in.p; t = in.t; h = in.h; ini = in.i; param = in.param;
-f = dyn.f;
+f = dyn.f; scaleflag = in.scaleflag;
+
+% (potentially) apply linear scaling
+if scaleflag
+
+    % extract
+    Xs = in.Xs; sm = in.sm; sc = in.sc;
+
+    % unscale optimization variables
+    Xunscaled = X.*sm + sc;
+
+    % reshape optimization variables
+    X = DTQP_reshape_X(X,np,nt,ini);
+    Xunscaled = DTQP_reshape_X(Xunscaled,np,nt,ini);
+
+else
+
+    % reshape optimization variables
+    X = DTQP_reshape_X(X,np,nt,ini);
+
+    % reshape optimization variables
+    Xunscaled = X;
+
+end
 
 % states with nonlinear dynamics
 if isfield(in,'IDnon')
@@ -30,12 +53,6 @@ nz = nt - 1;
 % initialize storage arrays
 Isav = {}; Jsav = {}; Vsav = {};
 
-% reshape optimization variables
-P = X(end-np+1:end);
-X = reshape(X(1:end-np),nt,[]);
-P = repelem(P',nt,1);
-X = [X,P,repmat(X(1,ini{2}),nt,1),repmat(X(end,ini{2}),nt,1)];
-
 % extract states for current optimization variables
 Y = X(:,in.i{2});
 
@@ -49,8 +66,13 @@ R = horzcat(ini{1:3});
 % compute defect constraints
 %--------------------------------------------------------------------------
 % calculate state derivative function values
-fi = DTQP_QLIN_update_tmatrix(f,[],X,param);
+fi = DTQP_QLIN_update_tmatrix(f,[],Xunscaled,param);
 ft = DTQP_tmultiprod(fi,p,t);
+
+% scale
+if scaleflag
+    ft = ft./Xs;
+end
 
 % sum neighboring values
 F = (ft + circshift(ft,[1 0]));
@@ -74,7 +96,12 @@ if ~Dflag
 end
 
 % calculate Jacobian of state derivative function values
-Dft = DTQP_jacobian(dyn,p,t,X,param,opts.method.derivatives);
+Dft = DTQP_jacobian(dyn,p,t,Xunscaled,param,opts.method.derivatives);
+
+% scale
+if scaleflag
+    Dft = Dft./Xs;
+end
 
 % go through each defect constraint
 for ix = 1:nz2
@@ -116,6 +143,11 @@ Vf = vertcat(Vsav{:});
 
 % create sparse matrix
 FH = sparse(If,Jf,Vf,nz2*nz,nX);
+
+% scale
+if scaleflag
+    FH = sm'.*FH;
+end
 
 % create initial matrix for state linear differences
 ld = spdiags(repmat([1 -1],nz,1),[0 1],nz,nt);

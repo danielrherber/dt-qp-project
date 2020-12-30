@@ -76,6 +76,14 @@ U0 = [[1];[1]];
 P0 = [[100];[100]];
 setup.guess.X = [U0,Y0,P0];
 
+% scaling
+setup.scaling(1).right = 1; % controls
+setup.scaling(1).matrix = umax;
+setup.scaling(2).right = 2; % states
+setup.scaling(2).matrix = [3000 3000 15 15];
+setup.scaling(3).right = 3; % parameters
+setup.scaling(3).matrix = 200;
+
 % combine structures
 setup.symb = symb; setup.M = M; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
@@ -107,10 +115,6 @@ case 1
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 500; % number of nodes
-    opts.method.sqpflag = false;
-    opts.method.trustregionflag = true;
-    opts.method.improveguess = false;
-    opts.method.delta = 3000;
     opts.solver.display = 'iter'; % iterations
     opts.solver.function = 'ipfmincon';
     opts.method.form = 'nonlinearprogram';

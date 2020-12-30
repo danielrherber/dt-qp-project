@@ -35,7 +35,7 @@ n.nu = 2; n.ny = 4;
 str{1} = '[';
 str{end+1} = '-10*y1 + u1 + u2; ';
 str{end+1} = '-2*y2 + u1 + 2*u2; ';
-str{end+1} = '-3*y3 + 5*y4 + u1 - u2,; ';
+str{end+1} = '-3*y3 + 5*y4 + u1 - u2; ';
 str{end+1} = '5*y3 - 3*y4 + u1 + 3*u2';
 str{end+1} = ']';
 symb.D = horzcat(str{:});
@@ -89,12 +89,14 @@ case 1
     opts.dt.defects = 'TR';
     opts.dt.quadrature = 'CTR';
     opts.dt.mesh = 'ED';
-    opts.dt.nt = 500; % number of nodes
+    opts.dt.nt = 100; % number of nodes
     opts.solver.maxiters = 300;
     opts.solver.display = 'iter';
     opts.solver.function = 'ipfmincon';
     opts.method.form = 'nonlinearprogram';
     opts.method.olqflag = false;
+    opts.dt.meshr.method = 'RICHARDSON-DOUBLING';
+    opts.dt.meshr.tolerance = 1e-3;
 case 2
     opts.general.displevel = 2;
     opts.general.plotflag = 1;

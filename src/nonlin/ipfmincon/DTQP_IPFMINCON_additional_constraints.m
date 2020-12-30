@@ -4,8 +4,6 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-%
-%--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
@@ -14,13 +12,26 @@ function [G,DG] = DTQP_IPFMINCON_additional_constraints(X,con,in,opts,Dflag)
 % extract
 nu = in.nu; ny = in.ny; np = in.np; nt = in.nt; nX = in.nx;
 p = in.p; t = in.t; ini = in.i; param = in.param;
-f = con.f; pathboundary = con.pathboundary;
+f = con.f; pathboundary = con.pathboundary; scaleflag = in.scaleflag;
 
-% reshape optimization variables
-P = X(end-np+1:end);
-X = reshape(X(1:end-np),nt,[]);
-P = repelem(P',nt,1);
-X = [X,P,repmat(X(1,ini{2}),nt,1),repmat(X(end,ini{2}),nt,1)];
+% (potentially) apply linear scaling
+if scaleflag
+
+    % extract
+    sm = in.sm; sc = in.sc;
+
+    % unscale optimization variables
+    Xunscaled = X.*sm + sc;
+
+    % reshape optimization variables
+    Xunscaled = DTQP_reshape_X(Xunscaled,np,nt,ini);
+
+else
+
+    % reshape optimization variables
+    Xunscaled = DTQP_reshape_X(X,np,nt,ini);
+
+end
 
 % number of constraints
 nz = length(f);
@@ -29,7 +40,7 @@ nz = length(f);
 % compute constraint value
 %--------------------------------------------------------------------------
 % calculate constraint function values
-fi = DTQP_QLIN_update_tmatrix(f,[],X,param);
+fi = DTQP_QLIN_update_tmatrix(f,[],Xunscaled,param);
 ft = DTQP_tmultiprod(fi,p,t);
 
 % initialize
@@ -69,7 +80,7 @@ LR = repelem([1 2 3 4 5],[nu ny np ny ny]);
 R = horzcat(ini{1:5});
 
 % calculate Jacobian of the constraints
-Dft = DTQP_jacobian(con,p,t,X,param,opts.method.derivatives);
+Dft = DTQP_jacobian(con,p,t,Xunscaled,param,opts.method.derivatives);
 
 % initialize storage arrays
 Isav = {}; Jsav = {}; Vsav = {};
@@ -134,5 +145,10 @@ V = vertcat(Vsav{:});
 
 % create sparse matrix
 DG = sparse(I,J,V,sum((pathboundary*nt)+(~pathboundary)),nX);
+
+% scale
+if scaleflag
+    DG = sm'.*DG;
+end
 
 end

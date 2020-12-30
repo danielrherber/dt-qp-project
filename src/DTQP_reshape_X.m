@@ -1,25 +1,21 @@
 %--------------------------------------------------------------------------
-% SpaceShuttleReentry_output.m
-% Output function for Space Shuttle Reentry example
+% DTQP_reshape_X.m
+% Reshape X into matrix form
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [O,sol] = SpaceShuttleReentry_output(T,U,Y,P,F,in,opts)
+function X = DTQP_reshape_X(X,np,nt,ini)
 
-% solution
-sol = []; % no exact solution
+% parameters
+P = X(end-np+1:end);
 
-% outputs
-O(1).value = max(in.QPcreatetime);
-O(1).label = 'QPcreatetime';
-O(2).value = max(in.QPsolvetime);
-O(2).label = 'QPsolvetime';
+% continuous variables into matrix form
+X = reshape(X(1:end-np),nt,[]);
 
-% display to the command window
-disp(vpa(rad2deg(F)))
-disp(vpa(P))
+% combine with parameters, initial states, and final states in matrix form
+X = [X,repelem(P',nt,1),repmat(X(1,ini{2}),nt,1),repmat(X(end,ini{2}),nt,1)];
 
 end

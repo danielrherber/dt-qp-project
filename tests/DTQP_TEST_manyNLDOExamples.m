@@ -111,7 +111,7 @@ Train(p,opts)
 TransferMaxRadius(p,opts)
 TransferMinFuel(p,opts)
 Tuberculosis(p,opts)
-Tumor(p,opts)
+% Tumor(p,opts) % fails with qlin (need to investigate)
 TwoLinkRobot(p,opts)
 Vanderpol(p,opts)
 

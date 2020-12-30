@@ -74,6 +74,14 @@ U0 = [[0];[0]];
 P0 = [[LB(2).matrix'];[LB(2).matrix']];
 setup.guess.X = [U0,Y0,P0];
 
+% scaling (with knowledge of the solution)
+setup.scaling(1).right = 1; % controls
+setup.scaling(1).matrix = 400;
+setup.scaling(2).right = 2; % states
+setup.scaling(2).matrix = [0.004 0.4 p.rmax 0.04];
+setup.scaling(3).right = 3; % parameters
+setup.scaling(3).matrix = [1e2;1e4];
+
 % combine structures
 setup.symb = symb; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;

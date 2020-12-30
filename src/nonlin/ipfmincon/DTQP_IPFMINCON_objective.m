@@ -11,16 +11,26 @@ function [fo,go] = DTQP_IPFMINCON_objective(X,obj,in,opts,Hin,fin)
 
 % extract
 p = in.p; t = in.t; np = in.np; nt = in.nt; ini = in.i; param = in.param;
-quadrature = opts.dt.quadrature;
+quadrature = opts.dt.quadrature; scaleflag = in.scaleflag;
 
-% store initial optimization variable vector
-Xo = X;
+% (potentially) apply linear scaling
+if scaleflag
 
-% reshape optimization variables
-P = X(end-np+1:end);
-X = reshape(X(1:end-np),nt,[]);
-P = repelem(P',nt,1);
-X = [X,P,repmat(X(1,ini{2}),nt,1),repmat(X(end,ini{2}),nt,1)];
+    % extract
+    sm = in.sm; sc = in.sc;
+
+    % unscale optimization variables
+    Xunscaled = X.*sm + sc;
+
+    % reshape optimization variables
+    Xunscaled = DTQP_reshape_X(Xunscaled,np,nt,ini);
+
+else
+
+    % reshape optimization variables
+    Xunscaled = DTQP_reshape_X(X,np,nt,ini);
+
+end
 
 %--------------------------------------------------------------------------
 % compute objective
@@ -35,7 +45,7 @@ if ~isempty(obj)
     f = obj.f;
 
     % calculate objective function values
-    fi = DTQP_QLIN_update_tmatrix(f,[],X,param);
+    fi = DTQP_QLIN_update_tmatrix(f,[],Xunscaled,param);
     ft = DTQP_tmultiprod(fi,p,t);
 
     % integrate nonlinear term
@@ -59,10 +69,10 @@ end
 if ~isempty(find(Hin,1))
 
     % compute intermediate value for the gradient
-    XH = Xo'*Hin;
+    XH = X'*Hin;
 
     % add to objective
-    fo = fo + XH*Xo;
+    fo = fo + XH*X;
 
 end
 
@@ -70,7 +80,7 @@ end
 if ~isempty(find(fin,1))
 
     % add to objective
-	fo = fo + fin'*Xo;
+	fo = fo + fin'*X;
 
 end
 
@@ -89,7 +99,7 @@ if nargout > 1
         h = in.h; w = in.w;
 
         % calculate gradient of objective function values
-        Dft = DTQP_jacobian(obj,p,t,X,param,opts.method.derivatives);
+        Dft = DTQP_jacobian(obj,p,t,Xunscaled,param,opts.method.derivatives);
 
         % integrate nonlinear term
         % TODO: add more methods
@@ -126,8 +136,12 @@ if nargout > 1
         % combine
         Dft = [Dft_UY(:);Dft_P(:)]';
 
-        % add to gradient
-        go = go + Dft;
+        % scale and add to gradient
+        if scaleflag
+            go = go + sm'.*Dft;
+        else
+            go = go + Dft;
+        end
 
     end
 

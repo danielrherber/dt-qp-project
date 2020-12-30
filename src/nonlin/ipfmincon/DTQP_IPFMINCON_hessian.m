@@ -11,15 +11,28 @@ function Ho = DTQP_IPFMINCON_hessian(X,lambda,obj,dyn,cin,ceq,Hin,in,opts)
 
 % extract
 nu = in.nu; ny = in.ny; np = in.np; ini = in.i; nx = in.nx;
-p = in.p; t = in.t; np = in.np; nt = in.nt; param = in.param;
+p = in.p; t = in.t; nt = in.nt; param = in.param;
 Ilambda = in.Ilambda; quadrature = opts.dt.quadrature;
-derivativeflag = opts.method.derivatives;
+derivativeflag = opts.method.derivatives; scaleflag = in.scaleflag;
 
-% reshape optimization variables
-P = X(end-np+1:end);
-X = reshape(X(1:end-np),nt,[]);
-P = repelem(P',nt,1);
-X = [X,P,repmat(X(1,ini{2}),nt,1),repmat(X(end,ini{2}),nt,1)];
+% (potentially) apply linear scaling
+if scaleflag
+
+    % extract
+    Xs = in.Xs; sm = in.sm; sc = in.sc;
+
+    % unscale optimization variables
+    Xunscaled = X.*sm + sc;
+
+    % reshape optimization variables
+    Xunscaled = DTQP_reshape_X(Xunscaled,np,nt,ini);
+
+else
+
+    % reshape optimization variables
+    Xunscaled = DTQP_reshape_X(X,np,nt,ini);
+
+end
 
 % initialize row and column indices
 LR = repelem([1 2 3 4 5],[nu ny np ny ny]);
@@ -58,7 +71,7 @@ if ~isempty(obj)
     end
 
     % calculate second derivative values
-    D2ft = DTQP_hessian(obj,p,t,X,param,derivativeflag,1);
+    D2ft = DTQP_hessian(obj,p,t,Xunscaled,param,derivativeflag,1);
 
     % go through each row entry in the original problem form
     for ix = 1:length(R)
@@ -136,11 +149,16 @@ if ~isempty(dyn)
     for k = 1:nz
 
         % calculate second derivative values
-        D2ft = DTQP_hessian(dyn,p,t,X,param,derivativeflag,k);
+        D2ft = DTQP_hessian(dyn,p,t,Xunscaled,param,derivativeflag,k);
 
         % continue if all derivatives are zero (so D2ft is empty)
         if isempty(D2ft)
            continue
+        end
+
+        % scale
+        if scaleflag
+            D2ft = D2ft./Xs(:,k);
         end
 
         % go through each row entry in the original problem form
@@ -191,7 +209,7 @@ if ~isempty(ceq)
     for k = 1:nz
 
         % calculate second derivative values
-        D2ft = DTQP_hessian(ceq,p,t,X,param,derivativeflag,k);
+        D2ft = DTQP_hessian(ceq,p,t,Xunscaled,param,derivativeflag,k);
 
         % extract relevant multipliers
         lambda_ceq = lambda_eqnonlin(Ilambda_ceq{k});
@@ -258,7 +276,7 @@ if ~isempty(cin)
     for k = 1:nz
 
         % calculate second derivative values
-        D2ft = DTQP_hessian(cin,p,t,X,param,derivativeflag,k);
+        D2ft = DTQP_hessian(cin,p,t,Xunscaled,param,derivativeflag,k);
 
         % extract relevant multipliers
         lambda_cin = lambda_ineqnonlin(Ilambda_cin{k});
@@ -318,9 +336,15 @@ V = vertcat(Vsav{:});
 % construct sparse Hessian
 Ho = sparse(I,J,V,nx,nx);
 
+% scale
+if scaleflag
+    Ho = sm'.*Ho.*sm;
+end
+
 % add constant quadratic term
 if ~isempty(find(Hin,1))
     Ho = Ho + 2*Hin;
 end
+
 
 end

@@ -98,6 +98,12 @@ Y0 = [[S0,L10,I10,L20,I20,T0];[S0,L10,I10,L20,I20,T0]];
 U0 = [[0.95,0.95];[0.95,0.95]];
 setup.guess.X = [U0,Y0];
 
+% scaling
+setup.scaling(1).right = 1; % controls
+setup.scaling(1).matrix = [u1max,u2max];
+setup.scaling(2).right = 2; % states
+setup.scaling(2).matrix = ([S0;L10;I10;L20;I20;T0]+Nmax)/2;
+
 % combine structures
 setup.symb = symb; setup.L = L; setup.UB = UB; setup.LB = LB; setup.Y = Y;
 setup.t0 = t0; setup.tf = tf; setup.p = p; setup.n = n;
@@ -141,7 +147,7 @@ case 2
     opts.dt.defects = 'PS';
     opts.dt.quadrature = 'G';
     opts.dt.mesh = 'LGL';
-    opts.dt.nt = 45; % number of nodes
+    opts.dt.nt = 55; % number of nodes
     opts.solver.tolerance = 1e-12;
     opts.solver.function = 'ipfmincon';
     opts.method.form = 'nonlinearprogram';

@@ -214,13 +214,59 @@ end
 %--------------------------------------------------------------------------
 [lb,ub] = DTQP_create_bnds(setup.LB,setup.UB,in);
 
-% TODO: add flag
-[A,b,Aeq,beq] = DTQP_scalingRows(A,b,Aeq,beq);
-
 %--------------------------------------------------------------------------
 % initial guess
 %--------------------------------------------------------------------------
 in = DTQP_guess(setup,in);
+
+%--------------------------------------------------------------------------
+% scaling
+%--------------------------------------------------------------------------
+% extract
+s = setup.scaling;
+
+% determine flags
+scaleflag = ~isempty(s);
+in.scaleflag = scaleflag;
+scalerowflag = opts.method.scalematrixrows;
+
+% (optional) apply linear transformation scaling
+if scaleflag
+
+    % apply scaling on olq elements
+    [H,f,c,A,b,Aeq,beq,lb,ub,~,~,~,~,~,~,~,~,in,sm,sc] = ...
+        DTQP_scalingLinear(H,f,c,A,b,Aeq,beq,lb,ub,[],[],[],[],[],[],[],[],in,s);
+
+    % scale guess
+    in.X0 = (in.X0 - sc)./sm;
+
+    % obtain continuous variable scaling matrix
+    SM = reshape(sm(1:end-np),nt,[]);
+
+    % state variable locations
+    Iy = in.i{2};
+
+    % state variable scaling matrix for nonlinear state derivatives
+    if isfield(in,'IDnon')
+        Xs = SM(:,Iy(in.IDnon));
+    else
+        Xs = SM(:,Iy);
+    end
+
+    % assign
+    in.Xs = Xs; in.sm = sm; in.sc = sc;
+
+else
+
+    % assign (for consistent structures)
+    in.Xs = []; in.sm = []; in.sc = [];
+
+end
+
+% (optional) constraint row scaling
+if scalerowflag
+    [A,b,Aeq,beq] = DTQP_scalingRows(A,b,Aeq,beq);
+end
 
 %--------------------------------------------------------------------------
 % solve the optimization problem
@@ -242,6 +288,11 @@ end
 %--------------------------------------------------------------------------
 % obtain outputs
 %--------------------------------------------------------------------------
+% (optional) unscale optimization variables
+if scaleflag
+    X = X.*sm + sc;
+end
+
 % return optimal controls, states, and parameters
 T = in.t;
 U = reshape(X((1:nu*nt)),nt,nu); % controls
