@@ -23,17 +23,17 @@ if isempty(B)
     return
 %--------------------------------------------------------------------------
 elseif iscell(A)
-        error('A should not be a function with the zero-hold method')
+        error('A should not be a function or time varying with the zero-hold method')
 %--------------------------------------------------------------------------
 % check if B is a cell (time-varying function)
 elseif iscell(B) || isa(B,'function_handle')
     for k = 1:nt-1
         t0 = t(k); tf = t(k+1);
         if ~any(A(:)) % check if any elements of A are nonzero
-            Q(k,:,:) = integral(@(tau) eye(ny)*squeeze(DTQP_tmatrix(B,p,tau))',...
+            Q(k,:,:) = integral(@(tau) eye(ny)*shiftdim(DTQP_tmultiprod(B,p,tau)),...
                 t0,tf,'ArrayValued',true,'RelTol',0,'AbsTol',1e-10);
         else % general case
-            Q(k,:,:) = integral(@(tau) expm(A*(tf-tau))*squeeze(DTQP_tmatrix(B,p,tau))',...
+            Q(k,:,:) = integral(@(tau) expm(A*(tf-tau))*shiftdim(DTQP_tmultiprod(B,p,tau)),...
                 t0,tf,'ArrayValued',true,'RelTol',0,'AbsTol',1e-10);
         end
     end
