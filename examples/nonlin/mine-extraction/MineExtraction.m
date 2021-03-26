@@ -21,7 +21,7 @@ ex_plot = @MineExtraction_plot;
 tf = 2; % contract length
 p.a = 1; % profit rate
 p.x0 = 10; % initial ore available
-obj_approach = 'string'; % 'function' or 'string'
+obj_approach = 'function'; % 'function' or 'string'
 
 %% setup
 % time horizon
@@ -37,10 +37,10 @@ setup.B = -1;
 % Lagrange term
 switch obj_approach
     %----------------------------------------------------------------------
-    case 'function'
+    case 'string'
         symb.Ob = 'u1^2/y1 - a*u1';
     %----------------------------------------------------------------------
-    case 'string'
+    case 'function'
         % provide function, rather than a string, for the objective function
         % NOTE: this feature is currently undocumented and undeveloped
         symb.Ob = []; % only needs to have the field to work
