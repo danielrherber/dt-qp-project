@@ -97,6 +97,7 @@ FreeFlyingRobot(p,opts)
 HangGlider(p,opts)
 HIVImmunology(p,opts)
 Hypersensitive(p,opts)
+% MineExtraction(p,opts) % implementation does support symbolic derivatives
 Multiextremal(p,opts)
 NeuenhofenKerriganX1(p,opts)
 NeuenhofenKerriganX2(p,opts)

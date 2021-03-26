@@ -64,6 +64,8 @@ switch opts.method.derivatives
 end
 
 % TODO: expose these options
+o{end+1} = 'FiniteDifferenceType';
+o{end+1} = 'central'; % useful when CheckGradients is true
 o{end+1} = 'HonorBounds';
 o{end+1} = false;
 o{end+1} = 'ScaleProblem';

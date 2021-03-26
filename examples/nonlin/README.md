@@ -15,6 +15,7 @@
 | Hang Glider | [hang-glider](hang-glider/) | Bul93 |  |
 | HIV Immunology | [hiv-immunology](hiv-immunology/) | Jo02 |  |
 | Hypersensitive | [hypersensitive](hypersensitive/) | Rao00 |  |
+| Mine Extraction | [mine-extraction](mine-extraction/) |  | closed-form |
 | Multiextremal | [multiextremal](multiextremal/) | Yu12 |  |
 | Neuenhofen Kerrigan X1 | [neuenhofen-kerrigan-x1](neuenhofen-kerrigan-x1/) | Neu20 | partial closed-form |
 | Neuenhofen Kerrigan X2 | [neuenhofen-kerrigan-x2](neuenhofen-kerrigan-x2/) | Neu20 | partial closed-form |
