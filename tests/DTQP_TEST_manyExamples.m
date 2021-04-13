@@ -9,7 +9,7 @@
 %--------------------------------------------------------------------------
 close all; clear; clc
 
-tests = 1:4;
+tests = 1:5;
 % tests = 1;
 
 % go through each test
@@ -42,6 +42,12 @@ for k = 1:length(tests)
         case 4
         opts.dt.defects = 'ZO';
         opts.dt.quadrature = 'CEF';
+        opts.dt.mesh = 'ED';
+        opts.dt.nt = 20; % number of time points
+        %------------------------------------------------------------------
+        case 5
+        opts.dt.defects = 'FO';
+        opts.dt.quadrature = 'CTR';
         opts.dt.mesh = 'ED';
         opts.dt.nt = 20; % number of time points
     end

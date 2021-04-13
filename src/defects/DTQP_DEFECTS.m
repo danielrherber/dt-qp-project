@@ -12,6 +12,8 @@ function [Aeq,beq,in] = DTQP_DEFECTS(A,B,G,d,in,opts)
 switch upper(opts.dt.defects)
     case 'ZO' % zero-order hold
         [Aeq,beq] = DTQP_DEFECTS_ZO(A,B,G,d,in,opts);
+    case 'FO' % first-order hold
+        [Aeq,beq] = DTQP_DEFECTS_FO(A,B,G,d,in,opts);
     case 'EF' % Euler forward
         [Aeq,beq] = DTQP_DEFECTS_EF(A,B,G,d,in,opts);
     case 'TR' % trapezoidal

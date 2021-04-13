@@ -194,12 +194,11 @@ disp(' ')
 end
 %--------------------------------------------------------------------------
 function DisplayBanner %#ok<DEFNU>
-
-disp('---------------------------------------------------------------')
-disp('                             <strong>DTQP</strong>                              ')
-disp('Link: <a href = "https://github.com/danielrherber/dt-qp-project">https://github.com/danielrherber/dt-qp-project</a>')
-disp('Primary contributor: Daniel R. Herber (danielrherber on GitHub)')
-disp('---------------------------------------------------------------')
+flag = 'line'; DTQP_commandWindowTasks %#ok<NASGU>
+flag = 'banner'; DTQP_commandWindowTasks %#ok<NASGU>
+flag = 'link'; DTQP_commandWindowTasks %#ok<NASGU>
+flag = 'contributor'; DTQP_commandWindowTasks %#ok<NASGU>
+flag = 'line'; DTQP_commandWindowTasks %#ok<NASGU>
 end
 %--------------------------------------------------------------------------
 function AddSubmissionContents(name) %#ok<DEFNU>

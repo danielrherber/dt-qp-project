@@ -17,18 +17,11 @@ displevel = opts.general.displevel;
 
 % (potentially) display banner
 if (displevel > 1) % minimal
-
-    disp('----------------------------------------------------------------')
-    disp("                        █▀▄ ▀█▀ █▀█ █▀█                         ")
-    disp("                        █▄▀  █  ▀▀█ █▀▀                         ")
-    disp('Link: <a href = "https://github.com/danielrherber/dt-qp-project">https://github.com/danielrherber/dt-qp-project</a>')
-    str = strings(0);
-    str(1) = strcat("Machine: ",string(java.net.InetAddress.getLocalHost.getHostName));
-    str(2) = strcat("Date: ",datestr(now,'yyyy/mm/dd HH:MM'));
-    str = strjoin(str,' | ');
-    disp(str)
-    disp('----------------------------------------------------------------')
-
+    flag = 'line'; DTQP_commandWindowTasks %#ok<NASGU>
+    flag = 'banner'; DTQP_commandWindowTasks %#ok<NASGU>
+    flag = 'link'; DTQP_commandWindowTasks %#ok<NASGU>
+    flag = 'info'; DTQP_commandWindowTasks %#ok<NASGU>
+    flag = 'line'; DTQP_commandWindowTasks %#ok<NASGU>
 end
 
 % (potentially) start the timers
@@ -58,8 +51,8 @@ end
 % (potentially) display to the command window
 if (displevel > 1) % verbose
 
-    disp(['█ Total time: ', num2str(opts.timer.total), ' s'])
-    disp('----------------------------------------------------------------')
+    disp(strcat(string(char(9658))," Total time: ",string(opts.timer.total)," s"))
+    flag = 'line'; DTQP_commandWindowTasks %#ok<NASGU>
 
 end
 

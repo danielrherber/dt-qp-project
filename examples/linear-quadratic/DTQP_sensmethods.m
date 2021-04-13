@@ -20,14 +20,14 @@ ntmax = 1000;
 narray = GenerateNgrid(N,ntmin,ntmax);
 
 % method lists
-DefectArray = {'ZO','EF','TR','HS','HS','RK4','PS','PS'};
-QuadArray = {'CEF','CEF','CTR','CTR','CQHS','CQHS','G','CC'};
-MeshArray = {'ED','ED','ED','ED','ED','ED','LGL','CGL'};
+DefectArray = {'ZO','FO','EF','TR','HS','HS','RK4','PS','PS'};
+QuadArray = {'CEF','CQHS','CEF','CTR','CTR','CQHS','CQHS','G','CC'};
+MeshArray = {'ED','ED','ED','ED','ED','ED','ED','LGL','CGL'};
 LegendArray = strcat(DefectArray,'-',QuadArray,'-',MeshArray);
 
 % select the methods to test from lists above
-Testarray = 1:8; % test all methods
-% Testarray = [5,6]; % only test CQHS methods
+% Testarray = 1:9; % test all methods
+Testarray = [2,5,6]; % only test CQHS methods
 % Testarray = [7,8]; % only test PS methods
 
 DefectArray = DefectArray(Testarray);
@@ -113,7 +113,7 @@ set(0,'DefaultTextInterpreter','latex'); % change the text interpreter
 set(0,'DefaultLegendInterpreter','latex'); % change the legend interpreter
 set(0,'DefaultAxesTickLabelInterpreter','latex'); % change the tick interpreter
 fontsize = 16;
-map = parula(length(LegendArray));
+map = turbo(length(LegendArray));
 figure('color',[1 1 1]); hold on
 
 % go through each dataset

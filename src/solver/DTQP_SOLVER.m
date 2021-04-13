@@ -21,7 +21,7 @@ end
 
 % (potentially) display to the command window
 if (displevel > 1) % verbose
-    disp(strcat("█ Creation time: ",string(ctime)," s"))
+    disp(strcat(string(char(9658))," Creation time: ",string(ctime)," s"))
 end
 
 switch upper(opts.solver.function)
@@ -50,7 +50,7 @@ end
 
 % (potentially) display to the command window
 if (displevel > 1) % verbose
-    disp(['█ Solver time: ', num2str(opts.timer.qpsolver), ' s'])
+    disp(strcat(string(char(9658))," Solver time: ",string(opts.timer.qpsolver)," s"))
 end
 
 end

@@ -23,23 +23,10 @@ Isav = {}; Jsav = {}; Vsav = {};
 % calculate matrices and sequencing vectors
 %--------------------------------------------------------------------------
 % find time dependent matrices
-if isa(A,'double') % not time varying
-    % initialize
-    if strcmpi(opts.dt.mesh,'ED')
-        Aexpm(1,:,:) = expm( A*h(1) );
-        At = repmat(Aexpm,nt-1,1,1);
-    else
-        At = zeros(nt-1,ny,ny);
-        for i = 1:nt-1
-            At(i,:,:) = expm( A*h(i) );
-        end
-    end
-else
-   error('A matrix cannot be time varying with ZOH defect method')
-end
-Bt = DTQP_DEFECTS_convolution(A,B,in,opts);
-Gt = DTQP_DEFECTS_convolution(A,G,in,opts);
-dt = DTQP_DEFECTS_convolution(A,d,in,opts);
+At_expm = DTQP_DEFECTS_expm(A,in,opts);
+Bt_type0 = DTQP_DEFECTS_convolution_integral_type0(A,B,in,opts);
+Gt_type0 = DTQP_DEFECTS_convolution_integral_type0(A,G,in,opts);
+dt_type0 = DTQP_DEFECTS_convolution_integral_type0(A,d,in,opts);
 
 Jy = DTQP_DEFECTS_index_columns(nt,ny,nu); % optimization variable (column) locations
 Jys = [Jy;Jy+1]; % combine to create paired optimization variable locations
@@ -66,7 +53,7 @@ for i = 1:ny
         Iu = repmat(DefectIndices,nu,1);
 
         % extract matrices
-        Bv = reshape(Bt(:,i,:),[],1);
+        Bv = reshape(Bt_type0(:,i,:),[],1);
 
         % theta values
         V3 = -Bv; % theta 3
@@ -75,7 +62,7 @@ for i = 1:ny
         Is = Iu; Js = Ju; Vs = V3;
 
         % remove zeros
-        ZeroIndex = find(~Vs);
+        ZeroIndex = ~Vs;
         Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
 
         % combine
@@ -92,7 +79,7 @@ for i = 1:ny
         Iy = repmat(DefectIndices,ny,1);
 
         % extract matrices
-        Av = reshape(At(:,i,:),[],1);
+        Av = reshape(At_expm(:,i,:),[],1);
 
         % theta values
         V1 = -Av; % theta 1
@@ -102,7 +89,7 @@ for i = 1:ny
         Is = [Iy;Iy]; Js = Jys; Vs = [V1;V2];
 
         % remove zeros
-        ZeroIndex = find(~Vs);
+        ZeroIndex = ~Vs;
         Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
 
         % combine
@@ -119,7 +106,7 @@ for i = 1:ny
         Is = repmat(DefectIndices,np,1);
 
         % extract matrices
-        Gv = reshape(Gt(:,i,:),[],1);
+        Gv = reshape(Gt_type0(:,i,:),[],1);
 
         % theta values
         Vs = -Gv; % theta 5
@@ -128,7 +115,7 @@ for i = 1:ny
         Js = Jp;
 
         % remove zeros
-        ZeroIndex = find(~Vs);
+        ZeroIndex = ~Vs;
         Is(ZeroIndex) = []; Js(ZeroIndex) = []; Vs(ZeroIndex) = [];
 
         % combine
@@ -159,13 +146,13 @@ if nd > 0
         Is = reshape((i-1)*(nt-1)+1:i*(nt-1),[],1);
 
         % extract matrices
-        dv = reshape(dt(:,i,:),[],1);
+        dv = reshape(dt_type0(:,i,:),[],1);
 
         % nu values
         Vs = dv; % nu
 
         % remove zeros
-        ZeroIndex = find(~Vs);
+        ZeroIndex = ~Vs;
         Is(ZeroIndex) = []; Vs(ZeroIndex) = [];
 
         % combine
@@ -184,4 +171,5 @@ else
     beq = sparse([],[],[],ny*(nt-1),1);
 end
 %--------------------------------------------------------------------------
+
 end
