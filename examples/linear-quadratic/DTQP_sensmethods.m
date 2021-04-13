@@ -26,8 +26,8 @@ MeshArray = {'ED','ED','ED','ED','ED','ED','ED','LGL','CGL'};
 LegendArray = strcat(DefectArray,'-',QuadArray,'-',MeshArray);
 
 % select the methods to test from lists above
-% Testarray = 1:9; % test all methods
-Testarray = [2,5,6]; % only test CQHS methods
+Testarray = 1:9; % test all methods
+% Testarray = [2,5,6]; % only test CQHS methods
 % Testarray = [7,8]; % only test PS methods
 
 DefectArray = DefectArray(Testarray);

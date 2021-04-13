@@ -27,11 +27,11 @@ if ~isempty(varargin)
     end
 end
 
-% display banner text
-RunSilent('DisplayBanner',silentflag)
-
 % add contents to path
 RunSilent('AddSubmissionContents(mfilename)',silentflag)
+
+% display banner text
+RunSilent('DisplayBanner',silentflag)
 
 % Check toolboxes and versions
 RunSilent('MinimumVersionChecks',silentflag)
