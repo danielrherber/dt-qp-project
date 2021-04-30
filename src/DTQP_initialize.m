@@ -25,7 +25,7 @@ else
 end
 in.tf = setup.tf; % final time
 [t,w,D] = DTQP_MESH_pts(in,dt); % mesh, quadrature wights, differentiation matrix
-in.nt = length(t); % number of time points
+nt = length(t); in.nt = nt; % number of time points
 in.t = t; in.w = w(:); in.D = D;
 h = diff(t); in.h = h; % time steps
 
@@ -61,6 +61,7 @@ if isfield(ns,'ny')
 else
     in.ny = max([size(setup.A,1),size(setup.B,1),size(setup.G,1),size(setup.d,1)]);
 end
+ny = in.ny;
 
 % controls
 if isfield(ns,'nu')
@@ -68,6 +69,7 @@ if isfield(ns,'nu')
 else
     in.nu = size(setup.B,2);
 end
+nu = in.nu;
 
 % parameters
 if isfield(ns,'np')
@@ -75,28 +77,33 @@ if isfield(ns,'np')
 else
     in.np = size(setup.G,2);
 end
+np = in.np;
 
 % disturbances
 in.nd = size(setup.d,2);
 
 % optimization variables
-in.nx = (in.nu+in.ny)*in.nt + in.np;
+in.nx = (nu+ny)*nt + np;
 
 % create a zero A matrix when not present
 if isempty(setup.A)
-	setup.A = zeros(in.ny);
+	setup.A = zeros(ny);
 end
 
 %% indices
+% infinite-dimensional problem
 i = cell(7,1);
-i{1} = 1:in.nu; % control indices
-i{2} = in.nu+1:(in.nu+in.ny); % state indices
-i{3} = (in.nu+in.ny)+1:(in.nu+in.ny)+in.np; % parameter indices
+i{1} = 1:nu; % control indices
+i{2} = nu+1:(nu+ny); % state indices
+i{3} = (nu+ny)+1:(nu+ny)+np; % parameter indices
 i{4} = i{2}; % initial state indices
 i{5} = i{2}; % final state indices
 i{6} = i{1}; % initial control indices
 i{7} = i{1}; % final control indices
 in.i = i;
+
+% finite-dimensional problem
+in.I_stored = [reshape(1:(nu+ny)*nt,nt,[]),repmat(i{3},nt,1)];
 
 %% go through Lagrange terms
 % add fields if not present
@@ -116,6 +123,7 @@ cL = struct(cLfields{:});
 
 % go through each entry in L
 for k = 1:length(Ltemp)
+
     % check if there is a nonzero left field
     Lflag = 0;
     if isfield(Ltemp(k),'left')
@@ -172,6 +180,7 @@ cM = struct(cMfields{:});
 
 % go through each entry in M
 for k = 1:length(Mtemp)
+
     % check if there is a nonzero left field
     Lflag = 0;
     if isfield(Mtemp(k),'left')
@@ -227,11 +236,11 @@ for k = 1:length(scaling)
     % determine number of variables
     switch s.right
         case 1
-            n = in.nu;
+            n = nu;
         case 2
-            n = in.ny;
+            n = ny;
         case 3
-            n = in.np;
+            n = np;
     end
 
     % check matrix field

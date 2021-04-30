@@ -10,8 +10,8 @@
 function [I,J,V] = DTQP_L(Lfull,in,opts)
 
 % extract some of the variables
-nt = in.nt; nu = in.nu; ny = in.ny; t = in.t; tm = in.tm; h = in.h;
-w = in.w; p = in.p;  ini = in.i; quadrature = opts.dt.quadrature;
+nt = in.nt; t = in.t; tm = in.tm; h = in.h; w = in.w;
+p = in.p; ini = in.i; I_stored = in.I_stored; quadrature = opts.dt.quadrature;
 
 % check if we need off-diagonal terms
 OffFlag = any(strcmpi(quadrature,'CQHS'));
@@ -50,8 +50,8 @@ for k = 1:length(Lfull)
 
             % check if this entry is always 0
             if any(Lv)
-                r = DTQP_getQPIndex(R(i),Lleft,1,nt,nu,ny); % Hessian row index sequence
-                c = DTQP_getQPIndex(C(j),Lright,1,nt,nu,ny); % Hessian column index sequence
+                r = DTQP_getQPIndex(R(i),Lleft,1,nt,I_stored); % Hessian row index sequence
+                c = DTQP_getQPIndex(C(j),Lright,1,nt,I_stored); % Hessian column index sequence
 
                 Isav{end+1} = r; % main diagonal rows
                 Jsav{end+1} = c; % main diagonal columns

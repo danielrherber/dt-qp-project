@@ -10,7 +10,7 @@
 function [I,J,V] = DTQP_M(Mfull,in,opts)
 
 % extract some of the variables
-nt = in.nt; nu = in.nu; ny = in.ny; ini = in.i;
+nt = in.nt; ini = in.i; I_stored = in.I_stored;
 
 % initialize storage arrays
 Isav = {}; Jsav = {}; Vsav = {};
@@ -37,8 +37,8 @@ for k = 1:length(Mfull)
 
             % check if this entry is always 0
             if any(Mv)
-                r = DTQP_getQPIndex(R(i),Mleft,0,nt,nu,ny); % Hessian row index sequence
-                c = DTQP_getQPIndex(C(j),Mright,0,nt,nu,ny); % Hessian column index sequence
+                r = DTQP_getQPIndex(R(i),Mleft,0,nt,I_stored); % Hessian row index sequence
+                c = DTQP_getQPIndex(C(j),Mright,0,nt,I_stored); % Hessian column index sequence
 
                 Isav{end+1} = r; % main diagonal row
                 Jsav{end+1} = c; % main diagonal column

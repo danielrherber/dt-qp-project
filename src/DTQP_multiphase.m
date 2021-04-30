@@ -127,7 +127,7 @@ for phs = 1:nphs
         end
 
         % assign
-        Hs{phs} = Hi;
+        Hs{phs} = Hi; fs{phs} = fi;
         As{phs} = Ai; bs{phs} = bi;
         Aeqs{phs} = Aeqi; beqs{phs} = beqi;
         LALs{phs} = LLAi; LARs{phs} = LRAi; LLbs{phs} = LLbi; LRbs{phs} = LRbi;

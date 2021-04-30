@@ -65,7 +65,7 @@ end
 % User options function for this example
 function opts = LQRstandard_opts
 % test number
-num = 1;
+num = 2;
 
 switch num
 case 1
@@ -76,17 +76,17 @@ case 1
     opts.dt.defects = 'PS';
     opts.dt.quadrature = 'G';
     opts.dt.mesh = 'LGL';
-    opts.dt.nt = 50; % number of nodes
+    opts.dt.nt = 25; % number of nodes
     opts.method.reordervariables = 0;
     opts.solver.function = 'built-in';
     opts.solver.tolerance = 1e-15;
     opts.solver.maxiters = 200;
     opts.solver.display = 'iter';
 case 2
-    opts.dt.defects = 'ZO';
-    opts.dt.quadrature = 'CEF';
+    opts.dt.defects = 'FO';
+    opts.dt.quadrature = 'CQHS';
     opts.dt.mesh = 'ED';
-    opts.dt.nt = 20;
+    opts.dt.nt = 100;
 end
 
 end

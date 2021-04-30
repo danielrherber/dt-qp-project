@@ -11,7 +11,7 @@ function Ho = DTQP_IPFMINCON_hessian(X,lambda,obj,dyn,cin,ceq,Hin,in,opts)
 
 % extract
 nu = in.nu; ny = in.ny; np = in.np; ini = in.i; nx = in.nx;
-p = in.p; t = in.t; nt = in.nt; param = in.param;
+p = in.p; t = in.t; nt = in.nt; I_stored = in.I_stored; param = in.param;
 Ilambda = in.Ilambda; quadrature = opts.dt.quadrature;
 derivativeflag = opts.method.derivatives; scaleflag = in.scaleflag;
 
@@ -89,8 +89,8 @@ if ~isempty(obj)
                 v = v.*H;
 
                 % Hessian row and column index sequences
-                r = DTQP_getQPIndex(R(ix),LR(ix),1,nt,nu,ny);
-                c = DTQP_getQPIndex(C(jx),LR(jx),1,nt,nu,ny);
+                r = DTQP_getQPIndex(R(ix),LR(ix),1,nt,I_stored);
+                c = DTQP_getQPIndex(C(jx),LR(jx),1,nt,I_stored);
 
                 % main diagonal
                 Isav{end+1} = r; % rows
@@ -177,8 +177,8 @@ if ~isempty(dyn)
                     v = v.*h0lambdadyn(:,k);
 
                     % Hessian row and column index sequences
-                    r = DTQP_getQPIndex(R(ix),LR(ix),1,nt,nu,ny);
-                    c = DTQP_getQPIndex(C(jx),LR(jx),1,nt,nu,ny);
+                    r = DTQP_getQPIndex(R(ix),LR(ix),1,nt,I_stored);
+                    c = DTQP_getQPIndex(C(jx),LR(jx),1,nt,I_stored);
 
                     % main diagonal
                     Isav{end+1} = r; % rows
@@ -233,8 +233,8 @@ if ~isempty(ceq)
                         v = v.*lambda_ceq;
 
                         % Hessian row and column index sequences
-                        r = DTQP_getQPIndex(R(ix),LR(ix),1,nt,nu,ny);
-                        c = DTQP_getQPIndex(C(jx),LR(jx),1,nt,nu,ny);
+                        r = DTQP_getQPIndex(R(ix),LR(ix),1,nt,I_stored);
+                        c = DTQP_getQPIndex(C(jx),LR(jx),1,nt,I_stored);
 
                     else % boundary constraint
 
@@ -242,8 +242,8 @@ if ~isempty(ceq)
                         v = v(1).*lambda_ceq;
 
                         % Hessian row and column index sequences
-                        r = DTQP_getQPIndex(R(ix),LR(ix),0,nt,nu,ny);
-                        c = DTQP_getQPIndex(C(jx),LR(jx),0,nt,nu,ny);
+                        r = DTQP_getQPIndex(R(ix),LR(ix),0,nt,I_stored);
+                        c = DTQP_getQPIndex(C(jx),LR(jx),0,nt,I_stored);
 
                     end
 
@@ -300,8 +300,8 @@ if ~isempty(cin)
                         v = v.*lambda_cin;
 
                         % Hessian row and column index sequences
-                        r = DTQP_getQPIndex(R(ix),LR(ix),1,nt,nu,ny);
-                        c = DTQP_getQPIndex(C(jx),LR(jx),1,nt,nu,ny);
+                        r = DTQP_getQPIndex(R(ix),LR(ix),1,nt,I_stored);
+                        c = DTQP_getQPIndex(C(jx),LR(jx),1,nt,I_stored);
 
                     else % boundary constraint
 
@@ -309,8 +309,8 @@ if ~isempty(cin)
                         v = v(1).*lambda_cin;
 
                         % Hessian row and column index sequences
-                        r = DTQP_getQPIndex(R(ix),LR(ix),0,nt,nu,ny);
-                        c = DTQP_getQPIndex(C(jx),LR(jx),0,nt,nu,ny);
+                        r = DTQP_getQPIndex(R(ix),LR(ix),0,nt,I_stored);
+                        c = DTQP_getQPIndex(C(jx),LR(jx),0,nt,I_stored);
 
                     end
 

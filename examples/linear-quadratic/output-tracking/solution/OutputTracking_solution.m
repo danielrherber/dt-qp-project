@@ -27,7 +27,7 @@ in.Idiag = find(eye(in.snp,in.snp));
 pode = in;
 
 % ode options
-options = odeset('RelTol',opts.tolode,'AbsTol',opts.tolode*1e-3,'InitialStep',1e-6);
+options = odeset('RelTol',opts.tolode,'AbsTol',opts.tolode*1e-3,'InitialStep',1e-12);
 
 % initial costates
 P0 = reshape(zeros(in.snp),[],1);
@@ -50,8 +50,12 @@ kode = flipud(kode);
 % same time vector for ode/bvp
 pode.t = tode;
 
+% create interpolation functions
+Pode_interp = griddedInterpolant(tode,Pode,'spline');
+kode_interp = griddedInterpolant(tode,kode,'spline');
+
 % forward integration for the states
-[~,Yode] = ode15s(@(x,y) odefun_dX(x,y,pode,Pode,kode,A,B,C,Q,R,o),pode.t,in.p.x0,options);
+[~,Yode] = ode15s(@(x,y) odefun_dX(x,y,pode,Pode_interp,kode_interp,A,B,C,Q,R,o),pode.t,in.p.x0,options);
 
 % calculate the optimal control
 Uode = calcU(Yode,Pode,kode,in,tode,B,R);
@@ -69,31 +73,31 @@ if strcmp(opts.solmethod,'bvp')
     T = in.t;
 
     % initial guess for the solution as interpolation of previous solutions
-    yinit = @(t) [interp1(tode,Yode,t,'pchip'),interp1(tode,Pode,t,'pchip'),...
-        interp1(tode,kode,t,'pchip')];
-    
+    yinit = @(t) [interp1(tode,Yode,t,'spline'),interp1(tode,Pode,t,'spline'),...
+        interp1(tode,kode,t,'spline')];
+
     % initialize solution
     solinit = bvpinit(T,yinit);
-    
+
     % bvp options
     options = bvpset('RelTol',opts.tolbvp,'AbsTol',opts.tolbvp*1e-3,...
         'NMax',10000,'Stats','on');
-    
+
     % solve the bvp
     sol = bvp4c(@(x,y) odefun(x,y,in,A,B,C,Q,R,o),@(ya,yb) bcfun(ya,yb,in),solinit,options);
-    
+
     % time mesh
     D.T = sol.x';
-    
+
     % states
     D.Y = sol.y(1:in.ny,:)';
-    
+
     % costates
     Psol = sol.y(in.ny+1:in.ny+length(in.Ilower),:)';
-    
+
     % additional costates
     ksol = sol.y(in.ny+length(in.Ilower)+1:end,:)';
-    
+
     % calculate the optimal control
     D.U = calcU(D.Y,Psol,ksol,in,D.T,B,R);
     %----------------------------------------------------------------------
@@ -104,7 +108,7 @@ else
     D.T = tode;
     D.Y = Yode;
     D.U = Uode;
-    
+
 end
 
 %--------------------------------------------------------------------------
@@ -164,10 +168,10 @@ dP = dP(in.Ilower);
 dPk = [dP;dk];
 end
 % state ordinary differential equation function for ode option
-function dX = odefun_dX(t,X,in,P,k,A,B,C,Q,R,o)
+function dX = odefun_dX(t,X,in,Pode_interp,kode_interp,A,B,C,Q,R,o)
 % interpolate
-P = interp1(in.t,P,t,'pchip'); % costates
-k = interp1(in.t,k,t,'pchip'); % additional costates
+P = Pode_interp(t); % costates
+k = kode_interp(t); % additional costates
 k = k(:);
 % matrix values at current time
 p = in.p;
@@ -227,7 +231,7 @@ dY = [dX;dP;dk];
 end
 % boundary value function for bvp option
 function res = bcfun(Y0,Yf,in)
-X0 = Y0(1:in.ny); % initial state 
+X0 = Y0(1:in.ny); % initial state
 Pf = Yf(in.ny+1:end); % costate and additional costate final conditions
 % residual equations
 res1 = X0 - in.p.x0;
@@ -240,7 +244,7 @@ res = [res1; res2];
 end
 % calculate the optimal control from states and costates
 function U = calcU(Y,P,K,in,T,B,R)
-    % intialize
+    % initialize
     U = zeros(size(B,2),length(T));
     for k = 1:length(T)
         % matrix values at current time
@@ -265,10 +269,12 @@ function U = calcU(Y,P,K,in,T,B,R)
 end
 % calculate quadratic integrand (vectorized)
 function I = quadIntegrand(t,T,A,B,in)
+    A_interp = griddedInterpolant(T,A,'spline')';
     I = zeros(size(t));
     for k = 1:length(t)
-        H = DTQP_tmatrix(B,in.p,t(k)); H = squeeze(H);
-        X = interp1(T,A,t(k),'pchip')';
+        p = in.p;
+        H = DTQP_tmatrix(B,p,t(k)); H = squeeze(H);
+        X = A_interp(t(k))';
         I(k) = X'*H*X;
     end
 end

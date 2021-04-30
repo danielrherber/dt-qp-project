@@ -35,28 +35,28 @@ else % construct the solution for later use
     disp('warning: this may take a few minutes but only needs to be done ONCE')
 
     % high accuracy solution
-    opts.solmethod = 'bvp';
-    opts.tolode = 1e-9;
-    opts.tolbvp = 1e-7;
+    opts.solmethod = 'ode';
+    opts.tolode = 1e-13;
+    % opts.tolbvp = 1e-7;
 
     D = LQRstandard_solution(in,opts);
 
     % save the solution
     save(fullname,'D');
-        
+
 end
 
 % interpolate
 sol(1).T = T;
-sol(1).U = interp1(D.T,D.U,T,'PCHIP');
-sol(1).Y = interp1(D.T,D.Y,T,'PCHIP');
+sol(1).U = interp1(D.T,D.U,T,'spline');
+sol(1).Y = interp1(D.T,D.Y,T,'spline');
 sol(1).F = D.F;
 
 % solution on high resolution T
 if opts.general.plotflag
     sol(2).T = linspace(in.t0,in.tf,1e4)';
-    sol(2).U = interp1(D.T,D.U,sol(2).T,'PCHIP');
-    sol(2).Y = interp1(D.T,D.Y,sol(2).T,'PCHIP');
+    sol(2).U = interp1(D.T,D.U,sol(2).T,'spline');
+    sol(2).Y = interp1(D.T,D.Y,sol(2).T,'spline');
     sol(2).F = D.F;
 end
 

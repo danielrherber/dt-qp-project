@@ -59,8 +59,8 @@ for iter = 1:maxiters
     % state derivatives using spline derivative
     ppDYs = fnder(ppYs);
 
-    % pchip for controls
-    ppUs = pchip(T',U');
+    % controls using linear interpolation
+    ppUs = griddedInterpolant(T,U,'spline');
 
     %----------------------------------------------------------------------
     % estimate discretization error
@@ -174,8 +174,8 @@ DYs = ppval(ppDYs,T);
 % calculate states using spline
 Y = ppval(ppYs,T)';
 
-% calculate controls using spline
-U = ppval(ppUs,T)';
+% calculate controls using some interpolating method
+U = ppUs(T');
 
 % evaluate time-varying matrices
 At = DTQP_tmultiprod(A,[],T);
@@ -280,7 +280,7 @@ if (displevel > 1) % verbose
 
     % initial headers
     if iter == 1
-        disp('---------------------------------------------------')
+        flag = 'line'; DTQP_commandWindowTasks %#ok<NASGU>
         disp('| iter |     nt |         F |    error |    t (s) |')
     end
 

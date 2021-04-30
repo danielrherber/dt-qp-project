@@ -12,7 +12,7 @@
 function [I,J,V] = DTQP_SQP_lagrangian_penalty_matrix(Lmatrix,in,opts)
 
 % extract some of the variables
-nu = in.nu; ny = in.ny; np = in.np; ini = in.i;
+nu = in.nu; ny = in.ny; np = in.np; ini = in.i; I_stored = in.I_stored;
 t = in.t; h = in.h; nt = in.nt; p = in.p;
 lambda = opts.lambda;
 
@@ -46,8 +46,8 @@ for k = 1:length(Lmatrix)
 
             % check if this entry is always 0
             if any(Lv)
-                r = DTQP_getQPIndex(R(i),LR(i),1,nt,nu,ny); % Hessian row index sequence
-                c = DTQP_getQPIndex(C(j),LR(j),1,nt,nu,ny); % Hessian column index sequence
+                r = DTQP_getQPIndex(R(i),LR(i),1,nt,I_stored); % Hessian row index sequence
+                c = DTQP_getQPIndex(C(j),LR(j),1,nt,I_stored); % Hessian column index sequence
 
                 Isav{end+1} = r; % main diagonal rows
                 Jsav{end+1} = c; % main diagonal columns

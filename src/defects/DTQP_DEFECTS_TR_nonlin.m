@@ -11,8 +11,8 @@ function [Z,DZ] = DTQP_DEFECTS_TR_nonlin(X,dyn,in,opts,Dflag)
 
 % extract
 nu = in.nu; ny = in.ny; np = in.np; nt = in.nt; nX = in.nx;
-p = in.p; t = in.t; h = in.h; ini = in.i; param = in.param;
-f = dyn.f; scaleflag = in.scaleflag;
+p = in.p; t = in.t; h = in.h; ini = in.i; I_stored = in.I_stored;
+f = dyn.f; scaleflag = in.scaleflag; param = in.param;
 
 % (potentially) apply linear scaling
 if scaleflag
@@ -121,7 +121,7 @@ for ix = 1:nz2
         I = ( (ix-1)*(nt-1) + 1:(ix*(nt-1)) )';
 
         % columns in DZ (optimization variables)
-        J1 = DTQP_getQPIndex(R(jx),LR(jx),1,nt,nu,ny);
+        J1 = DTQP_getQPIndex(R(jx),LR(jx),1,nt,I_stored);
 
         % compute values
         V1 = H2.*V(1:end-1); % check H calculation

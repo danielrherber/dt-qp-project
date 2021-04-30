@@ -11,7 +11,7 @@ function [G,DG] = DTQP_IPFMINCON_additional_constraints(X,con,in,opts,Dflag)
 
 % extract
 nu = in.nu; ny = in.ny; np = in.np; nt = in.nt; nX = in.nx;
-p = in.p; t = in.t; ini = in.i; param = in.param;
+p = in.p; t = in.t; ini = in.i; I_stored = in.I_stored; param = in.param;
 f = con.f; pathboundary = con.pathboundary; scaleflag = in.scaleflag;
 
 % (potentially) apply linear scaling
@@ -110,7 +110,7 @@ for ix = 1:nz
                 r = (r0+1:r0+nt)';
 
                 % columns in DZ (optimization variables)
-                c = DTQP_getQPIndex(R(jx),LR(jx),1,nt,nu,ny);
+                c = DTQP_getQPIndex(R(jx),LR(jx),1,nt,I_stored);
 
             else % boundary constraint
 
@@ -118,7 +118,7 @@ for ix = 1:nz
                 r = r0+1;
 
                 % columns in DZ (optimization variables)
-                c = DTQP_getQPIndex(R(jx),LR(jx),0,nt,nu,ny);
+                c = DTQP_getQPIndex(R(jx),LR(jx),0,nt,I_stored);
 
                 % only need first value
                 v = v(1);

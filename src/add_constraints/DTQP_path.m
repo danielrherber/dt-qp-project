@@ -10,7 +10,7 @@
 function [I,J,V,b] = DTQP_path(YZ,in)
 
 % extract some of the variables
-nt = in.nt; nu = in.nu; ny = in.ny; t = in.t; ini = in.i; p = in.p;
+nt = in.nt; t = in.t; ini = in.i; I_stored = in.I_stored; p = in.p;
 
 % initialize storage arrays
 Isav = {}; Jsav = {}; Vsav = {};
@@ -34,7 +34,7 @@ for j = 1:length(YZ.linear) % loop through the extended variables
         Is = Ir;
 
         % column locations
-        Js = DTQP_getQPIndex(C(i),YZ.linear(j).right,1,nt,nu,ny);
+        Js = DTQP_getQPIndex(C(i),YZ.linear(j).right,1,nt,I_stored);
 
         % nt values assigned
         if length(size(YZt))==3

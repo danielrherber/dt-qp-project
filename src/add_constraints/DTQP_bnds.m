@@ -10,7 +10,7 @@
 function [I,V] = DTQP_bnds(bnd,in)
 
 % extract some of the variables
-nt = in.nt; nu = in.nu; ny = in.ny;
+nt = in.nt; I_stored = in.I_stored;
 
 % find time dependent matrix (column vector)
 Bndt = DTQP_tmatrix(bnd.matrix,in.p,in.t);
@@ -29,7 +29,7 @@ for k = 1:length(C)
         % control or states
         case {1,2}
             % rows in lb/ub
-            Isav{k} = DTQP_getQPIndex(C(k),bnd.right,1,nt,nu,ny);
+            Isav{k} = DTQP_getQPIndex(C(k),bnd.right,1,nt,I_stored);
 
             % nt values assigned
             if length(size(Bndt))==3
@@ -44,7 +44,7 @@ for k = 1:length(C)
         % parameters, initial states, or final states
         case {3,4,5,6,7}
             % row in lb/ub
-            Isav{k} = DTQP_getQPIndex(C(k),bnd.right,0,nt,nu,ny);
+            Isav{k} = DTQP_getQPIndex(C(k),bnd.right,0,nt,I_stored);
 
             % single value assigned
             if length(size(Bndt))==3
