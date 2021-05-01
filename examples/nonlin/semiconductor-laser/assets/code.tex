@@ -1,0 +1,26 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{I(t),t_f} \quad & t_f \\
+\text{subject to:} \quad & \dot{S} = - \frac{S}{\tau_p} + \Gamma G(N,S) S + \beta B N\left[ N + P_0 \right] \\
+& \dot{N} = \frac{I}{q} - R(N) - \Gamma G(N,S) S \\
+& (S,N)(0) = (S_0,N_0) \\
+& (S,N)(t_f) = (S_f,N_f) \\
+& I_{\min} \leq I(t) \leq I_{\max} \\
+\text{where:} \quad & G(N,S) = G_p \left[ N - N_{\mathrm{tr}} \right] \left[ 1 - \epsilon  S \right] \\
+& R(N) = AN + BN \left[ N + P_0 \right] + CN \left[ N + P_0 \right]^2
+\end{align*}
+}}
+\end{document}
+
+% solution

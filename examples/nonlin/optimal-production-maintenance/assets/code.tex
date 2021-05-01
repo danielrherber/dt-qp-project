@@ -1,0 +1,25 @@
+% https://www.latex4technics.com/
+
+% formulation
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
+\thispagestyle{empty}
+\begin{document}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{u(t),m(t)} \quad & -ax(t_f)e^{-\rho t_f} - bp(t_f)e^{-\rho t_f} - \int_{0}^{t_f} e^{-\rho t} \left[ ws(t) - hx(t) - ru^2(t) - qu(t) - d - cm(t) \right] \mathrm{d}t \\
+\text{subject to:} \quad & \dot{x}(t) = p(t) u(t) - s(t) \\
+& \dot{p}(t) = - \left[ \alpha(t) + m(t) \right] p(t) + m(t)  \\
+& (x,p)(0) = (x_0,p_0) \\
+& 0 \leq u(t) \\
+& 0 \leq m(t) \leq M \\
+& 0 \leq x(t)
+\end{align*}
+}}
+\end{document}
+
+% solution

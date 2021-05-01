@@ -103,7 +103,7 @@ i{7} = i{1}; % final control indices
 in.i = i;
 
 % finite-dimensional problem
-in.I_stored = [reshape(1:(nu+ny)*nt,nt,[]),repmat(i{3},nt,1)];
+in.I_stored = [reshape(1:(nu+ny)*nt,nt,[]),repmat((nu+ny)*nt+(1:np),nt,1)];
 
 %% go through Lagrange terms
 % add fields if not present

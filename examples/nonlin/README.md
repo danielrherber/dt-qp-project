@@ -21,7 +21,9 @@
 | Neuenhofen Kerrigan X2 | [neuenhofen-kerrigan-x2](neuenhofen-kerrigan-x2/) | Neu20 | partial closed-form |
 | Nonlinear 1D | [nonlinear-1d](nonlinear-1d/) | Garg09 | closed-form |
 | Optimal Consumption | [optimal-consumption](optimal-consumption/) | Evans |  |
+| Optimal Production and Maintenance | [optimal-production-maintenance](optimal-production-maintenance/) | Cho93 |  |
 | Second Order Singular | [second-order-singular](second-order-singular/) | Aly78 | closed-form |
+| Semiconductor Laser | [semiconductor-laser](semiconductor-laser/) | Kim04 |  |
 | Simple Co-design Transfer | [simple-co-design-transfer](simple-co-design-transfer/) | Her19 |  |
 | Simple SASA | [simple-sasa](simple-sasa/) | Her17 | closed-form |
 | Simple Suspension | [simple-suspension](simple-suspension/) | Her20 |  |
@@ -43,6 +45,7 @@
 - [**Bul93**] R. Bulirsch, E. Nerz, H. J. Pesch, and O. von Stryk, "*Combining Direct and Indirect Methods in Optimal Control: Range Maximization of a Hang Glider,*" in Optimal Control, Birkhäuser Basel, 1993, pp. 273–288 [Online]. Available: http://dx.doi.org/10.1007/978-3-0348-7539-4_20
 - [**Can02**] E. Balsa Canto, J. R. Banga, A. A. Alonso, and V. S. Vassiliadis, "*Restricted second order information for the solution of optimal control problems using control vector parameterization*," Journal of Process Control, vol. 12, no. 2, pp. 243–255, Feb. 2002, doi: 10.1016/s0959-1524(01)00008-7
 - [**Cit69**] S. J. Citron, "*Elements of Optimal Control*.", Holt, Rinehart and Winston, 1969
+- [**Cho93**] D. I. Cho, P. L. Abad, and M. Parlar, "*Optimal production and maintenance decisions when a system experience age-dependent deterioration*", Optim. Control Appl. Meth., vol. 14, no. 3, pp. 153–167, Jul. 1993, doi: 10.1002/oca.4660140302. [Online]. Available: http://dx.doi.org/10.1002/oca.4660140302
 - [**Evans**] L. C. Evans, "*An Introduction to Mathematical Optimal Control Theory*." Department of Mathematics, University of California, Berkeley, Version 0.2
 - [**Hag16**] W. W. Hager, H. Hou, and A. V. Rao, "*Convergence Rate for a Gauss Collocation Method Applied to Unconstrained Optimal Control*", J Optim Theory Appl, vol. 169, no. 3, pp. 801–824, Mar. 2016, doi: 10.1007/s10957-016-0929-7
 - [**Her17**] D. R. Herber and J. T. Allison, "*Unified Scaling of Dynamic Optimization Design Formulations*", in Volume 2A: 43rd Design Automation Conference, 2017, doi: 10.1115/detc2017-67676 [Online]. Available: http://dx.doi.org/10.1115/DETC2017-67676
@@ -50,6 +53,7 @@
 - [**Her20**] D. R. Herber and A. K. Sundarrajan, "*On the uses of linear-quadratic methods in solving nonlinear dynamic optimization problems with direct transcription*", in ASME International Mechanical Engineering Congress & Exposition, 2020
 - [**Garg09**] D. Garg et al., "*"Direct Trajectory Optimization and Costate Estimation of General Optimal Control Problems Using a Radau Pseudospectral Method*", in AIAA Guidance, Navigation, and Control Conference, 2009, doi: 10.2514/6.2009-5989
 - [**Jo02**] H. R. Joshi, "*Optimal control of an HIV immunology model*," Optimal Control Applications and Methods, vol. 23, no. 4, pp. 199–213, 2002, doi: 10.1002/oca.710
+- [**Kim04**] J.-H. R. Kim, G. L. Lippi, and H. Maurer, "*Minimizing the transition time in lasers by optimal control methods*", Physica D: Nonlinear Phenomena, vol. 191, no. 3–4, pp. 238–260, May 2004, doi: 10.1016/j.physd.2003.12.002. [Online]. Available: http://dx.doi.org/10.1016/j.physd.2003.12.002 
 - [**Led08**] U. Ledzewicz and H. Schättler, "*Analysis of optimal controls for a mathematical model of tumour anti-angiogenesis*,"" Optimal Control Applications and Methods, vol. 29, no. 1, pp. 41–57, Jan. 2008, doi: 10.1002/oca.814
 - [**Lu00**] R. Luus, *Iterative Dynamic Programming*. CRC Press, 2000, isbn: 1584881488
 - [**Neu20**] M. P. Neuenhofen and E. C. Kerrigan, "*An integral penalty-barrier direct transcription method for optimal control*," 2020, arXiv:2009.06217
