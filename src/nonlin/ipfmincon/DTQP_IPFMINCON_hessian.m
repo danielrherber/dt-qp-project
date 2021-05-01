@@ -346,5 +346,4 @@ if ~isempty(find(Hin,1))
     Ho = Ho + 2*Hin;
 end
 
-
 end

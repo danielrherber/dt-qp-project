@@ -25,6 +25,7 @@ h0 = [h; 0];
 
 % go through each Lagrange term
 for k = 1:length(Lfull)
+
     % obtain current substructure
     Lleft = Lfull(k).left;
     Lright = Lfull(k).right;
@@ -45,16 +46,20 @@ for k = 1:length(Lfull)
     % determine locations and matrix values at this points
     for i = 1:length(R) % number of row continuous variables
         for j = 1:length(C) % number of column continuous variables
+
             % get current matrix values
             Lv = Lt(:,i,j);
 
             % check if this entry is always 0
             if any(Lv)
-                r = DTQP_getQPIndex(R(i),Lleft,1,nt,I_stored); % Hessian row index sequence
-                c = DTQP_getQPIndex(C(j),Lright,1,nt,I_stored); % Hessian column index sequence
 
-                Isav{end+1} = r; % main diagonal rows
-                Jsav{end+1} = c; % main diagonal columns
+                % Hessian index sequence
+                r = DTQP_getQPIndex(R(i),Lleft,1,nt,I_stored); % row
+                c = DTQP_getQPIndex(C(j),Lright,1,nt,I_stored); % column
+
+                % assign main diagonal
+                Isav{end+1} = r; % rows
+                Jsav{end+1} = c; % columns
 
                 % integration weights
                 if any(strcmpi(quadrature,{'G','CC'}))

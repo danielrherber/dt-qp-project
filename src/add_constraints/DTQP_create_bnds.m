@@ -50,4 +50,5 @@ end % end for i
 % assign minimum row value to lower bound vector
 ub = min(ub,[],2);
 %--------------------------------------------------------------------------
+
 end % end function

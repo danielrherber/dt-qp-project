@@ -47,6 +47,7 @@ for k = 1:nYZ
 
     % generate the sequences
     if YZflag
+
         % path constraint
         [AI,AJ,AV,b] = DTQP_path(YZ(k),in);
 
@@ -59,7 +60,9 @@ for k = 1:nYZ
 
         % update the current number of mixed linear constraints
         N = N + in.nt;
+
     else
+
         % boundary constraint
         [AJ,AV,b] = DTQP_boundary(YZ(k),in);
 
@@ -72,6 +75,7 @@ for k = 1:nYZ
 
         % update the current number of mixed linear constraints
         N = N + 1;
+
     end
 
 end

@@ -11,6 +11,7 @@ function [LA,Lb,RA,Rb] = DTQP_linkage(left,right,in)
 
 % transcribe the linkage constraints for left
 if ~isempty(left)
+
     % get the constraint structure for the left phase
     for idx = 1:length(left)
         LEFT(idx) = left(idx).left;
@@ -25,12 +26,15 @@ if ~isempty(left)
     [LA,Lb] = DTQP_create_YZ(LEFT,in);
 
 else
+
     % set as empty matrices
     LA = []; Lb = []; % probably need correct sizes
+
 end
 
 % transcribe the linkage constraints for right
 if ~isempty(right)
+
     % get the constraint structure for the right phase
     for idx = 1:length(right)
         RIGHT(idx) = right(idx).right;
@@ -45,8 +49,10 @@ if ~isempty(right)
     [RA,Rb] = DTQP_create_YZ(RIGHT,in);
 
 else
+
     % set as empty matrices
     RA = []; Rb = []; % probably need correct sizes
+
 end
 
 end % end function

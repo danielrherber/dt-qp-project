@@ -17,6 +17,7 @@ Isav = {}; Jsav = {}; Vsav = {};
 
 % go through each Mayer term
 for k = 1:length(Mfull)
+
     % obtain current substructure
     Mleft = Mfull(k).left;
     Mright = Mfull(k).right;
@@ -32,17 +33,22 @@ for k = 1:length(Mfull)
     % determine locations and matrix values at this points
     for i = 1:length(R) % number of row continuous variables
         for j = 1:length(C) % number of column continuous variables
+
             % get current matrix value
             Mv = Mt(:,i,j);
 
             % check if this entry is always 0
             if any(Mv)
-                r = DTQP_getQPIndex(R(i),Mleft,0,nt,I_stored); % Hessian row index sequence
-                c = DTQP_getQPIndex(C(j),Mright,0,nt,I_stored); % Hessian column index sequence
 
-                Isav{end+1} = r; % main diagonal row
-                Jsav{end+1} = c; % main diagonal column
-                Vsav{end+1} = Mv; % main diagonal value
+                % Hessian index sequence
+                r = DTQP_getQPIndex(R(i),Mleft,0,nt,I_stored); % row
+                c = DTQP_getQPIndex(C(j),Mright,0,nt,I_stored); % column
+
+                % assign main diagonal
+                Isav{end+1} = r; % row
+                Jsav{end+1} = c; % column
+                Vsav{end+1} = Mv; % value
+
             end
 
         end % end C for loop

@@ -66,6 +66,7 @@ if length(varargin) == 9
     % START: reorder linear constraint rows
     %----------------------------------------------------------------------
     if ~isempty(find(Aeq,1))
+
         % % sort the rows based on first nonzero entry
         % [~,D] = sortrows(-abs(Aeq));
 
@@ -81,9 +82,11 @@ if length(varargin) == 9
         if ~isempty(find(beq,1))
             beq = beq(D);
         end
+
     end
 
     if ~isempty(find(A,1))
+
         % % sort the rows based on first nonzero entry
         % [~,D] = sortrows(-abs(A));
 
@@ -99,6 +102,7 @@ if length(varargin) == 9
         if ~isempty(find(b,1))
             b = b(D);
         end
+
     end
     %----------------------------------------------------------------------
     % END: reorder linear constraint rows
@@ -111,6 +115,7 @@ if length(varargin) == 9
     varargout{8} = lb; varargout{9} = ub;
 
 else
+
     % original ordering
     % reorder, [u_1, y_1, ... , u_n, y_n, p] -> [U,Y,p]
     sV = [];

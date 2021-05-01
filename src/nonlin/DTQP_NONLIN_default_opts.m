@@ -105,4 +105,5 @@ if strcmpi(opts.method.form,'qlin')
     end
 
 end
+
 end

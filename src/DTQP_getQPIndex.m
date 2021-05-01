@@ -23,7 +23,7 @@ end
 
 % determine if continuous option is desired
 if Flag && (xtype ~= 1) && (xtype ~= 2)
-    I = repmat(I,nt,1); % continuous option, output Nt elements
+    I = repmat(I,nt,1); % continuous option, output nt elements
 end
 
 end

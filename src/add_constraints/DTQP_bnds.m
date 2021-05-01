@@ -25,36 +25,40 @@ Isav = cell(length(C),1); Vsav = Isav;
 for k = 1:length(C)
 
     switch bnd.right
-
+        %------------------------------------------------------------------
         % control or states
         case {1,2}
-            % rows in lb/ub
-            Isav{k} = DTQP_getQPIndex(C(k),bnd.right,1,nt,I_stored);
 
-            % nt values assigned
-            if length(size(Bndt))==3
-                Vs = Bndt(:,:,k);
-            else
-                Vs = Bndt(:,k,:);
-            end
+        % rows in lb/ub
+        Isav{k} = DTQP_getQPIndex(C(k),bnd.right,1,nt,I_stored);
 
-            % combine
-            Vsav{k} = Vs;
+        % nt values assigned
+        if length(size(Bndt))==3
+            Vs = Bndt(:,:,k);
+        else
+            Vs = Bndt(:,k,:);
+        end
 
+        % combine
+        Vsav{k} = Vs;
+
+        %------------------------------------------------------------------
         % parameters, initial states, or final states
         case {3,4,5,6,7}
-            % row in lb/ub
-            Isav{k} = DTQP_getQPIndex(C(k),bnd.right,0,nt,I_stored);
 
-            % single value assigned
-            if length(size(Bndt))==3
-                Vs = Bndt(1,:,k);
-            else
-                Vs = Bndt(1,k,:);
-            end
+        % row in lb/ub
+        Isav{k} = DTQP_getQPIndex(C(k),bnd.right,0,nt,I_stored);
 
-            % combine
-            Vsav{k} = Vs;
+        % single value assigned
+        if length(size(Bndt))==3
+            Vs = Bndt(1,:,k);
+        else
+            Vs = Bndt(1,k,:);
+        end
+
+        % combine
+        Vsav{k} = Vs;
+        %------------------------------------------------------------------
 
     end % end switch
 

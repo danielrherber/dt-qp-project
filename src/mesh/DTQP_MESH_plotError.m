@@ -31,6 +31,7 @@ eminplot = log10(min(vertcat(E{:})))-1;
 
 % go through each mesh
 for k = 1:length(T)
+
     % extract
     x = T{k};
     y = [E{k};E{k}(end)];
@@ -42,6 +43,7 @@ for k = 1:length(T)
     % plot the mesh errors
     fill([x;flipud(x)],[log10(y);eminplot*ones(size(y))],c(k,:),...
         'FaceAlpha',0.90);
+
 end
 
 % plot the tolerance line
@@ -62,4 +64,5 @@ ha.XAxis.Label.FontSize = fontlabel; % change x label font size
 ha.YAxis.Label.FontSize = fontlabel; % change y label font size
 ha.Layer = 'top'; % place the axes on top of the data
 ytickformat('$10^{%.3g}$')
+
 end

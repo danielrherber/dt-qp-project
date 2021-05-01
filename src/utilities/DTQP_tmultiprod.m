@@ -47,9 +47,12 @@
 function A = DTQP_tmultiprod(matrices,p,varargin)
 
 if isempty(matrices)
-    A = []; % empty result
+
+    % empty result
+    A = [];
 
 elseif strcmp(matrices(1),'prod')
+
     % remove 'prod' specifier
     matrices(1) = [];
 
@@ -63,8 +66,10 @@ elseif strcmp(matrices(1),'prod')
     end
 
 else
+
     % only a single matrix (no matrix products needed)
     A = DTQP_tmatrix(matrices,p,varargin{:});
+
 end
 
 end

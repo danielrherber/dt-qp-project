@@ -217,9 +217,13 @@ while nt < Nmax
 
     % determine if already too many points in the interval
     if It + 1 > n1
+
         ep(imax,:) = 0;
         continue
-    else % we should add the point
+
+    else
+
+        % we should add the point
         It = It + 1;
 
         % add a point to the interval
@@ -227,6 +231,7 @@ while nt < Nmax
 
         % increment the total number of points
         nt = nt + 1;
+
     end
 
     % update the predicted error for interval (4.164)
@@ -292,4 +297,5 @@ if (displevel > 1) % verbose
         ' | ', tstr,...
         ' | ']);
 end
+
 end

@@ -77,17 +77,23 @@ while (eRel > etol) && (nt < ntmax)
         end
 
     catch
+
         % reset saved quantities when QP problem fails
         ms = []; Fs = []; k0s = []; F = inf;
+
     end
 
     % check if the problem did not converge
     if isnan(F) || isinf(F)
+
         % reset saved quantities when problem did not converge
         ms = []; Fs = []; k0s = []; F = inf;
+
     else
+
         % store objective function value
         Fs(end+1) = F;
+
     end
 
     if length(Fs) > 2
@@ -156,10 +162,12 @@ while (eRel > etol) && (nt < ntmax)
 
         % % required nt
         % ntreq = nt*(eRel/etol)^(1/k0);
+
     end
 
 	% increment counter
     iter = iter + 1;
+
 end
 
 % reset display level

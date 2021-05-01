@@ -70,9 +70,11 @@ for phs = 1:nphs
         [LLAeqi,LLbeqi,LRAeqi,LRbeqi] = DTQP_linkage(setup2(phs+1).LY,setup2(phs).LY,in(phs));
 
     else
+
         % empty linkage elements
         LLAi = []; LLbi= []; LRAi= []; LRbi= [];
         LLAeqi= []; LLbeqi = []; LRAeqi = []; LRbeqi = [];
+
     end
 
     % (optional) linear transformation scaling
@@ -132,9 +134,12 @@ for phs = 1:nphs
         Aeqs{phs} = Aeqi; beqs{phs} = beqi;
         LALs{phs} = LLAi; LARs{phs} = LRAi; LLbs{phs} = LLbi; LRbs{phs} = LRbi;
         LAeqLs{phs} = LLAeqi; LAeqRs{phs} = LRAeqi; LLbeqs{phs} = LLbeqi; LRbeqs{phs} = LRbeqi;
+
     else
+
         H = Hi; f = fi; A = Ai; b = bi;
         Aeq = Aeqi; beq = beqi; lb = lbi; ub = ubi;
+
     end
 
     % combine constants
@@ -225,6 +230,7 @@ F = F + c;
 nx = 0;
 T = cell(nphs,1); U = cell(nphs,1); Y = cell(nphs,1); P = cell(nphs,1);
 for phs = 1:nphs
+
     % extract
     inphs = in(phs);
     nt = inphs.nt; nu = inphs.nu; ny = inphs.ny; np = inphs.np;
@@ -237,6 +243,7 @@ for phs = 1:nphs
 
     % increment phase optimization variable number starting point
     nx = nx + inphs.nx;
+
 end
 
 % combine
