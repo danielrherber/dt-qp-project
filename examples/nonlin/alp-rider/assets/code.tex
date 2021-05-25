@@ -1,14 +1,13 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
 \min_{u_1(t),u_2(t)} \quad & \int_{0}^{20} \left[10^{2}(y_1^2 + y_2^2 + y_3^2 + y_4^2) + 10^{-2} (u_1^2 +u_2^2)\right] dt\\
@@ -26,4 +25,4 @@
 }}
 \end{document}
 
-% solution
+%% solution
