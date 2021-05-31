@@ -98,7 +98,7 @@ end
 % feasibility region to plot
 I = I2;
 
- % colors
+% colors
 cFeasible =[1 0 0];
 cInfeasible = [0.8 0.8 0.8];
 

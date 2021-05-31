@@ -2,7 +2,7 @@
 % DSuspensionNested.m
 % Nested implementation of the control co-design problem in:
 % J. T. Allison, T. Guo, and Z. Han, "Co-Design of an Active Suspension
-% Using Simultaneous Dynamic Optimization,” Journal of Mechanical Design,
+% Using Simultaneous Dynamic Optimization," Journal of Mechanical Design,
 % vol. 136, no. 8, Jun. 2014, doi: 10.1115/1.4027335
 %--------------------------------------------------------------------------
 %
@@ -18,7 +18,7 @@ if ~isempty(varargin)
 else
     p.GAflag = true;
     p.FiniteDifferenceType = 'central'; % derivative method
-    p.nt = 100; % number of time points
+    p.nt = 200; % number of time points
     p.InnerLoopTolerance = 1e-14; % inner-loop tolerance
     p.OuterLoopTolerance = 1e-3; % outer-loop tolerance
 end
@@ -81,16 +81,16 @@ InitialPlant = 7;
 % set initial plant design
 switch InitialPlant
     %----------------------------------------------------------------------
-    case 1 % initial values from allison2014b
+    case 1 % initial values from Allison2014b
     X = [0.01,0.12,0.05,6,0.0067,0.04,0.15];
     %----------------------------------------------------------------------
-    case 2 % initial values from allison2014b
+    case 2 % initial values from Allison2014b
     X = [0.01,0.129,0.106,3.57,0.006,0.035,0.17];
     %----------------------------------------------------------------------
     case 3 % (lb+ub)/2
     X = [0.0125,0.2250,0.2600,9.5000,0.0075,0.0550,0.2000];
     %----------------------------------------------------------------------
-    case 4 % optimal values from allison2014b
+    case 4 % optimal values from Allison2014b
     X = [0.0097,0.0620,0.0201,15.3,0.0061,0.0303,0.170];
     %----------------------------------------------------------------------
     case 5 % optimal values using simultaneous

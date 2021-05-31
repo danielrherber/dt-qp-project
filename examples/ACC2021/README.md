@@ -1,15 +1,15 @@
 ## Detailed Suspension Control Co-Design Problem
 
 <p align="center">
-  <img src="assets/acc2021-image-2.svg">
+  <img src="detailed-suspension-acc/assets/acc2021-image-2.svg">
 </p>
 
 ### Key Files
 
 ##### Simultaneous Strategy
 
-- For a single problem instance with the simultaneous CCD strategy, run ![DSuspensionSimultaneous.m](simultaneous/DSuspensionSimultaneous.m)
-- For many problems with different options (tolerances, number of time points, derivative methods, etc.) with the simultaneous CCD strategy, run ![DSuspensionSimultaneous_Sens.m](simultaneous/DSuspensionSimultaneous_Sens.m)
+- For a single problem instance with the simultaneous CCD strategy, run ![DSuspensionSimultaneous.m](detailed-suspension-acc/simultaneous/DSuspensionSimultaneous.m)
+- For many problems with different options (tolerances, number of time points, derivative methods, etc.) with the simultaneous CCD strategy, run ![DSuspensionSimultaneous_Sens.m](detailed-suspension-acc/simultaneous/DSuspensionSimultaneous_Sens.m)
 
 ##### Nested Strategy
 
@@ -28,10 +28,10 @@ J. T. Allison, T. Guo, and Z. Han, "*Co-Design of an Active Suspension Using Sim
 
 ### Formulation
 <p align="center">
-  <img height="225" src="assets/acc2021-image-1.svg">
+  <img height="225" src="detailed-suspension-acc/assets/acc2021-image-1.svg">
 </p>
 
-![formulation](assets/formulation.svg)
+![formulation](detailed-suspension-acc/assets/formulation.svg)
 Note that this formulation is for the simultaneous problem. The nested strategy (inner/outer loops with fixed plant design for the inner-loop problem) is also implemented as indicated above.
 
 <!-- ### Solution -->

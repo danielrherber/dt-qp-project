@@ -2,7 +2,7 @@
 % DSuspensionSimultaneous.m
 % Simultaneous implementation of the control co-design problem in:
 % J. T. Allison, T. Guo, and Z. Han, "Co-Design of an Active Suspension
-% Using Simultaneous Dynamic Optimization,” Journal of Mechanical Design,
+% Using Simultaneous Dynamic Optimization," Journal of Mechanical Design,
 % vol. 136, no. 8, Jun. 2014, doi: 10.1115/1.4027335
 %--------------------------------------------------------------------------
 %
@@ -38,7 +38,7 @@ opts.solver.Ftolerance = p.FeasibilityTolerance;
 
 % opts for sens study
 if ~isempty(varargin)
-    opts.general.displevel = 0;   
+    opts.general.displevel = 1;
 end
 
 % problem parameters
@@ -228,7 +228,7 @@ UB(2).right = 3;
 UB(2).matrix = [0.02 0.4 0.5 16 0.012 0.08 0.3];
 
 % get initial guess
-p = DSuspensionSimultaneous_guess(p);
+setup = DSuspensionSimultaneous_guess([]);
 
 % combine structures
 setup.symb = symb; setup.UB = UB; setup.LB = LB;setup.Z = Z;
@@ -261,7 +261,7 @@ end
 end
 
 % initial guess
-function p = DSuspensionSimultaneous_guess(p)
+function setup = DSuspensionSimultaneous_guess(setup)
 
 % run a simulation with the initial plant design
 simflag = false;
@@ -272,16 +272,16 @@ InitialPlant = 2;
 % set initial plant design
 switch InitialPlant
     %----------------------------------------------------------------------
-    case 1 % initial values from allison2014b
+    case 1 % initial values from Allison2014b
     p0 = [0.01,0.12,0.05,6,0.0067,0.04,0.15];
     %----------------------------------------------------------------------
-    case 2 % initial values from allison2014b
+    case 2 % initial values from Allison2014b
     p0 = [0.01,0.129,0.106,3.57,0.006,0.035,0.17];
     %----------------------------------------------------------------------
     case 3 % (lb+ub)/2
     p0 = [0.0125,0.2250,0.2600,9.5000,0.0075,0.0550,0.2000];
     %----------------------------------------------------------------------
-    case 4 % optimal values from allison2014b
+    case 4 % optimal values from Allison2014b
     p0 = [0.0097,0.0620,0.0201,15.3,0.0061,0.0303,0.170];
     %----------------------------------------------------------------------
     case 5 % optimal values using simultaneous
@@ -319,7 +319,7 @@ else
 end
 
 % combine
-p.guess = [U0,Y0,P0];
+setup.guess.X = [U0,Y0,P0];
 
 end
 
