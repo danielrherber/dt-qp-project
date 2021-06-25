@@ -9,7 +9,8 @@
 %--------------------------------------------------------------------------
 function D = LQRstandard_solution(in,opts)
 
-% sqrt of the number of costates
+% sqrt of the number of costates (or the number of states)
+in.ny = in.phase_info(1).ny;
 in.snp = in.ny;
 
 % copy the matrices
@@ -35,7 +36,7 @@ P0 = reshape(full(M),[],1);
 P0 = P0(in.Ilower);
 
 % backward integration for the costates
-[tode,Pode] = ode15s(@(x,y) odefun_dP(x,y,A,B,iR,Q,in),[in.t(end) in.t(1)],P0,options);
+[tode,Pode] = ode15s(@(x,y) odefun_dP(x,y,A,B,iR,Q,in),[in.tf in.t0],P0,options);
 
 % flip the solution to be forward in time
 tode = flipud(tode);

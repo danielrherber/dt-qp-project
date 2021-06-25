@@ -35,15 +35,15 @@ else % construct the solution for later use
     disp('warning: this may take a few minutes but only needs to be done ONCE')
 
     % high accuracy solution
-    opts.solmethod = 'bvp';
-    opts.tolode = 1e-9;
+    opts.solmethod = 'ode';
+    opts.tolode = 1e-13;
     opts.tolbvp = 1e-7;
 
     D = TavallaeiTousi1_solution(in,opts);
 
     % save the solution
     save(fullname,'D');
-        
+
 end
 
 % interpolate

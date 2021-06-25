@@ -9,7 +9,8 @@
 %--------------------------------------------------------------------------
 function D = OutputTracking_solution(in,opts)
 
-% sqrt of the number of costates
+% sqrt of the number of costates (or the number of states)
+in.ny = in.phase_info(1).ny;
 in.snp = in.ny;
 
 % copy the matrices
@@ -36,7 +37,7 @@ k0 = zeros(in.ny,1);
 V0 = [P0;k0];
 
 % backward integration for the costates
-[tode,Pkode] = ode15s(@(x,y) odefun_dPk(x,y,in,A,B,C,Q,R,o),[in.t(end) in.t(1)],V0,options);
+[tode,Pkode] = ode15s(@(x,y) odefun_dPk(x,y,in,A,B,C,Q,R,o),[in.tf in.t0],V0,options);
 
 % extract
 Pode = Pkode(:,1:length(in.Ilower));
