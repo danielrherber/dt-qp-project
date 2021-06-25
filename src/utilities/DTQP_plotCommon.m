@@ -29,8 +29,8 @@ switch flag
     ha = gca; % get current axis handle
     ha.XAxis.Color = bcolor; % change the x axis color to black (not a dark gray)
     ha.YAxis.Color = bcolor; % change the y axis color to black (not a dark gray)
-    ha.XAxis.FontSize = fontsize-6; % change x tick font size
-    ha.YAxis.FontSize = fontsize-6; % change y tick font size
+    ha.XAxis.FontSize = fontsize-3; % change x tick font size
+    ha.YAxis.FontSize = fontsize-3; % change y tick font size
     ha.XAxis.Label.FontSize = fontsize; % change x label font size
     ha.YAxis.Label.FontSize = fontsize; % change y label font size
     ha.Box = 'on'; % box on
@@ -38,7 +38,7 @@ switch flag
     ha.LineWidth = 1; % increase axis line width
     %----------------------------------------------------------------------
     case 'legend' % requires: bcolor, fontsize
-    hl.FontSize = fontsize-16; % change legend font size
+    hl.FontSize = fontsize-3; % change legend font size
     hl.EdgeColor = bcolor; % change the legend border to black (not a dark gray)
     %----------------------------------------------------------------------
     case 'save' % requires: opts, pathplots, figname
@@ -50,42 +50,51 @@ switch flag
     end
     %----------------------------------------------------------------------
     case 'plot-state' % requires: T, Y, sol, fontsize, solutionflag
+
     % line colors
     cArray = lines(size(Y,2));
 
-    % plot state
+    % plot each state
     for i = 1:size(Y,2)
-        plot(T,Y(:,i),'.','color',cArray(i,:),'markersize',12);
+
+        % plot DT solution
+        plot(T,Y(:,i),'.','markersize',12,'color',cArray(i,:),...
+            'DisplayName',['$x^{DT}_{',num2str(i),'}$']);
+
+        % plot alternative solution
         if solutionflag
-            plot(sol(2).T,sol(2).Y(:,i),'linewidth',2,'color',cArray(i,:));
+            plot(sol(2).T,sol(2).Y(:,i),'linewidth',2,'color',cArray(i,:),...
+                'DisplayName',['$x^*_{',num2str(i),'}$']);
         end
+
     end
 
     % axis
     xlabel('$t$ (time)','fontsize',fontsize)
-    ylabel('$\xi$ (states)','fontsize',fontsize)
+    ylabel('$x$ (states)','fontsize',fontsize)
 
     % legend
-    Lv = {};
-    for i = 1:size(Y,2)
-        Lv{end+1} = ['$\xi^{DT}_{',num2str(i),'}$'];
-        if solutionflag
-            Lv{end+1} = ['$\xi^*_{',num2str(i),'}$'];
-        end
-    end
-    hL = legend(Lv);
-    set(hL,'interpreter','latex','location','best',...
-        'fontsize',fontsize-4)
+    hL_opts = {'Interpreter','latex','FontSize',fontsize-4,...
+        'Location','best','EdgeColor',bcolor};
+    legend(hL_opts{:});
+
     %----------------------------------------------------------------------
     case 'plot-control' % requires: T, U, sol, fontsize, solutionflag
+
     % line colors
     cArray = lines(size(U,2));
 
-    % plot control
+    % plot each control
     for i = 1:size(U,2)
-        plot(T,U(:,i),'.','color',cArray(i,:),'markersize',12);
+
+        % plot DT solution
+        plot(T,U(:,i),'.','markersize',12,'color',cArray(i,:),...
+            'DisplayName',['$u^{DT}_{',num2str(i),'}$']);
+
+        % plot alternative solution
         if solutionflag
-            plot(sol(2).T,sol(2).U(:,i),'linewidth',2,'color',cArray(i,:));
+            plot(sol(2).T,sol(2).U(:,i),'linewidth',2,'color',cArray(i,:),...
+                'DisplayName',['$u^*_{',num2str(i),'}$']);
         end
     end
 
@@ -94,33 +103,23 @@ switch flag
     ylabel('$u$ (controls)','fontsize',fontsize)
 
     % legend
-    Lv = {};
-    for i = 1:size(U,2)
-        Lv{end+1} = ['$u^{DT}_{',num2str(i),'}$'];
-        if solutionflag
-            Lv{end+1} = ['$u^*_{',num2str(i),'}$'];
-        end
-    end
-    hL = legend(Lv);
-    set(hL,'interpreter','latex','location','best',...
-        'fontsize',fontsize-4)
+    hL_opts = {'Interpreter','latex','FontSize',fontsize-4,...
+        'Location','best','EdgeColor',bcolor};
+    legend(hL_opts{:});
+
     %----------------------------------------------------------------------
     case 'plot-error' % requires: T, Y, U, sol, fontsize, solutionflag
-    % initialize
-    Hv = []; Lv = {};
 
     % plot state error
     for i = 1:size(Y,2)
-        ph1 = semilogy(T,abs(sol(1).Y(:,i)-Y(:,i))+1e-20,'linewidth',2);
-        Hv = [Hv, ph1];
-        Lv{i} = ['$\mathrm{log}_{10}\|\xi^*_{',num2str(i),'} - \xi^{DT}_{',num2str(i),'}\|$'];
+        semilogy(T,abs(sol(1).Y(:,i)-Y(:,i))+1e-20,'linewidth',2,...
+            'DisplayName',['$\mathrm{log}_{10}\|x^*_{',num2str(i),'} - x^{DT}_{',num2str(i),'}\|$']);
     end
 
     % plot control error
     for i = 1:size(U,2)
-        ph1 = semilogy(T,abs(sol(1).U(:,i)-U(:,i))+1e-20,'linewidth',2);
-        Hv = [Hv, ph1];
-        Lv{size(Y,2)+i} = ['$\mathrm{log}_{10}\|u^*_{',num2str(i),'} - u^{DT}_{',num2str(i),'}\|$'];
+        semilogy(T,abs(sol(1).U(:,i)-U(:,i))+1e-20,'linewidth',2,...
+            'DisplayName',['$\mathrm{log}_{10}\|u^*_{',num2str(i),'} - u^{DT}_{',num2str(i),'}\|$']);
     end
 
     % axis
@@ -131,7 +130,8 @@ switch flag
     ha.YScale = 'log';
 
     % legend
-    hL = legend(Hv,Lv);
-    set(hL,'location','best','fontsize',fontsize-4)
+    hL_opts = {'Interpreter','latex','FontSize',fontsize-4,...
+        'Location','best','EdgeColor',bcolor};
+    legend(hL_opts{:});
 
 end
