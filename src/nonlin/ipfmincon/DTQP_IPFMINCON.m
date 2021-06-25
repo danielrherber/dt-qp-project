@@ -94,6 +94,14 @@ if isfield(symb,'Ob')
         lqdoflag = false;
     % end
 
+    % construct objective function matrices
+    H = DTQP_createH(setup.L,setup.M,in,opts); % create Hessian
+    f = DTQP_createf(setup.l,setup.m,in,opts); % create gradient
+    c = DTQP_createc(setup.cL,setup.cM,in,opts); % determine constants
+
+    % fmincon expects H directly
+    H = H/2;
+
 else % only LQDO objective function terms
 
     % construct objective function matrices

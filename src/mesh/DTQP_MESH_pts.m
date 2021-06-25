@@ -11,7 +11,12 @@
 function [t,w,D] = DTQP_MESH_pts(in,dt)
 
 % extract
-t0 = in.t0; tf = in.tf;
+if isfield(in,'t0')
+    t0 = in.t0;
+else
+    t0 = 0;
+end
+tf = in.tf;
 
 % initialize
 w = []; % empty

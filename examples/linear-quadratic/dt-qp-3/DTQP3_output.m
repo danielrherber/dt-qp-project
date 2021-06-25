@@ -28,7 +28,7 @@ end
 
 % errors
 if p.ParameterFlag
-    errorU = abs(P-sol(1).U);
+    errorU = abs(P(1)-sol(1).U);
 else
     errorU = abs(F-sol(1).U);
 end

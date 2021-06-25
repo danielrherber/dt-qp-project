@@ -22,15 +22,15 @@ if opts.general.plotflag
     IN = in; T2 = []; T3 = [];
 
     % construct high resolution T
-    T1 = linspace(in(1).t0,in(1).tf,1e4)';
-    IN(1).t = T1;
-    if length(in) > 1
-        T2 = linspace(in(2).t0,in(2).tf,1e4)';
-        IN(2).t = T2;
+    T1 = linspace(in.phase_info(1).t0,in.phase_info(1).tf,1e4)';
+    IN.phase_info(1).t = T1;
+    if length(in.phase_info) > 1
+        T2 = linspace(in.phase_info(2).t0,in.phase_info(2).tf,1e4)';
+        IN.phase_info(2).t = T2;
     end
-    if length(in) > 2
-        T3 = linspace(in(3).t0,in(3).tf,1e4)';
-        IN(3).t = T3;
+    if length(in.phase_info) > 2
+        T3 = linspace(in.phase_info(3).t0,in.phase_info(3).tf,1e4)';
+        IN.phase_info(3).t = T3;
     end
 
     % obtain the solution

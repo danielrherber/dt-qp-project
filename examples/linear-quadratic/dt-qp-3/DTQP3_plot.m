@@ -12,7 +12,7 @@ function DTQP3_plot(T,U,Y,P,F,in,opts,sol)
 if opts.general.plotflag
 
 if in.p.ParameterFlag
-    U = ones(size(T))*P;
+    U = ones(size(T))*P(1);
 end
     
 % preliminary plot options

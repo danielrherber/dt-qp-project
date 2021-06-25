@@ -21,13 +21,13 @@ switch upper(opts.dt(1).meshr.method)
     end
 
     % solve the problem
-    [T,U,Y,P,F,in,opts] = solve_fun(setup,opts);
+    [T,U,Y,P,F,in_,opts] = solve_fun(setup,opts);
     %----------------------------------------------------------------------
     case 'RICHARDSON-DOUBLING' % doubling the mesh and Richardson extrapolation
-    [T,U,Y,P,F,in,opts] = DTQP_MESH_richardson_doubling(setup,opts);
+    [T,U,Y,P,F,in_,opts] = DTQP_MESH_richardson_doubling(setup,opts);
     %----------------------------------------------------------------------
     case 'SS-BETTS' % single-step method mesh refinement from Betts textbook
-    [T,U,Y,P,F,in,opts] = DTQP_MESH_ss_betts(setup,opts);
+    [T,U,Y,P,F,in_,opts] = DTQP_MESH_ss_betts(setup,opts);
     %----------------------------------------------------------------------
     case 'TEST' % in development
     % [T,U,Y,P,F,in,opts] = DTQP_meshr_test(setup,opts);
@@ -36,5 +36,13 @@ switch upper(opts.dt(1).meshr.method)
     error('mesh refinement method invalid')
     %----------------------------------------------------------------------
 end
+
+% modify in structure
+in.phase_info = in_;
+in.output = in_(1).output;
+in.p = in_(1).p;
+in.t0 = in_(1).t0;
+in.tf = in_(end).tf;
+in.nt = sum([in_.nt]);
 
 end

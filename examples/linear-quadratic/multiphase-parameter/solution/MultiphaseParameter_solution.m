@@ -24,19 +24,19 @@ pmax = 100;
 Y2 = []; Y3 = [];
 
 % phase 1
-T1 = in(1).t;
+T1 = in.phase_info(1).t;
 Y1 = MultiphaseParameter_Y1(P,T1',Y0);
 
 % phase 2
-if length(in) > 1
-	T2 = in(2).t;
+if length(in.phase_info) > 1
+	T2 = in.phase_info(2).t;
     Y1T1 = Y1(:,end) - E1;
     Y2 = MultiphaseParameter_Y2(P,T2',Y1T1,t1);
 end
 
 % phase 3
-if length(in) > 2
-	T3 = in(3).t;
+if length(in.phase_info) > 2
+	T3 = in.phase_info(3).t;
     Y2T2 = Y2(:,end) - E2;
     Y3 = MultiphaseParameter_Y3(0,T3',Y2T2,t2);
 end

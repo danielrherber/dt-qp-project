@@ -95,6 +95,12 @@ case 2
     opts.solver.display = 'none';
     opts.dt.meshr.method = 'SS-BETTS';
     opts.dt.meshr.tolerance = 1e-4;
+case 3
+    opts.dt.defects = 'PS-MI';
+    opts.dt.quadrature = 'G';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 10; % number of intervals
+    opts.dt.nn = 12; % polynomial order in each interval
 end
 
 end

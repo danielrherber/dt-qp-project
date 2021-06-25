@@ -87,6 +87,12 @@ case 2
     opts.dt.quadrature = 'CQHS';
     opts.dt.mesh = 'ED';
     opts.dt.nt = 100;
+case 3
+    opts.dt.defects = 'PS-MI';
+    opts.dt.quadrature = 'G';
+    opts.dt.mesh = 'ED';
+    opts.dt.nt = 10; % number of intervals
+    opts.dt.nn = 8; % polynomial order in each interval
 end
 
 end

@@ -11,6 +11,11 @@
 %--------------------------------------------------------------------------
 function [T,U,Y,P,F,in,opts] = DTQP_multiphase(setup,opts)
 
+% handle multiple-interval pseudospectral method
+if any(strcmpi({opts.dt.defects},'PS-MI'))
+    [setup,opts] = DTQP_multi_interval_pseudospectral(setup,opts);
+end
+
 % number of phases
 nphs = length(setup);
 

@@ -85,6 +85,7 @@ default = 'TR'; % trapezoidal
 % default = 'HS'; % Hermite-Simpson
 % default = 'RK4'; % fourth-order Runge-Kutta
 % default = 'PS'; % pseudospectral (both LGL and CGL meshes)
+% default = 'PS-MI'; % multiple-interval pseudospectral (LGL mesh only)
 
 defaultflag = 0; % initialize
 if ~isfield(opts.dt(1),'defects') % not present
@@ -94,7 +95,7 @@ elseif isempty(opts.dt(1).defects) % empty
     opts.dt(1).defects = default; % set as the default
     defaultflag = 1;
 end
-if defaultflag &&(opts.general.displevel > 1) % minimal
+if defaultflag && (opts.general.displevel > 1) % minimal
     disp(['using default defect constraint method ',opts.dt(1).defects])
 end
 
@@ -115,7 +116,7 @@ elseif isempty(opts.dt(1).quadrature) % empty
     opts.dt(1).quadrature = default; % set as the default
     defaultflag = 1;
 end
-if defaultflag &&(opts.general.displevel > 1) % minimal
+if defaultflag && (opts.general.displevel > 1) % minimal
     disp(['using default quadrature method ',opts.dt(1).quadrature])
 end
 
@@ -135,8 +136,8 @@ elseif isempty(opts.dt(1).mesh) % empty
     opts.dt(1).mesh = default; % set as the default
     defaultflag = 1;
 end
-if defaultflag &&(opts.general.displevel > 1) % minimal
-        disp(['using default mesh type ',opts.dt(1).mesh])
+if defaultflag && (opts.general.displevel > 1) % minimal
+    disp(['using default mesh type ',opts.dt(1).mesh])
 end
 
 %--------------------------------------------------------------------------
@@ -158,8 +159,24 @@ elseif isempty(opts.dt(1).nt) % empty
     opts.dt(1).nt = default; % set as the default
     defaultflag = 1;
 end
-if defaultflag &&(opts.general.displevel > 1) % minimal
-        disp(['using default number of nodes ',opts.dt(1).nt])
+if defaultflag && (opts.general.displevel > 1) % minimal
+    disp(['using default number of nodes ',opts.dt(1).nt])
+end
+
+%--------------------------------------------------------------------------
+% polynomial order in each interval (first phase)
+
+default = 8; % 8-th order polynomial in each interval
+
+defaultflag = 0; % initialize
+if strcmpi(opts.dt(1).defects,'PS-MI')
+    if ~isfield(opts.dt(1),'nn')
+        opts.dt(1).nn = default; % set as the default
+        defaultflag = 1;
+    end
+end
+if defaultflag && (opts.general.displevel > 1) % minimal
+    disp(['using default interval polynomial order ',opts.dt(1).nn])
 end
 
 %--------------------------------------------------------------------------
