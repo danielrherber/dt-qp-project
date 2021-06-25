@@ -1,27 +1,26 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{\bm{u}(t)} \quad & \int_0^{1} \left[ \bm{\xi}^T \bm{I}_n \bm{\xi} + \bm{u}^T \bm{I}_n \bm{u} \right] dt + 10 [\xi_1(1)]^2 \\
-\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}
+\min_{\bm{u}(t)} \quad & \int_0^{1} \left[ \bm{x}^T \bm{I}_n \bm{x} + \bm{u}^T \bm{I}_n \bm{u} \right] \mathrm{d}t + 10 [x_1(1)]^2 \\
+\text{subject to:} \quad & \dot{\bm{x}} = \begin{bmatrix}
 0 & 1 & 0 & \cdots & 0 \\
-0 & 0 & 1 & \cdots & 0 \\
-\cdots & \cdots & \cdots & \cdots & \cdots \\
-0 & 0 & 0 & \cdots & 1 \\
+0 & 0 & 1 & \ddots & \vdots \\
+\vdots & \ddots & \ddots & \ddots & 0 \\
+0 & \cdots & 0 & 0 & 1 \\
 1 & -2 & 3 & \cdots & (-1)^{n+1}n
-\end{bmatrix} \bm{\xi} + \bm{I}_n \bm{u} \\
-& \bm{\xi}(0) = \begin{bmatrix} 1 & 2 & \cdots & n \end{bmatrix}
+\end{bmatrix} \bm{x} + \bm{I}_n \bm{u} \\
+& \bm{x}(0) = \begin{bmatrix} 1 & 2 & \cdots & n \end{bmatrix}
 \end{align*}
 }}
 \end{document}
 
-% solution
+%% solution

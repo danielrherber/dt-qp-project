@@ -1,22 +1,20 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
-\usepackage{amssymb}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{\bm{u}(t)} \quad & \bm{\xi}^\intercal(t_f) \bm{M} \bm{\xi}(t_f) + \int_{t_0}^{t_f} \left[ \bm{\xi}^\intercal \bm{Q}(t) \bm{\xi} + \bm{u}^\intercal \bm{R}(t) \bm{u} \right] dt \\
-\text{subject to:} \quad & \dot{\bm{\xi}} = \bm{A}(t) \bm{\xi} + \bm{B}(t) \bm{u} + \bm{d}(t) \\
-& \bm{\xi}(t_0) = \bm{\xi}_0
+\min_{\bm{u}(t)} \quad & \bm{x}^T(t_f) \bm{M} \bm{x}(t_f) + \int_{t_0}^{t_f} \left[ \bm{x}^T \bm{Q}(t) \bm{x} + \bm{u}^T \bm{R}(t) \bm{u} \right] \mathrm{d}t \\
+\text{subject to:} \quad & \dot{\bm{x}} = \bm{A}(t) \bm{x} + \bm{B}(t) \bm{u} + \bm{d}(t) \\
+& \bm{x}(t_0) = \bm{x}_0
 \end{align*}
 }}
 \end{document}
 
-% solution
+%% solution

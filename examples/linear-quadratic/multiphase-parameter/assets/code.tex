@@ -1,24 +1,23 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{p} \quad & \int_0^{t_f} \bm{\xi}^T \bm{I} \bm{\xi} dt \\
-\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{cases} \bm{A}_1 \bm{\xi} + \bm{G} p & 0 \leq t \leq t_1 \\ \bm{A}_2 \bm{\xi} + \bm{G} p & t_1 \leq t \leq t_2 \\ \bm{A}_3 \bm{\xi} & t_2 \leq t \leq t_f \end{cases} \\
-& \bm{\xi}(0) = \bm{\xi}_0 \\
-& \bm{\xi}^{L}(t_1) - \bm{\xi}^{R}(t_1) = \bm{E}_1 \\
-& \bm{\xi}^{L}(t_2) - \bm{\xi}^{R}(t_2) = \bm{E}_2 \\
+\min_{p} \quad & \int_0^{t_f} \bm{x}^T \bm{I} \bm{x}\ \mathrm{d}t \\
+\text{subject to:} \quad & \dot{\bm{x}} = \begin{cases} \bm{A}_1 \bm{x} + \bm{G} p & 0 \leq t \leq t_1 \\ \bm{A}_2 \bm{x} + \bm{G} p & t_1 \leq t \leq t_2 \\ \bm{A}_3 \bm{x} & t_2 \leq t \leq t_f \end{cases} \\
+& \bm{x}(0) = \bm{x}_0 \\
+& \bm{x}^{L}(t_1) - \bm{x}^{R}(t_1) = \bm{E}_1 \\
+& \bm{x}^{L}(t_2) - \bm{x}^{R}(t_2) = \bm{E}_2 \\
 \text{where:} \quad & 0 < t_1 < t_2 < t_f
 \end{align*}
 }}
 \end{document}
 
-% solution
+%% solution

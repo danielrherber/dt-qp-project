@@ -1,28 +1,27 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{\bm{u}(t)} \quad & \int_0^1 \left[ u_1^2/10 + u_2^2/10 + u_1\xi_1 + u_1\xi_2 + 5\left(\xi_2-g(t)\right)^2 \right] dt + \max_{0\leq t\leq 1} \xi_3(t) \\
-\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix} -1 & 2 & 0 \\ 3 & -4 & 0 \\ 1 & 2 & -1 \end{bmatrix} \bm{\xi} +
+\min_{\bm{u}(t)} \quad & \int_0^1 \left[ u_1^2/10 + u_2^2/10 + u_1x_1 + u_1x_2 + 5\left(x_2-g(t)\right)^2 \right] \mathrm{d}t + \max_{0\leq t\leq 1} x_3(t) \\
+\text{subject to:} \quad & \dot{\bm{x}} = \begin{bmatrix} -1 & 2 & 0 \\ 3 & -4 & 0 \\ 1 & 2 & -1 \end{bmatrix} \bm{x} +
 \begin{bmatrix} 1 & 0 \\ -1 & 0 \\ 0 & 1/20 \end{bmatrix} \bm{u} \\
-& \xi_1(0) = 2 \\
-& \xi_3(0) = 1/2 \\
-& \xi_2(0) - \xi_2(1) = 0 \\
-& \int_0^1 \xi_1(t) dt = 0 \\
-& -\xi_1(t) + u_2(t)/12 \leq 0 \\
-& \xi_2(t) \leq g(t) \\
-& |u_2| \leq 10 
+& x_1(0) = 2 \\
+& x_3(0) = 1/2 \\
+& x_2(0) - x_2(1) = 0 \\
+& \int_0^1 x_1(t) \mathrm{d}t = 0 \\
+& -x_1(t) + u_2(t)/12 \leq 0 \\
+& x_2(t) \leq g(t) \\
+& |u_2(t)| \leq 10
 \end{align*}
 }}
 \end{document}
 
-% solution
+%% solution

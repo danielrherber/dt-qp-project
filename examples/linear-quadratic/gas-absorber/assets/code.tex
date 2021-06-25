@@ -1,23 +1,22 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{\bm{u}(t)} \quad & \int_0^{t_f} \left[ \bm{\xi}^T \bm{I} \bm{\xi} + \bm{u}^T \bm{I} \bm{u} \right] dt \\
-\text{subject to:} \quad & \dot{\bm{\xi}} =  \mathrm{tridiag}_n\left(\begin{bmatrix} 0.538998 & -1.173113 & 0.634115 \end{bmatrix}\right) \bm{\xi} + \cdots \\
+\min_{\bm{u}(t)} \quad & \int_0^{t_f} \left[ \bm{x}^T \bm{I} \bm{x} + \bm{u}^T \bm{I} \bm{u} \right] \mathrm{d}t \\
+\text{subject to:} \quad & \dot{\bm{x}} =  \mathrm{tridiag}_n\left(\begin{bmatrix} 0.538998 & -1.173113 & 0.634115 \end{bmatrix}\right) \bm{x} + \cdots \\
 & + \begin{bmatrix} 0.538998 & 0 & \cdots & 0 & 0 \\ 0 & 0 & \cdots & 0 & 0.634115  \end{bmatrix}^T \bm{u} \\
-& \bm{\xi}(0) = -0.0307 - \frac{i - 1}{n - 1}(0.1273 - 0.0307)\qquad i = 1, \dots, n \\
+& \bm{x}(0) = -0.0307 - \frac{i - 1}{n - 1}(0.1273 - 0.0307)\qquad i = 1, \dots, n \\
 & \bm{0} \leq \bm{u}
 \end{align*}
 }}
 \end{document}
 
-% solution
+%% solution

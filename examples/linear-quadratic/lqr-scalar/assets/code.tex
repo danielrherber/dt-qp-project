@@ -1,21 +1,20 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{u(t)} \quad & \frac{m}{2}\left[ \xi(t_f) \right]^2 + \frac{1}{2}\int_{t_0}^{t_f} \left[ q \xi^2 + r u^2 \right] dt \\
-\text{subject to:} \quad & \dot{\xi} = a \xi + b u \\
-& \xi(t_0) = \xi_0
+\min_{u(t)} \quad & \frac{m}{2}\left[ x(t_f) \right]^2 + \frac{1}{2}\int_{t_0}^{t_f} \left[ q x^2 + r u^2 \right] \mathrm{d}t \\
+\text{subject to:} \quad & \dot{x} = a x + b u \\
+& x(t_0) = x_0
 \end{align*}
 }}
 \end{document}
 
-% solution
+%% solution

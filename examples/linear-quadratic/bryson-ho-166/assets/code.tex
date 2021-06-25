@@ -1,24 +1,21 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{u(t)} \quad & \int_0^{t_f} u^2 dt \\
-\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}\xi_2 \\ -\xi_1 + u \end{bmatrix} \\
-& \xi_1(0) = x_0 \\
-& \xi_2(0) = v_0 \\
-& \xi_1(t_f) = 0 \\
-& \xi_2(t_f) = 0
+\min_{u(t)} \quad & \int_0^{t_f} u^2 \mathrm{d}t \\
+\text{subject to:} \quad & \dot{\bm{x}} = \begin{bmatrix}x_2 \\ -x_1 + u \end{bmatrix} \\
+& \bm{x}(0) = (x_0,v_0) \\
+& \bm{x}(t_f) = (0,0)
 \end{align*}
 }}
 \end{document}
 
-% solution
+%% solution

@@ -1,25 +1,24 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{u_0,u_{\pi}} \quad & \int_0^{5} \left[ \left( \frac{1}{2}\delta + q_1 \right) u^2_0 + \sum_{k=1}^{n-1} \delta \xi_k^2 + \left( \frac{1}{2}\delta + q_2 \right) u^2_\pi \right] dt \\
-\text{subject to:} \quad & \dot{\xi}_1 = \frac{1}{\delta^2} \left( \xi_2 - 2 \xi_1 + u_0 \right) \\
-& \dot{\xi}_k = \frac{1}{\delta^2} \left( \xi_{k+1} - 2 \xi_k + \xi_{k-1} \right) \qquad k = 2, \dots, n-2 \\
-& \dot{\xi}_{n-1} = \frac{1}{\delta^2} \left( u_\pi - 2 \xi_{n-1} + \xi_{n-2} \right) \\
+\min_{u_0,u_{\pi}} \quad & \int_0^{5} \left[ \left( \frac{1}{2}\delta + q_1 \right) u^2_0 + \sum_{k=1}^{n-1} \delta x_k^2 + \left( \frac{1}{2}\delta + q_2 \right) u^2_\pi \right] \mathrm{d}t \\
+\text{subject to:} \quad & \dot{x}_1 = \frac{1}{\delta^2} \left( x_2 - 2 x_1 + u_0 \right) \\
+& \dot{x}_k = \frac{1}{\delta^2} \left( x_{k+1} - 2 x_k + x_{k-1} \right) \qquad k = 2, \dots, n-2 \\
+& \dot{x}_{n-1} = \frac{1}{\delta^2} \left( u_\pi - 2 x_{n-1} + x_{n-2} \right) \\
 & g_0(t) \leq u_0(t) \\
-& g_k(t) \leq \xi_k(t) \qquad k = 1, \dots, n-1 \\
+& g_k(t) \leq x_k(t) \qquad k = 1, \dots, n-1 \\
 & g_n(t) \leq u_\pi(t) \\
 & u_0(0) = 0 \\
-& \xi_k(0) = 0 \qquad k = 1, \dots, n-1 \\
+& x_k(0) = 0 \qquad k = 1, \dots, n-1 \\
 & u_\pi(0) = 0 \\
 \text{where:} \quad & g_k(t) = c \left[ \sin\left(k\delta\right) \sin\left(\frac{\pi t}{5}\right) - a \right] - b \\
 & \delta = \pi/n
@@ -27,5 +26,4 @@
 }}
 \end{document}
 
-
-% solution
+%% solution
