@@ -29,7 +29,7 @@ p.t0 = 0; p.tf = 1;
 n.nu = 1; n.ny = 2;
 
 % system dynamics
-symb.D = '[u1/(2*y1); 4*y1^4 + u1^2]';
+element.dynamics = '[u1/(2*y1); 4*y1^4 + u1^2]';
 
 % Mayer term
 M(1).left = 0; M(1).right = 5; M(1).matrix = [0 1]; % states
@@ -45,7 +45,7 @@ LB(2).right = 1; LB(2).matrix = -1; % controls
 LB(3).right = 2; LB(3).matrix = [sqrt(0.4),-inf]; % states
 
 % combine structures
-setup.symb = symb; setup.M = M; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

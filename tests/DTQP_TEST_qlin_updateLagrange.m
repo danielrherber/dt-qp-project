@@ -10,8 +10,8 @@
 %--------------------------------------------------------------------------
 clc; clear; close all
 
-% tests = 1:5;
-tests = 3;
+tests = 1:5;
+% tests = 3;
 
 % go through the tests
 for k = 1:length(tests)
@@ -20,39 +20,39 @@ for k = 1:length(tests)
     switch tests(k)
         %------------------------------------------------------------------
         case 1
-        symb.Ob = '1';
+        element.lagrange = '1';
         n.nu = 2;
         n.ny = 3;
         n.np = 1;
         %------------------------------------------------------------------
         case 2
-        symb.Ob = 'y1*u1';
+        element.lagrange = 'y1*u1';
         n.nu = 1;
         n.ny = 1;
         n.np = 0;
         %------------------------------------------------------------------
         case 3
-        symb.Ob = 'y1^2 - y2^2 - u1^2 + u2^2 + y1*u1';
+        element.lagrange = 'y1^2 - y2^2 - u1^2 + u2^2 + y1*u1';
         n.nu = 2;
         n.ny = 2;
         n.np = 0;
         %------------------------------------------------------------------
         case 4
-        symb.Ob = 'y1*u1^2 ';
+        element.lagrange = 'y1*u1^2 ';
         n.nu = 1;
         n.ny = 2;
         n.np = 0;
         %------------------------------------------------------------------
         case 5
-        symb.Ob = 'y1^3 + y1*y2 + p1*u1';
+        element.lagrange = 'y1^3 + y1*y2 + p1*u1';
         n.nu = 2;
         n.ny = 3;
         n.np = 1;
     end
 
     % problem structure
-    [setup,opts,T,X,param] = problem(symb,n);
-    symb = setup.symb; L = setup.symb.L; o = n;
+    [setup,opts,T,X,param] = problem(element,n);
+    element = setup.element; L = setup.element.L; o = n;
 
     % run the test and time
     setup = DTQP_QLIN_update_lagrange(setup,L.H,L.G,L.C,o,T,X,param);
@@ -71,10 +71,10 @@ for k = 1:length(tests)
 end
 
 % problem structure
-function [setup,opts,T,X,param] = problem(symb,n)
+function [setup,opts,T,X,param] = problem(element,n)
 
 n.output = 2;
-setup.symb = symb;
+setup.element = element;
 setup.n = n;
 setup.t0 = 0;
 setup.tf = 1;

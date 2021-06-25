@@ -117,7 +117,7 @@ str{end+1} = Dy1;
 str{end+1} = '; ';
 str{end+1} = Dy2;
 str{end+1} = ']';
-symb.D = horzcat(str{:});
+element.dynamics = horzcat(str{:});
 
 % simple bounds
 UB(1).right = 4; UB(1).matrix = y0; % initial states
@@ -131,7 +131,7 @@ U0 = [[0];[0]];
 setup.guess.X = [U0,Y0];
 
 % combine structures
-setup.symb = symb; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 if exist('M','var')
 	setup.M = M;

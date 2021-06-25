@@ -63,9 +63,9 @@ M(1).right = 5; % final states
 M(1).matrix = [0,-1];
 
 % system dynamics
-symb.D = '[-u1*y1; u1*y1 - rho*u1^kc*y2]';
-symb.paramstr = 'rho kc';
-symb.param = [rho kc];
+element.dynamics = '[-u1*y1; u1*y1 - rho*u1^kc*y2]';
+element.parameter_list = 'rho kc';
+element.parameter_values = [rho kc];
 
 % simple bounds
 UB(1).right = 4; UB(1).matrix = y0'; % initial states
@@ -87,7 +87,7 @@ setup.scaling(2).right = 2; % states
 setup.scaling(2).matrix = [1.1,1.1];
 
 % combine structures
-setup.symb = symb; setup.M = M; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

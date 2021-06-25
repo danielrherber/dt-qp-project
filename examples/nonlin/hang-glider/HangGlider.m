@@ -49,9 +49,9 @@ strD{end+1} = 'p1*y4;';
 strD{end+1} = 'p1*( - (S*rho*y3*(k*u1^2 + CD0)*((y4 + uM*exp(-(y1/R - 5/2)^2)*((y1/R - 5/2)^2 - 1))^2 + y3^2)^(1/2))/(2*m) - (S*rho*u1*(y4 + uM*exp(-(y1/R - 5/2)^2)*((y1/R - 5/2)^2 - 1))*((y4 + uM*exp(-(y1/R - 5/2)^2)*((y1/R - 5/2)^2 - 1))^2 + y3^2)^(1/2))/(2*m) );';
 strD{end+1} = 'p1*( (S*rho*u1*y3*((y4 + uM*exp(-(y1/R - 5/2)^2)*((y1/R - 5/2)^2 - 1))^2 + y3^2)^(1/2))/(2*m) - g - (S*rho*(k*u1^2 + CD0)*(y4 + uM*exp(-(y1/R - 5/2)^2)*((y1/R - 5/2)^2 - 1))*((y4 + uM*exp(-(y1/R - 5/2)^2)*((y1/R - 5/2)^2 - 1))^2 + y3^2)^(1/2))/(2*m) )';
 strD{end+1} = ']';
-symb.D = horzcat(strD{:});
-symb.paramstr = 'rho CD0 k g m S uM R';
-symb.param = [rho CD0 k g m S uM R];
+element.dynamics = horzcat(strD{:});
+element.parameter_list = 'rho CD0 k g m S uM R';
+element.parameter_values = [rho CD0 k g m S uM R];
 
 % Mayer term
 M(1).right = 5; % final states
@@ -85,7 +85,7 @@ setup.scaling(3).right = 3; % parameters
 setup.scaling(3).matrix = 200;
 
 % combine structures
-setup.symb = symb; setup.M = M; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

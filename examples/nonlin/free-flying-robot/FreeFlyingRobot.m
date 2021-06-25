@@ -41,18 +41,18 @@ str{end+1} = '(u1-u2+u3-u4)*cos(y3);';
 str{end+1} = '(u1-u2+u3-u4)*sin(y3);';
 str{end+1} = 'a*(u1-u2) - b*(u3-u4)';
 str{end+1} = ']';
-symb.D = horzcat(str{:});
-symb.paramstr = 'a b';
-symb.param = [a b];
+element.dynamics = horzcat(str{:});
+element.parameter_list = 'a b';
+element.parameter_values = [a b];
 
 % Lagrange term
-% symb.Ob = 'u1+u2+u3+u4';
+% element.lagrange = 'u1+u2+u3+u4';
 L(1).left = 0; L(1).right = 1; L(1).matrix = [1 1 1 1];
 setup.L = L;
 
 % inequality constraints
-symb.cin.func = '[u1+u2-1;u3+u4-1]';
-symb.cin.pathboundary = [1 1];
+element.g.func = '[u1+u2-1;u3+u4-1]';
+element.g.pathboundary = [1 1];
 
 % simple bounds
 UB(1).right = 4; UB(1).matrix = [-10;-10;pi/2;0;0;0]; % initial states
@@ -74,7 +74,7 @@ setup.scaling(2).right = 2; % states
 setup.scaling(2).matrix = [10,10,pi/2,1,1,1];
 
 % combine structures
-setup.symb = symb; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

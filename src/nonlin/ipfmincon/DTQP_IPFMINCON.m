@@ -22,7 +22,7 @@ end
 
 % extract
 nu = in.nu; ny = in.ny; np = in.np; nt = in.nt;
-symb = setup.symb;
+element = setup.element;
 
 % initialize
 lqdoflag = true;
@@ -30,25 +30,25 @@ in.Ilambda = [];
 linflag = opts.method.olqflag;
 
 % set default field value
-if isfield(symb,'param')
+if isfield(element,'parameter_values')
 
     % convert time-varying cell to matrix on specified mesh
     % NOTE: this won't work for methods that need the parameters and
     % different points than the original mesh
-    if isa(symb.param,'cell')
-        symb.param = squeeze(DTQP_tmatrix(symb.param,setup.p,in.t));
+    if isa(element.parameter_values,'cell')
+        element.parameter_values = squeeze(DTQP_tmatrix(element.parameter_values,setup.p,in.t));
     end
-    in.paramstr = symb.paramstr;
-	in.param = symb.param;
+    in.parameter_list = element.parameter_list;
+	in.param = element.parameter_values;
 else
-    in.paramstr = [];
+    in.parameter_list = [];
     in.param = [];
 end
 
 %--------------------------------------------------------------------------
 % objective function
 %--------------------------------------------------------------------------
-if isfield(symb,'Ob')
+if isfield(element,'lagrange')
 
     linflagOb = false; % false only at the moment
 
@@ -61,7 +61,7 @@ if isfield(symb,'Ob')
     else
 
         % calculate derivatives
-        [obj,opts] = DTQP_IPFMINCON_symb(symb.Ob,in,linflagOb,false,opts);
+        [obj,opts] = DTQP_IPFMINCON_symb(element.lagrange,in,linflagOb,false,opts);
 
         % store to internal information structure
         in.internalinfo.obj = obj;
@@ -120,10 +120,10 @@ end
 %--------------------------------------------------------------------------
 % dynamics
 %--------------------------------------------------------------------------
-if isfield(symb,'D')
+if isfield(element,'dynamics')
 
     % determine nonlinear/linear dynamics
-    [Aeq1,beq1,dyn,Idyn,in,opts] = DTQP_IPFMINCON_dyn(symb.D,in,linflag,opts,0,nt);
+    [Aeq1,beq1,dyn,Idyn,in,opts] = DTQP_IPFMINCON_dyn(element.dynamics,in,linflag,opts,0,nt);
 
     % assign
     in.dyn = dyn;
@@ -150,10 +150,10 @@ end
 %--------------------------------------------------------------------------
 % general equality constraints
 %--------------------------------------------------------------------------
-if isfield(symb,'ceq')
+if isfield(element,'h')
 
     % determine nonlinear/linear equality constraints
-    [Y,ceq,Iceq,in,opts] = DTQP_IPFMINCON_c(symb.ceq,in,linflag,opts,nI,nt,false);
+    [Y,ceq,Iceq,in,opts] = DTQP_IPFMINCON_c(element.h,in,linflag,opts,nI,nt,false);
 
     % combine
     setup.Y = [setup.Y;Y];
@@ -187,10 +187,10 @@ beq = [beq1;beq2]; % Aeq*X = beq
 %--------------------------------------------------------------------------
 % general inequality constraints
 %--------------------------------------------------------------------------
-if isfield(symb,'cin')
+if isfield(element,'g')
 
     % determine nonlinear/linear equality constraints
-    [Z,cin,Icin,in,opts] = DTQP_IPFMINCON_c(symb.cin,in,linflag,opts,0,nt,true);
+    [Z,cin,Icin,in,opts] = DTQP_IPFMINCON_c(element.g,in,linflag,opts,0,nt,true);
 
     % combine
     setup.Z = [setup.Z;Z];

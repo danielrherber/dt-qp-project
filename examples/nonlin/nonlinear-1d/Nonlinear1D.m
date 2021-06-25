@@ -35,7 +35,7 @@ L(1).left = 1; L(1).right = 1; L(1).matrix = 1/2;
 L(2).left = 0; L(2).right = 2; L(2).matrix = 1/2;
 
 % system dynamics
-symb.D = '[2*y1 + 2*u1*sqrt(y1)]';
+element.dynamics = '[2*y1 + 2*u1*sqrt(y1)]';
 
 % simple bounds
 UB(1).right = 4; UB(1).matrix = [2]; % initial states
@@ -50,7 +50,7 @@ U0 = [[0];[0]];
 setup.guess.X = [U0,Y0];
 
 % combine structures
-setup.symb = symb; setup.UB = UB; setup.LB = LB; setup.L = L;
+setup.element = element; setup.UB = UB; setup.LB = LB; setup.L = L;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

@@ -48,8 +48,8 @@ end
 nx = nu + ny + np;
 
 % extra symbolic parameters
-if isfield(in,'paramstr')
-	param = in.paramstr;
+if isfield(in,'parameter_list')
+	param = in.parameter_list;
 else
     param = [];
 end

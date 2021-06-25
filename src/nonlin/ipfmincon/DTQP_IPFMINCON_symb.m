@@ -53,8 +53,8 @@ end
 nx = nu + ny + np;
 
 % extra symbolic parameters
-if isfield(in,'paramstr')
-	param = in.paramstr;
+if isfield(in,'parameter_list')
+	param = in.parameter_list;
 else
     param = [];
 end
@@ -239,10 +239,10 @@ else
 end
 
 % store symbolic results
-symb.F = F;
-symb.DF = DF;
-symb.D2F = D2F;
-E.symb = symb;
+element.F = F;
+element.DF = DF;
+element.D2F = D2F;
+E.element = element;
 
 % (potentially) end the timer
 if (opts.general.displevel > 0) % minimal

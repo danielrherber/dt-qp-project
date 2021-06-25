@@ -35,7 +35,7 @@ for k = 1:length(tests)
         % quadraticization of the cubic ( additional symbolic parameters)
         f = 'a*b*y1*(1-y1)^2';
         o.ny = 1; % number of states
-        o.paramstr = 'a b';
+        o.parameter_list = 'a b';
         form = 4;
         %------------------------------------------------------------------
         case 3
@@ -60,7 +60,7 @@ for k = 1:length(tests)
         o.nu = 1; % number of inputs
         o.np = 0; % number of parameters
         o.output = 2; % interpolated version
-        o.paramstr = 'alp';
+        o.parameter_list = 'alp';
         %------------------------------------------------------------------
         case 6
         %
@@ -86,7 +86,7 @@ for k = 1:length(tests)
         o.ny = 2; % number of states
         o.nu = 1; % number of inputs
         o.np = 0; % number of parameters
-        o.paramstr = 'zeta b Mew D G';
+        o.parameter_list = 'zeta b Mew D G';
         %------------------------------------------------------------------
         case 9
         %
@@ -95,7 +95,7 @@ for k = 1:length(tests)
         o.ny = 2; % number of states
         o.nu = 1; % number of inputs
         o.np = 1; % number of parameters
-        o.paramstr = 'zeta';
+        o.parameter_list = 'zeta';
     end
 
     % run the test and time

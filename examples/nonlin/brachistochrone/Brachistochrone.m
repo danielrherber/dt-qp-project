@@ -63,9 +63,9 @@ LB(4).right = 3; LB(4).matrix = 0;
 switch p.casenum
     case {1,2}
     % system dynamics
-    symb.D = '[p1*y3*sin(u1); p1*y3*cos(u1); p1*g*cos(u1)]';
-    symb.paramstr = 'g';
-    symb.param = [p.g];
+    element.dynamics = '[p1*y3*sin(u1); p1*y3*cos(u1); p1*g*cos(u1)]';
+    element.parameter_list = 'g';
+    element.parameter_values = [p.g];
 
     % simple bounds
     UB(2).right = 5; UB(2).matrix = [p.xf,p.yf,inf]; % final states
@@ -79,9 +79,9 @@ switch p.casenum
 
     case {3,4}
     % system dynamics
-    symb.D = '[p1*y3*cos(u1); p1*y3*sin(u1); p1*g*sin(u1)]';
-    symb.paramstr = 'g';
-    symb.param = [p.g];
+    element.dynamics = '[p1*y3*cos(u1); p1*y3*sin(u1); p1*g*sin(u1)]';
+    element.parameter_list = 'g';
+    element.parameter_values = [p.g];
 
     % simple bounds
     UB(2).right = 5; UB(2).matrix = [p.xf,inf,inf]; % final states
@@ -97,11 +97,11 @@ end
 
 if p.casenum == 4
     % state inequality constraint
-    symb.cin = 'y2 - y1/2 - 0.1'; % hard-coded at the moment
+    element.g = 'y2 - y1/2 - 0.1'; % hard-coded at the moment
 end
 
 % combine structures
-setup.symb = symb; setup.M = M; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

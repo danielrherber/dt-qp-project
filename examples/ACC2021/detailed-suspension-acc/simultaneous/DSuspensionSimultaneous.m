@@ -67,7 +67,7 @@ str{end+1} = '((281.5194*p6^4/(p5^3))*y6 - (G*p1^4/(4*p2*p4*(2*p2^2+p1^2)))*y7 -
 str{end+1} = ']';
 
 % combine
-symb.D = horzcat(str{:});
+element.dynamics = horzcat(str{:});
 
 %--- objective function
 % rough road input
@@ -81,11 +81,11 @@ str0{5} = 'w2/ms^2*((281.5194*p6^4/(p5^3))*y6 - (G*p1^4/(4*p2*p4*(2*p2^2+p1^2)))
 str0{6} = 'w3*u2^2)/100';
 
 % combine
-symb.Ob = horzcat(str0{:});
+element.lagrange = horzcat(str0{:});
 
 %--- symbolic parameters
-symb.paramstr = 'ct kt mus ms w1 w2 w3 G z0d R m A nd';
-symb.param = {p.bt p.kt p.mu p.ms p.w1 p.w2 p.w3 p.G p.z0dot p.ramp_in 0.108 1974 1.2 };
+element.parameter_list = 'ct kt mus ms w1 w2 w3 G z0d R m A nd';
+element.parameter_values = {p.bt p.kt p.mu p.ms p.w1 p.w2 p.w3 p.G p.z0dot p.ramp_in 0.108 1974 1.2 };
 
 %--- initial state values
 LB(1).right = 4;
@@ -218,8 +218,8 @@ strC{idx} = '1.2512*(p6^2/p5)*(-y8+y6)-1;';
 % combine
 idx = idx + 1; % increment
 strC{idx} = ']';
-symb.cin.func = horzcat(strC{:});
-symb.cin.pathboundary = [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1];
+element.g.func = horzcat(strC{:});
+element.g.pathboundary = [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1];
 
 % simple parameter bounds
 LB(2).right = 3;
@@ -231,7 +231,7 @@ UB(2).matrix = [0.02 0.4 0.5 16 0.012 0.08 0.3];
 setup = DSuspensionSimultaneous_guess([]);
 
 % combine structures
-setup.symb = symb; setup.UB = UB; setup.LB = LB;setup.Z = Z;
+setup.element = element; setup.UB = UB; setup.LB = LB;setup.Z = Z;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

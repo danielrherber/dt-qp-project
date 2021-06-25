@@ -48,8 +48,8 @@ switch testnum
     lonmax = deg2rad(180); % maximum longitudinal angle
 
     % inequality constraints
-    symb.cin.func = '[-17700*((1370823668977541*exp((7387794664292129*Re)/53592835565708902400 - (7387794664292129*(rads*y1))/53592835565708902400))/576460752303423488)^(1/2)*((7387794664292129*(vs*y4))/22517998136852480000)^(307/100)*((108842792728842046125*u1^3)/(18446744073709551616*pi^3) - (1987855047651470175*u1^2)/(288230376151711744*pi^2) + (249209700126165765*u1)/(72057594037927936*pi) - 4806323037483049/4503599627370496) - qu]';
-    symb.cin.pathboundary = [1];
+    element.g.func = '[-17700*((1370823668977541*exp((7387794664292129*Re)/53592835565708902400 - (7387794664292129*(rads*y1))/53592835565708902400))/576460752303423488)^(1/2)*((7387794664292129*(vs*y4))/22517998136852480000)^(307/100)*((108842792728842046125*u1^3)/(18446744073709551616*pi^3) - (1987855047651470175*u1^2)/(288230376151711744*pi^2) + (249209700126165765*u1)/(72057594037927936*pi) - 4806323037483049/4503599627370496) - qu]';
+    element.g.pathboundary = [1];
     %----------------------------------------------------------------------
 end
 
@@ -105,8 +105,8 @@ p.t0 = 0; p.tf = 1;
 n.nu = 2; n.ny = 6; n.np = 1;
 
 % parameters
-symb.paramstr = 'Re cd0 cd1 cd2 rho0 H cl0 cl1 S mass xmu rads vs qu';
-symb.param = [Re cd0 cd1 cd2 rho0 H cl0 cl1 S mass xmu rads vs qu];
+element.parameter_list = 'Re cd0 cd1 cd2 rho0 H cl0 cl1 S mass xmu rads vs qu';
+element.parameter_values = [Re cd0 cd1 cd2 rho0 H cl0 cl1 S mass xmu rads vs qu];
 
 % system dynamics (see
 str{1} = '[';
@@ -117,7 +117,7 @@ str{end+1} = 'p1*((- (xmu*sin(y5))/(rads*y1)^2 - (S*rho0*(vs*y4)^2*exp((Re - (ra
 str{end+1} = 'p1*((cos(y5)*((vs*y4)^2/(rads*y1) - xmu/(rads*y1)^2) + (S*rho0*(vs*y4)^2*exp((Re - (rads*y1))/H)*cos(u2)*(cl0 + cl1*u1))/(2*mass))/(vs*y4));';
 str{end+1} = 'p1*((((vs*y4)^2*cos(y5)*sin(y6)*tan(y3))/(rads*y1) + (S*rho0*(vs*y4)^2*exp((Re - (rads*y1))/H)*sin(u2)*(cl0 + cl1*u1))/(2*mass*cos(y5)))/(vs*y4))';
 str{end+1} = ']';
-symb.D = horzcat(str{:});
+element.dynamics = horzcat(str{:});
 
 % simple bounds
 UB(1).right = 4; UB(1).matrix = [rad0,lon0,lat0,v0,fpa0,azi0]; % initial states
@@ -146,7 +146,7 @@ setup.scaling(3).right = 3; % parameters
 setup.scaling(3).matrix = [4000];
 
 % combine structures
-setup.symb = symb; setup.M = M; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

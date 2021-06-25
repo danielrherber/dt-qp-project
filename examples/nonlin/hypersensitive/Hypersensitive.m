@@ -32,7 +32,7 @@ p.t0 = 0; p.tf = 10000;
 n.nu = 1; n.ny = 1;
 
 % system dynamics
-symb.D = '[-y1^3+u1]';
+element.dynamics = '[-y1^3+u1]';
 
 % Lagrange term
 L(1).left = 1; L(1).right = 1; L(1).matrix = 1/2;
@@ -47,7 +47,7 @@ UB(2).right = 5; UB(2).matrix = 1; % final states
 LB(2).right = 5; LB(2).matrix = 1;
 
 % combine structures
-setup.symb = symb; setup.L = L; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.L = L; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

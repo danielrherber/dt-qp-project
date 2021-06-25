@@ -33,9 +33,9 @@ p.t0 = 0; p.tf = tf;
 n.nu = 1; n.ny = 2; n.np = 1;
 
 % system dynamics
-symb.D = '[y2; -p1/J*y1 + u1/J]';
-symb.paramstr = 'J';
-symb.param = [p.J];
+element.dynamics = '[y2; -p1/J*y1 + u1/J]';
+element.parameter_list = 'J';
+element.parameter_values = [p.J];
 
 % Mayer term
 M(1).right = 5; M(1).left = 0; M(1).matrix = [-1,0]; % final states
@@ -55,7 +55,7 @@ P0 = [[1];[1]];
 setup.guess.X = [U0,Y0,P0];
 
 % combine structures
-setup.symb = symb; setup.M = M; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

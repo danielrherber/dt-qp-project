@@ -32,18 +32,18 @@ p.t0 = 0;
 n.nu = 1; n.ny = 2; n.np = 1;
 
 % system dynamics
-symb.D = '[y2;-p1*y1 + u1]';
-symb.o.ny = 2; % number of states
-symb.o.nu = 1; % number of controls
-symb.o.np = 1; % number of parameters
-symb.o.output = 2; % interp1 compatible
+element.dynamics = '[y2;-p1*y1 + u1]';
+element.o.ny = 2; % number of states
+element.o.nu = 1; % number of controls
+element.o.np = 1; % number of parameters
+element.o.output = 2; % interp1 compatible
 
 % Lagrange term
 if ~isfield(opts.method,'olqflag') || opts.method.olqflag
     L(1).left = 1; L(1).right = 1; L(1).matrix = 1; % u^2
     setup.L = L;
 else
-    symb.Ob = 'u1^2';
+    element.lagrange = 'u1^2';
 end
 
 % simple bounds
@@ -53,7 +53,7 @@ UB(2).right = 5; UB(2).matrix = [0;0]; % final states
 LB(2).right = 5; LB(2).matrix = [0;0];
 
 % combine structures
-setup.UB = UB; setup.LB = LB; setup.symb = symb;
+setup.UB = UB; setup.LB = LB; setup.element = element;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

@@ -40,7 +40,7 @@ str{end+1} = 'u1+17.2656*y3; ';
 str{end+1} = 'u2; ';
 str{end+1} = '-(u1 + 27.0756*y3+2*y5*y6)/y2';
 str{end+1} = ']';
-symb.D = horzcat(str{:});
+element.dynamics = horzcat(str{:});
 
 % Lagrange term
 if ~isfield(opts.method,'olqflag') || opts.method.olqflag
@@ -48,7 +48,7 @@ if ~isfield(opts.method,'olqflag') || opts.method.olqflag
     L(2).left = 2; L(2).right = 2; L(2).matrix = diag([0,0,0.5,0,0,0.5]);
     setup.L = L;
 else
-    symb.Ob = '0.5*(y3^2 + y6^2 + 0.01*(u1^2+u2^2))';
+    element.lagrange = '0.5*(y3^2 + y6^2 + 0.01*(u1^2+u2^2))';
 end
 
 % simple bounds
@@ -73,7 +73,7 @@ setup.scaling(2).right = 2; % states
 setup.scaling(2).matrix = [10,22,1,2.5,1,1];
 
 % combine structures
-setup.symb = symb; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

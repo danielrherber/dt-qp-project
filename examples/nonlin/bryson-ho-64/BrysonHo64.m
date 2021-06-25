@@ -31,8 +31,8 @@ n.nu = 1; n.ny = 1;
 p.t0 = -p.l; p.tf = p.l;
 
 % objective function
-symb.Ob = '2*pi*y1*sqrt(1+u1^2)';
-% symb.Ob = 'y1^2*(1+u1^2)';
+element.lagrange = '2*pi*y1*sqrt(1+u1^2)';
+% element.lagrange = 'y1^2*(1+u1^2)';
 
 % dynamics
 setup.A = 0;
@@ -46,7 +46,7 @@ LB(2).right = 5; LB(2).matrix = p.a;
 LB(3).right = 2; LB(3).matrix = 0;
 
 %% setup
-setup.symb = symb; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

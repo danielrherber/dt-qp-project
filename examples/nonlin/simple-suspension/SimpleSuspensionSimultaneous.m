@@ -38,17 +38,17 @@ str{end+1} = '(- kt*y1 - (p1 + ct)*y2 + p2*y3 + p1*y4 + ct*z0d - u1)/mus;'; % mi
 str{end+1} = 'y4 - y2;';
 str{end+1} = '( p1*y2 - p2*y3 - p1*y4 + u1)/ms';
 str{end+1} = ']';
-symb.D = horzcat(str{:});
+element.dynamics = horzcat(str{:});
 
 % objective function
 str0{1} = 'w1*y1^2 + ';
 str0{2} = 'w2/ms^2*( p1*y2 - p2*y3 - p1*y4 + u1 )^2 + ';
 str0{3} = 'w3*u1^2';
-symb.Ob = horzcat(str0{:});
+element.lagrange = horzcat(str0{:});
 
 % symbolic parameters
-symb.paramstr = 'ct kt mus ms w1 w2 w3 z0d';
-symb.param = {p.bt p.kt p.mu p.ms p.w1 p.w2 p.w3 p.z0dot};
+element.parameter_list = 'ct kt mus ms w1 w2 w3 z0d';
+element.parameter_values = {p.bt p.kt p.mu p.ms p.w1 p.w2 p.w3 p.z0dot};
 
 % initial state values
 LB(1).right = 4;
@@ -83,7 +83,7 @@ setup.scaling(3).right = 3; % parameters
 setup.scaling(3).matrix = [1e2;1e4];
 
 % combine structures
-setup.symb = symb; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

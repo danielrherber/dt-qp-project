@@ -57,7 +57,7 @@ while (eRel > etol) && (nt < ntmax)
     try
 
         % check if there are symbolically defined problem elements
-        if isfield(setup,'symb')
+        if isfield(setup,'element')
 
             % solve the NLDO problem
             [T,U,Y,P,F,in,opts] = DTQP_NONLIN(setup,opts);

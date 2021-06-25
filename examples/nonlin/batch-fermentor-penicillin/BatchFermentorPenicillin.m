@@ -37,7 +37,7 @@ str{end+1} = 'p1*( (0.0055*(y3./(0.0001+y3.*(1+10*y3))).*y1-0.01*y2-u1.*(y2./500
 str{end+1} = 'p1*( (-0.11*(y3./(0.006*y1+y3)).*y1/0.47-0.0055*(y3./(0.0001+y3.*(1+10*y3))).*y1/1.2-y1.*(0.029*y3./(0.0001+y3))+u1./y4.*(1-y3/500)) ); ';
 str{end+1} = 'p1*( u1/500 )';
 str{end+1} = ']';
-symb.D = horzcat(str{:});
+element.dynamics = horzcat(str{:});
 
 % Mayer term
 Mmatrix = zeros(4); Mmatrix(2,4) = -1;
@@ -66,7 +66,7 @@ setup.scaling(2).right = 2; % states
 setup.scaling(2).matrix = [40,50,25,10];
 
 % combine structures
-setup.symb = symb; setup.M = M; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

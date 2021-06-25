@@ -62,9 +62,9 @@ str{end+1} = 'Ts/As/Rs*y4/y1; ';
 str{end+1} = 'Ts/Vrs/Rs*y4^2/y1 - Ts/Vrs/Rs^2/y1^2 + Ts/Vrs*Us*u1; ';
 str{end+1} = '-Ts*Vrs/Rs*y3*y4/y1 + Ts*Us*u2';
 str{end+1} = ']';
-symb.D = horzcat(str{:});
-symb.paramstr = 'umax Us Ts Rs As Vrs';
-symb.param = [umax Us Ts Rs As Vrs];
+element.dynamics = horzcat(str{:});
+element.parameter_list = 'umax Us Ts Rs As Vrs';
+element.parameter_values = [umax Us Ts Rs As Vrs];
 
 switch testnum
     %----------------------------------------------------------------------
@@ -72,8 +72,8 @@ switch testnum
 
     if testnum == 1 % original formulation
         % Lagrange term
-        % symb.Ob = 'abs(u1) + abs(u2)';
-        symb.Ob = 'sqrt(u1^2) + sqrt(u2^2)'; % works with complex numbers
+        % element.lagrange = 'abs(u1) + abs(u2)';
+        element.lagrange = 'sqrt(u1^2) + sqrt(u2^2)'; % works with complex numbers
 
         % linear inequality constraint
         UB(3).right = 1; UB(3).matrix = [umax, umax]/Us; % controls
@@ -89,7 +89,7 @@ switch testnum
         n.nu = n.nu + 2;
 
         % Lagrange term
-        % symb.Ob = 'u3 + u4';
+        % element.lagrange = 'u3 + u4';
         L(1).left = 0; L(1).right = 1; L(1).matrix = [0 0 1 1];
         setup.L = L;
 
@@ -120,12 +120,12 @@ switch testnum
 
     if testnum == 2 % original formulation
         % Lagrange term
-        symb.Ob = '(u1^2 + u2^2)^(1/2)';
+        element.lagrange = '(u1^2 + u2^2)^(1/2)';
 
         % nonlinear inequality constraint
-        % symb.cin.func = '(u1^2 + u2^2)^(1/2) - umax/Us';
-        symb.cin.func = '(u1^2 + u2^2) - umax^2/Us^2'; % better form
-        symb.cin.pathboundary = 1;
+        % element.g.func = '(u1^2 + u2^2)^(1/2) - umax/Us';
+        element.g.func = '(u1^2 + u2^2) - umax^2/Us^2'; % better form
+        element.g.pathboundary = 1;
 
         % linear inequality constraint
         UB(3).right = 1; UB(3).matrix = [umax, umax]/Us; % controls
@@ -144,10 +144,10 @@ switch testnum
         L(1).left = 0; L(1).right = 1; L(1).matrix = [0,0,1]; setup.L = L;
 
         % nonlinear inequality constraint
-        % symb.ceq.func = 'u1^2 + u2^2 - u3^2';
-        % symb.ceq.pathboundary = 1;
-        symb.cin.func = 'u1^2 + u2^2 - u3^2'; % better form
-        symb.cin.pathboundary = 1;
+        % element.h.func = 'u1^2 + u2^2 - u3^2';
+        % element.h.pathboundary = 1;
+        element.g.func = 'u1^2 + u2^2 - u3^2'; % better form
+        element.g.pathboundary = 1;
 
         % linear inequality constraint
         UB(3).right = 1; UB(3).matrix = [1.05*umax, 1.05*umax, umax]/Us; % controls
@@ -162,7 +162,7 @@ switch testnum
 end
 
 % combine structures
-setup.symb = symb; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

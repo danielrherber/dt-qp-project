@@ -33,12 +33,12 @@ casenum = 2;
 switch casenum
     case 1
         % system dynamics
-        symb.D = '[y2;-y1+y2-y1^2*y2+u1]';
+        element.dynamics = '[y2;-y1+y2-y1^2*y2+u1]';
         n.ny = 2; % number of states
         n.nu = 1; % number of inputs
 
         % Lagrange term
-        symb.Ob = 'y1^2 + y2^2 + u1^2';
+        element.lagrange = 'y1^2 + y2^2 + u1^2';
         % L(1).left = 1; L(1).right = 1; L(1).matrix = 1;
         % L(2).left = 2; L(2).right = 2; L(2).matrix = eye(2);
 
@@ -54,7 +54,7 @@ switch casenum
         setup.guess.X = [U0,Y0];
 
         % combine structures
-        setup.symb = symb; setup.UB = UB; setup.LB = LB; % setup.L = L;
+        setup.element = element; setup.UB = UB; setup.LB = LB; % setup.L = L;
         setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
     case 2 % co-design example
@@ -62,7 +62,7 @@ switch casenum
         dmax = [5 5];
 
         % system dynamics
-        symb.D = '[y2;-p1*y1+y2-p2*y1^2*y2+u1]';
+        element.dynamics = '[y2;-p1*y1+y2-p2*y1^2*y2+u1]';
         n.ny = 2; % number of states
         n.nu = 1; % number of inputs
         n.np = 2;
@@ -73,7 +73,7 @@ switch casenum
             L(2).left = 2; L(2).right = 2; L(2).matrix = eye(2);
             setup.L = L;
         else
-            symb.Ob = 'y1^2 + y2^2 + u1^2';
+            element.lagrange = 'y1^2 + y2^2 + u1^2';
         end
 
         % simple bounds
@@ -92,23 +92,23 @@ switch casenum
         setup.guess.X = [U0,Y0,P0];
 
         % combine structures
-        setup.symb = symb; setup.UB = UB; setup.LB = LB;
+        setup.element = element; setup.UB = UB; setup.LB = LB;
         setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
     case 3 % completely symbolic formulation
         % system dynamics
-        symb.D = '[y2; -y1 + y2 - y1^2*y2 + u1]';
+        element.dynamics = '[y2; -y1 + y2 - y1^2*y2 + u1]';
         n.ny = 2; % number of states
         n.nu = 1; % number of inputs
 
         % Lagrange term
-        symb.Ob = 'y1^2 + y2^2 + u1^2';
+        element.lagrange = 'y1^2 + y2^2 + u1^2';
 
         % equality constraints
-        symb.ceq = '[yi1 - 1; yi2 - 0]';
+        element.h = '[yi1 - 1; yi2 - 0]';
 
         % inequality constraints
-        symb.cin = '[u1 - 1; -u1 - 0.3]';
+        element.g = '[u1 - 1; -u1 - 0.3]';
 
         % guess
         Y0 = [[1,0];[1,0]];
@@ -116,7 +116,7 @@ switch casenum
         setup.guess.X = [U0,Y0];
 
         % combine structures
-        setup.symb = symb; % setup.UB = UB; setup.LB = LB; % setup.L = L;
+        setup.element = element; % setup.UB = UB; setup.LB = LB; % setup.L = L;
         setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 end
 

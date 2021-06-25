@@ -36,7 +36,7 @@ str{end+1} = 'y2; ';
 str{end+1} = 'u1; ';
 str{end+1} = 'y1^2/2 + y2^2/2';
 str{end+1} = ']';
-symb.D = horzcat(str{:});
+element.dynamics = horzcat(str{:});
 
 % Mayer term
 M(1).left = 0; M(1).right = 5; M(1).matrix = [0 0 1]; % final states
@@ -53,7 +53,7 @@ U0 = [[-1];[-1]];
 setup.guess.X = [U0,Y0];
 
 % combine structures
-setup.symb = symb; setup.M = M; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

@@ -39,12 +39,12 @@ str{1} = '[';
 str{end+1} = 'y2;';
 str{end+1} = '(s2-s1)/pi*atan((y1-2)/0.05)+(s3-s2)/pi*atan((y1-4)/0.05)-(a+b*y2+c*y2^2)+u1-u2';
 str{end+1} = ']';
-symb.D = horzcat(str{:});
-symb.paramstr = 'a b c z1 z2 s1 s2 s3';
-symb.param = [a b c z1 z2 s1 s2 s3];
+element.dynamics = horzcat(str{:});
+element.parameter_list = 'a b c z1 z2 s1 s2 s3';
+element.parameter_values = [a b c z1 z2 s1 s2 s3];
 
 % Lagrange term
-% symb.Ob = 'u1*y2 + 10^-3*(u1^2 + u2^2)';
+% element.lagrange = 'u1*y2 + 10^-3*(u1^2 + u2^2)';
 L(1).left = 1; L(1).right = 1; L(1).matrix = diag([1e-3,1e-3]);
 L(2).left = 1; L(2).right = 2; L(2).matrix = [0,0;1,0;0,0;0,0];
 setup.L = L;
@@ -69,7 +69,7 @@ setup.scaling(2).right = 2; % states
 setup.scaling(2).matrix = [6,6];
 
 % combine structures
-setup.symb = symb; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

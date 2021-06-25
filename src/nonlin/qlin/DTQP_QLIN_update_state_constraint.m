@@ -12,9 +12,9 @@
 function [setup] = DTQP_QLIN_update_state_constraint(setup,opts)
 
 % get the respective Nonlinear variables
-symb = setup.symb;
-Liny = symb.y;
-oy = symb.oy;
+element = setup.element;
+Liny = element.y;
+oy = element.oy;
 
 % get the linearized matrix values
 B = rand(opts.dt.nt,oy.ny);

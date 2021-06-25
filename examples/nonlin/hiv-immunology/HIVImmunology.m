@@ -41,9 +41,9 @@ str{1} = '[';
 str{end+1} = 's1-s2*y2/(b1+y2)- m*y1-k*y1*y2+u1*y1; ';
 str{end+1} = 'g*(1-u2)*y2/(b2+y2)-C*y1*y2';
 str{end+1} = ']';
-symb.D = horzcat(str{:});
-symb.paramstr = 's1 s2 m C k g b1 b2 A1 A2';
-symb.param = [s1 s2 m C k g b1 b2 A1 A2];
+element.dynamics = horzcat(str{:});
+element.parameter_list = 's1 s2 m C k g b1 b2 A1 A2';
+element.parameter_values = [s1 s2 m C k g b1 b2 A1 A2];
 
 % Lagrange term
 L(1).left = 1; L(1).right = 1; L(1).matrix = diag([A1 A2]);
@@ -69,7 +69,7 @@ setup.scaling(2).right = 2; % states
 setup.scaling(2).matrix = [1200 5];
 
 % combine structures
-setup.symb = symb; setup.UB = UB; setup.LB = LB; setup.L = L;
+setup.element = element; setup.UB = UB; setup.LB = LB; setup.L = L;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

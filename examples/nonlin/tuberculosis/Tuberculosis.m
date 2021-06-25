@@ -72,9 +72,9 @@ str{end+1} = 'k2*y4 - (xmu+d2)*y5;';
 str{end+1} = 'u1*r1*y2 + (1 - (1 - u2)*(xp+q))*r2*y3 - beta2*y6*y3/Npop - betas*y6*y5/Npop - xmu*y6;';
 str{end+1} = ']';
 str = horzcat(str{:});
-symb.D = str;
-symb.paramstr = 'lam beta1 beta2 betas Npop xmu k1 k2 r1 r2 xp q d1 d2';
-symb.param =    [lam beta1 beta2 betas Npop xmu k1 k2 r1 r2 xp q d1 d2];
+element.dynamics = str;
+element.parameter_list = 'lam beta1 beta2 betas Npop xmu k1 k2 r1 r2 xp q d1 d2';
+element.parameter_values =    [lam beta1 beta2 betas Npop xmu k1 k2 r1 r2 xp q d1 d2];
 
 % Lagrange term
 L(1).left = 1; L(1).right = 1; L(1).matrix = diag(1/2*[B1,B2]); % controls
@@ -105,7 +105,7 @@ setup.scaling(2).right = 2; % states
 setup.scaling(2).matrix = ([S0;L10;I10;L20;I20;T0]+Nmax)/2;
 
 % combine structures
-setup.symb = symb; setup.L = L; setup.UB = UB; setup.LB = LB; setup.Y = Y;
+setup.element = element; setup.L = L; setup.UB = UB; setup.LB = LB; setup.Y = Y;
 setup.t0 = t0; setup.tf = tf; setup.p = p; setup.n = n;
 
 %% solve

@@ -12,9 +12,9 @@
 function [setup] = DTQP_QLIN_update_control_constraint(setup,opts)
 
 % get the nonlinear variables
-symb = setup.symb;
-Linc = symb.c;
-oc = symb.oc;
+element = setup.element;
+Linc = element.c;
+oc = element.oc;
 
 % get the linearized matrix values
 U = rand(opts.dt.nt,oc.nu);

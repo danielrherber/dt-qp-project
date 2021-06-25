@@ -25,48 +25,54 @@ for k = 1:length(tests)
     switch tests(k)
         %------------------------------------------------------------------
         case 1
-        symb.Ob = '(p1-1)^4 + p1^2 + (p2-pi)^2';
+        element.lagrange = '(p1-1)^4 + p1^2 + (p2-pi)^2';
         [P2,F2] = fmincon(@(x) (x(1)-1)^4 + x(1)^2 + (x(2)-pi)^2,[1,1],[],[],[],[],[],[],[],options);
         %------------------------------------------------------------------
         case 2
-        symb.Ob = '(p1-1)^4 + log(p1+4)^2 + (p2-pi)^2';
+        element.lagrange = '(p1-1)^4 + log(p1+4)^2 + (p2-pi)^2';
         [P2,F2] = fmincon(@(x) (x(1)-1)^4 + log(x(1)+4)^2 + (x(2)-pi)^2,[1,1],[],[],[],[],[],[],[],options);
         %------------------------------------------------------------------
         case 3
-        symb.Ob = '(p1-1)^4 + (p2-3)^2 + p1^2*p2';
+        element.lagrange = '(p1-1)^4 + (p2-3)^2 + p1^2*p2';
         [P2,F2] = fmincon(@(x) (x(1)-1)^4 + (x(2)-3)^2 + x(1)^2*x(2),[1,1],[],[],[],[],[],[],[],options);
         %------------------------------------------------------------------
         case 4
-        symb.Ob = '(p1-1)^2 + (p2-3)^2 + p1*p2';
+        element.lagrange = '(p1-1)^2 + (p2-3)^2 + p1*p2';
         [P2,F2] = fmincon(@(x) (x(1)-1)^2 + (x(2)-3)^2 + x(1)*x(2),[1,1],[],[],[],[],[],[],[],options);
     end
 
     % problem structure
-    [setup,opts] = problem(symb);
+    [setup,opts] = problem(element);
 
     % run the test and time
     [T,U,Y,P1,F1,in,opts] = DTQP_solve(setup,opts);
 
     % test analysis
+    disp("---")
     disp(strcat("Case ",string(tests(k))))
-    disp("DTQP | F"); disp(F1); disp("P1"); disp(P1(:)')
-    disp("FMINCON | F"); disp(F2); disp("P2"); disp(P2(:)')
+    disp("DTQP | F"); disp(F1); disp("P"); disp(P1(:)')
+    disp("FMINCON | F"); disp(F2); disp("P"); disp(P2(:)')
 end
 
 % problem structure
-function [setup,opts] = problem(symb)
+function [setup,opts] = problem(element)
 
 n.ny = 1; % number of states
 n.np = 2; % number of parameters
 
 % system dynamics
-symb.D = '[0]';
+element.dynamics = '[0]';
 
 % time horizon
 t0 = 0; tf = 1;
 
+% guess
+Y0 = [[1];[1]];
+P0 = [[0,0];[0,0]];
+setup.guess.X = [Y0,P0];
+
 % combine structures
-setup.symb = symb; setup.n = n;
+setup.element = element; setup.n = n;
 setup.t0 = t0; setup.tf = tf; setup.p = [];
 
 % options

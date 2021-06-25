@@ -33,12 +33,12 @@ p.t0 = 0; p.tf = tf;
 n.nu = 1; n.ny = 2;
 
 % system dynamics
-symb.D = '[V*cos(u1) + w; V*sin(u1)]';
-symb.paramstr = 'V w';
-symb.param = [p.V p.w];
+element.dynamics = '[V*cos(u1) + w; V*sin(u1)]';
+element.parameter_list = 'V w';
+element.parameter_values = [p.V p.w];
 
 % Lagrange term
-symb.Ob = '-y2*(V*cos(u1) + w)';
+element.lagrange = '-y2*(V*cos(u1) + w)';
 
 % simple bounds
 UB(1).right = 4; UB(1).matrix = [0;0]; % initial states
@@ -54,7 +54,7 @@ U0 = [[0];[0]];
 setup.guess.X = [U0,Y0];
 
 % combine structures
-setup.symb = symb; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

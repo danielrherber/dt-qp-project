@@ -22,7 +22,7 @@ improveX0flag = opts.method.improveguess;
 deltascaleflag = opts.method.deltascaleflag;
 sqpflag = opts.method.sqpflag;
 imax = opts.method.maxiters;
-symb = setup.symb;
+element = setup.element;
 o = setup.n;
 param = o.param;
 
@@ -33,9 +33,9 @@ end
 
 % linearized dynamics
 D2 = [];
-if isfield(symb,'Linf')
+if isfield(element,'Linf')
     Dflag = true;
-    D = symb.Linf;
+    D = element.Linf;
     DA = D.A; DB = D.B; DG = D.G; Dd = D.d;
     if sqpflag
        D2 = D.D2;
@@ -45,9 +45,9 @@ else
 end
 
 % quadracized Lagrange term
-if isfield(symb,'L')
+if isfield(element,'L')
     Lflag = true;
-    L = symb.L;
+    L = element.L;
     LH = L.H; LG = L.G; LC = L.C;
 else
     Lflag = false;

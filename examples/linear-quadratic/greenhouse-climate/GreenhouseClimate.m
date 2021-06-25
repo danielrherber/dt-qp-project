@@ -89,10 +89,10 @@ switch casenum
     str{end+1} = '1/2*xp1*( (800*sin(4*pi*t/xtf - 0.65*pi) + abs(800*sin(4*pi*t/xtf - 0.65*pi)) ) )*y2; '; % max function
     str{end+1} = 'xp2*( 15 + 10*sin(4*pi*t/xtf - 0.65*pi) - y2) + xp3*u1';
     str{end+1} = ']';
-    symb.D = horzcat(str{:});
-    symb.paramstr = 'xp1 xp2 xp3 xp4 xp5 xtf';
-    symb.param = [xp1 xp2 xp3 xp4 xp5 xtf];
-    setup.symb = symb;
+    element.dynamics = horzcat(str{:});
+    element.parameter_list = 'xp1 xp2 xp3 xp4 xp5 xtf';
+    element.parameter_values = [xp1 xp2 xp3 xp4 xp5 xtf];
+    setup.element = element;
 
     opts.method.form = 'nonlinearprogram';
     %----------------------------------------------------------------------
@@ -111,10 +111,10 @@ switch casenum
     str{end+1} = 'xp1*( 800*sin(4*pi*t/xtf - 0.65*pi) )*y2; ';
     str{end+1} = 'xp2*( 15 + 10*sin(4*pi*t/xtf - 0.65*pi) - y2) + xp3*u1';
     str{end+1} = ']';
-    symb.D = horzcat(str{:});
-    symb.paramstr = 'xp1 xp2 xp3 xp4 xp5 xtf';
-    symb.param = [xp1 xp2 xp3 xp4 xp5 xtf];
-    setup.symb = symb;
+    element.dynamics = horzcat(str{:});
+    element.parameter_list = 'xp1 xp2 xp3 xp4 xp5 xtf';
+    element.parameter_values = [xp1 xp2 xp3 xp4 xp5 xtf];
+    setup.element = element;
 
     opts.method.form = 'nonlinearprogram';
 end

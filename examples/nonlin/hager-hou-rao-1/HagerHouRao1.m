@@ -31,10 +31,10 @@ p.t0 = 0; p.tf = 1;
 n.nu = 2; n.ny = 2;
 
 % objective
-symb.Ob = '2*y1^2*y2^2 + 1.25/(y2^2) + u2/y2 + u1^2 + u2^2';
+element.lagrange = '2*y1^2*y2^2 + 1.25/(y2^2) + u2/y2 + u1^2 + u2^2';
 
 % system dynamics
-symb.D = '[y1 + u1/y2 + y1*y2*u2; -y2*(0.5 + y2*u2)]';
+element.dynamics = '[y1 + u1/y2 + y1*y2*u2; -y2*(0.5 + y2*u2)]';
 
 % simple bounds
 UB(1).right = 4; UB(1).matrix = [1,1]; % initial states
@@ -46,7 +46,7 @@ U0 = [[0,0];[0,0]];
 setup.guess.X = [U0,Y0];
 
 % combine structures
-setup.symb = symb; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

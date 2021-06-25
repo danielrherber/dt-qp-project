@@ -38,20 +38,20 @@ setup.B = -1;
 switch obj_approach
     %----------------------------------------------------------------------
     case 'string'
-        symb.Ob = 'u1^2/y1 - a*u1';
+        element.lagrange = 'u1^2/y1 - a*u1';
     %----------------------------------------------------------------------
     case 'function'
         % provide function, rather than a string, for the objective function
         % NOTE: this feature is currently undocumented and undeveloped
-        symb.Ob = []; % only needs to have the field to work
+        element.lagrange = []; % only needs to have the field to work
         obj.f = { @(t,param,UYP) UYP(:,1).^2./UYP(:,2) - param(:,1).*UYP(:,1) };
         setup.internalinfo.obj = obj;
     %----------------------------------------------------------------------
 end
 
 % problem parameters
-symb.paramstr = 'a';
-symb.param = [p.a];
+element.parameter_list = 'a';
+element.parameter_values = [p.a];
 
 % simple bounds
 UB(1).right = 4; UB(1).matrix = p.x0;% initial states
@@ -65,7 +65,7 @@ U0 = [[0];[0]];
 setup.guess.X = [U0,Y0];
 
 % combine structures
-setup.symb = symb; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

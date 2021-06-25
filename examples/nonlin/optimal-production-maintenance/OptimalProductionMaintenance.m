@@ -52,11 +52,11 @@ str{end+1} = 'y2*u1 - s;';
 str{end+1} = '-(alpha_ + u2)*y2 + u2;';
 str{end+1} = ']';
 str = horzcat(str{:});
-symb.D = str;
+element.dynamics = str;
 
 % problem parameters
-symb.paramstr = 'alpha_ s';
-symb.param = [alpha s];
+element.parameter_list = 'alpha_ s';
+element.parameter_values = [alpha s];
 
 % Lagrange term
 L(1).left = 1; L(1).right = 1; L(1).matrix = {@(t) exp(-rho*t)*r , 0; 0, 0};
@@ -79,7 +79,7 @@ U0 = [[0,0];[0,M_]];
 setup.guess.X = [U0,Y0];
 
 % combine structures
-setup.symb = symb; setup.M = M; setup.L = L; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.M = M; setup.L = L; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

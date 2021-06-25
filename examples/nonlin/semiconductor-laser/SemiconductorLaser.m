@@ -59,11 +59,11 @@ str{end+1} = 'ts*p1/S0*( -y1*S0/taup + gam*Gp*(y2*N0-Ntr)*(1-ep*y1*S0)*y1*S0 + b
 str{end+1} = 'ts*p1/N0*( Imin*u1/q - (A_*y2*N0 + B_*y2*N0*(y2*N0+P0) + C_*y2*N0*(y2*N0+P0)^2) - gam*Gp*(y2*N0-Ntr)*(1-ep*y1*S0)*y1*S0);';
 str{end+1} = ']';
 str = horzcat(str{:});
-symb.D = str;
+element.dynamics = str;
 
 % problem parameters
-symb.paramstr = 'taup ep P0 B_ Imin Gp Ntr q C_ gam beta_ A_ S0 N0 ts';
-symb.param = [taup ep P0 B Imin Gp Ntr q C gam beta A S0 N0 ts];
+element.parameter_list = 'taup ep P0 B_ Imin Gp Ntr q C_ gam beta_ A_ S0 N0 ts';
+element.parameter_values = [taup ep P0 B Imin Gp Ntr q C gam beta A S0 N0 ts];
 
 % Mayer term
 M(1).left = 0; M(1).right = 3; M(1).matrix = [1];
@@ -85,7 +85,7 @@ P0 = [[100];[100]];
 setup.guess.X = [U0,Y0,P0];
 
 % combine structures
-setup.symb = symb; setup.M = M; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

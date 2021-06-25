@@ -41,9 +41,9 @@ str{end+1} = 'y4/y1; ';
 str{end+1} = 'y4^2/y1 - xmu/y1^2 + (xT/(m0 - dm*t))*u1; ';
 str{end+1} = '-y3*y4/y1 + (xT/(m0 - dm*t))*u2';
 str{end+1} = ']';
-symb.D = horzcat(str{:});
-symb.paramstr = 'xmu xT m0 dm';
-symb.param = [xmu xT m0 dm];
+element.dynamics = horzcat(str{:});
+element.parameter_list = 'xmu xT m0 dm';
+element.parameter_values = [xmu xT m0 dm];
 
 % simple bounds
 UB(1).right = 4; UB(1).matrix = [1,0,0,1]; % initial states
@@ -52,8 +52,8 @@ UB(2).right = 5; UB(2).matrix = [inf,inf,0,inf]; % final states
 LB(2).right = 5; LB(2).matrix = [-inf,-inf,0,-inf];
 
 % equality constraints
-symb.ceq.func = '[u1^2 + u2^2 - 1; sqrt(xmu/yf1) - yf4]';
-symb.ceq.pathboundary = [1 0];
+element.h.func = '[u1^2 + u2^2 - 1; sqrt(xmu/yf1) - yf4]';
+element.h.pathboundary = [1 0];
 
 % Mayer term
 M(1).left = 0; M(1).right = 5; M(1).matrix = [-1,0,0,0];
@@ -70,7 +70,7 @@ setup.scaling(2).right = 2; % states
 setup.scaling(2).matrix = [1.5,2.5,0.3,1];
 
 % combine structures
-setup.symb = symb; setup.UB = UB; setup.LB = LB; setup.M = M;
+setup.element = element; setup.UB = UB; setup.LB = LB; setup.M = M;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

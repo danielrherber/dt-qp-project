@@ -40,7 +40,7 @@ str{3} = 'p1*( -( sin(y3).*(9/4*cos(y3).*y2.^2+7/2*y1.^2) - 7/3*u2 + 3/2*cos(y3)
 str{4} = 'p1*( y2-y1 ); ';
 str{5} = 'p1*( y1 )';
 str{6} = ']';
-symb.D = horzcat(str{:});
+element.dynamics = horzcat(str{:});
 
 % Mayer term
 M(1).right = 3; M(1).left = 0; M(1).matrix = 1; % parameters
@@ -64,7 +64,7 @@ P0 = [[3.1];[3.1]];
 setup.guess.X = [U0,Y0,P0];
 
 % combine structures
-setup.symb = symb; setup.M = M;  setup.UB = UB; setup.LB = LB; % setup.L = L;
+setup.element = element; setup.M = M;  setup.UB = UB; setup.LB = LB; % setup.L = L;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

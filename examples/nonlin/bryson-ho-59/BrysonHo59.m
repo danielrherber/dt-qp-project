@@ -36,9 +36,9 @@ n.nu = 1; n.ny = 4;
 M(1).left = 0; M(1).right = 5; M(1).matrix = [-1,0,0,0];
 
 % system dynamics
-symb.D = '[a*cos(u1); a*sin(u1); y1; y2]';
-symb.paramstr = 'a';
-symb.param = [p.a];
+element.dynamics = '[a*cos(u1); a*sin(u1); y1; y2]';
+element.parameter_list = 'a';
+element.parameter_values = [p.a];
 
 % simple bounds
 UB(1).right = 4; UB(1).matrix = [0,0,0,0]; % initial states
@@ -56,7 +56,7 @@ U0 = [[0];[0]];
 setup.guess.X = [U0,Y0];
 
 % combine structures
-setup.symb = symb; setup.M = M; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
 
 %% solve

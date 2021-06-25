@@ -182,9 +182,9 @@ p.y0 = y0;
 p.t0 = 0; p.tf = 1.2;
 
 % system dynamics
-symb.D = '[-zeta*y1*log(y1/y2); y2*(b-(Mew+(D*(y1^(2/3)))+G*u1)); u1]';
-symb.paramstr = 'zeta b Mew D G';
-symb.param = [zeta b Mew D G];
+element.dynamics = '[-zeta*y1*log(y1/y2); y2*(b-(Mew+(D*(y1^(2/3)))+G*u1)); u1]';
+element.parameter_list = 'zeta b Mew D G';
+element.parameter_values = [zeta b Mew D G];
 
 n.ny = 3;
 n.nu = 1;
@@ -209,7 +209,7 @@ U0 = [[0.5*umax];[0.5*umax]];
 setup.guess.X = [U0,Y0];
 
 % combine structures
-setup.symb = symb; setup.M = M; setup.UB = UB; setup.LB = LB;
+setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
 setup.t0 = p.t0; setup.tf = p.tf; setup.p = p;
 
 % options
