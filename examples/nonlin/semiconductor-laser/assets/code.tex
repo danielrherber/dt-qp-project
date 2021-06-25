@@ -1,14 +1,13 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
 \min_{I(t),t_f} \quad & t_f \\
@@ -23,4 +22,4 @@
 }}
 \end{document}
 
-% solution
+%% solution

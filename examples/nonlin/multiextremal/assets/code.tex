@@ -1,36 +1,35 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{u_1(t)} \quad & \int_{0}^{t_f} L(\cdot) dt + M(\cdot) \\
-\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}
+\min_{u_1(t)} \quad & \int_{0}^{t_f} L(\cdot) \mathrm{d}t + M(\cdot) \\
+\text{subject to:} \quad & \dot{\bm{x}} = \begin{bmatrix}
 f_1(\cdot) \\
 f_2(\cdot)
 \end{bmatrix} \\
-& (\xi_1,\xi_2)(0) = (\xi_{10},\xi_{20}) \\
+& (x_1,x_2)(0) = (x_{10},x_{20}) \\
 & u_{\min} \leq u_1(t) \leq u_{\max} \\
-\text{problem 4:} \quad & L = 0, \quad M = \xi_1^2(t_f) + \xi_2^2(t_f) \\
-& f_1 = \xi_2, \quad f_2 = u_1 - \sin(\xi_1) \\
-& \xi_{10} = 5, \quad \xi_{20} = 0 \\
+\text{Problem 4:} \quad & L = 0, \quad M = x_1^2(t_f) + x_2^2(t_f) \\
+& f_1 = x_2, \quad f_2 = u_1 - \sin(x_1) \\
+& x_{10} = 5, \quad x_{20} = 0 \\
 &  u_{\min} = -1, \quad u_{\max} = 1 \\
 & t_f = 5 \\
-\text{problem 8:} \quad & L = \xi_1^2 + \xi_2^2 + 0.1 u_1^2, \quad M = 0 \\
-& f_1 = -[2+u_1][\xi_1+0.25] + [\xi_2+0.5]e^{25 \xi_1/[\xi_1+2]} \\
-& f_2 = 0.5 - \xi_2 - [\xi_2+0.5]e^{25 \xi_1/[\xi_1+2]} \\
-& \xi_{10} = 0.09, \quad \xi_{20} = 0.09 \\
+\text{Problem 8:} \quad & L = x_1^2 + x_2^2 + 0.1 u_1^2, \quad M = 0 \\
+& f_1 = -[2+u_1][x_1+0.25] + [x_2+0.5]e^{25 x_1/[x_1+2]} \\
+& f_2 = 0.5 - x_2 - [x_2+0.5]e^{25 x_1/[x_1+2]} \\
+& x_{10} = 0.09, \quad x_{20} = 0.09 \\
 &  u_{\min} = 0, \quad u_{\max} = 5 \\
 & t_f = 0.78
 \end{align*}
 }}
 \end{document}
 
-% solution
+%% solution

@@ -1,18 +1,16 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\usepackage{mathtools}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=8in, paperwidth=8in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{u(t)} \quad & \int_0^{t_f} y \left( V \cos(\theta) + u \right) dt \\
+\min_{u(t)} \quad & \int_0^{t_f} y \left[ V \cos(\theta) + u \right] \mathrm{d}t \\
 \text{subject to:} \quad & \begin{bmatrix} \dot{x} \\ \dot{y} \end{bmatrix} = \begin{bmatrix} V \cos(\theta) + u \\ V \sin(\theta) \end{bmatrix} \\
 & x(0) = x(t_f) = 0 \\
 & y(0) = y(t_f) = 0
@@ -20,4 +18,4 @@
 }}
 \end{document}
 
-% solution
+%% solution

@@ -1,22 +1,21 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{u(t)} \quad & \int_{-\ell}^{\ell} r\sqrt{1+u^2} dt \\
+\min_{u(t)} \quad & \int_{-\ell}^{\ell} r\sqrt{1+u^2} \mathrm{d}t \\
 \text{subject to:} \quad & \dot{r} = u \\
 & r(-\ell) = a \\
-& r(\ell) = a \\
+& r(\ell) = a
 \end{align*}
 }}
 \end{document}
 
-% solution
+%% solution

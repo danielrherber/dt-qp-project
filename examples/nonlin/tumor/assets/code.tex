@@ -1,26 +1,25 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{u(t)} \quad & \xi_1(t_f) \\
-\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}
-- \zeta \xi_1 \log(\xi_1/\xi_2) \\
-\xi_2 \left( b - \mu - d \xi_1^{2/3} + G u \right)
+\min_{u(t)} \quad & x_1(t_f) \\
+\text{subject to:} \quad & \dot{\bm{x}} = \begin{bmatrix}
+- \zeta x_1 \log(x_1/x_2) \\
+x_2 \left( b - \mu - d x_1^{2/3} + G u \right)
 \end{bmatrix} \\
-& \bm{\xi}(0) = \bm{\xi}_0 \\
+& \bm{x}(0) = \bm{x}_0 \\
 & 0 \leq u(t) \leq u_{\max} \\
-& \int_0^{t_f} u(t) dt \leq A
+& \int_0^{t_f} u(t) \mathrm{d}t \leq A
 \end{align*}
 }}
 \end{document}
 
-% solution
+%% solution

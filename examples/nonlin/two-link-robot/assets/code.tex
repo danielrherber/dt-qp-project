@@ -1,30 +1,29 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
 \min_{t_f, \bm{u}(t)} \quad & t_f \\
-\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}
-\frac{ \sin(\xi_3)[9/4\cos(\xi_3) \xi_1^2 + 2\xi_2^2 ] + 4/3*[u_1-u_2] - 3/2 \cos(\xi_3)u_2 }{31/36 + 9/4 \sin^2(\xi_3)} \\
-\frac{ -[\sin(\xi_3)[7/2 \xi_1^2 + 9/4\cos(\xi_3) \xi_2^2] - 7/3u_2 + 3/2 \cos(\xi_3) [u_1 - u_2] ]    }{31/36 + 9/4 \sin^2(\xi_3)} \\
-\xi_2 - \xi_1 \\
-\xi_1
+\text{subject to:} \quad & \dot{\bm{x}} = \begin{bmatrix}
+\frac{ \sin(x_3)[9/4\cos(x_3) x_1^2 + 2x_2^2 ] + 4/3 [u_1-u_2] - 3/2 \cos(x_3)u_2 }{31/36 + 9/4 \sin^2(x_3)} \\
+\frac{ -[\sin(x_3)[7/2 x_1^2 + 9/4\cos(x_3) x_2^2] - 7/3u_2 + 3/2 \cos(x_3) [u_1 - u_2] ]    }{31/36 + 9/4 \sin^2(x_3)} \\
+x_2 - x_1 \\
+x_1
 \end{bmatrix} \\
-& \bm{\xi}(0) = (0,0,0.5,0) \\
-& \bm{\xi}(t_f) = (0,0,0.5,0.522) \\
-& \bm{0} \leq \bm{\xi} \\
+& \bm{x}(0) = (0,0,0.5,0) \\
+& \bm{x}(t_f) = (0,0,0.5,0.522) \\
+& \bm{0} \leq \bm{x} \\
 & -1 \leq u_1 \leq 1 \\
 & -1 \leq u_2 \leq 1
 \end{align*}
 }}
 \end{document}
 
-% solution
+%% solution

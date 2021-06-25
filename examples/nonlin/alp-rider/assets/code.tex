@@ -10,16 +10,16 @@
 \pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{u_1(t),u_2(t)} \quad & \int_{0}^{20} \left[10^{2}(y_1^2 + y_2^2 + y_3^2 + y_4^2) + 10^{-2} (u_1^2 +u_2^2)\right] dt\\
-\text{subject to:} \quad & \dot{\bm{y}} = \begin{bmatrix}
--10 y_1 + u_1 + u_2 \\
--2 y_2 + u_1 + 2 u_2 \\
--3 y_3 + 5 y_4 + u_1 - u_2 \\
-5 y_3 - 3 y_4 + u_1 + 3 u_2
+\min_{u_1(t),u_2(t)} \quad & \int_{0}^{20} \left[10^{2}(x_1^2 + x_2^2 + x_3^2 + x_4^2) + 10^{-2} (u_1^2 +u_2^2)\right] \mathrm{d}t \\
+\text{subject to:} \quad & \dot{\bm{x}} = \begin{bmatrix}
+-10 x_1 + u_1 + u_2 \\
+-2 x_2 + u_1 + 2 u_2 \\
+-3 x_3 + 5 x_4 + u_1 - u_2 \\
+5 x_3 - 3 x_4 + u_1 + 3 u_2
 \end{bmatrix} \\
-& \bm{y}(0) = (2,1,2,1) \\
-& \bm{y}(20) = (2,3,1,-2) \\
-& y_1^2 + y_2^2 + y_3^2 + y_4^2 \geq 3 p(t,3,12) + 3 p(t,6,10) + 3 p(t,10,6) + 8 p(t,15,4) + 0.01 \\
+& \bm{x}(0) = (2,1,2,1) \\
+& \bm{x}(20) = (2,3,1,-2) \\
+& x_1^2 + x_2^2 + x_3^2 + x_4^2 \geq 3 p(t,3,12) + 3 p(t,6,10) + 3 p(t,10,6) + 8 p(t,15,4) + 0.01 \\
 \text{where:} \quad & p(t,a,b) = e^{-b(t-a)^2}
 \end{align*}
 }}

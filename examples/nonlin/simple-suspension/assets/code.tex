@@ -1,32 +1,30 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\usepackage{mathtools}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=8in, paperwidth=13in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{u,\bm{\xi},\bm{p}} \quad & \int_{0}^{t_f} \left[ w_1 \xi_1^2 + w_2 \dot{\xi}_4^2 + w_3 u^2 \right] dt \\
-\text{subject to:} \quad & \dot{\bm{\xi}}(t) =
+\min_{u,\bm{p}} \quad & \int_{0}^{t_f} \left[ w_1 x_1^2 + w_2 \dot{x}_4^2 + w_3 u^2 \right] \mathrm{d}t \\
+\text{subject to:} \quad & \dot{\bm{x}}(t) =
 \begin{bmatrix} 0 & 1 & 0 & 0 \\\frac{-k_t}{m_{us/4}} & \frac{-[p_1 + c_t]}{m_{us/4}}& \frac{p_2}{m_{us/4}}& \frac{p_1}{m_{us/4}} \\ 0 & -1 & 0 & 1 \\ 0 & \frac{p_1}{m_{s/4}} & \frac{-p_2}{m_{s/4}}& \frac{-p_1}{m_{s/4}}
-\end{bmatrix} \bm{\xi}(t) +
+\end{bmatrix} \bm{x}(t) +
 \begin{bmatrix}
 0 \\ \frac{-1}{m_{us/4}} \\0 \\ \frac{1}{m_{s/4}}
 \end{bmatrix}u(t) +
 \begin{bmatrix}
 -1 \\ \frac{c_t}{m_{us/4}} \\ 0 \\ 0
 \end{bmatrix}\dot{z}_0(t) \\
-& \bm{\xi}(0) = \bm{0} \\
-& | \xi_3(t) | \leq r_{\max} \\
+& \bm{x}(0) = \bm{0} \\
+& | x_3(t) | \leq r_{\max} \\
 & \bm{p}_{\min} \leq \bm{p} \leq \bm{p}_{\max}
 \end{align*}
 }}
 \end{document}
 
-% solution
+%% solution

@@ -1,28 +1,27 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{u_1(t),u_2(t)} \quad & \ \int_{0}^{t_f} [u_1\xi_2 + \rho(u_1^2 +u_2^2)] dt \\
-\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix}
-\xi_2\\
-h(\xi_1) - (a + b\xi_2 + c\xi_2^2) + u_1 -u_2\\
+\min_{u_1(t),u_2(t)} \quad & \ \int_{0}^{t_f} [u_1x_2 + \rho(u_1^2 +u_2^2)] \mathrm{d}t \\
+\text{subject to:} \quad & \dot{\bm{x}} = \begin{bmatrix}
+x_2\\
+h(x_1) - (a + bx_2 + cx_2^2) + u_1 -u_2\\
 \end{bmatrix} \\
-& \bm{\xi}(0) = \bm{\xi}_0 \\
-& \bm{\xi}(t_f) = \bm{\xi}_f\\
+& \bm{x}(0) = \bm{x}_0 \\
+& \bm{x}(t_f) = \bm{x}_f\\
 & u_{1,\min} \leq u_1(t) \leq u_{1,\max} \\
 & u_{2,\min} \leq u_2(t) \leq u_{2,\max} \\
-\text{where:} \quad & h(\xi_1) = \sum_{j=1}^{2}\left[ \frac{s_{j+1} - s_j}{\pi} \tan^{-1}\frac{\xi_1 - z_j}{\epsilon }\right]\\
+\text{where:} \quad & h(x_1) = \sum_{j=1}^{2}\left[ \frac{s_{j+1} - s_j}{\pi} \tan^{-1}\frac{x_1 - z_j}{\epsilon }\right]
 \end{align*}
 }}
 \end{document}
 
-% solution
+%% solution

@@ -1,22 +1,21 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{u(t)} \quad & \int_{0}^{\pi/2} [ [y(t)]^2 + \cos(t) u(t) ] dt \\
-\text{subject to:} \quad & \dot{y}(t) = [y(t)]^2/2 + u(t) \\
-& y(0) = 0 \\
+\min_{u(t)} \quad & \int_{0}^{\pi/2} \left[ [x(t)]^2 + \cos(t) u(t) \right] \mathrm{d}t \\
+\text{subject to:} \quad & \dot{x}(t) = [x(t)]^2/2 + u(t) \\
+& x(0) = 0 \\
 & -1.5 \leq u(t) \leq 1
 \end{align*}
 }}
 \end{document}
 
-% solution
+%% solution

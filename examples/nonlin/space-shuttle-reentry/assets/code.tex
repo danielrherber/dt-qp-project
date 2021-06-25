@@ -1,18 +1,17 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
 \min_{\alpha(t), \beta(t),t_f} \quad & -\theta(t_f) \\
-\text{subject to:} \quad & \dot{\bm{\xi}} = \begin{bmatrix} \dot{r} \\ \dot{\theta} \\ \dot{\phi} \\ \dot{v} \\ \dot{\gamma} \\ \dot{\psi} \end{bmatrix} = \begin{bmatrix}
+\text{subject to:} \quad & \dot{\bm{x}} = \begin{bmatrix} \dot{r} \\ \dot{\theta} \\ \dot{\phi} \\ \dot{v} \\ \dot{\gamma} \\ \dot{\psi} \end{bmatrix} = \begin{bmatrix}
 v \sin(\gamma) \\
 v  \cos(\gamma) \sin(\psi) \cos^{-1}(\phi) r^{-1} \\
 v \cos(\gamma) \cos(\psi) r^{-1} \\
@@ -20,9 +19,9 @@ v \cos(\gamma) \cos(\psi) r^{-1} \\
 L \cos(\beta) v^{-1} - \cos(\gamma)\left[ g v^{-1} - v r^{-1} \right] \\
 L \sin(\beta) \cos^{-1}(\gamma) v^{-1} + v \cos(\gamma) \sin(\psi) \tan(\phi) r^{-1}
 \end{bmatrix} \\
-& \bm{\xi}(0) = (r_0, \theta_0, \phi_0, v_0, \gamma_0, \psi_0) \\
+& \bm{x}(0) = (r_0, \theta_0, \phi_0, v_0, \gamma_0, \psi_0) \\
 & (r,v,\gamma)(t_f) = (r_f,v_f,\gamma_f) \\
-& \bm{\xi}_{\min} \leq \bm{\xi}(t) \leq \bm{\xi}_{\max} \\
+& \bm{x}_{\min} \leq \bm{x}(t) \leq \bm{x}_{\max} \\
 & \bm{u}_{\min} \leq \bm{u}(t) \leq \bm{u}_{\max} \\
 & q(t) \leq q_U \\
 \text{where:} \quad & D = Q S C_D m^{-1}, \ C_D = C_{D0} + C_{D1} \alpha + C_{D2} \alpha^2 \\
@@ -38,4 +37,4 @@ L \sin(\beta) \cos^{-1}(\gamma) v^{-1} + v \cos(\gamma) \sin(\psi) \tan(\phi) r^
 }}
 \end{document}
 
-% solution
+%% solution

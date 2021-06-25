@@ -1,22 +1,21 @@
-% https://www.latex4technics.com/
-
-% formulation
-\documentclass{article}
+%% formulation
+\documentclass{standalone}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphicx}
-\usepackage{geometry}
-\geometry{top=0in, bottom=0in, left=0in, right=0in, paperheight=100in, paperwidth=100in}
-\thispagestyle{empty}
+\usepackage{xcolor}
 \begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
 \scalebox{2}{\parbox{0.1\textwidth}{%
 \begin{align*}
-\min_{u(t)} \quad & \int_{0}^{t_f} \xi^2 + u^2 dt \\
-\text{subject to:} \quad & \dot{\xi} = -\xi^3 + u \\
-& \xi(0) = 1.5 \\
-& \xi(t_f) = 1 \\
+\min_{u(t)} \quad & \int_{0}^{t_f} \left[ x^2 + u^2 \right] \mathrm{d}t \\
+\text{subject to:} \quad & \dot{x} = -x^3 + u \\
+& x(0) = 1.5 \\
+& x(t_f) = 1
 \end{align*}
 }}
 \end{document}
 
-% solution
+%% solution
