@@ -21,7 +21,7 @@ end
 
 % (potentially) display to the command window
 if (displevel > 1) % verbose
-    disp(strcat(string(char(9658))," Creation time: ",string(ctime)," s"))
+    flag = 'creation-time'; DTQP_commandWindowTasks %#ok<NASGU>
 end
 
 switch upper(opts.solver.function)
@@ -50,7 +50,7 @@ end
 
 % (potentially) display to the command window
 if (displevel > 1) % verbose
-    disp(strcat(string(char(9658))," Solver time: ",string(opts.timer.qpsolver)," s"))
+    flag = 'solver-time'; DTQP_commandWindowTasks %#ok<NASGU>
 end
 
 end

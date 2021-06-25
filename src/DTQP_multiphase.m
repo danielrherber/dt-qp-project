@@ -42,11 +42,6 @@ end
 displevel = opts.general.displevel;
 opts.general.displevel = 0;
 
-% potentially start the timer
-if (displevel > 0) % minimal
-    tic % start timer
-end
-
 % go through each phase structure
 for phs = 1:nphs
 

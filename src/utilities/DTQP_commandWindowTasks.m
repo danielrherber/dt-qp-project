@@ -38,4 +38,13 @@ disp(str)
 case 'contributor'
 disp('<strong>Primary contributor</strong>: Daniel Herber (danielrherber on GitHub)')
 %--------------------------------------------------------------------------
+case 'creation-time'
+disp(strcat(string(char(9658))," Creation time: ",string(ctime)," s"))
+%--------------------------------------------------------------------------
+case 'solver-time'
+disp(strcat(string(char(9658))," Solver time: ",string(opts.timer.qpsolver)," s"))
+%--------------------------------------------------------------------------
+case 'total-time'
+disp(strcat(string(char(9658))," Total time: ",string(opts.timer.total)," s"))
+%--------------------------------------------------------------------------
 end
