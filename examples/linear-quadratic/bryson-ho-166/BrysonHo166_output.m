@@ -10,19 +10,19 @@
 function [O,sol] = BrysonHo166_output(T,U,Y,P,F,in,opts)
 
 % extract parameter structure
-p = in.p;
+auxdata = in.auxdata;
 
 % solution on T
 sol(1).T = T;
-sol(1).U = BrysonHo166_U(T,in.tf,p.v0,p.x0);
-sol(1).Y = BrysonHo166_Y(T,in.tf,p.v0,p.x0);
-sol(1).F = BrysonHo166_F(in.tf,p.v0,p.x0);
+sol(1).U = BrysonHo166_U(T,in.tf,auxdata.v0,auxdata.x0);
+sol(1).Y = BrysonHo166_Y(T,in.tf,auxdata.v0,auxdata.x0);
+sol(1).F = BrysonHo166_F(in.tf,auxdata.v0,auxdata.x0);
 
 % solution on high resolution T
 if opts.general.plotflag
     sol(2).T = linspace(in.t0,in.tf,1e4)';
-    sol(2).U = BrysonHo166_U(sol(2).T,in.tf,p.v0,p.x0);
-    sol(2).Y = BrysonHo166_Y(sol(2).T,in.tf,p.v0,p.x0);
+    sol(2).U = BrysonHo166_U(sol(2).T,in.tf,auxdata.v0,auxdata.x0);
+    sol(2).Y = BrysonHo166_Y(sol(2).T,in.tf,auxdata.v0,auxdata.x0);
     sol(2).F = sol(1).F;
 end
 

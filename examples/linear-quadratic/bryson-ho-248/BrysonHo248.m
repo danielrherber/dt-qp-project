@@ -9,21 +9,21 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = BrysonHo248(varargin)
-% input arguments can be provided in the format 'BrysonHo248(p,opts)'
+% input arguments can be provided in the format 'BrysonHo248(auxdata,opts)'
 
 % set local functions
 ex_opts = @BrysonHo248_opts; % options function
 ex_output = @BrysonHo248_output; % output function
 ex_plot = @BrysonHo248_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 tf = 1;
-p.alpha = 1;
-p.beta = 1;
-p.gamma = 20;
+auxdata.alpha = 1;
+auxdata.beta = 1;
+auxdata.gamma = 20;
 
 %% setup
 % system dynamics
@@ -41,9 +41,9 @@ L(1).matrix = [1/2,0;0,0];
 
 % initial conditions
 LB(1).right = 4; % initial states
-LB(1).matrix = [p.alpha;p.beta];
+LB(1).matrix = [auxdata.alpha;auxdata.beta];
 UB(1).right = 4; % initial states
-UB(1).matrix = [p.alpha;p.beta];
+UB(1).matrix = [auxdata.alpha;auxdata.beta];
 
 % final conditions
 LB(2).right = 5; % final states
@@ -53,13 +53,13 @@ UB(2).matrix = [0;0];
 
 % absolute value control bounds
 LB(3).right = 1; % control
-LB(3).matrix = -p.gamma;
+LB(3).matrix = -auxdata.gamma;
 UB(3).right = 1; % control
-UB(3).matrix = p.gamma;
+UB(3).matrix = auxdata.gamma;
 
 % combine
 setup.A = A; setup.B = B; setup.L = L;
-setup.UB = UB; setup.LB = LB; setup.tf = tf; setup.p = p;
+setup.UB = UB; setup.LB = LB; setup.tf = tf; setup.auxdata = auxdata;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

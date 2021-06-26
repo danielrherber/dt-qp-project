@@ -13,7 +13,7 @@ function [I,V] = DTQP_bnds(bnd,in)
 nt = in.nt; I_stored = in.I_stored;
 
 % find time dependent matrix (column vector)
-Bndt = DTQP_tmatrix(bnd.matrix,in.p,in.t);
+Bndt = DTQP_tmatrix(bnd.matrix,in.auxdata,in.t);
 
 % variable locations for the variable type
 C = in.i{bnd.right};

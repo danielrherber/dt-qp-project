@@ -36,7 +36,7 @@ if isfield(element,'parameter_values')
     % NOTE: this won't work for methods that need the parameters and
     % different points than the original mesh
     if isa(element.parameter_values,'cell')
-        element.parameter_values = squeeze(DTQP_tmatrix(element.parameter_values,setup.p,in.t));
+        element.parameter_values = squeeze(DTQP_tmatrix(element.parameter_values,setup.auxdata,in.t));
     end
     in.parameter_list = element.parameter_list;
 	in.param = element.parameter_values;

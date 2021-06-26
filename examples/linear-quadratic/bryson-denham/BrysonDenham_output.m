@@ -10,19 +10,19 @@
 function [O,sol] = BrysonDenham_output(T,U,Y,P,F,in,opts)
 
 % extract parameter structure
-p = in.p;
+auxdata = in.auxdata;
 
 % solution on T
 sol(1).T = T;
-sol(1).U = BrysonDenham_U(T,p.ell);
-sol(1).Y = BrysonDenham_Y(T,p.ell);
-sol(1).F = BrysonDenham_F(p.ell);
+sol(1).U = BrysonDenham_U(T,auxdata.ell);
+sol(1).Y = BrysonDenham_Y(T,auxdata.ell);
+sol(1).F = BrysonDenham_F(auxdata.ell);
 
 % solution on high resolution T
 if opts.general.plotflag
     sol(2).T = linspace(in.t0,in.tf,1e5)';
-    sol(2).U = BrysonDenham_U(sol(2).T,p.ell);
-    sol(2).Y = BrysonDenham_Y(sol(2).T,p.ell);
+    sol(2).U = BrysonDenham_U(sol(2).T,auxdata.ell);
+    sol(2).Y = BrysonDenham_Y(sol(2).T,auxdata.ell);
     sol(2).F = sol(1).F;
 end
 

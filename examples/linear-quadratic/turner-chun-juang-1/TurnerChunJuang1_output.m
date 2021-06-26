@@ -10,19 +10,19 @@
 function [O,sol] = TurnerChunJuang1_output(T,U,Y,P,F,in,opts)
 
 % extract parameter structure
-p = in.p;
+auxdata = in.auxdata;
 
 % solution on T
 sol(1).T = T;
-sol(1).U = TurnerChunJuang1_U(p.S,p.a,p.em,p.eta,in.tf,T,in.t0,p.um,p.y0);
-sol(1).Y = TurnerChunJuang1_Y(p.S,p.a,p.em,p.eta,in.tf,T,in.t0,p.um,p.y0);
-sol(1).F = TurnerChunJuang1_F(p.S,p.a,p.em,p.eta,in.tf,in.t0,p.um,p.y0);
+sol(1).U = TurnerChunJuang1_U(auxdata.S,auxdata.a,auxdata.em,auxdata.eta,in.tf,T,in.t0,auxdata.um,auxdata.y0);
+sol(1).Y = TurnerChunJuang1_Y(auxdata.S,auxdata.a,auxdata.em,auxdata.eta,in.tf,T,in.t0,auxdata.um,auxdata.y0);
+sol(1).F = TurnerChunJuang1_F(auxdata.S,auxdata.a,auxdata.em,auxdata.eta,in.tf,in.t0,auxdata.um,auxdata.y0);
 
 % solution on high resolution T
 if opts.general.plotflag
     sol(2).T = linspace(in.t0,in.tf,1e4)';
-    sol(2).U = TurnerChunJuang1_U(p.S,p.a,p.em,p.eta,in.tf,sol(2).T,in.t0,p.um,p.y0);
-    sol(2).Y = TurnerChunJuang1_Y(p.S,p.a,p.em,p.eta,in.tf,sol(2).T,in.t0,p.um,p.y0);
+    sol(2).U = TurnerChunJuang1_U(auxdata.S,auxdata.a,auxdata.em,auxdata.eta,in.tf,sol(2).T,in.t0,auxdata.um,auxdata.y0);
+    sol(2).Y = TurnerChunJuang1_Y(auxdata.S,auxdata.a,auxdata.em,auxdata.eta,in.tf,sol(2).T,in.t0,auxdata.um,auxdata.y0);
     sol(2).F = sol(1).F;
 end
 

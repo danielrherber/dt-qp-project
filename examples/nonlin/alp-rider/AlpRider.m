@@ -11,22 +11,22 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = AlpRider(varargin)
-% input arguments can be provided in the format 'AlpRider(p,opts)'
+% input arguments can be provided in the format 'AlpRider(auxdata,opts)'
 
 % set local functions
 ex_opts = @AlpRider_opts;
 ex_output = @AlpRider_output;
 ex_plot = @AlpRider_plot;
 
-% set p and opts
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 tf = 20;
 
 %% setup
 % time horizon
-p.t0 = 0; p.tf = tf;
+auxdata.t0 = 0; auxdata.tf = tf;
 
 % number of controls, states, and parameters
 n.nu = 2; n.ny = 4;
@@ -61,7 +61,7 @@ setup.guess.X = [U0,Y0];
 
 % combine structures
 setup.element = element; setup.L = L; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

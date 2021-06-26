@@ -14,8 +14,9 @@ in.ny = in.phase_info(1).ny;
 in.snp = in.ny;
 
 % copy the matrices
-p = in.p; A = full(p.A); B = full(p.B); iR = full(inv(p.r)); R = full(p.r);
-Q = full(p.Q); x0 = full(p.y0); K = p.k;
+auxdata = in.auxdata; A = full(auxdata.A); B = full(auxdata.B);
+iR = full(inv(auxdata.r)); R = full(auxdata.r);
+Q = full(auxdata.Q); x0 = full(auxdata.y0); K = auxdata.k;
 M = zeros(in.ny);
 
 % find indices of diagonal and lower triangular entries

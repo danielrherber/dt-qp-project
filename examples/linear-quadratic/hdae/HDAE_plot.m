@@ -12,7 +12,7 @@ function HDAE_plot(T,U,Y,P,F,in,opts,sol)
 if opts.general.plotflag
 
 % extract parameter structure
-p = in.p;
+auxdata = in.auxdata;
 
 % preliminary plot options
 flag = 'preliminary'; DTQP_plotCommon %#ok<NASGU>
@@ -66,8 +66,8 @@ hold(ha,'on');
 
 % combine
 Z = [U(:,1),Y,U(:,end)];
-TT = repmat(T,1,p.n+1);
-x = (0:p.n)*(pi/p.n);
+TT = repmat(T,1,auxdata.n+1);
+x = (0:auxdata.n)*(pi/auxdata.n);
 X = repmat(x,length(T),1);
 
 % plot the data

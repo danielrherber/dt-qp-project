@@ -12,7 +12,7 @@ function GreenhouseClimate_plot(T,U,Y,P,F,in,opts,sol)
 if opts.general.plotflag
 
 % extract problem parameters structure
-p = in.p;
+auxdata = in.auxdata;
 
 % preliminary plot options
 flag = 'preliminary'; DTQP_plotCommon %#ok<NASGU>
@@ -48,18 +48,18 @@ flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 %% additional plots
 
 % case-specific parameters
-switch p.casenum
+switch auxdata.casenum
     %----------------------------------------------------------------------
     case {1,3}
     smax = 41;
     umax = 35;
-    d1 = 0.5*(800*sin(4*pi*T/p.xtf - 0.65*pi) + abs(800*sin(4*pi*T/p.xtf - 0.65*pi)));
+    d1 = 0.5*(800*sin(4*pi*T/auxdata.xtf - 0.65*pi) + abs(800*sin(4*pi*T/auxdata.xtf - 0.65*pi)));
     us = 5;
     %----------------------------------------------------------------------
     case {2,4}
     smax = 30;
     umax = 30;
-    d1 = 800*sin(4*pi*T/p.xtf - 0.65*pi);
+    d1 = 800*sin(4*pi*T/auxdata.xtf - 0.65*pi);
     us = 1;
     %----------------------------------------------------------------------
     otherwise
@@ -72,7 +72,7 @@ figure('Color',wcolor); hold on
 % plot trajectories
 s_light = 40;
 plot(T,d1/s_light,'linewidth',2);
-plot(T,15 + 10*sin(4*pi*T/p.xtf - 0.65*pi),'linewidth',2);
+plot(T,15 + 10*sin(4*pi*T/auxdata.xtf - 0.65*pi),'linewidth',2);
 plot(T,U/us,'linewidth',2)
 
 % labels
@@ -83,7 +83,7 @@ legend(['Light$\times$',num2str(s_light),' [W]'],'Outside temp. [$^\circ$C]',...
     'Location','best');
 
 % configure axis
-axis([0 p.xtf -1 umax]);
+axis([0 auxdata.xtf -1 umax]);
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 
 % save
@@ -97,7 +97,7 @@ figure('Color',wcolor); hold on
 sf1 = 1200; sf3 = 60;
 
 % plot trajectories
-plot(T,[sf1*Y(:,1) Y(:,2) sf3*cumtrapz(T,p.xp4*U(:,1))],'linewidth',2);
+plot(T,[sf1*Y(:,1) Y(:,2) sf3*cumtrapz(T,auxdata.xp4*U(:,1))],'linewidth',2);
 
 % labels
 xlabel('Time [h]'); ylabel('states');
@@ -105,7 +105,7 @@ legend('1200$\times$Dry weight [kg]','Greenhouse temp. [$^\circ$C]','$60 p_4 \in
     'Location','best');
 
 % configure axis
-axis([0 p.xtf -5 smax]);
+axis([0 auxdata.xtf -5 smax]);
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 
 % save

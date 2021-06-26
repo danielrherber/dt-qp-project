@@ -40,7 +40,7 @@ end
 % modify in structure
 in.phase_info = in_;
 in.output = in_(1).output;
-in.p = in_(1).p;
+in.auxdata = in_(1).auxdata;
 in.t0 = in_(1).t0;
 in.tf = in_(end).tf;
 in.nt = sum([in_.nt]);

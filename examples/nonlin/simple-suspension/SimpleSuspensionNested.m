@@ -18,26 +18,26 @@ ex_output = @SimpleSuspension_output;
 ex_plot = @SimpleSuspension_plot;
 
 % problem parameters
-p = SimpleSuspensionProblemParameters;
+auxdata = SimpleSuspensionProblemParameters;
 
 % tunable parameters
-p.t0 = 0; p.tf = 3;
+auxdata.t0 = 0; auxdata.tf = 3;
 
 % limits for plant design
-lb = [p.bmin,p.kmin];
-ub = [p.bmax, p.kmax];
+lb = [auxdata.bmin,auxdata.kmin];
+ub = [auxdata.bmax, auxdata.kmax];
 
 %% solve
 % solve the outer-loop, plant-only problem
 t1 = tic;
-[p,~] = OuterLoop(p,lb,ub);
+[auxdata,~] = OuterLoop(auxdata,lb,ub);
 toc(t1)
 
 % final linear model update
-[A,Bu,Bz,C1,C2,C3,D1u,D3u] = UpdateLinearModel(p.xpopt,p);
+[A,Bu,Bz,C1,C2,C3,D1u,D3u] = UpdateLinearModel(auxdata.xpopt,auxdata);
 
 % final solution
-[F,T,U,Y,P,in,opts] = InnerLoop(p,A,Bu,Bz,C1,C2,C3,D1u,D3u);
+[F,T,U,Y,P,in,opts] = InnerLoop(auxdata,A,Bu,Bz,C1,C2,C3,D1u,D3u);
 
 %% output
 % [O,sol] = ex_output(T,U,Y,P,F,in,opts);
@@ -167,7 +167,7 @@ UB(2).matrix = [inf,inf,p.rmax,inf];
 
 % combine
 setup.A = A; setup.B = Bu; setup.d = d; setup.L = L;
-setup.UB = UB; setup.LB = LB; setup.p = p; setup.t0 = 0; setup.tf = p.tf;
+setup.UB = UB; setup.LB = LB; setup.auxdata = p; setup.t0 = 0; setup.tf = p.tf;
 
 % DTQP options
 opts = SimpleSuspensionNested_opts;

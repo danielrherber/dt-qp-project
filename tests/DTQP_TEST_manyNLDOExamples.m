@@ -15,7 +15,7 @@ tests = 1:4;
 % go through each test
 for k = 1:length(tests)
 
-    p = [];
+    auxdata = [];
     clear opts
     opts.general.plotflag = 0;
 
@@ -74,46 +74,46 @@ for k = 1:length(tests)
     end
 
     % run the test and time
-    problem(p,opts)
+    problem(auxdata,opts)
 
     % test analysis
 
 end
 
 % problem structure
-function problem(p,opts)
+function problem(~,opts)
 
 % run all examples
-AlpRider(p,opts)
-BatchFermentorPenicillin(p,opts)
-Brachistochrone(p,opts)
-BrysonHo59(p,opts)
-BrysonHo63(p,opts)
-BrysonHo64(p,opts)
-ChemicalReactor(p,opts)
-ContainerCrane(p,opts)
-FreeFlyingRobot(p,opts)
-% HagerHouRao1(p,opts)  % fails with qlin (divide by 0)
-HangGlider(p,opts)
-HIVImmunology(p,opts)
-Hypersensitive(p,opts)
-% MineExtraction(p,opts) % implementation does support symbolic derivatives
-Multiextremal(p,opts)
-NeuenhofenKerriganX1(p,opts)
-NeuenhofenKerriganX2(p,opts)
-Nonlinear1D(p,opts)
-OptimalConsumption(p,opts)
-SecondOrderSingular(p,opts)
-SimpleCoDesignTransfer(p,opts)
-SimpleSASA(p,opts)
-SimpleSuspensionSimultaneous(p,opts)
-SpaceShuttleReentry(p,opts)
-Train(p,opts)
-TransferMaxRadius(p,opts)
-TransferMinFuel(p,opts)
-Tuberculosis(p,opts)
-% Tumor(p,opts) % fails with qlin (need to investigate)
-TwoLinkRobot(p,opts)
-Vanderpol(p,opts)
+AlpRider([],opts)
+BatchFermentorPenicillin([],opts)
+Brachistochrone([],opts)
+BrysonHo59([],opts)
+BrysonHo63([],opts)
+BrysonHo64([],opts)
+ChemicalReactor([],opts)
+ContainerCrane([],opts)
+FreeFlyingRobot([],opts)
+% HagerHouRao1([],opts)  % fails with qlin (divide by 0)
+HangGlider([],opts)
+HIVImmunology([],opts)
+Hypersensitive([],opts)
+% MineExtraction([],opts) % implementation does support symbolic derivatives
+Multiextremal([],opts)
+NeuenhofenKerriganX1([],opts)
+NeuenhofenKerriganX2([],opts)
+Nonlinear1D([],opts)
+OptimalConsumption([],opts)
+SecondOrderSingular([],opts)
+SimpleCoDesignTransfer([],opts)
+SimpleSASA([],opts)
+SimpleSuspensionSimultaneous([],opts)
+SpaceShuttleReentry([],opts)
+Train([],opts)
+TransferMaxRadius([],opts)
+TransferMinFuel([],opts)
+Tuberculosis([],opts)
+% Tumor([],opts) % fails with qlin (need to investigate)
+TwoLinkRobot([],opts)
+Vanderpol([],opts)
 
 end

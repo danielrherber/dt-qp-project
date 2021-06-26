@@ -9,23 +9,23 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = AndersonMoore64(varargin)
-% input arguments can be provided in the format 'AndersonMoore64(p,opts)'
+% input arguments can be provided in the format 'AndersonMoore64(auxdata,opts)'
 
 % set local functions
 ex_opts = @AndersonMoore64_opts; % options function
 ex_output = @AndersonMoore64_output; % output function
 ex_plot = @AndersonMoore64_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 t0 = 0; tf = 10; % time horizon
-p.x0 = 5; % initial state
+auxdata.x0 = 5; % initial state
 
 %% setup
 % system dynamics
-A = 1/2; 
+A = 1/2;
 B = 1;
 
 % Lagrange term
@@ -38,13 +38,13 @@ L(2).matrix = {@(t) 0.5*exp(-t)};
 
 % initial states
 LB(1).right = 4; % initial states
-LB(1).matrix = p.x0;
+LB(1).matrix = auxdata.x0;
 UB(1).right = 4; % initial states
-UB(1).matrix = p.x0;
+UB(1).matrix = auxdata.x0;
 
 % combine structures
 setup.A = A; setup.B = B; setup.L = L;
-setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.p = p;
+setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.auxdata = auxdata;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

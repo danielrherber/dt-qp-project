@@ -11,7 +11,7 @@
 function I = DTQP_DEFECTS_convolution_integral_type0(A,B,in,~)
 
 % extract
-p = in.p; nt = in.nt; t = in.t; h = in.h;
+auxdata = in.auxdata; nt = in.nt; t = in.t; h = in.h;
 
 % number of states
 na = size(A,2);
@@ -61,9 +61,9 @@ if (B_type==1)
 
         % check if any elements of A are nonzero
         if (A_type==0)
-            integrand = @(s) shiftdim(DTQP_tmultiprod(B,p,s+tk));
+            integrand = @(s) shiftdim(DTQP_tmultiprod(B,auxdata,s+tk));
         else % general case
-            integrand = @(s) expm(A*(hk-s))*shiftdim(DTQP_tmultiprod(B,p,s+tk));
+            integrand = @(s) expm(A*(hk-s))*shiftdim(DTQP_tmultiprod(B,auxdata,s+tk));
         end
 
         % compute integral

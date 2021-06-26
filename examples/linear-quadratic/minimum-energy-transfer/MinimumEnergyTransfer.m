@@ -11,15 +11,15 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = MinimumEnergyTransfer(varargin)
-% input arguments can be provided in the format 'MinimumEnergyTransfer(p,opts)'
+% input arguments can be provided in the format 'MinimumEnergyTransfer(auxdata,opts)'
 
 % set local functions
 ex_opts = @MinimumEnergyTransfer_opts; % options function
 ex_output = @MinimumEnergyTransfer_output; % output function
 ex_plot = @MinimumEnergyTransfer_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 t0 = 0; tf = 2; % time horizon
@@ -30,16 +30,16 @@ nu = 6; % number of controls
 rng(83233683,'twister') % random number seed
 Adensity = rand;
 Aeig = -2 + (2 - -2).*rand(ny,1);
-p.A = sprandsym(ny,Adensity,Aeig);
-p.B = -10 + (10 - -10).*rand(ny,nu);
+auxdata.A = sprandsym(ny,Adensity,Aeig);
+auxdata.B = -10 + (10 - -10).*rand(ny,nu);
 
 % initial states
-p.y0 = 10*rand(ny,1);
-p.yf = zeros(ny,1);
+auxdata.y0 = 10*rand(ny,1);
+auxdata.yf = zeros(ny,1);
 
 % check controllability
 try
-	Co = ctrb(p.A,p.B);
+	Co = ctrb(auxdata.A,auxdata.B);
     if rank(Co) ~= ny
         warning('system is not controllable')
     end
@@ -49,8 +49,8 @@ end
 
 %% setup
 % system dynamics
-A = p.A;
-B = p.B;
+A = auxdata.A;
+B = auxdata.B;
 
 % Lagrange term
 L(1).left = 1; % control variables
@@ -59,19 +59,19 @@ L(1).matrix = eye(nu);
 
 % initial conditions
 LB(1).right = 4; % initial states
-LB(1).matrix = p.y0;
+LB(1).matrix = auxdata.y0;
 UB(1).right = 4; % initial states
-UB(1).matrix = p.y0;
+UB(1).matrix = auxdata.y0;
 
 % final conditions
 LB(2).right = 5; % final states
-LB(2).matrix = p.yf;
+LB(2).matrix = auxdata.yf;
 UB(2).right = 5; % final states
-UB(2).matrix = p.yf;
+UB(2).matrix = auxdata.yf;
 
 % combine
 setup.A = A; setup.B = B; setup.L = L;
-setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.p = p;
+setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.auxdata = auxdata;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

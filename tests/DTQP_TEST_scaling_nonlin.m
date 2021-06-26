@@ -175,11 +175,11 @@ q0 = p0/2;
 umax = 75;
 y0 = [p0,q0,0];
 ymin = [0.1,0.1,-inf];
-p.y0 = y0;
+auxdata.y0 = y0;
 
 %% setup
 % time horizon
-p.t0 = 0; p.tf = 1.2;
+auxdata.t0 = 0; auxdata.tf = 1.2;
 
 % system dynamics
 element.dynamics = '[-zeta*y1*log(y1/y2); y2*(b-(Mew+(D*(y1^(2/3)))+G*u1)); u1]';
@@ -210,7 +210,7 @@ setup.guess.X = [U0,Y0];
 
 % combine structures
 setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata;
 
 % options
 opts.general.displevel = 1;

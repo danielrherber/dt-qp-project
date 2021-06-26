@@ -3,10 +3,10 @@
 % Evaluate a potentially time-varying matrix on a specific time mesh
 %--------------------------------------------------------------------------
 % - the matrix must be vectorized if time-varying
-% - varargin can be used to provide a time mesh different than p.t
+% - varargin can be used to provide a time mesh different than auxdata.t
 %--------------------------------------------------------------------------
 % Example 1: basic time-invariant -----------------------------------------
-% p.t = 0:4; At = DTQP_tmatrix(ones(2),p);
+% auxdata.t = 0:4; At = DTQP_tmatrix(ones(2),auxdata);
 % At(:,:,1) =
 %      1     1
 %      1     1
@@ -20,7 +20,7 @@
 %      1     1
 %      1     1
 % Example 2: basic time-varying -------------------------------------------
-% p.t = 0:2; A{1} = @(t) sin(t); A{2} = -1; At = DTQP_tmatrix(A,p);
+% auxdata.t = 0:2; A{1} = @(t) sin(t); A{2} = -1; At = DTQP_tmatrix(A,auxdata);
 % At(:,:,1) =
 %          0
 %     0.8415
@@ -30,7 +30,7 @@
 %     -1
 %     -1
 % Example 3: passing additional parameters --------------------------------
-% p.t = 0:2; p.a = 3; A{1} = @(t,p) p.a*sin(t); At = DTQP_tmatrix(A,p);
+% auxdata.t = 0:2; auxdata.a = 3; A{1} = @(t,auxdata) auxdata.a*sin(t); At = DTQP_tmatrix(A,auxdata);
 % At =
 %          0
 %     2.5244
@@ -39,11 +39,11 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function At = DTQP_tmatrix(A,p,varargin)
+function At = DTQP_tmatrix(A,auxdata,varargin)
 
 % check if another time mesh is inputted
 if isempty(varargin)
-    t = p.t;
+    t = auxdata.t;
 else
     t = varargin{1};
 end
@@ -82,7 +82,7 @@ else
                 % do nothing
             elseif isa(A{i,j},'function_handle') % A is time-varying
                 if nargin(A{i,j}) == 2
-                    At(:,i,j) = A{i,j}(t,p);
+                    At(:,i,j) = A{i,j}(t,auxdata);
                 elseif nargin(A{i,j}) == 1
                     At(:,i,j) = A{i,j}(t);
                 else

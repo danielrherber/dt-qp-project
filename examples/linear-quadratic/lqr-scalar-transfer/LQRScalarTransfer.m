@@ -19,74 +19,74 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = LQRScalarTransfer(varargin)
-% input arguments can be provided in the format 'LQRScalarTransfer(p,opts)'
+% input arguments can be provided in the format 'LQRScalarTransfer(auxdata,opts)'
 
 % set local functions
 ex_opts = @LQRScalarTransfer_opts; % options function
 ex_output = @LQRScalarTransfer_output; % output function
 ex_plot = @LQRScalarTransfer_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 % "Hyper-Sensitive"-like behavior
 tf = 10000; % final time, requires high-precision solution
-p.a = -1; % state matrix
-p.b = 1; % input matrix
-p.c = 1.5; % initial state
-p.d = 1; % final state
-p.q = 1; % quadratic state cost
-p.r = 1; % quadratic control cost
+auxdata.a = -1; % state matrix
+auxdata.b = 1; % input matrix
+auxdata.c = 1.5; % initial state
+auxdata.d = 1; % final state
+auxdata.q = 1; % quadratic state cost
+auxdata.r = 1; % quadratic control cost
 
 % % "Energy-Optimal Control"
 % tf = 5; % final time, tf > 0
-% p.a = 2; % state matrix, a > 0
-% p.b = 3; % input matrix, b > 0
-% p.c = 1; % initial state, c > 0
-% p.d = 5; % final state, d < exp(a*tf)*c
-% p.q = 0; % quadratic state cost
-% p.r = 1/2; % quadratic control cost
+% auxdata.a = 2; % state matrix, a > 0
+% auxdata.b = 3; % input matrix, b > 0
+% auxdata.c = 1; % initial state, c > 0
+% auxdata.d = 5; % final state, d < exp(a*tf)*c
+% auxdata.q = 0; % quadratic state cost
+% auxdata.r = 1/2; % quadratic control cost
 
 % % "Mass-Spring" Problem
 % tf = pi/2; % final time
-% p.a = 0; % state matrix
-% p.b = 1; % input matrix
-% p.c = 0; % initial state
-% p.d = 1; % final state
-% p.q = -1; % quadratic state cost
-% p.r = 1; % quadratic control cost
+% auxdata.a = 0; % state matrix
+% auxdata.b = 1; % input matrix
+% auxdata.c = 0; % initial state
+% auxdata.d = 1; % final state
+% auxdata.q = -1; % quadratic state cost
+% auxdata.r = 1; % quadratic control cost
 
 %% setup
 t0 = 0;
 
 % system dynamics
-A = p.a;
-B = p.b;
+A = auxdata.a;
+B = auxdata.b;
 
 % Lagrange term
 L(1).left = 1; % control variables
 L(1).right = 1; % control variables
-L(1).matrix = p.r;
+L(1).matrix = auxdata.r;
 L(2).left = 2; % state variables
 L(2).right = 2; % state variables
-L(2).matrix = p.q;
+L(2).matrix = auxdata.q;
 
 % initial conditions
 LB(1).right = 4; % initial states
-LB(1).matrix = p.c;
+LB(1).matrix = auxdata.c;
 UB(1).right = 4; % initial states
-UB(1).matrix = p.c;
+UB(1).matrix = auxdata.c;
 
 % final conditions
 LB(2).right = 5; % final states
-LB(2).matrix = p.d;
+LB(2).matrix = auxdata.d;
 UB(2).right = 5; % final states
-UB(2).matrix = p.d;
+UB(2).matrix = auxdata.d;
 
 % combine
 setup.A = A; setup.B = B; setup.L = L;
-setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.p = p;
+setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.auxdata = auxdata;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

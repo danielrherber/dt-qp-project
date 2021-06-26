@@ -10,7 +10,7 @@
 function [I,J,V,b] = DTQP_path(YZ,in)
 
 % extract some of the variables
-nt = in.nt; t = in.t; ini = in.i; I_stored = in.I_stored; p = in.p;
+nt = in.nt; t = in.t; ini = in.i; I_stored = in.I_stored; auxdata = in.auxdata;
 
 % initialize storage arrays
 Isav = {}; Jsav = {}; Vsav = {};
@@ -22,7 +22,7 @@ Ir = (1:nt)';
 for j = 1:length(YZ.linear) % loop through the extended variables
 
     % find time dependent matrix
-    YZt = DTQP_tmultiprod(YZ.linear(j).matrix,p,t);
+    YZt = DTQP_tmultiprod(YZ.linear(j).matrix,auxdata,t);
 
     % variable locations for the variable type
     C = ini{YZ.linear(j).right};
@@ -60,6 +60,6 @@ J = vertcat(Jsav{:});
 V = vertcat(Vsav{:});
 
 % find time dependent vector
-b = DTQP_tmultiprod(YZ.b,p,t);
+b = DTQP_tmultiprod(YZ.b,auxdata,t);
 
 end % end function

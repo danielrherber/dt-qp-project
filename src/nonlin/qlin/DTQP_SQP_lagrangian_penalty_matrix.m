@@ -13,7 +13,7 @@ function [I,J,V] = DTQP_SQP_lagrangian_penalty_matrix(Lmatrix,in,opts)
 
 % extract some of the variables
 nu = in.nu; ny = in.ny; np = in.np; ini = in.i; I_stored = in.I_stored;
-t = in.t; h = in.h; nt = in.nt; p = in.p;
+t = in.t; h = in.h; nt = in.nt; auxdata = in.auxdata;
 lambda = opts.lambda;
 
 % extract and reshape multipliers
@@ -35,7 +35,7 @@ Isav = {}; Jsav = {}; Hsav = {}; Lsav = {};  Qsav = {};
 for k = 1:length(Lmatrix)
 
     % find time dependent matrix
-    Lt = DTQP_tmultiprod(Lmatrix{k},p,t);
+    Lt = DTQP_tmultiprod(Lmatrix{k},auxdata,t);
 
     % determine locations and matrix values at this points
     for i = 1:length(R) % number of row continuous variables

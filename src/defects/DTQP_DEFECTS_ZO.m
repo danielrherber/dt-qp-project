@@ -9,7 +9,7 @@
 %--------------------------------------------------------------------------
 function [Aeq,beq] = DTQP_DEFECTS_ZO(A,B,G,d,in,opts)
 
-% extract some of the variables in p
+% extract some of the variables
 nu = in.nu; ny = in.ny; np = in.np; nd = in.nd; nx = in.nx;
 nt = in.nt; h = in.h;
 

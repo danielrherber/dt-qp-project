@@ -10,13 +10,14 @@
 function [O,sol] = LQRScalarTransfer_output(T,U,Y,P,F,in,opts)
 
 % extract parameter structure
-p = in.p;
+auxdata = in.auxdata;
 
 % solution on T
 sol(1).T = T;
-sol(1).U = real(LQRScalarTransfer_U(p.a,p.b,p.c,p.d,in.tf,p.q,p.r,T));
-sol(1).Y = real(LQRScalarTransfer_Y(p.a,p.b,p.c,p.d,in.tf,p.q,p.r,T));
-sol(1).F = real(LQRScalarTransfer_F(p.a,p.b,p.c,p.d,in.tf,p.q,p.r));
+args = {auxdata.a,auxdata.b,auxdata.c,auxdata.d,in.tf,auxdata.q,auxdata.r};
+sol(1).U = real(LQRScalarTransfer_U(args{:},T));
+sol(1).Y = real(LQRScalarTransfer_Y(args{:},T));
+sol(1).F = real(LQRScalarTransfer_F(args{:}));
 
 % flag to decide if the symbolic solution is needed
 symflag = 0;
@@ -24,7 +25,7 @@ symflag = 0;
 % check if we need the symbolic solution
 if any(isnan(sol(1).U(:))) || any(isnan(sol(1).U(:))) || isnan(sol(1).F)
     [sol(1).U,sol(1).Y,sol(1).F] = ...
-        LQRScalarTransfer_SymFun(p.a,p.b,p.c,p.d,in.tf,p.q,p.r,T);    
+        LQRScalarTransfer_SymFun(args{:},T);
     symflag = 1;
 end
 
@@ -34,10 +35,10 @@ if opts.general.plotflag
     sol(2).F = sol(1).F;
     if symflag
         [sol(2).U,sol(2).Y,~] = ...
-            LQRScalarTransfer_SymFun(p.a,p.b,p.c,p.d,in.tf,p.q,p.r,sol(2).T);
+            LQRScalarTransfer_SymFun(args{:},sol(2).T);
     else
-        sol(2).U = real(LQRScalarTransfer_U(p.a,p.b,p.c,p.d,in.tf,p.q,p.r,sol(2).T));
-        sol(2).Y = real(LQRScalarTransfer_Y(p.a,p.b,p.c,p.d,in.tf,p.q,p.r,sol(2).T));
+        sol(2).U = real(LQRScalarTransfer_U(args{:},sol(2).T));
+        sol(2).Y = real(LQRScalarTransfer_Y(args{:},sol(2).T));
     end
 end
 

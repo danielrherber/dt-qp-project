@@ -11,7 +11,7 @@ function [I,J,V] = DTQP_L(Lfull,in,opts)
 
 % extract some of the variables
 nt = in.nt; t = in.t; tm = in.tm; h = in.h; w = in.w;
-p = in.p; ini = in.i; I_stored = in.I_stored; quadrature = opts.dt.quadrature;
+auxdata = in.auxdata; ini = in.i; I_stored = in.I_stored; quadrature = opts.dt.quadrature;
 
 % check if we need off-diagonal terms
 OffFlag = any(strcmpi(quadrature,'CQHS'));
@@ -32,11 +32,11 @@ for k = 1:length(Lfull)
     Lmatrix = Lfull(k).matrix;
 
 	% find time dependent matrix
-	Lt = DTQP_tmultiprod(Lmatrix,p,t);
+	Lt = DTQP_tmultiprod(Lmatrix,auxdata,t);
 
     % find time dependent matrix at time grid midpoints
     if OffFlag
-        Lm = DTQP_tmultiprod(Lmatrix,p,tm);
+        Lm = DTQP_tmultiprod(Lmatrix,auxdata,tm);
     end
 
     % check if both left and right fields are equal to 0

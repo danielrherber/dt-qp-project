@@ -10,7 +10,7 @@
 function [fo,go] = DTQP_IPFMINCON_objective(X,obj,in,opts,Hin,fin)
 
 % extract
-p = in.p; t = in.t; np = in.np; nt = in.nt; ini = in.i; param = in.param;
+auxdata = in.auxdata; t = in.t; np = in.np; nt = in.nt; ini = in.i; param = in.param;
 quadrature = opts.dt.quadrature; scaleflag = in.scaleflag;
 
 % (potentially) apply linear scaling
@@ -46,7 +46,7 @@ if ~isempty(obj)
 
     % calculate objective function values
     fi = DTQP_QLIN_update_tmatrix(f,[],Xunscaled,param);
-    ft = DTQP_tmultiprod(fi,p,t);
+    ft = DTQP_tmultiprod(fi,auxdata,t);
 
     % integrate nonlinear term
     % TODO: add more methods
@@ -99,7 +99,7 @@ if nargout > 1
         h = in.h; w = in.w;
 
         % calculate gradient of objective function values
-        Dft = DTQP_jacobian(obj,p,t,Xunscaled,param,opts.method.derivatives);
+        Dft = DTQP_jacobian(obj,auxdata,t,Xunscaled,param,opts.method.derivatives);
 
         % integrate nonlinear term
         % TODO: add more methods

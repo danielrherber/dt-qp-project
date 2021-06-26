@@ -10,8 +10,8 @@
 %--------------------------------------------------------------------------
 close all; clear; clc
 
-% tests = 1:5;
-tests = 4;
+tests = 1:5;
+% tests = 4;
 
 % go through the tests
 for k = 1:length(tests)
@@ -79,7 +79,7 @@ end
 function [setup,opts] = problem(opts,xT)
 
 % tunable parameters
-p.ell = 1/9;
+auxdata.ell = 1/9;
 
 % options
 [opts.dt.defects] = deal('PS');
@@ -152,7 +152,7 @@ for phs = 1:length(xT)-1
     setup(phs).tf = xT(phs+1);
 
     % parameters
-    setup(phs).p = p;
+    setup(phs).auxdata = auxdata;
 
     % linkage constraints
     if phs < length(xT)-1
@@ -167,7 +167,7 @@ function setup = BrysonHo166_local
 
 %% tunable parameters
 tf = 20; % time horizon
-p.x0 = -0.5; p.v0 = 1; % other
+auxdata.x0 = -0.5; auxdata.v0 = 1; % other
 
 %% setup
 t0 = 0;
@@ -183,9 +183,9 @@ L(1).matrix = 1/2; % 1/2*u^2
 
 % initial conditions
 LB(1).right = 4; % initial states
-LB(1).matrix = [p.x0;p.v0];
+LB(1).matrix = [auxdata.x0;auxdata.v0];
 UB(1).right = 4; % initial states
-UB(1).matrix = [p.x0;p.v0];
+UB(1).matrix = [auxdata.x0;auxdata.v0];
 
 % final conditions
 LB(2).right = 5; % final states
@@ -195,7 +195,7 @@ UB(2).matrix = [0;0];
 
 % combine
 setup.A = A; setup.B = B; setup.L = L;
-setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.p = p;
+setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.auxdata = auxdata;
 
 end
 
@@ -223,14 +223,14 @@ d{2,1} = @(t) xp2*( 15 + 10*sin(4*pi*t/xtf - 0.65*pi));
 setup.d = d;
 
 
-p.xtf = xtf; p.xp1 = xp1; p.xp2 = xp2; p.xp3 = xp3;
-p.xp4 = xp4; p.xp1 = xp5;
+auxdata.xtf = xtf; auxdata.xp1 = xp1; auxdata.xp2 = xp2; auxdata.xp3 = xp3;
+auxdata.xp4 = xp4; auxdata.xp1 = xp5;
 
 % number of controls, states, and parameters
 n.nu = 1; n.ny = 2;
 
 % time horizon
-p.t0 = 0; p.tf = xtf;
+auxdata.t0 = 0; auxdata.tf = xtf;
 
 % Mayer term
 M(1).left = 0; M(1).right = 5; M(1).matrix = [-xp5,0];
@@ -246,7 +246,7 @@ LB(2).right = 1; LB(2).matrix = 0;
 
 % combine structures
 setup.M = M; setup.L = L; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 end
 
@@ -261,16 +261,16 @@ nu = 6; % number of controls
 rng(83233683,'twister') % random number seed
 Adensity = rand;
 Aeig = -2 + (2 - -2).*rand(ny,1);
-p.A = sprandsym(ny,Adensity,Aeig);
-p.B = -10 + (10 - -10).*rand(ny,nu);
+auxdata.A = sprandsym(ny,Adensity,Aeig);
+auxdata.B = -10 + (10 - -10).*rand(ny,nu);
 
 % initial states
-p.y0 = 10*rand(ny,1);
-p.yf = zeros(ny,1);
+auxdata.y0 = 10*rand(ny,1);
+auxdata.yf = zeros(ny,1);
 
 % check controllability
 try
-	Co = ctrb(p.A,p.B);
+	Co = ctrb(auxdata.A,auxdata.B);
     if rank(Co) ~= ny
         warning('system is not controllable')
     end
@@ -280,8 +280,8 @@ end
 
 %% setup
 % system dynamics
-A = p.A;
-B = p.B;
+A = auxdata.A;
+B = auxdata.B;
 
 % Lagrange term
 L(1).left = 1; % control variables
@@ -290,18 +290,18 @@ L(1).matrix = eye(nu);
 
 % initial conditions
 LB(1).right = 4; % initial states
-LB(1).matrix = p.y0;
+LB(1).matrix = auxdata.y0;
 UB(1).right = 4; % initial states
-UB(1).matrix = p.y0;
+UB(1).matrix = auxdata.y0;
 
 % final conditions
 LB(2).right = 5; % final states
-LB(2).matrix = p.yf;
+LB(2).matrix = auxdata.yf;
 UB(2).right = 5; % final states
-UB(2).matrix = p.yf;
+UB(2).matrix = auxdata.yf;
 
 % combine
 setup.A = A; setup.B = B; setup.L = L;
-setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.p = p;
+setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.auxdata = auxdata;
 
 end

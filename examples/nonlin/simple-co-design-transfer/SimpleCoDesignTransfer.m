@@ -11,22 +11,22 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = SimpleCoDesignTransfer(varargin)
-% input arguments can be provided in the format 'SimpleCoDesignTransfer(p,opts)'
+% input arguments can be provided in the format 'SimpleCoDesignTransfer(auxdata,opts)'
 
 % set local functions
 ex_opts = @SimpleCoDesignTransfer_opts; % options function
 ex_output = @SimpleCoDesignTransfer_output; % output function
 ex_plot = @SimpleCoDesignTransfer_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
-p.x0 = 1; p.v0 = 2; p.tf = 1;
+auxdata.x0 = 1; auxdata.v0 = 2; auxdata.tf = 1;
 
 %% setup
 % time horizon
-p.t0 = 0;
+auxdata.t0 = 0;
 
 % number of controls, states, and parameters
 n.nu = 1; n.ny = 2; n.np = 1;
@@ -47,14 +47,14 @@ else
 end
 
 % simple bounds
-UB(1).right = 4; UB(1).matrix = [p.x0;p.v0]; % initial states
-LB(1).right = 4; LB(1).matrix = [p.x0;p.v0];
+UB(1).right = 4; UB(1).matrix = [auxdata.x0;auxdata.v0]; % initial states
+LB(1).right = 4; LB(1).matrix = [auxdata.x0;auxdata.v0];
 UB(2).right = 5; UB(2).matrix = [0;0]; % final states
 LB(2).right = 5; LB(2).matrix = [0;0];
 
 % combine structures
 setup.UB = UB; setup.LB = LB; setup.element = element;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

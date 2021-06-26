@@ -7,15 +7,15 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = MultiphaseParameter(varargin)
-% input arguments can be provided in the format 'MultiphaseParameter(p,opts)'
+% input arguments can be provided in the format 'MultiphaseParameter(auxdata,opts)'
 
 % set local functions
 ex_opts = @MultiphaseParameter_opts; % options function
 ex_output = @MultiphaseParameter_output; % output function
 ex_plot = @MultiphaseParameter_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 tf1 = 5; % end of phase 1
@@ -42,7 +42,8 @@ E1 = [-8;zeros(n-1,1)];
 E2 = [0;zeros(n-1,1)];
 
 % combine
-p.E1 = E1; p.E2 = E2; p.Y0 = Y0; p.t1 = tf1; p.t2 = tf2; p.t3 = tf3; 
+auxdata.E1 = E1; auxdata.E2 = E2; auxdata.Y0 = Y0;
+auxdata.t1 = tf1;auxdata.t2 = tf2; auxdata.t3 = tf3;
 
 % Lagrange term
 L(1).right = 2; % states
@@ -61,7 +62,7 @@ LB(1).matrix = Y0;
 
 % combine
 setup(1).A = A1; setup(1).G = G; setup(1).L = L;
-setup(1).t0 = tf0; setup(1).tf = tf1; setup(1).p = p;
+setup(1).t0 = tf0; setup(1).tf = tf1; setup(1).auxdata = auxdata;
 setup(1).UB = UB; setup(1).LB = LB;
 
 %--- phase 2
@@ -70,7 +71,7 @@ A2 = gallery('hanowa',n,-0.05);
 
 % combine
 setup(2).A = A2; setup(2).G = G; setup(2).L = L;
-setup(2).t0 = tf1; setup(2).tf = tf2; setup(2).p = p;
+setup(2).t0 = tf1; setup(2).tf = tf2; setup(2).auxdata = auxdata;
 
 %--- phase 3
 % system dynamics
@@ -78,7 +79,7 @@ A3 = -eye(n);
 
 % combine
 setup(3).A = A3; setup(3).L = L;
-setup(3).t0 = tf2; setup(3).tf = tf3; setup(3).p = p;
+setup(3).t0 = tf2; setup(3).tf = tf3; setup(3).auxdata = auxdata;
 
 %--- phase 1-2 linkage constraints
 clear LY

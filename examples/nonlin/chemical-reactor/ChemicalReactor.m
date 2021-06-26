@@ -10,15 +10,15 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = ChemicalReactor(varargin)
-% input arguments can be provided in the format 'ChemicalReactor(p,opts)'
+% input arguments can be provided in the format 'ChemicalReactor(auxdata,opts)'
 
 % set local functions
 ex_opts = @ChemicalReactor_opts; % options function
 ex_output = @ChemicalReactor_output; % output function
 ex_plot = @ChemicalReactor_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 testnum = 1;
@@ -52,7 +52,7 @@ y0 = [1;0.01];
 
 %% setup
 % time horizon
-p.t0 = 0; p.tf = tf;
+auxdata.t0 = 0; auxdata.tf = tf;
 
 % number of controls, states, and parameters
 n.nu = 1; n.ny = 2;
@@ -88,7 +88,7 @@ setup.scaling(2).matrix = [1.1,1.1];
 
 % combine structures
 setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

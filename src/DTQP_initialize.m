@@ -10,11 +10,11 @@
 function [setup,in] = DTQP_initialize(setup,dt)
 
 % set user parameter structure
-if isfield(setup,'p')
-    in.p = setup.p;
-%     setup = rmfield(setup,'p'); % kind of slow, removing for now
+if isfield(setup,'auxdata')
+    in.auxdata = setup.auxdata;
+%     setup = rmfield(setup,'auxdata'); % kind of slow, removing for now
 else
-    in.p = [];
+    in.auxdata = [];
 end
 
 %% create mesh

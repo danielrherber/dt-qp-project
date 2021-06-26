@@ -11,20 +11,20 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = TransferMinFuel(varargin)
-% input arguments can be provided in the format 'TransferMinFuel(p,opts)'
+% input arguments can be provided in the format 'TransferMinFuel(auxdata,opts)'
 
 % set local functions
 ex_opts = @TransferMinFuel_opts; % options function
 ex_output = @TransferMinFuel_output; % output function
 ex_plot = @TransferMinFuel_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 testnum = 22; % see below
 r0 = 1; rf = 4; % initial and final radius
-p.tf = 57; % final time
+auxdata.tf = 57; % final time
 umax = 0.01; % maximum thrust
 
 % scaling
@@ -35,15 +35,15 @@ switch scalenum
     Us = 1; Ts = 1; Rs = 1; As = 1; Vrs = 1;
     %----------------------------------------------------------------------
     case 2
-	Us = umax; Ts = p.tf; Rs = (r0+rf)/2; As = 10; Vrs = 0.1;
+	Us = umax; Ts = auxdata.tf; Rs = (r0+rf)/2; As = 10; Vrs = 0.1;
 end
 
 %% setup
 % initial time
-p.t0 = 0;
+auxdata.t0 = 0;
 
 % final time
-p.tf = p.tf/Ts;
+auxdata.tf = auxdata.tf/Ts;
 
 % number of controls, states, and parameters
 n.nu = 2; n.ny = 4;
@@ -163,7 +163,7 @@ end
 
 % combine structures
 setup.element = element; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

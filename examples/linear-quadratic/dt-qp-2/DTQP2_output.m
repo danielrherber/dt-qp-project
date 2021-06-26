@@ -10,20 +10,22 @@
 function [O,sol] = DTQP2_output(T,U,Y,P,F,in,opts)
 
 % extract parameter structure
-p = in.p;
+auxdata = in.auxdata;
 
 % solution on T
 sol(1).T = T;
-sol(1).U = DTQP2_U(p.a,p.b,p.m,p.r,T,in.tf,p.omega,p.x0);
-sol(1).Y = DTQP2_Y(p.a,p.b,p.m,p.r,T,in.tf,p.omega,p.x0);
-sol(1).F = integral(@(t) DTQP2_L(p.a,p.b,p.m,p.r,t,in.tf,p.omega,p.x0),0,in.tf,...
-    'AbsTol',eps) + p.m*sol(1).Y(end)^2;
+args = {auxdata.a,auxdata.b,auxdata.m,auxdata.r,T,in.tf,auxdata.omega,auxdata.x0};
+sol(1).U = DTQP2_U(args{:});
+sol(1).Y = DTQP2_Y(args{:});
+sol(1).F = integral(@(t) DTQP2_L(auxdata.a,auxdata.b,auxdata.m,auxdata.r,t,in.tf,auxdata.omega,auxdata.x0),0,in.tf,...
+    'AbsTol',eps) + auxdata.m*sol(1).Y(end)^2;
 
 % solution on high resolution T
 if opts.general.plotflag
     sol(2).T = linspace(in.t0,in.tf,1e4)';
-    sol(2).U = DTQP2_U(p.a,p.b,p.m,p.r,sol(2).T,in.tf,p.omega,p.x0);
-    sol(2).Y = DTQP2_Y(p.a,p.b,p.m,p.r,sol(2).T,in.tf,p.omega,p.x0);
+    args = {auxdata.a,auxdata.b,auxdata.m,auxdata.r,sol(2).T,in.tf,auxdata.omega,auxdata.x0};
+    sol(2).U = DTQP2_U(args{:});
+    sol(2).Y = DTQP2_Y(args{:});
     sol(2).F = sol(1).F;
 end
 
@@ -43,3 +45,5 @@ O(4).value = max(in.QPcreatetime);
 O(4).label = 'QPcreatetime';
 O(5).value = max(in.QPsolvetime);
 O(5).label = 'QPsolvetime';
+
+end

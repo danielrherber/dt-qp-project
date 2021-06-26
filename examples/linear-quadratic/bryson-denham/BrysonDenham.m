@@ -9,18 +9,18 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = BrysonDenham(varargin)
-% input arguments can be provided in the format 'BrysonDenham(p,opts)'
+% input arguments can be provided in the format 'BrysonDenham(auxdata,opts)'
 
 % set local functions
 ex_opts = @BrysonDenham_opts; % options function
 ex_output = @BrysonDenham_output; % output function
 ex_plot = @BrysonDenham_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
-p.ell = 1/9;
+auxdata.ell = 1/9;
 
 %% setup
 % time horizon
@@ -37,11 +37,11 @@ UB(1).right = 4; UB(1).matrix = [0;1]; % initial states
 LB(1).right = 4; LB(1).matrix = [0;1];
 UB(2).right = 5; UB(2).matrix = [0;-1]; % final states
 LB(2).right = 5; LB(2).matrix = [0;-1];
-UB(3).right = 2; UB(3).matrix = [p.ell;Inf]; % states
+UB(3).right = 2; UB(3).matrix = [auxdata.ell;Inf]; % states
 
 % combine structures
 setup.A = A; setup.B = B; setup.L = L; setup.UB = UB; setup.LB = LB;
-setup.t0 = t0; setup.tf = tf; setup.p = p;
+setup.t0 = t0; setup.tf = tf; setup.auxdata = auxdata;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

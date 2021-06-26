@@ -9,9 +9,6 @@
 %--------------------------------------------------------------------------
 function [O,sol] = LQRstandard_output(T,U,Y,P,F,in,opts,setup)
 
-% extract parameter structure
-p = in.p;
-
 % initialize
 sol = [];
 

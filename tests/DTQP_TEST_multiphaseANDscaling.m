@@ -51,7 +51,7 @@ for k = 1:length(tests)
     [setup,opts] = problem(opts,scaleflag);
 
     % run the test and time
-    [T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
+    [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
     % test analysis
     hf = figure(1); hold on; hf.Color = 'w';

@@ -20,7 +20,7 @@ deriv = @DTQP_hessian_real_forward;
 % go through the tests
 for k = 1:length(tests)
 
-    clear f Df X param p t
+    clear f Df X param auxdata t
     rng(35345690)
 
     % test setup
@@ -48,7 +48,7 @@ for k = 1:length(tests)
         nt = 10000; nu = 1; ny = 2; np = 2;
         X = 100*rand(nt,nu+ny+np);
         param = [];
-        p = [];
+        auxdata = [];
         t = linspace(0,5,nt)';
         %------------------------------------------------------------------
         case 2 %
@@ -65,7 +65,7 @@ for k = 1:length(tests)
         nt = 4000; nu = 0; ny = 1; np = 0;
         X = rand(nt,nu+ny+np);
         param = [];
-        p = [];
+        auxdata = [];
         t = linspace(0,5,nt)';
         %------------------------------------------------------------------
     end
@@ -74,7 +74,7 @@ for k = 1:length(tests)
     tic
         % compute exact Jacobian
         D2fi = DTQP_QLIN_update_tmatrix(D2f,[],X,param);
-        D2ft = DTQP_tmultiprod(D2fi,p,t);
+        D2ft = DTQP_tmultiprod(D2fi,auxdata,t);
     toc
 
     tic

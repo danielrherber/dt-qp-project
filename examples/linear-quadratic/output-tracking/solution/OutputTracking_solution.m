@@ -14,7 +14,8 @@ in.ny = in.phase_info(1).ny;
 in.snp = in.ny;
 
 % copy the matrices
-p = in.p; A = p.A; B = p.B; C = p.C; Q = p.Q; R = p.R; o = p.o;
+auxdata = in.auxdata; A = auxdata.A; B = auxdata.B; C = auxdata.C;
+Q = auxdata.Q; R = auxdata.R; o = auxdata.o;
 
 % find indices of diagonal and lower triangular entries
 in.NS = sum(sum(tril(ones(in.snp,in.snp))));
@@ -24,7 +25,7 @@ in.Idiag = find(eye(in.snp,in.snp));
 %--------------------------------------------------------------------------
 % START: ode solution
 %--------------------------------------------------------------------------
-% copy p to output structure
+% copy in to output structure
 pode = in;
 
 % ode options
@@ -56,7 +57,7 @@ Pode_interp = griddedInterpolant(tode,Pode,'spline');
 kode_interp = griddedInterpolant(tode,kode,'spline');
 
 % forward integration for the states
-[~,Yode] = ode15s(@(x,y) odefun_dX(x,y,pode,Pode_interp,kode_interp,A,B,C,Q,R,o),pode.t,in.p.x0,options);
+[~,Yode] = ode15s(@(x,y) odefun_dX(x,y,pode,Pode_interp,kode_interp,A,B,C,Q,R,o),pode.t,in.auxdata.x0,options);
 
 % calculate the optimal control
 Uode = calcU(Yode,Pode,kode,in,tode,B,R);
@@ -142,13 +143,13 @@ end
 % costate ordinary differential equation function
 function dPk = odefun_dPk(t,Pk,in,A,B,C,Q,R,o)
 % matrix values at current time
-p = in.p;
-A = DTQP_tmatrix(A,p,t); A = squeeze(A);
-B = DTQP_tmatrix(B,p,t); B = squeeze(B);
-C = DTQP_tmatrix(C,p,t); C = squeeze(C);
-Q = DTQP_tmatrix(Q,p,t); Q = squeeze(Q);
-R = DTQP_tmatrix(R,p,t); R = squeeze(R);
-o = DTQP_tmatrix(o,p,t); o = squeeze(o)';
+auxdata = in.auxdata;
+A = DTQP_tmatrix(A,auxdata,t); A = squeeze(A);
+B = DTQP_tmatrix(B,auxdata,t); B = squeeze(B);
+C = DTQP_tmatrix(C,auxdata,t); C = squeeze(C);
+Q = DTQP_tmatrix(Q,auxdata,t); Q = squeeze(Q);
+R = DTQP_tmatrix(R,auxdata,t); R = squeeze(R);
+o = DTQP_tmatrix(o,auxdata,t); o = squeeze(o)';
 % extract
 P = Pk(1:length(in.Ilower));
 k = Pk(length(in.Ilower)+1:end);
@@ -175,10 +176,10 @@ P = Pode_interp(t); % costates
 k = kode_interp(t); % additional costates
 k = k(:);
 % matrix values at current time
-p = in.p;
-A = DTQP_tmatrix(A,p,t); A = squeeze(A);
-B = DTQP_tmatrix(B,p,t); B = squeeze(B);
-R = DTQP_tmatrix(R,p,t); R = squeeze(R);
+auxdata = in.auxdata;
+A = DTQP_tmatrix(A,auxdata,t); A = squeeze(A);
+B = DTQP_tmatrix(B,auxdata,t); B = squeeze(B);
+R = DTQP_tmatrix(R,auxdata,t); R = squeeze(R);
 % reshape the costates
 q = P;
 P = zeros(in.snp,in.snp);
@@ -194,14 +195,14 @@ disp(t)
 end
 % ordinary differential equation function for bvp option
 function dY = odefun(t,Y,in,A,B,C,Q,R,o)
-p = in.p;
+auxdata = in.auxdata;
 % matrix values at current time
-A = DTQP_tmatrix(A,p,t); A = squeeze(A);
-B = DTQP_tmatrix(B,p,t); B = squeeze(B);
-C = DTQP_tmatrix(C,p,t); C = squeeze(C);
-Q = DTQP_tmatrix(Q,p,t); Q = squeeze(Q);
-R = DTQP_tmatrix(R,p,t); R = squeeze(R);
-o = DTQP_tmatrix(o,p,t); o = squeeze(o)';
+A = DTQP_tmatrix(A,auxdata,t); A = squeeze(A);
+B = DTQP_tmatrix(B,auxdata,t); B = squeeze(B);
+C = DTQP_tmatrix(C,auxdata,t); C = squeeze(C);
+Q = DTQP_tmatrix(Q,auxdata,t); Q = squeeze(Q);
+R = DTQP_tmatrix(R,auxdata,t); R = squeeze(R);
+o = DTQP_tmatrix(o,auxdata,t); o = squeeze(o)';
 % extract
 X = Y(1:in.ny); % states
 P = Y(in.ny+1:in.ny+length(in.Ilower)); % costates
@@ -235,7 +236,7 @@ function res = bcfun(Y0,Yf,in)
 X0 = Y0(1:in.ny); % initial state
 Pf = Yf(in.ny+1:end); % costate and additional costate final conditions
 % residual equations
-res1 = X0 - in.p.x0;
+res1 = X0 - in.auxdata.x0;
 res2 = Pf - [zeros(numel(in.Ilower),1);zeros(in.ny,1)];
 % reshape
 res1 = reshape(res1,[],1);
@@ -249,8 +250,8 @@ function U = calcU(Y,P,K,in,T,B,R)
     U = zeros(size(B,2),length(T));
     for k = 1:length(T)
         % matrix values at current time
-        B = DTQP_tmatrix(B,in.p,T(k)); B = squeeze(B);
-        R = DTQP_tmatrix(R,in.p,T(k)); R = squeeze(R);
+        B = DTQP_tmatrix(B,in.auxdata,T(k)); B = squeeze(B);
+        R = DTQP_tmatrix(R,in.auxdata,T(k)); R = squeeze(R);
         % states
         YY = reshape(Y(k,:),[],1);
         % costates
@@ -273,8 +274,8 @@ function I = quadIntegrand(t,T,A,B,in)
     A_interp = griddedInterpolant(T,A,'spline')';
     I = zeros(size(t));
     for k = 1:length(t)
-        p = in.p;
-        H = DTQP_tmatrix(B,p,t(k)); H = squeeze(H);
+        auxdata = in.auxdata;
+        H = DTQP_tmatrix(B,auxdata,t(k)); H = squeeze(H);
         X = A_interp(t(k))';
         I(k) = X'*H*X;
     end

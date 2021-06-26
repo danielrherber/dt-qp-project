@@ -9,15 +9,15 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = Nagurka(varargin)
-% input arguments can be provided in the format 'Nagurka(p,opts)'
+% input arguments can be provided in the format 'Nagurka(auxdata,opts)'
 
 % set local functions
 ex_opts = @Nagurka_opts; % options function
 ex_output = @Nagurka_output; % output function
 ex_plot = @Nagurka_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 testnum = 2;
@@ -53,7 +53,7 @@ LB(1).right = 4; LB(1).matrix = vec';
 
 % combine structures
 setup.A = A; setup.B = B; setup.L = L; setup.M = M;
-setup.UB = UB; setup.LB = LB; setup.t0 = t0; setup.tf = tf; setup.p = p;
+setup.UB = UB; setup.LB = LB; setup.t0 = t0; setup.tf = tf; setup.auxdata = auxdata;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

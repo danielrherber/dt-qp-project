@@ -20,7 +20,7 @@ deriv = @DTQP_jacobian_real_forward;
 % go through the tests
 for k = 1:length(tests)
 
-    clear f Df X param p t
+    clear f Df X param auxdata t
     rng(824935)
 
     % test setup
@@ -42,7 +42,7 @@ for k = 1:length(tests)
         nt = 10000; nu = 1; ny = 2; np = 2;
         X = 100*rand(nt,nu+ny+np);
         param = [];
-        p = [];
+        auxdata = [];
         t = linspace(0,5,nt)';
         %------------------------------------------------------------------
         case 2 % Tumor (multiple functions, problem parameters)
@@ -69,7 +69,7 @@ for k = 1:length(tests)
         zeta = 0.084; % per day
         D = 0.00873; % per mm^2 per day
         param = [zeta b Mew D G];
-        p = [];
+        auxdata = [];
         t = linspace(0,1.2,nt)';
         %------------------------------------------------------------------
     end
@@ -78,7 +78,7 @@ for k = 1:length(tests)
     tic
         % compute exact Jacobian
         Dfi = DTQP_QLIN_update_tmatrix(Df,[],X,param);
-        Dft = DTQP_tmultiprod(Dfi,p,t);
+        Dft = DTQP_tmultiprod(Dfi,auxdata,t);
     toc
 
     tic

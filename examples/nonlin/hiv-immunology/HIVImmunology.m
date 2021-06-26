@@ -11,15 +11,15 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = HIVImmunology(varargin)
-% input arguments can be provided in the format 'HIVImmunology(p,opts)'
+% input arguments can be provided in the format 'HIVImmunology(auxdata,opts)'
 
 % set local functions
 ex_opts = @HIVImmunology_opts;
 ex_output = @HIVImmunology_output;
 ex_plot = @HIVImmunology_plot;
 
-% set p and opts
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 tf = 50;
@@ -31,7 +31,7 @@ A1 = 2.5e5; A2 = 75;
 
 %% setup
 % time horizon
-p.t0 = 0; p.tf = tf;
+auxdata.t0 = 0; auxdata.tf = tf;
 
 % number of controls, states, and parameters
 n.nu = 2; n.ny = 2;
@@ -70,7 +70,7 @@ setup.scaling(2).matrix = [1200 5];
 
 % combine structures
 setup.element = element; setup.UB = UB; setup.LB = LB; setup.L = L;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

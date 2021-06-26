@@ -12,21 +12,21 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = Vanderpol(varargin)
-% input arguments can be provided in the format 'Vanderpol(p,opts)'
+% input arguments can be provided in the format 'Vanderpol(auxdata,opts)'
 
 % set local functions
 ex_opts = @Vanderpol_opts; % options function
 ex_output = @Vanderpol_output; % output function
 ex_plot = @Vanderpol_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 
 %% setup
 % time horizon
-p.t0 = 0; p.tf = 5;
+auxdata.t0 = 0; auxdata.tf = 5;
 
 casenum = 2;
 
@@ -55,7 +55,7 @@ switch casenum
 
         % combine structures
         setup.element = element; setup.UB = UB; setup.LB = LB; % setup.L = L;
-        setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+        setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
     case 2 % co-design example
         dmin = [0.1 0.1];
@@ -93,7 +93,7 @@ switch casenum
 
         % combine structures
         setup.element = element; setup.UB = UB; setup.LB = LB;
-        setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+        setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
     case 3 % completely symbolic formulation
         % system dynamics
@@ -117,7 +117,7 @@ switch casenum
 
         % combine structures
         setup.element = element; % setup.UB = UB; setup.LB = LB; % setup.L = L;
-        setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+        setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 end
 
 %% solve

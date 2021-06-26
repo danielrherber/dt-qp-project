@@ -9,15 +9,15 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = Cart(varargin)
-% input arguments can be provided in the format 'Cart(p,opts)'
+% input arguments can be provided in the format 'Cart(auxdata,opts)'
 
 % set local functions
 ex_opts = @Cart_opts; % options function
 ex_output = @Cart_output; % output function
 ex_plot = @Cart_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 t0 = 0;

@@ -44,7 +44,7 @@ plot(T1,Y1-Y2)
 
 % problem structure
 function setup = problem
-p.ell = 1/9;
+auxdata.ell = 1/9;
 
 % time horizon
 setup.t0 = 0; setup.tf = 1;
@@ -62,9 +62,9 @@ UB(1).right = 4; UB(1).matrix = [0;1]; % initial states
 LB(1).right = 4; LB(1).matrix = [0;1];
 UB(2).right = 5; UB(2).matrix = [0;-1]; % final states
 LB(2).right = 5; LB(2).matrix = [0;-1];
-UB(3).right = 2; UB(3).matrix = [p.ell;Inf]; % states
+UB(3).right = 2; UB(3).matrix = [auxdata.ell;Inf]; % states
 
 % combine structures
-setup.A = A; setup.B = B; setup.L = L; setup.UB = UB; setup.LB = LB; setup.p = p;
+setup.A = A; setup.B = B; setup.L = L; setup.UB = UB; setup.LB = LB; setup.auxdata = auxdata;
 
 end

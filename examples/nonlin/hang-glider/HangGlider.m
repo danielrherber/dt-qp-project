@@ -12,15 +12,15 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = HangGlider(varargin)
-% input arguments can be provided in the format 'HangGlider(p,opts)'
+% input arguments can be provided in the format 'HangGlider(auxdata,opts)'
 
 % set local functions
 ex_opts = @HangGlider_opts; % options function
 ex_output = @HangGlider_output; % output function
 ex_plot = @HangGlider_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 rho = 1.13;
@@ -37,7 +37,7 @@ yf = [inf,900,13.227567500,-1.2875005200];
 
 %% setup
 % time horizon
-p.t0 = 0; p.tf = 1;
+auxdata.t0 = 0; auxdata.tf = 1;
 
 % number of controls, states, and parameters
 n.nu = 1; n.ny = 4; n.np = 1;
@@ -86,7 +86,7 @@ setup.scaling(3).matrix = 200;
 
 % combine structures
 setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

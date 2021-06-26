@@ -1,8 +1,8 @@
 %--------------------------------------------------------------------------
 % BettsBiehnCampbell1.m
-% J. T. Betts, N. Biehn, and S. L. Campbell, Convergence of Nonconvergent 
-% IRK Discretizations of Optimal Control Problems with State Inequality 
-% Constraints," SIAM Journal on Scientific Computing, vol. 23, no. 6, 
+% J. T. Betts, N. Biehn, and S. L. Campbell, Convergence of Nonconvergent
+% IRK Discretizations of Optimal Control Problems with State Inequality
+% Constraints," SIAM Journal on Scientific Computing, vol. 23, no. 6,
 % pp. 1981-2007, 2002. doi: 10.1137/S1064827500383044
 %--------------------------------------------------------------------------
 %
@@ -11,22 +11,22 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = BettsBiehnCampbell1(varargin)
-% input arguments can be provided in the format 'BettsBiehnCampbell1(p,opts)'
+% input arguments can be provided in the format 'BettsBiehnCampbell1(auxdata,opts)'
 
 % set local functions
 ex_opts = @BettsBiehnCampbell1_opts; % options function
 ex_output = @BettsBiehnCampbell1_output; % output function
 ex_plot = @BettsBiehnCampbell1_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% setup
 t0 = 34/15; tf = 4;
 
 % system dynamics
-A = [0 1; 0 0]; 
-B = [0;1]; 
+A = [0 1; 0 0];
+B = [0;1];
 
 % Lagrange term
 L(1).left = 1; % control variables
@@ -47,8 +47,8 @@ LB(2).right = 2; % states
 LB(2).matrix = {@(t) 15 - (t-4).^4;-Inf};
 
 % combine
-setup.A = A; setup.B = B; setup.L = L; 
-setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.p = p;
+setup.A = A; setup.B = B; setup.L = L;
+setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.auxdata = auxdata;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

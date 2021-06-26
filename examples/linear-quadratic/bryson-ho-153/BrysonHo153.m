@@ -9,24 +9,24 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = BrysonHo153(varargin)
-% input arguments can be provided in the format 'BrysonHo153(p,opts)'
+% input arguments can be provided in the format 'BrysonHo153(auxdata,opts)'
 
 % set local functions
 ex_opts = @BrysonHo153_opts; % options function
 ex_output = @BrysonHo153_output; % output function
 ex_plot = @BrysonHo153_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 t0 = 0; tf = 1; % time horizon
-p.c = 2; p.x0 = 1; % other
+auxdata.c = 2; auxdata.x0 = 1; % other
 
 %% setup
 % system dynamics
-A = 0; 
-B = 1; 
+A = 0;
+B = 1;
 
 % Lagrange term
 L(1).left = 1; % control variables
@@ -36,17 +36,17 @@ L(1).matrix = 1/2; % 1/2*u^2
 % Mayer term
 M(1).right = 5; % final states
 M(1).left = 5; % final states
-M(1).matrix = p.c/2; % c/2*yf^2
+M(1).matrix = auxdata.c/2; % c/2*yf^2
 
 % initial conditions
 LB(1).right = 4; % initial states
-LB(1).matrix = p.x0;
+LB(1).matrix = auxdata.x0;
 UB(1).right = 4; % initial states
-UB(1).matrix = p.x0;
+UB(1).matrix = auxdata.x0;
 
 % combine
 setup.A = A; setup.B = B; setup.L = L; setup.M = M;
-setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.p = p;
+setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.auxdata = auxdata;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

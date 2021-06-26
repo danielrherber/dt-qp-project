@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function D2ft = DTQP_hessian(in,p,t,X,param,flag,k)
+function D2ft = DTQP_hessian(in,auxdata,t,X,param,flag,k)
 
 % determine which derivative method
 switch flag
@@ -19,7 +19,7 @@ switch flag
         return
     end
     D2fi = DTQP_QLIN_update_tmatrix(in.D2f{k},[],X,param);
-    D2ft = DTQP_tmultiprod(D2fi,p,t);
+    D2ft = DTQP_tmultiprod(D2fi,auxdata,t);
     %----------------------------------------------------------------------
     case 'complex'
     D2ft = DTQP_hessian_complex_step(in.f{k},X,t,param);

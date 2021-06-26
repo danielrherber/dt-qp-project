@@ -9,18 +9,18 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = BrysonHo109(varargin)
-% input arguments can be provided in the format 'BrysonHo109(p,opts)'
+% input arguments can be provided in the format 'BrysonHo109(auxdata,opts)'
 
 % set local functions
 ex_opts = @BrysonHo109_opts; % options function
 ex_output = @BrysonHo109_output; % output function
 ex_plot = @BrysonHo109_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
-p.x0 = 1; p.a = 2; % 1
+auxdata.x0 = 1; auxdata.a = 2; % 1
 tf = 1; % time horizon
 
 %% setup
@@ -34,17 +34,17 @@ A = 0; B{1,1} = @BrysonHo109_g;
 L(1).left = 1; L(1).right = 1; L(1).matrix = 1/2; % 1/2*u^2
 
 % Mayer term
-M(1).left = 5; M(1).right = 5; M(1).matrix = p.a^2/2; % a^2/2*xf^2
+M(1).left = 5; M(1).right = 5; M(1).matrix = auxdata.a^2/2; % a^2/2*xf^2
 
 % simple bounds
-UB(1).right = 4; UB(1).matrix = p.x0; % initial state
-LB(1).right = 4; LB(1).matrix = p.x0;
+UB(1).right = 4; UB(1).matrix = auxdata.x0; % initial state
+LB(1).right = 4; LB(1).matrix = auxdata.x0;
 UB(2).right = 1; UB(2).matrix = 1; % control
 LB(2).right = 1; LB(2).matrix = -1;
 
 % combine structures
 setup.A = A; setup.B = B; setup.L = L; setup.M = M;
-setup.UB = UB; setup.LB = LB; setup.t0 = t0; setup.tf = tf; setup.p = p;
+setup.UB = UB; setup.LB = LB; setup.t0 = t0; setup.tf = tf; setup.auxdata = auxdata;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

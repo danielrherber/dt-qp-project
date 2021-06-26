@@ -10,24 +10,24 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = SimpleSASA(varargin)
-% input arguments can be provided in the format 'SimpleSASA(p,opts)'
+% input arguments can be provided in the format 'SimpleSASA(auxdata,opts)'
 
 % set local functions
 ex_opts = @SimpleSASA_opts; % options function
 ex_output = @SimpleSASA_output; % output function
 ex_plot = @SimpleSASA_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
-p.umax = 1;
-p.J = 1;
+auxdata.umax = 1;
+auxdata.J = 1;
 tf = 2;
 
 %% setup
 % time horizon
-p.t0 = 0; p.tf = tf;
+auxdata.t0 = 0; auxdata.tf = tf;
 
 % number of controls, states, and parameters
 n.nu = 1; n.ny = 2; n.np = 1;
@@ -35,7 +35,7 @@ n.nu = 1; n.ny = 2; n.np = 1;
 % system dynamics
 element.dynamics = '[y2; -p1/J*y1 + u1/J]';
 element.parameter_list = 'J';
-element.parameter_values = [p.J];
+element.parameter_values = [auxdata.J];
 
 % Mayer term
 M(1).right = 5; M(1).left = 0; M(1).matrix = [-1,0]; % final states
@@ -45,8 +45,8 @@ UB(1).right = 4; UB(1).matrix = [0,0]; % initial states
 LB(1).right = 4; LB(1).matrix = [0,0];
 UB(2).right = 5; UB(2).matrix = [inf 0]; % final states
 LB(2).right = 5; LB(2).matrix = [-inf 0];
-UB(3).right = 1; UB(3).matrix = p.umax; % controls
-LB(3).right = 1; LB(3).matrix = -p.umax;
+UB(3).right = 1; UB(3).matrix = auxdata.umax; % controls
+LB(3).right = 1; LB(3).matrix = -auxdata.umax;
 
 % guess
 Y0 = [[0,0];[1 0]];
@@ -56,7 +56,7 @@ setup.guess.X = [U0,Y0,P0];
 
 % combine structures
 setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

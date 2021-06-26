@@ -17,7 +17,7 @@ tests = 1:7; % all
 opts.dt.nt = 10;
 
 % problem structure
-[setup,opts,F,p,T] = problem(opts);
+[setup,opts,F,auxdata,T] = problem(opts);
 
 % initialize
 l1str{1} = '$\xi_{actual}$';
@@ -81,7 +81,7 @@ for k = 1:length(tests)
     plot(t{k},X{k},'linewidth',1.5,'Color',c(k,:));
 
     figure(2); hold on
-    semilogy(t{k},abs(X{k} - F(t{k},p.x0))+1e-20,...
+    semilogy(t{k},abs(X{k} - F(t{k},auxdata.x0))+1e-20,...
         'linewidth',1.5,'Color',c(k,:));
 end
 
@@ -95,7 +95,7 @@ hl = legend(l2str,'location','Best');
 hl.FontSize = 12; % change legend font size
 hl.EdgeColor = 'k'; % change the legend border to black (not a dark grey)
 
-function [setup,opts,F,p,T] = problem(opts)
+function [setup,opts,F,auxdata,T] = problem(opts)
 
 % symbolically generate the correct function
 syms t x0
@@ -107,8 +107,8 @@ F = matlabFunction(F);
 
 % tunable parameters
 setup.t0 = 0; setup.tf = 10; % time horizon
-p.x0 = 1;
-setup.p = p;
+auxdata.x0 = 1;
+setup.auxdata = auxdata;
 
 % system dynamics
 setup.d{1,1} = f;
@@ -116,7 +116,7 @@ setup.d{1,1} = f;
 % initial state
 setup.Y(1).linear.right = 4; % initial states
 setup.Y(1).linear.matrix = 1;
-setup.Y(1).b = p.x0;
+setup.Y(1).b = auxdata.x0;
 
 % dummy objective
 setup.M(1).left = 5;
@@ -143,7 +143,7 @@ hf.Position = [200 200 550 400]; % set figure size and position
 T = linspace(setup.t0,setup.tf,10000);
 
 % plot actual solution
-plot(T,F(T,p.x0),'k','linewidth',2); hold on
+plot(T,F(T,auxdata.x0),'k','linewidth',2); hold on
 
 % post tasks
 xlabel('$t$') % create x label

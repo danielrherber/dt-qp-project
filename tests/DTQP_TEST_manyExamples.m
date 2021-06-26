@@ -15,7 +15,7 @@ tests = 1:5;
 % go through each test
 for k = 1:length(tests)
 
-    p = [];
+    auxdata = [];
     opts.general.plotflag = 0;
 
     % test setup
@@ -53,45 +53,45 @@ for k = 1:length(tests)
     end
 
     % run the test and time
-    problem(p,opts)
+    problem(auxdata,opts)
 
     % test analysis
 
 end
 
 % problem structure
-function problem(p,opts)
+function problem(~,opts)
 
 % run all examples
-AndersonMoore64(p,opts)
-BettsBiehnCampbell1(p,opts)
-BrysonDenham(p,opts)
-BrysonHo109(p,opts)
-BrysonHo116(p,opts)
-BrysonHo153(p,opts)
-BrysonHo154(p,opts)
-BrysonHo156(p,opts)
-BrysonHo166(p,opts)
-BrysonHo248(p,opts)
-Cart(p,opts)
-DTQP1(p,opts)
-DTQP2(p,opts)
-DTQP3(p,opts)
-GasAbsorber(p,opts)
-% GreenhouseClimate(p,opts) % fails (on purpose) with ZO because A(t)
-Hager1(p,opts)
-HDAE(p,opts)
-JadduShimemura(p,opts)
-LinearPendulum(p,opts)
-LQRInhomogeneous(p,opts)
-LQRScalar(p,opts)
-LQRScalarTransfer(p,opts)
-LQRstandard(p,opts)
-MinimumEnergyTransfer(p,opts)
-MultiphaseParameter(p,opts)
-Nagurka(p,opts)
-OutputTracking(p,opts)
-TavallaeiTousi1(p,opts)
-TurnerChunJuang1(p,opts)
+AndersonMoore64([],opts)
+BettsBiehnCampbell1([],opts)
+BrysonDenham([],opts)
+BrysonHo109([],opts)
+BrysonHo116([],opts)
+BrysonHo153([],opts)
+BrysonHo154([],opts)
+BrysonHo156([],opts)
+BrysonHo166([],opts)
+BrysonHo248([],opts)
+Cart([],opts)
+DTQP1([],opts)
+DTQP2([],opts)
+DTQP3([],opts)
+GasAbsorber([],opts)
+% GreenhouseClimate([],opts) % fails (on purpose) with ZO because A(t)
+Hager1([],opts)
+HDAE([],opts)
+JadduShimemura([],opts)
+LinearPendulum([],opts)
+LQRInhomogeneous([],opts)
+LQRScalar([],opts)
+LQRScalarTransfer([],opts)
+LQRstandard([],opts)
+MinimumEnergyTransfer([],opts)
+MultiphaseParameter([],opts)
+Nagurka([],opts)
+OutputTracking([],opts)
+TavallaeiTousi1([],opts)
+TurnerChunJuang1([],opts)
 
 end

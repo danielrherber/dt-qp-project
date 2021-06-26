@@ -12,17 +12,17 @@ function SemiconductorLaser_plot(T,U,Y,P,F,in,opts,sol)
 if opts.general.plotflag
 
 % extract
-p = in.p;
+auxdata = in.auxdata;
 
 % unscale time
 T = P*T;
 
 % unscale controls
-U = p.Imin*U;
+U = auxdata.Imin*U;
 
 % unscale states
-Y = Y.*[p.S0 p.N0];
-Y = Y./10.^(ceil(log10([p.S0 p.N0])));
+Y = Y.*[auxdata.S0 auxdata.N0];
+Y = Y./10.^(ceil(log10([auxdata.S0 auxdata.N0])));
 
 % preliminary plot options
 flag = 'preliminary'; DTQP_plotCommon %#ok<NASGU>

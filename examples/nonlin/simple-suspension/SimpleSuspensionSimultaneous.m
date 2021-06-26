@@ -18,14 +18,14 @@ ex_opts = @SimpleSuspensionSimultaneous_opts;
 ex_output = @SimpleSuspension_output;
 ex_plot = @SimpleSuspension_plot;
 
-% set p and opts
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 % problem parameters
-p = SimpleSuspensionProblemParameters;
+auxdata = SimpleSuspensionProblemParameters;
 
 % tunable parameters
-p.t0 = 0; p.tf = 3;
+auxdata.t0 = 0; auxdata.tf = 3;
 
 %% setup
 % number of controls, states, and parameters
@@ -48,7 +48,7 @@ element.lagrange = horzcat(str0{:});
 
 % symbolic parameters
 element.parameter_list = 'ct kt mus ms w1 w2 w3 z0d';
-element.parameter_values = {p.bt p.kt p.mu p.ms p.w1 p.w2 p.w3 p.z0dot};
+element.parameter_values = {auxdata.bt auxdata.kt auxdata.mu auxdata.ms auxdata.w1 auxdata.w2 auxdata.w3 auxdata.z0dot};
 
 % initial state values
 LB(1).right = 4;
@@ -58,15 +58,15 @@ UB(1).matrix = zeros(4,1);
 
 % simple parameter bounds
 LB(2).right = 3;
-LB(2).matrix = [p.bmin;p.kmin];
+LB(2).matrix = [auxdata.bmin;auxdata.kmin];
 UB(2).right = 3;
-UB(2).matrix = [p.bmax;p.kmax];
+UB(2).matrix = [auxdata.bmax;auxdata.kmax];
 
 % rattlespace constraints
 LB(3).right = 2; % states
-LB(3).matrix = [-inf,-inf,-p.rmax,-inf];
+LB(3).matrix = [-inf,-inf,-auxdata.rmax,-inf];
 UB(3).right = 2; % states
-UB(3).matrix = [inf,inf,p.rmax,inf];
+UB(3).matrix = [inf,inf,auxdata.rmax,inf];
 
 % guess
 Y0 = [[0,0,0,0];[0,0,0,0]];
@@ -78,13 +78,13 @@ setup.guess.X = [U0,Y0,P0];
 setup.scaling(1).right = 1; % controls
 setup.scaling(1).matrix = 400;
 setup.scaling(2).right = 2; % states
-setup.scaling(2).matrix = [0.004 0.4 p.rmax 0.04];
+setup.scaling(2).matrix = [0.004 0.4 auxdata.rmax 0.04];
 setup.scaling(3).right = 3; % parameters
 setup.scaling(3).matrix = [1e2;1e4];
 
 % combine structures
 setup.element = element; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

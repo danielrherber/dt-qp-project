@@ -46,7 +46,7 @@ opts.general.plotflag = 0; % no plots
 opts.general.displevel = 1; % only calculate compute times
 
 % initialize
-p = [];
+auxdata = [];
 
 % create the test scenario
 switch testnum
@@ -116,7 +116,7 @@ for idx = 1:length(F)
             end
 
             % run test
-            eval(strcat("o = ",F(idx),"(p,opts);"));
+            eval(strcat("o = ",F(idx),"([],opts);"));
 
             % find times
             QPcreatetime = o(strcmpi({o.label},'QPcreatetime')).value;

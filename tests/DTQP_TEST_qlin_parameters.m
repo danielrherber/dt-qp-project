@@ -73,7 +73,7 @@ setup.guess.X = [Y0,P0];
 
 % combine structures
 setup.element = element; setup.n = n;
-setup.t0 = t0; setup.tf = tf; setup.p = [];
+setup.t0 = t0; setup.tf = tf; setup.auxdata = [];
 
 % options
 opts.general.displevel = 0;

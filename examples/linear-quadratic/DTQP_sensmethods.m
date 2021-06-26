@@ -65,7 +65,7 @@ NV = narray(I);
 for idx = 1:Nparfor % serial
     % initialize
     opts = options();
-    p = [];
+    auxdata = [];
 
     % extract options
     opts.dt.quadrature = QuadV{idx};
@@ -79,7 +79,7 @@ for idx = 1:Nparfor % serial
     else
         try
             % run and get outputs
-            O = f(p,opts);
+            O = f(auxdata,opts);
 
             % assign outputs to the output matrix
             for k = 1:nO

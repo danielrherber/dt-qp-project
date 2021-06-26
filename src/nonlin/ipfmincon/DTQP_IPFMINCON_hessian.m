@@ -11,7 +11,7 @@ function Ho = DTQP_IPFMINCON_hessian(X,lambda,obj,dyn,cin,ceq,Hin,in,opts)
 
 % extract
 nu = in.nu; ny = in.ny; np = in.np; ini = in.i; nx = in.nx;
-p = in.p; t = in.t; nt = in.nt; I_stored = in.I_stored; param = in.param;
+auxdata = in.auxdata; t = in.t; nt = in.nt; I_stored = in.I_stored; param = in.param;
 Ilambda = in.Ilambda; quadrature = opts.dt.quadrature;
 derivativeflag = opts.method.derivatives; scaleflag = in.scaleflag;
 
@@ -71,7 +71,7 @@ if ~isempty(obj)
     end
 
     % calculate second derivative values
-    D2ft = DTQP_hessian(obj,p,t,Xunscaled,param,derivativeflag,1);
+    D2ft = DTQP_hessian(obj,auxdata,t,Xunscaled,param,derivativeflag,1);
 
     % go through each row entry in the original problem form
     for ix = 1:length(R)
@@ -149,7 +149,7 @@ if ~isempty(dyn)
     for k = 1:nz
 
         % calculate second derivative values
-        D2ft = DTQP_hessian(dyn,p,t,Xunscaled,param,derivativeflag,k);
+        D2ft = DTQP_hessian(dyn,auxdata,t,Xunscaled,param,derivativeflag,k);
 
         % continue if all derivatives are zero (so D2ft is empty)
         if isempty(D2ft)
@@ -209,7 +209,7 @@ if ~isempty(ceq)
     for k = 1:nz
 
         % calculate second derivative values
-        D2ft = DTQP_hessian(ceq,p,t,Xunscaled,param,derivativeflag,k);
+        D2ft = DTQP_hessian(ceq,auxdata,t,Xunscaled,param,derivativeflag,k);
 
         % extract relevant multipliers
         lambda_ceq = lambda_eqnonlin(Ilambda_ceq{k});
@@ -276,7 +276,7 @@ if ~isempty(cin)
     for k = 1:nz
 
         % calculate second derivative values
-        D2ft = DTQP_hessian(cin,p,t,Xunscaled,param,derivativeflag,k);
+        D2ft = DTQP_hessian(cin,auxdata,t,Xunscaled,param,derivativeflag,k);
 
         % extract relevant multipliers
         lambda_cin = lambda_ineqnonlin(Ilambda_cin{k});

@@ -9,20 +9,20 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = BrysonHo154(varargin)
-% input arguments can be provided in the format 'BrysonHo154(p,opts)'
+% input arguments can be provided in the format 'BrysonHo154(auxdata,opts)'
 
 % set local functions
 ex_opts = @BrysonHo154_opts; % options function
 ex_output = @BrysonHo154_output; % output function
 ex_plot = @BrysonHo154_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 t0 = 0; tf = 100; % time horizon
-p.x0 = 100; p.v0 = 1; 
-p.c1 = 1; p.c2 = 100;
+auxdata.x0 = 100; auxdata.v0 = 1;
+auxdata.c1 = 1; auxdata.c2 = 100;
 
 %% setup
 % system dynamics
@@ -37,17 +37,17 @@ L(1).matrix = 1/2; % 1/2*u^2
 % Mayer term
 M(1).left = 5; % final state variables
 M(1).right = 5; % final state variables
-M(1).matrix = [p.c2,0;0,p.c1]/2;
+M(1).matrix = [auxdata.c2,0;0,auxdata.c1]/2;
 
 % initial conditions
 LB(1).right = 4; % initial states
-LB(1).matrix = [p.x0;p.v0];
+LB(1).matrix = [auxdata.x0;auxdata.v0];
 UB(1).right = 4; % initial states
-UB(1).matrix = [p.x0;p.v0];
+UB(1).matrix = [auxdata.x0;auxdata.v0];
 
 % combine
 setup.A = A; setup.B = B; setup.L = L; setup.M = M;
-setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.p = p;
+setup.LB = LB; setup.UB = UB; setup.t0 = t0; setup.tf = tf; setup.auxdata = auxdata;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

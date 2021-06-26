@@ -9,8 +9,8 @@
 %--------------------------------------------------------------------------
 close all; clear; clc
 
-% tests = 1:8;
-tests = 8;
+tests = 1:8;
+% tests = 8;
 
 % go through the tests
 for k = 1:length(tests)

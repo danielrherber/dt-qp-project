@@ -11,15 +11,15 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = GreenhouseClimate(varargin)
-% input arguments can be provided in the format 'GreenhouseClimate(p,opts)'
+% input arguments can be provided in the format 'GreenhouseClimate(auxdata,opts)'
 
 % set local functions
 ex_opts = @GreenhouseClimate_opts; % options function
 ex_output = @GreenhouseClimate_output; % output function
 ex_plot = @GreenhouseClimate_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% setup
 casenum = 1;
@@ -119,14 +119,14 @@ switch casenum
     opts.method.form = 'nonlinearprogram';
 end
 
-p.casenum = casenum; p.xtf = xtf; p.xp1 = xp1; p.xp2 = xp2; p.xp3 = xp3;
-p.xp4 = xp4; p.xp1 = xp5;
+auxdata.casenum = casenum; auxdata.xtf = xtf; auxdata.xp1 = xp1; auxdata.xp2 = xp2; auxdata.xp3 = xp3;
+auxdata.xp4 = xp4; auxdata.xp1 = xp5;
 
 % number of controls, states, and parameters
 n.nu = 1; n.ny = 2;
 
 % time horizon
-p.t0 = 0; p.tf = xtf;
+auxdata.t0 = 0; auxdata.tf = xtf;
 
 % Mayer term
 M(1).left = 0; M(1).right = 5; M(1).matrix = [-xp5,0];
@@ -142,7 +142,7 @@ LB(2).right = 1; LB(2).matrix = 0;
 
 % combine structures
 setup.M = M; setup.L = L; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

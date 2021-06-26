@@ -9,15 +9,15 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = HDAE(varargin)
-% input arguments can be provided in the format 'HDAE(p,opts)'
+% input arguments can be provided in the format 'HDAE(auxdata,opts)'
 
 % set local functions
 ex_opts = @HDAE_opts; % options function
 ex_output = @HDAE_output; % output function
 ex_plot = @HDAE_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 n = 20;
@@ -29,7 +29,7 @@ q2 = 1e-3;
 tf = 5;
 
 % save to parameter structure
-p.n = n;
+auxdata.n = n;
 
 %% setup
 delta = pi/n;
@@ -71,15 +71,15 @@ idx = idx + 1;
 LB(idx).right = 2; % states
 g = cell(1,n-1);
 for k = 1:n-1
-   g{1,k} = @(t,p)  c*(sin(k*pi/n)*sin(pi*t/5) - a) - b;
+   g{1,k} = @(t)  c*(sin(k*pi/n)*sin(pi*t/5) - a) - b;
 end
 LB(idx).matrix = g;
 
 % control inequality constraints
 idx = idx + 1;
 LB(idx).right = 1; % controls
-LB(idx).matrix{1,1} = @(t,p)  c*(sin(0*pi/n)*sin(pi*t/5) - a) - b;
-LB(idx).matrix{2,1} = @(t,p)  c*(sin(n*pi/n)*sin(pi*t/5) - a) - b;
+LB(idx).matrix{1,1} = @(t)  c*(sin(0*pi/n)*sin(pi*t/5) - a) - b;
+LB(idx).matrix{2,1} = @(t)  c*(sin(n*pi/n)*sin(pi*t/5) - a) - b;
 
 % initial controls
 idx = idx + 1;
@@ -103,7 +103,7 @@ UB(idx).matrix{2,1} = @(t) [0;inf(length(t)-1,1)];
 
 % combine
 setup.A = A; setup.B = B; setup.L = L;
-setup.LB = LB; setup.UB = UB; setup.tf = tf; setup.p = p;
+setup.LB = LB; setup.UB = UB; setup.tf = tf; setup.auxdata = auxdata;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

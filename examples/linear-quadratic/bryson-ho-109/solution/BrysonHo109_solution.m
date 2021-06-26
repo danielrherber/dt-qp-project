@@ -10,7 +10,7 @@
 function sol = BrysonHo109_solution(T,Yguess,in)
 
 % extract parameters
-p = in.p;
+auxdata = in.auxdata;
 
 % symbolic variables
 syms y yf t a
@@ -25,26 +25,26 @@ ufun = matlabFunction(u,'Vars',{'a','t','yf'});
 gufun = matlabFunction(gu,'Vars',{'a','t','yf'});
 
 % solution function
-solfun = @(y) y - ( p.x0 - integral(@(t) gufun(p.a,t,y),in.t0,in.tf,...
+solfun = @(y) y - ( auxdata.x0 - integral(@(t) gufun(auxdata.a,t,y),in.t0,in.tf,...
     'RelTol',1e-16,'AbsTol',1e-16));
 
 % solve the implicit equation
 yf = fzero(@(x) solfun(x), Yguess(end), optimset('Display','none','TolX',0));
 
 % control
-U = -ufun(p.a,T,yf);
+U = -ufun(auxdata.a,T,yf);
 
 % state
-Y(1,1) = p.x0;
+Y(1,1) = auxdata.x0;
 for i = 2:length(T)
-    Y(i,1) =  Y(i-1,1) - integral(@(t) gufun(p.a,t,yf), T(i-1),T(i),...
+    Y(i,1) =  Y(i-1,1) - integral(@(t) gufun(auxdata.a,t,yf), T(i-1),T(i),...
         'RelTol',1e-16,'AbsTol',1e-16);
     disp(T(i-1))
 end
 
 % objective function
-Iu = integral(@(t) (ufun(p.a,t,yf)).^2,in.t0,in.tf,'AbsTol',1e-16,'RelTol',1e-16);
-F = p.a^2/2*yf^2 + 1/2*Iu;
+Iu = integral(@(t) (ufun(auxdata.a,t,yf)).^2,in.t0,in.tf,'AbsTol',1e-16,'RelTol',1e-16);
+F = auxdata.a^2/2*yf^2 + 1/2*Iu;
 
 % save to structure
 sol.T = T;

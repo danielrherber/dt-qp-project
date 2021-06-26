@@ -11,18 +11,18 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = JadduShimemura(varargin)
-% input arguments can be provided in the format 'JadduShimemura(p,opts)'
+% input arguments can be provided in the format 'JadduShimemura(auxdata,opts)'
 
 % set local functions
 ex_opts = @JadduShimemura_opts; % options function
 ex_output = @JadduShimemura_output; % output function
 ex_plot = @JadduShimemura_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
-p.examplenum = 2; % see below
+auxdata.examplenum = 1; % see below
 
 %% setup
 % system dynamics
@@ -44,25 +44,25 @@ UB(1).right = 4; % initial states
 UB(1).matrix = [0,-1];
 
 % case number
-switch p.examplenum
+switch auxdata.examplenum
     case 0 % no additional constraints, not in reference above
         % combine structures
         setup.A = A; setup.B = B; setup.L = L;
-        setup.LB = LB; setup.UB = UB; setup.t0 = 0; setup.tf = 1; setup.p = p;
+        setup.LB = LB; setup.UB = UB; setup.t0 = 0; setup.tf = 1; setup.auxdata = auxdata;
     case 1 % path constraint on state 2
         UB(2).right = 2; % states
         UB(2).matrix = {inf, @(t) 8*(t-0.5).^2 - 0.5};
 
         % combine structures
         setup.A = A; setup.B = B; setup.L = L;
-        setup.LB = LB; setup.UB = UB; setup.t0 = 0; setup.tf = 1; setup.p = p;
+        setup.LB = LB; setup.UB = UB; setup.t0 = 0; setup.tf = 1; setup.auxdata = auxdata;
     case 2 % path constraint on state 1
         UB(2).right = 2; % states
         UB(2).matrix = {@(t) 8*(t-0.5).^2 - 0.5,inf};
 
         % combine structures
         setup.A = A; setup.B = B; setup.L = L;
-        setup.LB = LB; setup.UB = UB; setup.t0 = 0; setup.tf = 1; setup.p = p;
+        setup.LB = LB; setup.UB = UB; setup.t0 = 0; setup.tf = 1; setup.auxdata = auxdata;
     case 3 % intermediate point constraint, multi-phase problem
         LB(2).right = 5; % final states
         LB(2).matrix = [0.5;-inf];
@@ -71,11 +71,11 @@ switch p.examplenum
 
         %--- combine structures, phase 1
         setup(1).A = A; setup(1).B = B; setup(1).L = L;
-        setup(1).LB = LB; setup(1).UB = UB; setup(1).t0 = 0; setup(1).tf = 0.5; setup(1).p = p;
+        setup(1).LB = LB; setup(1).UB = UB; setup(1).t0 = 0; setup(1).tf = 0.5; setup(1).auxdata = auxdata;
 
         %--- combine structures, phase 2
         setup(2).A = A; setup(2).B = B; setup(2).L = L;
-        setup(2).t0 = 0.5; setup(2).tf = 1; setup(2).p = p;
+        setup(2).t0 = 0.5; setup(2).tf = 1; setup(2).auxdata = auxdata;
 
         %--- phase 1-2 linkage constraints
         n = length(A);

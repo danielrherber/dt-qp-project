@@ -18,7 +18,7 @@ oc = element.oc;
 
 % get the linearized matrix values
 U = rand(opts.dt.nt,oc.nu);
-T = linspace(setup.p.t0,setup.p.tf,opts.dt.nt)';
+T = linspace(setup.auxdata.t0,setup.auxdata.tf,opts.dt.nt)';
 X = [U];
 param = [];
 

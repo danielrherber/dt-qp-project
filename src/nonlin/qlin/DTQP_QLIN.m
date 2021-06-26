@@ -66,7 +66,7 @@ opts.reduction = inf;
 
 % potentially create time-varying parameter matrix
 if isa(param,'cell')
-    param = squeeze(DTQP_tmatrix(param,setup.p,T));
+    param = squeeze(DTQP_tmatrix(param,setup.auxdata,T));
 end
 
 % quasilinearization

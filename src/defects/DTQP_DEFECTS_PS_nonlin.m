@@ -11,7 +11,7 @@ function [Z,DZ] = DTQP_DEFECTS_PS_nonlin(X,dyn,in,opts,Dflag)
 
 % extract
 nu = in.nu; ny = in.ny; np = in.np; nt = in.nt; nX = in.nx;
-p = in.p; t = in.t; D = in.D; ini = in.i; I_stored = in.I_stored;
+auxdata = in.auxdata; t = in.t; D = in.D; ini = in.i; I_stored = in.I_stored;
 f = dyn.f; scaleflag = in.scaleflag; param = in.param;
 
 % (potentially) apply linear scaling
@@ -67,7 +67,7 @@ R = horzcat(ini{1:3});
 %--------------------------------------------------------------------------
 % calculate state derivative function values
 fi = DTQP_QLIN_update_tmatrix(f,[],Xunscaled,param);
-ft = DTQP_tmultiprod(fi,p,t);
+ft = DTQP_tmultiprod(fi,auxdata,t);
 
 % scale
 if scaleflag
@@ -90,7 +90,7 @@ if ~Dflag
 end
 
 % calculate Jacobian of state derivative function values
-Dft = DTQP_jacobian(dyn,p,t,Xunscaled,param,opts.method.derivatives);
+Dft = DTQP_jacobian(dyn,auxdata,t,Xunscaled,param,opts.method.derivatives);
 
 % scale
 if scaleflag

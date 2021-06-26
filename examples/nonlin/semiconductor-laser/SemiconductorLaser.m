@@ -10,15 +10,15 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = SemiconductorLaser(varargin)
-% input arguments can be provided in the format 'SemiconductorLaser(p,opts)'
+% input arguments can be provided in the format 'SemiconductorLaser(auxdata,opts)'
 
 % set local functions
 ex_opts = @SemiconductorLaser_opts;
 ex_output = @SemiconductorLaser_output;
 ex_plot = @SemiconductorLaser_plot;
 
-% set p and opts
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 taup = 2.072e-12;
@@ -41,13 +41,13 @@ Imax = 67.5e-3;
 ts = 1e-12;
 
 % assign to parameter structure
-p.S0 = S0;
-p.N0 = N0;
-p.Imin = Imin;
+auxdata.S0 = S0;
+auxdata.N0 = N0;
+auxdata.Imin = Imin;
 
 %% setup
 % time horizon
-p.t0 = 0; p.tf = 1;
+auxdata.t0 = 0; auxdata.tf = 1;
 
 % number of controls, states, and parameters
 n.nu = 1; n.ny = 2; n.np = 1;
@@ -86,7 +86,7 @@ setup.guess.X = [U0,Y0,P0];
 
 % combine structures
 setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

@@ -8,16 +8,16 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [F,varargout] = DSuspensionNested_InnerLoopRamp(x,p)
+function [F,varargout] = DSuspensionNested_InnerLoopRamp(x,auxdata)
 
 % common inner-loop problem setup
-[setup,Bz] = DSuspensionNested_InnerLoopCommonSetup(x,p);
+[setup,Bz] = DSuspensionNested_InnerLoopCommonSetup(x,auxdata);
 
 % dynamic constraints
-setup = DSuspensionNested_RampStateConstraints(x,p,setup);
+setup = DSuspensionNested_RampStateConstraints(x,auxdata,setup);
 
 % combine
-setup.t0 = 0; setup.tf = p.tf; setup.p = p;
+setup.t0 = 0; setup.tf = auxdata.tf; setup.auxdata = auxdata;
 
 % ramp disturbance
 ns = size(Bz,1);
@@ -30,11 +30,11 @@ setup.d = d;
 % DTQP options
 opts.general.displevel = 0;
 opts.general.plotflag = 0;
-opts.solver.tolerance = p.InnerLoopTolerance;
+opts.solver.tolerance = auxdata.InnerLoopTolerance;
 opts.dt.defects = 'TR';
 opts.dt.quadrature = 'CTR';
 opts.dt.mesh = 'ED';
-opts.dt.nt = p.nt;
+opts.dt.nt = auxdata.nt;
 
 % form and solve problem
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

@@ -9,26 +9,26 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = BrysonHo64(varargin)
-% input arguments can be provided in the format 'BrysonHo64(p,opts)'
+% input arguments can be provided in the format 'BrysonHo64(auxdata,opts)'
 
 % set local functions
 ex_opts = @BrysonHo64_opts; % options function
 ex_output = @BrysonHo64_output; % output function
 ex_plot = @BrysonHo64_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
-p.a = 1;
-p.l = 0.45;
+auxdata.a = 1;
+auxdata.l = 0.45;
 
 %% setup
 % number of controls, states, and parameters
 n.nu = 1; n.ny = 1;
 
 % time horizon
-p.t0 = -p.l; p.tf = p.l;
+auxdata.t0 = -auxdata.l; auxdata.tf = auxdata.l;
 
 % objective function
 element.lagrange = '2*pi*y1*sqrt(1+u1^2)';
@@ -39,15 +39,15 @@ setup.A = 0;
 setup.B = 1;
 
 % bounds
-UB(1).right = 4; UB(1).matrix = p.a;
-LB(1).right = 4; LB(1).matrix = p.a;
-UB(2).right = 5; UB(2).matrix = p.a;
-LB(2).right = 5; LB(2).matrix = p.a;
+UB(1).right = 4; UB(1).matrix = auxdata.a;
+LB(1).right = 4; LB(1).matrix = auxdata.a;
+UB(2).right = 5; UB(2).matrix = auxdata.a;
+LB(2).right = 5; LB(2).matrix = auxdata.a;
 LB(3).right = 2; LB(3).matrix = 0;
 
 %% setup
 setup.element = element; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

@@ -9,8 +9,8 @@
 %--------------------------------------------------------------------------
 close all; clear; clc
 
-% tests = 1:2;
-tests = 1;
+tests = 1:2;
+% tests = 1;
 
 % go through the tests
 for k = 1:length(tests)
@@ -44,7 +44,7 @@ for k = 1:length(tests)
     end
 
     % run the test and time
-    [T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
+    [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
     % test analysis
     figure(1)

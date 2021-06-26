@@ -92,8 +92,8 @@ for k = 1:length(tests)
         %------------------------------------------------------------------
         case 9 % time-varying function (controls and states)
         Told = linspace(setup.t0,setup.tf,10000);
-        Uold = BrysonDenham_U(Told,setup.p.ell);
-        Yold = BrysonDenham_Y(Told,setup.p.ell);
+        Uold = BrysonDenham_U(Told,setup.auxdata.ell);
+        Yold = BrysonDenham_Y(Told,setup.auxdata.ell);
         setup.scaling(1).right = 1; % controls
         setup.scaling(1).constant = @(t) interp1(Told,Uold,t);
         setup.scaling(2).right = 2; % states
@@ -106,8 +106,8 @@ for k = 1:length(tests)
         %------------------------------------------------------------------
         case 11 % time-based matrix (controls and states)
         Told = linspace(setup.t0,setup.tf,opts.dt.nt);
-        Uold = BrysonDenham_U(Told,setup.p.ell);
-        Yold = BrysonDenham_Y(Told,setup.p.ell);
+        Uold = BrysonDenham_U(Told,setup.auxdata.ell);
+        Yold = BrysonDenham_Y(Told,setup.auxdata.ell);
         setup.scaling(1).right = 1; % controls
         setup.scaling(1).constant = Uold;
         setup.scaling(2).right = 2; % states
@@ -139,7 +139,7 @@ end
 hf = figure; hold on; hf.Color = 'w';
 legendstr = strings(ntests,1);
 for k = 1:ntests
-    Yactual = BrysonDenham_Y(T{k},setup.p.ell);
+    Yactual = BrysonDenham_Y(T{k},setup.auxdata.ell);
     d = abs(Y{k}(:,1)-Yactual(:,1));
     plot(T{k},d,'linewidth',2);
     legendstr(k) = string(tests(k));
@@ -152,7 +152,7 @@ xlabel("t"); ylabel("Y1 error")
 hf = figure; hold on; hf.Color = 'w';
 legendstr = strings(ntests,1);
 for k = 1:ntests
-    Yactual = BrysonDenham_Y(T{k},setup.p.ell);
+    Yactual = BrysonDenham_Y(T{k},setup.auxdata.ell);
     d = abs(Y{k}(:,2)-Yactual(:,2));
     plot(T{k},d,'linewidth',2);
     legendstr(k) = string(tests(k));
@@ -165,7 +165,7 @@ xlabel("t"); ylabel("Y2 error")
 hf = figure; hold on; hf.Color = 'w';
 legendstr = strings(ntests,1);
 for k = 1:ntests
-    Uactual = BrysonDenham_U(T{k},setup.p.ell);
+    Uactual = BrysonDenham_U(T{k},setup.auxdata.ell);
     d = abs(U{k}(:,1)-Uactual(:,1));
     plot(T{k},d,'linewidth',2);
     legendstr(k) = string(tests(k));
@@ -197,7 +197,7 @@ return
 function [setup,opts] = problem
 
 % BrysonDenham path constraint parameter
-p.ell = 1/9;
+auxdata.ell = 1/9;
 
 % options
 opts.dt.nt = 1000; % 10000
@@ -219,9 +219,9 @@ UB(1).right = 4; UB(1).matrix = [0;1]; % initial states
 LB(1).right = 4; LB(1).matrix = [0;1];
 UB(2).right = 5; UB(2).matrix = [0;-1]; % final states
 LB(2).right = 5; LB(2).matrix = [0;-1];
-UB(3).right = 2; UB(3).matrix = [p.ell;Inf]; % states
+UB(3).right = 2; UB(3).matrix = [auxdata.ell;Inf]; % states
 
 % combine structures
-setup.A = A; setup.B = B; setup.L = L; setup.UB = UB; setup.LB = LB; setup.p = p;
+setup.A = A; setup.B = B; setup.L = L; setup.UB = UB; setup.LB = LB; setup.auxdata = auxdata;
 
 end

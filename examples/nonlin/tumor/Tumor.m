@@ -11,15 +11,15 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = Tumor(varargin)
-% input arguments can be provided in the format 'Tumor(p,opts)'
+% input arguments can be provided in the format 'Tumor(auxdata,opts)'
 
 % set local functions
 ex_opts = @Tumor_opts; % options function
 ex_output = @Tumor_output; % output function
 ex_plot = @Tumor_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 A0 = 15;
@@ -33,11 +33,11 @@ q0 = p0/2;
 umax = 75;
 y0 = [p0,q0,0];
 ymin = [0.1,0.1,-inf];
-p.y0 = y0;
+auxdata.y0 = y0;
 
 %% setup
 % time horizon
-p.t0 = 0; p.tf = 1.2;
+auxdata.t0 = 0; auxdata.tf = 1.2;
 
 % system dynamics
 element.dynamics = '[-zeta*y1*log(y1/y2); y2*(b-(Mew+(D*(y1^(2/3)))+G*u1)); u1]';
@@ -74,7 +74,7 @@ setup.scaling(2).matrix = [p0,q0,A0];
 
 % combine structures
 setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

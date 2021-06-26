@@ -12,7 +12,7 @@ function DTQP1_plot(T,U,Y,P,F,in,opts,sol)
 if opts.general.plotflag
 
 % extract parameter structure
-p = in.p;
+auxdata = in.auxdata;
 
 % preliminary plot options
 flag = 'preliminary'; DTQP_plotCommon %#ok<NASGU>
@@ -29,7 +29,7 @@ for i = 1:3
 end
 
 plot([T(1) T(end)], [Y(1,2) Y(end,2)],'ok','markersize',8);
-plot(T, p.g(T),'--','color',[0 0 0]);
+plot(T, auxdata.g(T),'--','color',[0 0 0]);
 plot(T, P*ones(size(T)),'--','color',[0.5 0.5 0.5]);
 
 % axis

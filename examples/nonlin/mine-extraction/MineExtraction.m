@@ -7,25 +7,25 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = MineExtraction(varargin)
-% input arguments can be provided in the format 'MineExtraction(p,opts)'
+% input arguments can be provided in the format 'MineExtraction(auxdata,opts)'
 
 % set local functions
 ex_opts = @MineExtraction_opts;
 ex_output = @MineExtraction_output;
 ex_plot = @MineExtraction_plot;
 
-% set p and opts
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 tf = 2; % contract length
-p.a = 1; % profit rate
-p.x0 = 10; % initial ore available
+auxdata.a = 1; % profit rate
+auxdata.x0 = 10; % initial ore available
 obj_approach = 'function'; % 'function' or 'string'
 
 %% setup
 % time horizon
-p.t0 = 0; p.tf = tf;
+auxdata.t0 = 0; auxdata.tf = tf;
 
 % number of controls, states, and parameters
 n.nu = 1; n.ny = 1;
@@ -51,22 +51,22 @@ end
 
 % problem parameters
 element.parameter_list = 'a';
-element.parameter_values = [p.a];
+element.parameter_values = [auxdata.a];
 
 % simple bounds
-UB(1).right = 4; UB(1).matrix = p.x0;% initial states
-LB(1).right = 4; LB(1).matrix = p.x0;
-UB(2).right = 2; UB(2).matrix = p.x0;% state bounds
+UB(1).right = 4; UB(1).matrix = auxdata.x0;% initial states
+LB(1).right = 4; LB(1).matrix = auxdata.x0;
+UB(2).right = 2; UB(2).matrix = auxdata.x0;% state bounds
 LB(2).right = 2; LB(2).matrix = 0;
 
 % guess
-Y0 = [[p.x0];[p.x0]];
+Y0 = [[auxdata.x0];[auxdata.x0]];
 U0 = [[0];[0]];
 setup.guess.X = [U0,Y0];
 
 % combine structures
 setup.element = element; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

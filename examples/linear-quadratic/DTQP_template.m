@@ -10,9 +10,9 @@
 % All items should be put into a setup structure
 % k is an appropriate index in the examples below, need to be incremental
 %-------------------------------------------------------------------------------
-% Time horizon and auxiliary data (setup.p = p)
-% p.t0 = 0; p.tf = 20;
-% p.a = 1;
+% Time horizon and auxiliary data (setup.auxdata = auxdata)
+% auxdata.t0 = 0; auxdata.tf = 20;
+% auxdata.a = 1;
 %-------------------------------------------------------------------------------
 % Dynamics
 % setup.A = [0,1;-3,-2]; % ns = 2

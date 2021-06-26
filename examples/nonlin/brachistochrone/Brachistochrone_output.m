@@ -10,7 +10,7 @@
 function [O,sol] = Brachistochrone_output(T,U,Y,P,F,in,opts)
 
 % extract parameter structure
-p = in.p;
+auxdata = in.auxdata;
 
 % failure
 if isempty(P)
@@ -28,12 +28,12 @@ if isempty(P)
     return
 end
 
-switch p.casenum
+switch auxdata.casenum
 %----------------------------------------------------------------------
 case {1,2}
 % solution on T
 sol(1).T = T*P(1);
-[F2,Y2,U2] = Brachistochrone_solution(sol(1).T,p.casenum,p.g,p.xf,p.yf);
+[F2,Y2,U2] = Brachistochrone_solution(sol(1).T,auxdata.casenum,auxdata.g,auxdata.xf,auxdata.yf);
 sol(1).U = U2;
 sol(1).Y = Y2;
 sol(1).F = F2;
@@ -41,7 +41,7 @@ sol(1).F = F2;
 % solution on high resolution T
 if opts.general.plotflag
     sol(2).T = linspace(0,F2,1e4)';
-    [~,Y2,U2] = Brachistochrone_solution(sol(2).T,p.casenum,p.g,p.xf,p.yf);
+    [~,Y2,U2] = Brachistochrone_solution(sol(2).T,auxdata.casenum,auxdata.g,auxdata.xf,auxdata.yf);
     sol(2).U = U2;
     sol(2).Y = Y2;
     sol(2).F = F2;
@@ -68,7 +68,7 @@ O(5).label = 'QPsolvetime';
 case 3
 % solution on T
 sol(1).T = T*P(1);
-[F2,Y2,U2] = Brachistochrone_solution(sol(1).T,p.casenum,p.g,p.xf);
+[F2,Y2,U2] = Brachistochrone_solution(sol(1).T,auxdata.casenum,auxdata.g,auxdata.xf);
 sol(1).U = U2;
 sol(1).Y = Y2;
 sol(1).F = F2;
@@ -76,7 +76,7 @@ sol(1).F = F2;
 % solution on high resolution T
 if opts.general.plotflag
     sol(2).T = linspace(0,F2,1e4)';
-    [~,Y2,U2] = Brachistochrone_solution(sol(2).T,p.casenum,p.g,p.xf);
+    [~,Y2,U2] = Brachistochrone_solution(sol(2).T,auxdata.casenum,auxdata.g,auxdata.xf);
     sol(2).U = U2;
     sol(2).Y = Y2;
     sol(2).F = F2;
@@ -103,7 +103,7 @@ O(5).label = 'QPsolvetime';
 case 4
 % solution on T
 sol(1).T = T*P(1);
-[F2,Y2,U2] = Brachistochrone_solution(sol(1).T,p.casenum,p.g,p.xf,p.theta,p.h);
+[F2,Y2,U2] = Brachistochrone_solution(sol(1).T,auxdata.casenum,auxdata.g,auxdata.xf,auxdata.theta,auxdata.h);
 sol(1).U = U2;
 sol(1).Y = Y2;
 sol(1).F = F2;
@@ -111,7 +111,7 @@ sol(1).F = F2;
 % solution on high resolution T
 if opts.general.plotflag
     sol(2).T = linspace(0,F2,1e4)';
-    [~,Y2,U2] = Brachistochrone_solution(sol(2).T,p.casenum,p.g,p.xf,p.theta,p.h);
+    [~,Y2,U2] = Brachistochrone_solution(sol(2).T,auxdata.casenum,auxdata.g,auxdata.xf,auxdata.theta,auxdata.h);
     sol(2).U = U2;
     sol(2).Y = Y2;
     sol(2).F = F2;

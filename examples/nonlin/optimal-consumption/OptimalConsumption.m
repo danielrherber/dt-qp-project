@@ -11,21 +11,21 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = OptimalConsumption(varargin)
-% input arguments can be provided in the format 'OptimalConsumption(p,opts)'
+% input arguments can be provided in the format 'OptimalConsumption(auxdata,opts)'
 
 % set local functions
 ex_opts = @OptimalConsumption_opts; % options function
 ex_output = @OptimalConsumption_output; % output function
 ex_plot = @OptimalConsumption_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 
 %% setup
 % time horizon
-p.t0 = 0; p.tf = 1.5;
+auxdata.t0 = 0; auxdata.tf = 1.5;
 
 % number of controls, states, and parameters
 n.nu = 1; n.ny = 1;
@@ -45,7 +45,7 @@ UB(2).right = 4; UB(2).matrix = 1;
 
 % combine structures
 setup.element = element; setup.L = L; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

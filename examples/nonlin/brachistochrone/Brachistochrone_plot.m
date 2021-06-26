@@ -12,7 +12,7 @@ function Brachistochrone_plot(T,U,Y,P,F,in,opts,sol)
 if opts.general.plotflag
 
 % extract parameter structure
-p = in.p;
+auxdata = in.auxdata;
 
 % solution available for all cases
 solutionflag = true;
@@ -77,7 +77,7 @@ Lv = {};
 cArray = lines(size(Y,2));
 
 % hard-coded path constraint
-if p.casenum == 4
+if auxdata.casenum == 4
     plot([min(Y(:,1)),max(Y(:,1))],-[min(Y(:,1))/2 + 0.1, max(Y(:,1))/2 + 0.1],...
         '-','linewidth',2,'color',cArray(2,:));
     Lv{end+1} = ['path constraint'];

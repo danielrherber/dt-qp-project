@@ -10,19 +10,19 @@
 function [O,sol] = AndersonMoore64_output(T,U,Y,P,F,in,opts)
 
 % extract parameter structure
-p = in.p;
+auxdata = in.auxdata;
 
 % solution on T
 sol(1).T = T;
-sol(1).U = AndersonMoore64_U(T,in.t0,in.tf,p.x0);
-sol(1).Y = AndersonMoore64_Y(T,in.t0,in.tf,p.x0);
-sol(1).F = AndersonMoore64_F(in.t0,in.tf,p.x0);
+sol(1).U = AndersonMoore64_U(T,in.t0,in.tf,auxdata.x0);
+sol(1).Y = AndersonMoore64_Y(T,in.t0,in.tf,auxdata.x0);
+sol(1).F = AndersonMoore64_F(in.t0,in.tf,auxdata.x0);
 
 % solution on high resolution T
 if opts.general.plotflag
     sol(2).T = linspace(in.t0,in.tf,1e4)';
-    sol(2).U = AndersonMoore64_U(sol(2).T,in.t0,in.tf,p.x0);
-    sol(2).Y = AndersonMoore64_Y(sol(2).T,in.t0,in.tf,p.x0);
+    sol(2).U = AndersonMoore64_U(sol(2).T,in.t0,in.tf,auxdata.x0);
+    sol(2).Y = AndersonMoore64_Y(sol(2).T,in.t0,in.tf,auxdata.x0);
     sol(2).F = sol(1).F;
 end
 

@@ -12,14 +12,14 @@ function SpaceShuttleReentry_plot(T,U,Y,P,F,in,opts,sol)
 if opts.general.plotflag
 
 % extract
-p = in.p;
+auxdata = in.auxdata;
 
 % unscale time
 T = T*P;
 
 % calculate heating
-vI = 3.280839895*Y(:,4)*p.vs;
-hI = 3.280839895*(Y(:,1)*p.rads - p.Re);
+vI = 3.280839895*Y(:,4)*auxdata.vs;
+hI = 3.280839895*(Y(:,1)*auxdata.rads - auxdata.Re);
 rho = 0.002378*exp(-hI/23800);
 qr = 17700*sqrt(rho).*(0.0001*vI).^3.07;
 a = rad2deg(U(:,1));
@@ -61,7 +61,7 @@ flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 figure('Color',wcolor); hold on
 
 subplot(3,2,1); hold on
-plot(T,(Y(:,1)*p.rads - p.Re)/1000,'-','linewidth',1.5,'color','k')
+plot(T,(Y(:,1)*auxdata.rads - auxdata.Re)/1000,'-','linewidth',1.5,'color','k')
 xlabel('Time (sec)'); title('Altitude (1000 m)');
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU> % configure axis
 ha.XAxis.Label.FontSize = 10;
@@ -79,7 +79,7 @@ flag = 'axis'; DTQP_plotCommon %#ok<NASGU> % configure axis
 ha.XAxis.Label.FontSize = 10;
 
 subplot(3,2,2); hold on
-plot(T,Y(:,4)*p.vs/1000,'-','linewidth',1.5,'color','k')
+plot(T,Y(:,4)*auxdata.vs/1000,'-','linewidth',1.5,'color','k')
 xlabel('Time (sec)'); title('Velocity (1000 m/s)');
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU> % configure axis
 ha.XAxis.Label.FontSize = 10;

@@ -8,22 +8,22 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = DTQP1(varargin)
-% input arguments can be provided in the format 'DTQP1(p,opts)'
+% input arguments can be provided in the format 'DTQP1(auxdata,opts)'
 
 % set local functions
 ex_opts = @DTQP1_opts; % options function
 ex_output = @DTQP1_output; % output function
 ex_plot = @DTQP1_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% setup
 % time horizon
 t0 = 0; tf = 1;
 
 % problem parameters
-p.g = @(t) sin(2*pi*t) + 0.5;
+auxdata.g = @(t) sin(2*pi*t) + 0.5;
 
 % system dynamics
 A = [-1,2,0,0;3,-4,0,0;1,2,-1,0;1,0,0,0]; B = [1,0;-1,0;0,1/20;0,0]; G = zeros(4,1);
@@ -32,8 +32,8 @@ A = [-1,2,0,0;3,-4,0,0;1,2,-1,0;1,0,0,0]; B = [1,0;-1,0;0,1/20;0,0]; G = zeros(4
 L(1).left = 1; L(1).right = 1; L(1).matrix = eye(2)/10; % u1^2 + u2^2
 L(2).left = 1; L(2).right = 2; L(2).matrix = [1,1,0,0;0,0,0,0]; % u1*y1 + u1*y2
 L(3).left = 2; L(3).right = 2; L(3).matrix = zeros(4); L(3).matrix(2,2) = 5; % 5*y2^2
-L(4).left = 0; L(4).right = 2; L(4).matrix = {0,@(t) -5*2*p.g(t),0,0}; % -5*2*g*y2
-L(5).left = 0; L(5).right = 0; L(5).matrix{1} = @(t) 5*(p.g(t)).^2; % 5*g^2
+L(4).left = 0; L(4).right = 2; L(4).matrix = {0,@(t) -5*2*auxdata.g(t),0,0}; % -5*2*g*y2
+L(5).left = 0; L(5).right = 0; L(5).matrix{1} = @(t) 5*(auxdata.g(t)).^2; % 5*g^2
 
 % Mayer term
 M(1).left = 0; M(1).right = 3; M(1).matrix = 1; % p1
@@ -65,12 +65,12 @@ UB(3).right = 1; UB(3).matrix = [inf;10];
 LB(3).right = 1; LB(3).matrix = -[inf;10];
 
 % y2 < g(t), simple bounds
-UB(4).right = 2; UB(4).matrix= {inf;@(t) p.g(t);inf;inf};
+UB(4).right = 2; UB(4).matrix= {inf;@(t) auxdata.g(t);inf;inf};
 
 % combine structures
 setup.A = A; setup.B = B; setup.G = G; setup.L = L; setup.M = M;
 setup.Y = Y; setup.Z = Z; setup.UB = UB; setup.LB = LB;
-setup.t0 = t0; setup.tf = tf; setup.p = p;
+setup.t0 = t0; setup.tf = tf; setup.auxdata = auxdata;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

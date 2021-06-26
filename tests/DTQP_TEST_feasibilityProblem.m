@@ -35,7 +35,7 @@ for k = 1:length(tests)
     end
 
     % run the test and time
-    [T,U,Y,P,F,p,opts] = DTQP_solve(setup,opts);
+    [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);
 
     % test analysis
     disp(strcat("tf = ",string(setup.tf)))
@@ -60,7 +60,7 @@ v0 = -2; h0 = 10;
 
 % setup
 setup.t0 = 0;
-setup.p = [];
+setup.auxdata = [];
 
 % system dynamics
 A = [0,1;0,0];

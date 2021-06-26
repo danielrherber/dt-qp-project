@@ -10,7 +10,8 @@
 function [Y,P,F] = MultiphaseParameter_solution(in)
 
 % extract
-p = in.p; Y0 = p.Y0; E1 = p.E1; E2 = p.E2; t1 = p.t1; t2 = p.t2; t3 = p.t3;
+auxdata = in.auxdata; Y0 = auxdata.Y0; E1 = auxdata.E1; E2 = auxdata.E2;
+t1 = auxdata.t1; t2 = auxdata.t2; t3 = auxdata.t3;
 
 % fminbnd options
 options = optimset('Display','none','TolX',1e-15);

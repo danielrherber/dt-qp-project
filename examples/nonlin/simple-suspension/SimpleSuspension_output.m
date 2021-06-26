@@ -31,7 +31,7 @@ O(7).label = 'funcCount';
 % % determine which method
 % if strcmpi(opts.solver.function,'quadprog')
 %     method = "nested";
-%     P = in.p.xpopt;
+%     P = in.auxdata.xpopt;
 % else
 %     method = "simultaneous";
 % end

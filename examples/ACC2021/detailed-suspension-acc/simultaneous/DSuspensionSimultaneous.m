@@ -15,26 +15,26 @@ function sol = DSuspensionSimultaneous(varargin)
 
 % check if inputs were provided
 if isempty(varargin)
-    p.derivatives = 'symbolic'; % derivative method
-    p.nt = 200; % number of time points
-    p.OptimalityTolerance = 1e-7; % optimality tolerance
-    p.FeasibilityTolerance = 1e-12; % feasibility tolerance
+    auxdata.derivatives = 'symbolic'; % derivative method
+    auxdata.nt = 200; % number of time points
+    auxdata.OptimalityTolerance = 1e-7; % optimality tolerance
+    auxdata.FeasibilityTolerance = 1e-12; % feasibility tolerance
 else
     in = varargin;
-    p.derivatives = in{1}; % derivative method
-    p.nt = in{2}; % number of time points
-    p.OptimalityTolerance = in{3}; % optimality tolerance
-    p.FeasibilityTolerance = in{4}; % feasibility tolerance
+    auxdata.derivatives = in{1}; % derivative method
+    auxdata.nt = in{2}; % number of time points
+    auxdata.OptimalityTolerance = in{3}; % optimality tolerance
+    auxdata.FeasibilityTolerance = in{4}; % feasibility tolerance
 end
 
 % get DTQP default options for this problem
 opts = DSuspensionSimultaneous_opts;
 
 % assign options
-opts.method.derivatives = p.derivatives;
-opts.dt.nt = p.nt;
-opts.solver.Otolerance = p.OptimalityTolerance;
-opts.solver.Ftolerance = p.FeasibilityTolerance;
+opts.method.derivatives = auxdata.derivatives;
+opts.dt.nt = auxdata.nt;
+opts.solver.Otolerance = auxdata.OptimalityTolerance;
+opts.solver.Ftolerance = auxdata.FeasibilityTolerance;
 
 % opts for sens study
 if ~isempty(varargin)
@@ -42,10 +42,10 @@ if ~isempty(varargin)
 end
 
 % problem parameters
-p = DSuspensionProblem_Parameters;
+auxdata = DSuspensionProblem_Parameters;
 
 % time horizon
-p.t0 = 0; p.tf = 2;
+auxdata.t0 = 0; auxdata.tf = 2;
 
 %% setup
 % number of controls, states, and parameters
@@ -85,7 +85,7 @@ element.lagrange = horzcat(str0{:});
 
 %--- symbolic parameters
 element.parameter_list = 'ct kt mus ms w1 w2 w3 G z0d R m A nd';
-element.parameter_values = {p.bt p.kt p.mu p.ms p.w1 p.w2 p.w3 p.G p.z0dot p.ramp_in 0.108 1974 1.2 };
+element.parameter_values = {auxdata.bt auxdata.kt auxdata.mu auxdata.ms auxdata.w1 auxdata.w2 auxdata.w3 auxdata.G auxdata.z0dot auxdata.ramp_in 0.108 1974 1.2 };
 
 %--- initial state values
 LB(1).right = 4;
@@ -232,7 +232,7 @@ setup = DSuspensionSimultaneous_guess([]);
 
 % combine structures
 setup.element = element; setup.UB = UB; setup.LB = LB;setup.Z = Z;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 t1 = tic;

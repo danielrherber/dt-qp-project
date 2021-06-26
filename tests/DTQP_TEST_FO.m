@@ -21,7 +21,7 @@ A = sys.A;
 B = sys.B;
 
 % needed data
-p = [];
+auxdata = [];
 nt = 20;
 t = linspace(0,100,nt)';
 h = diff(t);
@@ -29,7 +29,7 @@ np = 0;
 nd = 0;
 
 % assign
-in.p = p;
+in.auxdata = auxdata;
 in.nt= nt;
 in.t = t;
 in.h = h;

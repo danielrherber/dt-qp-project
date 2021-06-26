@@ -9,20 +9,20 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = BrysonHo116(varargin)
-% input arguments can be provided in the format 'BrysonHo116(p,opts)'
+% input arguments can be provided in the format 'BrysonHo116(auxdata,opts)'
 
 % set local functions
 ex_opts = @BrysonHo116_opts; % options function
 ex_output = @BrysonHo116_output; % output function
 ex_plot = @BrysonHo116_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 tf = 1.5;
-p.x0 = 0.1;
-p.v0 = 0.5;
+auxdata.x0 = 0.1;
+auxdata.v0 = 0.5;
 
 %% setup
 t0 = 0;
@@ -37,9 +37,9 @@ L(1).matrix = [0,1];
 
 % initial conditions
 LB(1).right = 4; % initial states
-LB(1).matrix = [p.x0;p.v0];
+LB(1).matrix = [auxdata.x0;auxdata.v0];
 UB(1).right = 4; % initial states
-UB(1).matrix = [p.x0;p.v0];
+UB(1).matrix = [auxdata.x0;auxdata.v0];
 
 % final conditions
 LB(2).right = 5; % final states
@@ -63,7 +63,7 @@ Z(2).b = 0;
 
 % combine
 setup.A = A; setup.B = B; setup.L = L; setup.UB = UB; setup.LB = LB;
-setup.Z = Z; setup.t0 = t0; setup.tf = tf; setup.p = p;
+setup.Z = Z; setup.t0 = t0; setup.tf = tf; setup.auxdata = auxdata;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

@@ -10,19 +10,19 @@
 function [O,sol] = LinearPendulum_output(T,U,Y,P,F,in,opts)
 
 % extract parameter structure
-p = in.p;
+auxdata = in.auxdata;
 
 % solution on T
 sol(1).T = T;
-sol(1).U = LinearPendulum_U(p.m,p.k,p.umax,in.tf,T);
-sol(1).Y = LinearPendulum_Y(p.m,p.k,p.umax,p.x0,p.v0,in.tf,T);
-sol(1).F = LinearPendulum_F(p.m,p.k,p.umax,p.x0,p.v0,in.tf);
+sol(1).U = LinearPendulum_U(auxdata.m,auxdata.k,auxdata.umax,in.tf,T);
+sol(1).Y = LinearPendulum_Y(auxdata.m,auxdata.k,auxdata.umax,auxdata.x0,auxdata.v0,in.tf,T);
+sol(1).F = LinearPendulum_F(auxdata.m,auxdata.k,auxdata.umax,auxdata.x0,auxdata.v0,in.tf);
 
 % solution on high resolution T
 if opts.general.plotflag
     sol(2).T = linspace(in.t0,in.tf,1e4)';
-    sol(2).U = LinearPendulum_U(p.m,p.k,p.umax,in.tf,sol(2).T);
-    sol(2).Y = LinearPendulum_Y(p.m,p.k,p.umax,p.x0,p.v0,in.tf,sol(2).T);
+    sol(2).U = LinearPendulum_U(auxdata.m,auxdata.k,auxdata.umax,in.tf,sol(2).T);
+    sol(2).Y = LinearPendulum_Y(auxdata.m,auxdata.k,auxdata.umax,auxdata.x0,auxdata.v0,in.tf,sol(2).T);
     sol(2).F = sol(1).F;
 end
 

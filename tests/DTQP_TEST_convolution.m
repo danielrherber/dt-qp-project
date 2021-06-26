@@ -17,7 +17,7 @@ for k = 1:length(tests)
 
     % initialize
     clear opts in A B
-    in.p = [];
+    in.auxdata = [];
 
     % test setup
     switch tests(k)

@@ -11,7 +11,7 @@ function [Aeq,beq] = DTQP_DEFECTS_FO(A,B,G,d,in,opts)
 
 % extract some of the variables
 nu = in.nu; ny = in.ny; np = in.np; nd = in.nd; nx = in.nx;
-p = in.p; nt = in.nt; t = in.t; h = in.h;
+auxdata = in.auxdata; nt = in.nt; t = in.t; h = in.h;
 
 % states with linear dynamics
 if isfield(in,'IDlin')

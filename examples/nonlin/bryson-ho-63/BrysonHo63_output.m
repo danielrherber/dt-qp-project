@@ -10,21 +10,21 @@
 function [O,sol] = BrysonHo63_output(T,U,Y,P,F,in,opts)
 
 % extract parameter structure
-p = in.p;
+auxdata = in.auxdata;
 
 % transform F
 F = -F;
 
 % solution on T
 sol(1).T = T;
-[F2,E2] = BrysonHo63_solution(p.tf,p.V,p.w,T);
+[F2,E2] = BrysonHo63_solution(auxdata.tf,auxdata.V,auxdata.w,T);
 sol(1).F = F2;
 sol(1).E = E2;
 
 % solution on high resolution T
 if opts.general.plotflag
     sol(2).T = linspace(in.t0,in.tf,1e4)';
-    [F2,E2] = BrysonHo63_solution(p.tf,p.V,p.w,sol(2).T);
+    [F2,E2] = BrysonHo63_solution(auxdata.tf,auxdata.V,auxdata.w,sol(2).T);
     sol(2).F = F2;
     sol(2).E = E2;
 end

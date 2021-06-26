@@ -12,7 +12,7 @@ function JadduShimemura_plot(T,U,Y,P,F,in,opts,sol)
 if opts.general.plotflag
 
 % get example number
-examplenum = in(1).p.examplenum;
+examplenum = in(1).auxdata.examplenum;
 
 % preliminary plot options
 flag = 'preliminary'; DTQP_plotCommon %#ok<NASGU>
@@ -29,11 +29,11 @@ switch examplenum
     case 1
         t2 = linspace(0.2,0.8,1000);
         plot(t2,8*(t2-0.5).^2 - 0.5,'linewidth',1,'color','k'); hold on
-        hL.String{end} = 'constraint';
+        hL = findobj(gcf, 'Type', 'Legend'); hL.String{end} = 'constraint';
     case 2
         t2 = linspace(0.2,0.8,1000);
         plot(t2,8*(t2-0.5).^2 - 0.5,'linewidth',1,'color','k'); hold on
-        hL.String{end} = 'constraint';
+        hL = findobj(gcf, 'Type', 'Legend'); hL.String{end} = 'constraint';
 end
 
 % configure axis

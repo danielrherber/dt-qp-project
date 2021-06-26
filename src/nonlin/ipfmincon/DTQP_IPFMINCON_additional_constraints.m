@@ -11,7 +11,7 @@ function [G,DG] = DTQP_IPFMINCON_additional_constraints(X,con,in,opts,Dflag)
 
 % extract
 nu = in.nu; ny = in.ny; np = in.np; nt = in.nt; nX = in.nx;
-p = in.p; t = in.t; ini = in.i; I_stored = in.I_stored; param = in.param;
+auxdata = in.auxdata; t = in.t; ini = in.i; I_stored = in.I_stored; param = in.param;
 f = con.f; pathboundary = con.pathboundary; scaleflag = in.scaleflag;
 
 % (potentially) apply linear scaling
@@ -41,7 +41,7 @@ nz = length(f);
 %--------------------------------------------------------------------------
 % calculate constraint function values
 fi = DTQP_QLIN_update_tmatrix(f,[],Xunscaled,param);
-ft = DTQP_tmultiprod(fi,p,t);
+ft = DTQP_tmultiprod(fi,auxdata,t);
 
 % initialize
 G = cell(nz,1);
@@ -80,7 +80,7 @@ LR = repelem([1 2 3 4 5],[nu ny np ny ny]);
 R = horzcat(ini{1:5});
 
 % calculate Jacobian of the constraints
-Dft = DTQP_jacobian(con,p,t,Xunscaled,param,opts.method.derivatives);
+Dft = DTQP_jacobian(con,auxdata,t,Xunscaled,param,opts.method.derivatives);
 
 % initialize storage arrays
 Isav = {}; Jsav = {}; Vsav = {};

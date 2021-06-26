@@ -12,7 +12,7 @@ function OutputTracking_plot(T,U,Y,P,F,in,opts,sol)
 if opts.general.plotflag
 
 % extract parameter structure
-p = in.p;
+auxdata = in.auxdata;
 
 % preliminary plot options
 flag = 'preliminary'; DTQP_plotCommon %#ok<NASGU>
@@ -85,14 +85,14 @@ flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 figure('Color',wcolor); hold on
 
 % line colors
-cArray = parula(size(p.C,1));
+cArray = parula(size(auxdata.C,1));
 
 % plot state
-for i = 1:size(p.C,1)
-    plot(T, p.o{i}(T),'--','linewidth',2,'color',cArray(i,:));
-    o(:,i) = sum(bsxfun(@times,p.C(i,:),Y),2);
+for i = 1:size(auxdata.C,1)
+    plot(T, auxdata.o{i}(T),'--','linewidth',2,'color',cArray(i,:));
+    o(:,i) = sum(bsxfun(@times,auxdata.C(i,:),Y),2);
     plot(T,o(:,i),'.','linewidth',2,'color',cArray(i,:),'markersize',12);
-    o_actual(:,i) = sum(bsxfun(@times,p.C(i,:),sol(2).Y),2);
+    o_actual(:,i) = sum(bsxfun(@times,auxdata.C(i,:),sol(2).Y),2);
     plot(sol(2).T,o_actual(:,i),'-','linewidth',2,'color',cArray(i,:),'markersize',12);
 end
 

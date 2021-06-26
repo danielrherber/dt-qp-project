@@ -11,7 +11,7 @@ function [Aeq,beq] = DTQP_DEFECTS_EF(A,B,G,d,in,opts)
 
 % extract some of the variables
 nu = in.nu; ny = in.ny; np = in.np; nd = in.nd; nx = in.nx;
-p = in.p; nt = in.nt; t = in.t; h = in.h;
+auxdata = in.auxdata; nt = in.nt; t = in.t; h = in.h;
 
 % matrix form of I in the formulas
 K = kron(eye(ny),ones(nt-1,1));
@@ -23,10 +23,10 @@ Isav = {}; Jsav = {}; Vsav = {};
 % calculate matrices and sequencing vectors
 %--------------------------------------------------------------------------
 % find time dependent matrices
-At = DTQP_tmultiprod(A,p,t);
-Bt = DTQP_tmultiprod(B,p,t);
-Gt = DTQP_tmultiprod(G,p,t);
-dt = DTQP_tmultiprod(d,p,t);
+At = DTQP_tmultiprod(A,auxdata,t);
+Bt = DTQP_tmultiprod(B,auxdata,t);
+Gt = DTQP_tmultiprod(G,auxdata,t);
+dt = DTQP_tmultiprod(d,auxdata,t);
 
 Jy = DTQP_DEFECTS_index_columns(nt,ny,nu); % optimization variable (column) locations
 Jys = [Jy;Jy+1]; % combine to create paired optimization variable locations

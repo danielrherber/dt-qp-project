@@ -10,24 +10,24 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = BrysonHo59(varargin)
-% input arguments can be provided in the format 'BrysonHo59(p,opts)'
+% input arguments can be provided in the format 'BrysonHo59(auxdata,opts)'
 
 % set local functions
 ex_opts = @BrysonHo59_opts; % options function
 ex_output = @BrysonHo59_output; % output function
 ex_plot = @BrysonHo59_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 tf = 2.05;
-p.a = 1;
-p.h = 1;
+auxdata.a = 1;
+auxdata.h = 1;
 
 %% setup
 % time horizon
-p.t0 = 0; p.tf = tf;
+auxdata.t0 = 0; auxdata.tf = tf;
 
 % number of controls, states, and parameters
 n.nu = 1; n.ny = 4;
@@ -38,26 +38,26 @@ M(1).left = 0; M(1).right = 5; M(1).matrix = [-1,0,0,0];
 % system dynamics
 element.dynamics = '[a*cos(u1); a*sin(u1); y1; y2]';
 element.parameter_list = 'a';
-element.parameter_values = [p.a];
+element.parameter_values = [auxdata.a];
 
 % simple bounds
 UB(1).right = 4; UB(1).matrix = [0,0,0,0]; % initial states
 LB(1).right = 4; LB(1).matrix = [0,0,0,0];
-UB(2).right = 5; UB(2).matrix = [inf,0,inf,p.h]; % final states
-LB(2).right = 5; LB(2).matrix = [-inf,0,-inf,p.h];
+UB(2).right = 5; UB(2).matrix = [inf,0,inf,auxdata.h]; % final states
+LB(2).right = 5; LB(2).matrix = [-inf,0,-inf,auxdata.h];
 UB(3).right = 1; UB(3).matrix = pi; % controls
 LB(3).right = 1; LB(3).matrix = -pi;
 UB(4).right = 2; UB(4).matrix = [inf,inf,inf,inf]; % states
 LB(4).right = 2; LB(4).matrix = [-inf,-inf,-inf,0];
 
 % guess
-Y0 = [[0,0,0,0];[0,0,0,p.h]];
+Y0 = [[0,0,0,0];[0,0,0,auxdata.h]];
 U0 = [[0];[0]];
 setup.guess.X = [U0,Y0];
 
 % combine structures
 setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

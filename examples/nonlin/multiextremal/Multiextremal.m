@@ -11,15 +11,15 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = Multiextremal(varargin)
-% input arguments can be provided in the format 'Multiextremal(p,opts)'
+% input arguments can be provided in the format 'Multiextremal(auxdata,opts)'
 
 % set local functions
 ex_opts = @Multiextremal_opts; % options function
 ex_output = @Multiextremal_output; % output function
 ex_plot = @Multiextremal_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 testnum = 6; % 4-12 from the reference above
@@ -106,7 +106,7 @@ switch testnum
 end
 %% setup
 % time horizon
-p.t0 = 0; p.tf = tf;
+auxdata.t0 = 0; auxdata.tf = tf;
 
 % number of controls, states, and parameters
 n.ny = 2; n.nu = 1;
@@ -132,7 +132,7 @@ setup.guess.X = [U0,Y0];
 
 % combine structures
 setup.element = element; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 if exist('M','var')
 	setup.M = M;
 end

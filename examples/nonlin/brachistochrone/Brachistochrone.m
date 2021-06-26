@@ -10,41 +10,41 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = Brachistochrone(varargin)
-% input arguments can be provided in the format 'Brachistochrone(p,opts)'
+% input arguments can be provided in the format 'Brachistochrone(auxdata,opts)'
 
 % set local functions
 ex_opts = @Brachistochrone_opts; % options function
 ex_output = @Brachistochrone_output; % output function
 ex_plot = @Brachistochrone_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
-p.casenum = 2; % see below
+auxdata.casenum = 2; % see below
 
-switch p.casenum
+switch auxdata.casenum
     case 1 % final x and y specified
-    p.g = 10;
-    p.xf = 2;
-    p.yf = 2;
+    auxdata.g = 10;
+    auxdata.xf = 2;
+    auxdata.yf = 2;
     case 2 % final x and y specified
-    p.g = 10;
-    p.xf = 10;
-    p.yf = 2;
+    auxdata.g = 10;
+    auxdata.xf = 10;
+    auxdata.yf = 2;
     case 3 % final x specified
-    p.g = 32.1740;
-    p.xf = 1;
+    auxdata.g = 32.1740;
+    auxdata.xf = 1;
     case 4 % final x specified with path constraint
-    p.g = 32.1740;
-    p.xf = 1;
-    p.h = 0.1;
-    p.theta = atan(0.5);
+    auxdata.g = 32.1740;
+    auxdata.xf = 1;
+    auxdata.h = 0.1;
+    auxdata.theta = atan(0.5);
 end
 
 %% setup
 % time horizon
-p.t0 = 0; p.tf = 1;
+auxdata.t0 = 0; auxdata.tf = 1;
 
 % number of controls, states, and parameters
 n.nu = 1; n.ny = 3; n.np = 1;
@@ -60,19 +60,19 @@ LB(3).right = 1; LB(3).matrix = -pi;
 UB(4).right = 3; UB(4).matrix = 200; % parameters
 LB(4).right = 3; LB(4).matrix = 0;
 
-switch p.casenum
+switch auxdata.casenum
     case {1,2}
     % system dynamics
     element.dynamics = '[p1*y3*sin(u1); p1*y3*cos(u1); p1*g*cos(u1)]';
     element.parameter_list = 'g';
-    element.parameter_values = [p.g];
+    element.parameter_values = [auxdata.g];
 
     % simple bounds
-    UB(2).right = 5; UB(2).matrix = [p.xf,p.yf,inf]; % final states
-    LB(2).right = 5; LB(2).matrix = [p.xf,p.yf,-inf];
+    UB(2).right = 5; UB(2).matrix = [auxdata.xf,auxdata.yf,inf]; % final states
+    LB(2).right = 5; LB(2).matrix = [auxdata.xf,auxdata.yf,-inf];
 
     % guess
-    Y0 = [[0,0,0];[p.xf,p.yf,0]];
+    Y0 = [[0,0,0];[auxdata.xf,auxdata.yf,0]];
     U0 = [[0];[0]];
     P0 = [[1];[1]];
     setup.guess.X = [U0,Y0,P0];
@@ -81,28 +81,28 @@ switch p.casenum
     % system dynamics
     element.dynamics = '[p1*y3*cos(u1); p1*y3*sin(u1); p1*g*sin(u1)]';
     element.parameter_list = 'g';
-    element.parameter_values = [p.g];
+    element.parameter_values = [auxdata.g];
 
     % simple bounds
-    UB(2).right = 5; UB(2).matrix = [p.xf,inf,inf]; % final states
-    LB(2).right = 5; LB(2).matrix = [p.xf,-inf,-inf];
+    UB(2).right = 5; UB(2).matrix = [auxdata.xf,inf,inf]; % final states
+    LB(2).right = 5; LB(2).matrix = [auxdata.xf,-inf,-inf];
 
     % guess
-    Y0 = [[0,0,0];[p.xf,0,0]];
+    Y0 = [[0,0,0];[auxdata.xf,0,0]];
     U0 = [[0];[0]];
     P0 = [[1];[1]];
     setup.guess.X = [U0,Y0,P0];
 
 end
 
-if p.casenum == 4
+if auxdata.casenum == 4
     % state inequality constraint
     element.g = 'y2 - y1/2 - 0.1'; % hard-coded at the moment
 end
 
 % combine structures
 setup.element = element; setup.M = M; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

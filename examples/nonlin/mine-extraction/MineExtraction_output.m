@@ -10,10 +10,10 @@
 function [O,sol] = MineExtraction_output(T,U,Y,P,F,in,opts)
 
 % extract parameter structure
-p = in.p;
-a = p.a;
-Tf = p.tf;
-x0 = p.x0;
+auxdata = in.auxdata;
+a = auxdata.a;
+Tf = auxdata.tf;
+x0 = auxdata.x0;
 
 % solution on T
 sol(1).T = T;

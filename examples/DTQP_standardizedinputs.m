@@ -7,10 +7,10 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [p,opts] = DTQP_standardizedinputs(f,in)
+function [auxdata,opts] = DTQP_standardizedinputs(f,in)
 
 % initialize
-p = [];
+auxdata = [];
 
 % number of inputs
 n = length(in);
@@ -20,7 +20,7 @@ opts = feval(f);
 
 % potentially add inputs to p or opts
 if n >= 1
-    p = in{1};
+    auxdata = in{1};
 end
 if n >= 2
     opts = in{2};

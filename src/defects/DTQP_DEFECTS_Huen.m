@@ -11,7 +11,7 @@ function [Aeq,beq] = DTQP_DEFECTS_Huen(A,B,G,d,in,opts)
 
 % extract some of the variables
 nu = in.nu; ny = in.ny; np = in.np; nd = in.nd; nx = in.nx;
-p = in.p; nt = in.nt; t = in.t; h = in.h; tm = in.tm;
+auxdata = in.auxdata; nt = in.nt; t = in.t; h = in.h; tm = in.tm;
 
 % matrix form of I in the formulas
 K = kron(eye(ny),ones(nt-1,1));
@@ -23,16 +23,16 @@ Isav = {}; Jsav = {}; Vsav = {};
 % calculate matrices and sequencing vectors
 %--------------------------------------------------------------------------
 % find time dependent matrices
-At = DTQP_tmultiprod(A,p,t);
-Bt = DTQP_tmultiprod(B,p,t);
-Gt = DTQP_tmultiprod(G,p,t);
-dt = DTQP_tmultiprod(d,p,t);
+At = DTQP_tmultiprod(A,auxdata,t);
+Bt = DTQP_tmultiprod(B,auxdata,t);
+Gt = DTQP_tmultiprod(G,auxdata,t);
+dt = DTQP_tmultiprod(d,auxdata,t);
 
 % find matrix values for intermediate time points
-As = DTQP_tmultiprod(A,p,tm);
-Bs = DTQP_tmultiprod(B,p,tm);
-Gs = DTQP_tmultiprod(G,p,tm);
-ds = DTQP_tmultiprod(d,p,tm);
+As = DTQP_tmultiprod(A,auxdata,tm);
+Bs = DTQP_tmultiprod(B,auxdata,tm);
+Gs = DTQP_tmultiprod(G,auxdata,tm);
+ds = DTQP_tmultiprod(d,auxdata,tm);
 
 % time indexing vectors
 Im = 1:nt-1;

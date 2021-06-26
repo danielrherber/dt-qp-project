@@ -9,15 +9,15 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = OutputTracking(varargin)
-% input arguments can be provided in the format 'OutputTracking(p,opts)'
+% input arguments can be provided in the format 'OutputTracking(auxdata,opts)'
 
 % set local functions
 ex_opts = @OutputTracking_opts; % options function
 ex_output = @OutputTracking_output; % output function
 ex_plot = @OutputTracking_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 tf = 50; % final time
@@ -38,7 +38,8 @@ Q = eye(no); % state penalty
 [o,W] = OutputTracking_o(no);
 
 % save to parameter structure
-p.x0 = x0; p.A = A; p.B = B; p.C = C; p.R = R; p.Q = Q; p.W = W; p.o = o;
+auxdata.x0 = x0; auxdata.A = A; auxdata.B = B; auxdata.C = C;
+auxdata.R = R; auxdata.Q = Q; auxdata.W = W; auxdata.o = o;
 
 %% setup
 % Lagrange term
@@ -53,7 +54,7 @@ LB(1).right = 4; LB(1).matrix = x0; % initial states
 
 % combine structures
 setup.A = A; setup.B = B; setup.L = L;
-setup.UB = UB; setup.LB = LB; setup.tf = tf; setup.p = p;
+setup.UB = UB; setup.LB = LB; setup.tf = tf; setup.auxdata = auxdata;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

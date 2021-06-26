@@ -11,15 +11,15 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = FreeFlyingRobot(varargin)
-% input arguments can be provided in the format 'FreeFlyingRobot(p,opts)'
+% input arguments can be provided in the format 'FreeFlyingRobot(auxdata,opts)'
 
 % set local functions
 ex_opts = @FreeFlyingRobot_opts;
 ex_output = @FreeFlyingRobot_output;
 ex_plot = @FreeFlyingRobot_plot;
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 tf = 12;
@@ -27,7 +27,7 @@ a = 0.2; b = 0.2;
 
 %% setup
 % time horizon
-p.t0 = 0; p.tf = tf;
+auxdata.t0 = 0; auxdata.tf = tf;
 
 % number of controls, states, and parameters
 n.nu = 4; n.ny = 6;
@@ -75,7 +75,7 @@ setup.scaling(2).matrix = [10,10,pi/2,1,1,1];
 
 % combine structures
 setup.element = element; setup.UB = UB; setup.LB = LB;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

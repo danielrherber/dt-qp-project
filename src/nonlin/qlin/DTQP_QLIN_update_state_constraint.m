@@ -18,7 +18,7 @@ oy = element.oy;
 
 % get the linearized matrix values
 B = rand(opts.dt.nt,oy.ny);
-T = linspace(setup.p.t0,setup.p.tf,opts.dt.nt)';
+T = linspace(setup.auxdata.t0,setup.auxdata.tf,opts.dt.nt)';
 X = [B];
 param = [];
 A = TaylorConvert(Liny.A,T,X,param);

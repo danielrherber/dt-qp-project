@@ -10,14 +10,14 @@
 function [O,sol] = BrysonHo64_output(T,U,Y,P,F,in,opts)
 
 % extract parameter structure
-p = in.p;
+auxdata = in.auxdata;
 
 % transform F
 F = 2*pi*sqrt(F);
 
 % solution on T
 sol(1).T = T;
-[U2,Y2,F2] = BrysonHo64_solution(p.a,p.l,T);
+[U2,Y2,F2] = BrysonHo64_solution(auxdata.a,auxdata.l,T);
 sol(1).U = U2;
 sol(1).Y = Y2;
 sol(1).F = F2;
@@ -25,7 +25,7 @@ sol(1).F = F2;
 % solution on high resolution T
 if opts.general.plotflag
     sol(2).T = linspace(in.t0,in.tf,1e4)';
-    [U2,Y2,F2] = BrysonHo64_solution(p.a,p.l,sol(2).T);
+    [U2,Y2,F2] = BrysonHo64_solution(auxdata.a,auxdata.l,sol(2).T);
     sol(2).U = U2;
     sol(2).Y = Y2;
     sol(2).F = F2;

@@ -10,10 +10,10 @@
 function [O,sol] = SimpleSASA_output(T,U,Y,P,F,in,opts)
 
 % extract parameter structure
-p = in.p;
-J = p.J;
-umax = p.umax;
-f = p.tf;
+auxdata = in.auxdata;
+J = auxdata.J;
+umax = auxdata.umax;
+f = auxdata.tf;
 
 % transform F
 F = abs(F);

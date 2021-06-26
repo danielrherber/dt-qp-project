@@ -11,21 +11,21 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = Nonlinear1D(varargin)
-% input arguments can be provided in the format 'Nonlinear1D(p,opts)'
+% input arguments can be provided in the format 'Nonlinear1D(auxdata,opts)'
 
 % set local functions
 ex_opts = @Nonlinear1D_opts; % options function
 ex_output = @Nonlinear1D_output; % output function
 ex_plot = @Nonlinear1D_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 
 %% setup
 % time horizon
-p.t0 = 0; p.tf = 5;
+auxdata.t0 = 0; auxdata.tf = 5;
 
 % number of controls, states, and parameters
 n.nu = 1; n.ny = 1;
@@ -51,7 +51,7 @@ setup.guess.X = [U0,Y0];
 
 % combine structures
 setup.element = element; setup.UB = UB; setup.LB = LB; setup.L = L;
-setup.t0 = p.t0; setup.tf = p.tf; setup.p = p; setup.n = n;
+setup.t0 = auxdata.t0; setup.tf = auxdata.tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

@@ -10,15 +10,15 @@
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
 function varargout = Tuberculosis(varargin)
-% input arguments can be provided in the format 'Tuberculosis(p,opts)'
+% input arguments can be provided in the format 'Tuberculosis(auxdata,opts)'
 
 % set local functions
 ex_opts = @Tuberculosis_opts; % options function
 ex_output = @Tuberculosis_output; % output function
 ex_plot = @Tuberculosis_plot; % plot function
 
-% set p and opts (see local_opts)
-[p,opts] = DTQP_standardizedinputs(ex_opts,varargin);
+% set auxdata and opts (see local_opts)
+[auxdata,opts] = DTQP_standardizedinputs(ex_opts,varargin);
 
 %% tunable parameters
 beta1 = 13;
@@ -106,7 +106,7 @@ setup.scaling(2).matrix = ([S0;L10;I10;L20;I20;T0]+Nmax)/2;
 
 % combine structures
 setup.element = element; setup.L = L; setup.UB = UB; setup.LB = LB; setup.Y = Y;
-setup.t0 = t0; setup.tf = tf; setup.p = p; setup.n = n;
+setup.t0 = t0; setup.tf = tf; setup.auxdata = auxdata; setup.n = n;
 
 %% solve
 [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts);

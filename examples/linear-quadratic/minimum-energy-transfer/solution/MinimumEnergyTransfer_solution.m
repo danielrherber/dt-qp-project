@@ -10,11 +10,11 @@
 function [U,Y,F] = MinimumEnergyTransfer_solution(T,in)
 
 % extract
-p = in.p;
-A = full(p.A);
-B = full(p.B);
-y0 = p.y0;
-yf = p.yf;
+auxdata = in.auxdata;
+A = full(auxdata.A);
+B = full(auxdata.B);
+y0 = auxdata.y0;
+yf = auxdata.yf;
 t0 = in.t0;
 tf = in.tf;
 
