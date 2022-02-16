@@ -35,6 +35,9 @@ switch upper(opts.solver.function)
     case 'QPOASES' % https://github.com/coin-or/qpOASES
     [X,F,in,opts] = DTQP_SOLVER_qpoases(H,f,A,b,Aeq,beq,lb,ub,in,opts);
     %----------------------------------------------------------------------
+    case 'OSQP' % https://github.com/osqp/osqp-matlab
+    [X,F,in,opts] = DTQP_SOLVER_osqp(H,f,A,b,Aeq,beq,lb,ub,in,opts);
+    %----------------------------------------------------------------------
     case 'IPFMINCON' % MATLAB fmincon solver with interior point algorithm
     [X,F,in,opts] = DTQP_SOLVER_ipfmincon(H,f,A,b,Aeq,beq,lb,ub,in,opts);
     %----------------------------------------------------------------------

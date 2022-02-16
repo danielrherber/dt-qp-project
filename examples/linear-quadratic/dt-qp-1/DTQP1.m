@@ -37,6 +37,7 @@ L(5).left = 0; L(5).right = 0; L(5).matrix{1} = @(t) 5*(auxdata.g(t)).^2; % 5*g^
 
 % Mayer term
 M(1).left = 0; M(1).right = 3; M(1).matrix = 1; % p1
+
 % y2(t0)?y2(tf) = 0, equality constraint
 Y(1).linear(1).right = 4; Y(1).linear(1).matrix = [0;1;0;0]; % y2(t0)
 Y(1).linear(2).right = 5; Y(1).linear(2).matrix = [0;-1;0;0]; % -y2(tf)

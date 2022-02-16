@@ -10,6 +10,7 @@
 | Bryson Ho 64 | [bryson-ho-64](bryson-ho-64/) | Bry75 | closed-form |
 | Chemical Reactor | [chemical-reactor](chemical-reactor/) | Cit69 |  |
 | Container Crane | [container-crane](container-crane/) | Aug01 |  |
+| DynamicSoaring | [dynamic-soaring](dynamic-soaring/) | Zhao04 |  |
 | Free Flying Robot | [free-flying-robot](free-flying-robot/) | Bett10 |  |
 | HagerHouRao1 | [hager-hou-rao-1](hager-hou-rao-1/) | Hag16 | closed-form |
 | Hang Glider | [hang-glider](hang-glider/) | Bul93 |  |
@@ -61,3 +62,4 @@
 - [**Ross07**] I. M. Ross, Q. Gong, and P. Sekhavat, "*Low-Thrust, High-Accuracy Trajectory Optimization*," Journal of Guidance, Control, and Dynamics, vol. 30, no. 4, pp. 921–933, Jul. 2007, doi: 10.2514/1.23181
 - [**Van01**] R. J. Vanderbei, "*Case Studies in Trajectory Optimization: Trains, Planes, and Other Pastimes*," Optimization and Engineering, vol. 2, no. 2, pp. 215-243, 2001, doi: 10.1023/a:1013145328012
 - [**Yu12**] A. Yu. Gornov, T. S. Zarodnyuk, T. I. Madzhara, A. V. Daneeva, and I. A. Veyalko, "*A Collection of Test Multiextremal Optimal Control Problems*", in Optimization, Simulation, and Control, Springer New York, 2012, pp. 257–274 [Online]. Available: http://dx.doi.org/10.1007/978-1-4614-5131-0_16
+- [**Zhao04**] Y. J. Zhao, "*Optimal Pattern of Glider Dynamic Soaring*," Optimal Control Applications and Methods, vol. 25, no. 2, pp. 67-89, 2004, doi: 10.1002/oca.710

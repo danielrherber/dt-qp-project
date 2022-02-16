@@ -37,7 +37,7 @@ end
 
 % path for saving
 if ~isfield(opts.general,'path')
-    opts.general.path = mfoldername(mfilename('fullpath'),'_private');
+    opts.general.path = mfoldername(mfilename('fullpath'),'.private');
 end
 
 % controls the displayed diagnostics in the command window
@@ -250,6 +250,7 @@ if ~isfield(opts.solver,'function')
     opts.solver.function = 'quadprog'; % MATLAB quadprog
     % opts.solver.function = 'cvx'; % see DTQP_SOLVER_cvx.m
     % opts.solver.function = 'qpoases'; % see DTQP_SOLVER_qpoases.m
+    % opts.solver.function = 'osqp'; % see DTQP_SOLVER_osqp.m
     % opts.solver.function = 'ipfmincon'; % see DTQP_SOLVER_ipfmincon.m
 end
 

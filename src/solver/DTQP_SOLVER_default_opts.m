@@ -55,6 +55,17 @@ switch upper(opts.solver.function)
         end
     end
     %----------------------------------------------------------------------
+    case 'OSQP' % see DTQP_SOLVER_osqp.m
+    % tolerance
+    if ~isfield(opts.solver,'tolerance')
+        opts.solver.tolerance = 1e-4;
+    end
+
+    % maximum iterations
+    if ~isfield(opts.solver,'maxiters')
+        opts.solver.maxiters = 100000;
+    end
+    %----------------------------------------------------------------------
     case 'IPFMINCON' % see DTQP_SOLVER_ipfmincon.m
     % tolerance
     if ~isfield(opts.solver,'tolerance')
