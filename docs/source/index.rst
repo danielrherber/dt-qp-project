@@ -1,13 +1,9 @@
-Welcome to Lumache's documentation!
+Welcome to DTQP's documentation!
 ===================================
 
-**Lumache** (/lu'make/) is a Python library for cooks and food lovers
-that creates recipes mixing random ingredients.
-It pulls data from the `Open Food Facts database <https://world.openfoodfacts.org/>`_
-and offers a *simple* and *intuitive* API.
+**DTQP** project solves linear-quadratic dynamic optimization (LQDO) problems using direct transcription (DT) and quadratic programming (QP).
 
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project.
+Check out the :doc:`getting-started` section for further information, including :ref:`installation` information.
 
 .. note::
 
@@ -18,5 +14,6 @@ Contents
 
 .. toctree::
 
-   usage
-   api
+   getting-started
+   basics
+   examples
