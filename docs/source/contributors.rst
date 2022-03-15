@@ -1,5 +1,6 @@
-Contributors
-============
+********************
+List of Contributors
+********************
 
 * `Daniel R. Herber <https://github.com/danielrherber>`_ (primary maintainer and contact)
 
