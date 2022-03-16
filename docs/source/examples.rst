@@ -2,13 +2,13 @@
 Examples
 ********
 
-.. note::
-
-   Add some of the examples.
-
-
 Linear-Quadratic Examples
 =========================
+
+.. toctree::
+   :titlesonly:
+
+   /examples/BrysonHo166.rst
 
 Nonlinear Examples
 ==================

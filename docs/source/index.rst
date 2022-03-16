@@ -12,9 +12,12 @@ Check out the :doc:`getting-started` section for further information, including 
    This project is under active development on `GitHub <GitHub_>`_.
 
 .. toctree::
+   :maxdepth: 3
+   :includehidden:
 
    getting-started
    basics
    examples
+   references
    glossary
    contributors
