@@ -1,0 +1,31 @@
+%% formulation
+\documentclass{standalone}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{\theta(t),t_f} \quad & t_f \\
+\text{subject to:} \quad & \begin{bmatrix}
+\dot{x} \\ \dot{y}  \\ \dot{v}_x  \\ \dot{v}_y \\ \dot{m}
+\end{bmatrix} = \begin{bmatrix}
+v_x \\
+v_y \\
+\frac{1}{m}\left( T \cos(\theta) - 0.5 C_D S D v_x^2 \right) \\
+\frac{1}{m}\left( T \sin(\theta) - 0.5 C_D S D v_y^2 \right) - g \\
+-\frac{T}{g I_{\mathrm{sp}}}
+\end{bmatrix} \\
+& (x,y,v_x,v_y,m)(0) = (0,0,0,0,117000) \\
+& (y,v_x,v_y)(t_f) = (185000,7796.6961,0) \\
+& -\pi/2 \leq \theta(t) \leq \pi/2 \\
+\text{where:} \quad & D = \rho_{\mathrm{ref}}e^{-y/h_\mathrm{ref}}
+\end{align*}
+}}
+\end{document}
+
+%% solution

@@ -11,12 +11,14 @@
 | Chemical Reactor | [chemical-reactor](chemical-reactor/) | Cit69 |  |
 | Container Crane | [container-crane](container-crane/) | Aug01 |  |
 | DynamicSoaring | [dynamic-soaring](dynamic-soaring/) | Zhao04 |  |
+| Earth Launch | [earth-launch](earth-launch/) | Lon14 |  |
 | Free Flying Robot | [free-flying-robot](free-flying-robot/) | Bett10 |  |
 | HagerHouRao1 | [hager-hou-rao-1](hager-hou-rao-1/) | Hag16 | closed-form |
 | Hang Glider | [hang-glider](hang-glider/) | Bul93 |  |
 | HIV Immunology | [hiv-immunology](hiv-immunology/) | Jo02 |  |
 | Hypersensitive | [hypersensitive](hypersensitive/) | Rao00 |  |
 | Mine Extraction | [mine-extraction](mine-extraction/) |  | closed-form |
+| Mountain Car | [mountain-car](mountain-car/) | Mel14 |  |
 | Multiextremal | [multiextremal](multiextremal/) | Yu12 |  |
 | Neuenhofen Kerrigan X1 | [neuenhofen-kerrigan-x1](neuenhofen-kerrigan-x1/) | Neu20 | partial closed-form |
 | Neuenhofen Kerrigan X2 | [neuenhofen-kerrigan-x2](neuenhofen-kerrigan-x2/) | Neu20 | partial closed-form |
@@ -54,9 +56,11 @@
 - [**Her20**] D. R. Herber and A. K. Sundarrajan, "*On the uses of linear-quadratic methods in solving nonlinear dynamic optimization problems with direct transcription*", in ASME International Mechanical Engineering Congress & Exposition, 2020
 - [**Garg09**] D. Garg et al., "*"Direct Trajectory Optimization and Costate Estimation of General Optimal Control Problems Using a Radau Pseudospectral Method*", in AIAA Guidance, Navigation, and Control Conference, 2009, doi: 10.2514/6.2009-5989
 - [**Jo02**] H. R. Joshi, "*Optimal control of an HIV immunology model*," Optimal Control Applications and Methods, vol. 23, no. 4, pp. 199–213, 2002, doi: 10.1002/oca.710
-- [**Kim04**] J.-H. R. Kim, G. L. Lippi, and H. Maurer, "*Minimizing the transition time in lasers by optimal control methods*", Physica D: Nonlinear Phenomena, vol. 191, no. 3–4, pp. 238–260, May 2004, doi: 10.1016/j.physd.2003.12.002. [Online]. Available: http://dx.doi.org/10.1016/j.physd.2003.12.002 
+- [**Kim04**] J.-H. R. Kim, G. L. Lippi, and H. Maurer, "*Minimizing the transition time in lasers by optimal control methods*", Physica D: Nonlinear Phenomena, vol. 191, no. 3–4, pp. 238–260, May 2004, doi: 10.1016/j.physd.2003.12.002. [Online]. Available: http://dx.doi.org/10.1016/j.physd.2003.12.002
 - [**Led08**] U. Ledzewicz and H. Schättler, "*Analysis of optimal controls for a mathematical model of tumour anti-angiogenesis*,"" Optimal Control Applications and Methods, vol. 29, no. 1, pp. 41–57, Jan. 2008, doi: 10.1002/oca.814
+- [**Lon14**] J. M. Longuski, J. J. Guzmán, and J. E. Prussing, *Optimal Control with Aerospace Applications*. Springer New York, 2014 [Online]. Available: http://dx.doi.org/10.1007/978-1-4614-8945-0
 - [**Lu00**] R. Luus, *Iterative Dynamic Programming*. CRC Press, 2000, isbn: 1584881488
+- [**Mel14**] A. A. Melnikov, A. Makmal, H. J. Briegel, "*Projective Simulation Applied to the Grid-World and the Mountain-Car Problem*", ArXiv:1405.5459 [Cs], May 2014. arXiv.org, http://arxiv.org/abs/1405.5459
 - [**Neu20**] M. P. Neuenhofen and E. C. Kerrigan, "*An integral penalty-barrier direct transcription method for optimal control*," 2020, arXiv:2009.06217
 - [**Rao00**] A. V. Rao and K. D. Mease, "*Eigenvector approximate dichotomic basis method for solving hyper-sensitive optimal control problems*, Optimal Control Applications and Methods, vol. 21, no. 1, pp. 1–19, Jan. 2000, doi: 10.1002/(SICI)1099-1514(200001/02)21:1<1::AID-OCA646>3.0.CO;2-V
 - [**Ross07**] I. M. Ross, Q. Gong, and P. Sekhavat, "*Low-Thrust, High-Accuracy Trajectory Optimization*," Journal of Guidance, Control, and Dynamics, vol. 30, no. 4, pp. 921–933, Jul. 2007, doi: 10.2514/1.23181
