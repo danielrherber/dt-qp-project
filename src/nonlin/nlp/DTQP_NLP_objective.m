@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_IPFMINCON_objective.m
+% DTQP_NLP_objective.m
 % Compute objective function value and gradient
 %--------------------------------------------------------------------------
 %
@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [fo,go] = DTQP_IPFMINCON_objective(X,obj,in,opts,Hin,fin)
+function [fo,go] = DTQP_NLP_objective(X,obj,in,opts,Hin,fin)
 
 % extract
 auxdata = in.auxdata; t = in.t; np = in.np; nt = in.nt; ini = in.i; param = in.param;

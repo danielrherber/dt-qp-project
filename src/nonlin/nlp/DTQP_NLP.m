@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_IPFMINCON.m
+% DTQP_NLP.m
 % Prepare and solve NLDO problem using interior point fmincon
 %--------------------------------------------------------------------------
 %
@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [T,U,Y,P,F,in,opts] = DTQP_IPFMINCON(setup,opts)
+function [T,U,Y,P,F,in,opts] = DTQP_NLP(setup,opts)
 
 % initialize some stuff
 [setup,in] = DTQP_initialize(setup,opts.dt);
@@ -61,7 +61,7 @@ if isfield(element,'lagrange')
     else
 
         % calculate derivatives
-        [obj,opts] = DTQP_IPFMINCON_symb(element.lagrange,in,linflagOb,false,opts);
+        [obj,opts] = DTQP_NLP_symb(element.lagrange,in,linflagOb,false,opts);
 
         % store to internal information structure
         in.internalinfo.obj = obj;
@@ -123,7 +123,7 @@ end
 if isfield(element,'dynamics')
 
     % determine nonlinear/linear dynamics
-    [Aeq1,beq1,dyn,Idyn,in,opts] = DTQP_IPFMINCON_dyn(element.dynamics,in,linflag,opts,0,nt);
+    [Aeq1,beq1,dyn,Idyn,in,opts] = DTQP_NLP_dyn(element.dynamics,in,linflag,opts,0,nt);
 
     % assign
     in.dyn = dyn;
@@ -153,7 +153,7 @@ end
 if isfield(element,'h')
 
     % determine nonlinear/linear equality constraints
-    [Y,ceq,Iceq,in,opts] = DTQP_IPFMINCON_c(element.h,in,linflag,opts,nI,nt,false);
+    [Y,ceq,Iceq,in,opts] = DTQP_NLP_c(element.h,in,linflag,opts,nI,nt,false);
 
     % combine
     setup.Y = [setup.Y;Y];
@@ -190,7 +190,7 @@ beq = [beq1;beq2]; % Aeq*X = beq
 if isfield(element,'g')
 
     % determine nonlinear/linear equality constraints
-    [Z,cin,Icin,in,opts] = DTQP_IPFMINCON_c(element.g,in,linflag,opts,0,nt,true);
+    [Z,cin,Icin,in,opts] = DTQP_NLP_c(element.g,in,linflag,opts,0,nt,true);
 
     % combine
     setup.Z = [setup.Z;Z];
@@ -315,7 +315,7 @@ end
 end
 
 % dynamics
-function [Aeq1,beq1,dyn,Idyn,in,opts] = DTQP_IPFMINCON_dyn(D,in,linflag,opts,nI,nt)
+function [Aeq1,beq1,dyn,Idyn,in,opts] = DTQP_NLP_dyn(D,in,linflag,opts,nI,nt)
 
 % check internal information is already available for the dynamics
 if isfield(in.internalinfo,'dyn')
@@ -326,7 +326,7 @@ if isfield(in.internalinfo,'dyn')
 else
 
     % calculate derivatives
-    [dyn,opts] = DTQP_IPFMINCON_symb(D,in,linflag,false,opts);
+    [dyn,opts] = DTQP_NLP_symb(D,in,linflag,false,opts);
 
     % store to internal information structure
     in.internalinfo.dyn = dyn;
@@ -402,7 +402,7 @@ end
 end
 
 % additional constraints
-function [YZ,c,Ic,in,opts] = DTQP_IPFMINCON_c(c,in,linflag,opts,nI,nt,cflag)
+function [YZ,c,Ic,in,opts] = DTQP_NLP_c(c,in,linflag,opts,nI,nt,cflag)
 
 % check if pathboundary was provided
 if isfield(c,'pathboundary')
@@ -429,7 +429,7 @@ if isfield(in.internalinfo,cstr)
 else
 
     % calculate derivatives
-    [c,opts] = DTQP_IPFMINCON_symb(c.func,in,linflag,true,opts);
+    [c,opts] = DTQP_NLP_symb(c.func,in,linflag,true,opts);
 
     % store to internal information structure
     if cflag

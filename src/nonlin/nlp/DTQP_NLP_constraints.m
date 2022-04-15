@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_IPFMINCON_constraints.m
+% DTQP_NLP_constraints.m
 % Compute nonlinear constraint values and Jacobians
 %--------------------------------------------------------------------------
 %
@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [G,H,DG,DH] = DTQP_IPFMINCON_constraints(X,dyn,cin,ceq,in,opts)
+function [G,H,DG,DH] = DTQP_NLP_constraints(X,dyn,cin,ceq,in,opts)
 
 % check if gradients are requested
 if nargout > 2
@@ -32,7 +32,8 @@ if ~isempty(dyn.Inon)
         case 'TR' % trapezoidal
             [z,Dz] = DTQP_DEFECTS_TR_nonlin(X,dyn,in,opts,Dflag);
         case 'HS' % Hermite-Simpson
-            error(' ')
+%             error(' ')
+            [z,Dz] = DTQP_DEFECTS_HS_nonlin(X,dyn,in,opts,Dflag);
         case 'RK4' % fourth-order Runge-Kutta
             error(' ')
         case 'PS' % pseudospectral (both LGL and CGL)
@@ -48,7 +49,7 @@ end
 
 % compute additional nonlinear equality constraints
 if ~isempty(ceq)
-    [h,Dh] = DTQP_IPFMINCON_additional_constraints(X,ceq,in,opts,Dflag);
+    [h,Dh] = DTQP_NLP_additional_constraints(X,ceq,in,opts,Dflag);
 else
     h = []; Dh = [];
 end
@@ -58,7 +59,7 @@ H = [z;h];
 
 % compute additional nonlinear inequality constraints
 if ~isempty(cin)
-    [G,DG] = DTQP_IPFMINCON_additional_constraints(X,cin,in,opts,Dflag);
+    [G,DG] = DTQP_NLP_additional_constraints(X,cin,in,opts,Dflag);
 else
     G = []; DG = [];
 end

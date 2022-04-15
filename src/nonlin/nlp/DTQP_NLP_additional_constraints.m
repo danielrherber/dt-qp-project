@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_IPFMINCON_additional_constraints.m
+% DTQP_NLP_additional_constraints.m
 % Compute nonlinear constraint values and Jacobian
 %--------------------------------------------------------------------------
 %
@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function [G,DG] = DTQP_IPFMINCON_additional_constraints(X,con,in,opts,Dflag)
+function [G,DG] = DTQP_NLP_additional_constraints(X,con,in,opts,Dflag)
 
 % extract
 nu = in.nu; ny = in.ny; np = in.np; nt = in.nt; nX = in.nx;

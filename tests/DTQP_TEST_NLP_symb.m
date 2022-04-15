@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
-% DTQP_TEST_ipfmincon_symb.m
-% Tests for DTQP_IPFMINCON_symb.m
+% DTQP_TEST_NLP_symb.m
+% Tests for DTQP_NLP_symb.m
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -115,7 +115,7 @@ for k = 1:length(tests)
 
     % run the test and time
     tic
-    E = DTQP_IPFMINCON_symb(f,o,linflag,true,opts);
+    E = DTQP_NLP_symb(f,o,linflag,true,opts);
     toc
 
     % test analysis

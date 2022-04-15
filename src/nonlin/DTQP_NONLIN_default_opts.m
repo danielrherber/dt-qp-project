@@ -26,7 +26,7 @@ end
 %--------------------------------------------------------------------------
 % ipfmincon options
 %-------------------------------------------------------------------------
-if strcmpi(opts.method.form,'nonlinearprogram')
+if any(strcmpi(opts.method.form,{'nonlinearprogram','nlp'}))
 
     % set solver function
     opts.solver.function = 'ipfmincon';
