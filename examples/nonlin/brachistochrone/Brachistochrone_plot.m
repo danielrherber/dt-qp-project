@@ -90,8 +90,8 @@ if solutionflag
 end
 
 % axis
-xlabel('$x$','fontsize',fontsize)
-ylabel('$y$','fontsize',fontsize)
+xlabel('$x$','fontsize',fontsize_)
+ylabel('$y$','fontsize',fontsize_)
 
 % legend
 Lv{end+1} = ['$(x,y)^{DT}$'];
@@ -100,7 +100,7 @@ if solutionflag
 end
 hL = legend(Lv);
 set(hL,'interpreter','latex','location','best',...
-    'fontsize',fontsize-4)
+    'fontsize',fontsize_-4)
 
 % configure axis
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>

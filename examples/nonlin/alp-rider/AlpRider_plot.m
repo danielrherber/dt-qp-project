@@ -55,8 +55,8 @@ plot(T2,3*exp(-12*(T2-3).^2) + 3*exp(-10*(T2-6).^2) + 3*exp(-6*(T2-10).^2) + 8*e
 plot(T,sum(Y.^2,2),'.','color',cArray(2,:),'markersize',12);
 
 % axis
-xlabel('$t$ (s)','fontsize',fontsize)
-ylabel('peak function','fontsize',fontsize)
+xlabel('$t$ (s)','fontsize',fontsize_)
+ylabel('peak function','fontsize',fontsize_)
 
 % legend
 Lv = {};
@@ -64,7 +64,7 @@ Lv{end+1} = ['peak function'];
 Lv{end+1} = ['$(\xi_1^2 + \xi_2^2 + \xi_3^2 + \xi_4^2)^{DT}$'];
 hL = legend(Lv);
 set(hL,'interpreter','latex','location','best',...
-    'fontsize',fontsize-4)
+    'fontsize',fontsize_-4)
 
 % configure axis
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>

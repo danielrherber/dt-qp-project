@@ -60,15 +60,15 @@ view(gca,[23 33.5]);
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 
 % axis labels
-xlabel('$x$','fontsize',fontsize)
-ylabel('$y$','fontsize',fontsize)
-zlabel('$z$','fontsize',fontsize)
+xlabel('$x$','fontsize',fontsize_)
+ylabel('$y$','fontsize',fontsize_)
+zlabel('$z$','fontsize',fontsize_)
 
 % z axis customization
 ha = gca; % get current axis handle
 ha.ZAxis.Color = bcolor; % change the x axis color to black (not a dark gray)
-ha.ZAxis.FontSize = fontsize-3; % change x tick font size
-ha.ZAxis.Label.FontSize = fontsize; % change z label font size
+ha.ZAxis.FontSize = fontsize_-3; % change x tick font size
+ha.ZAxis.Label.FontSize = fontsize_; % change z label font size
 ha.LineWidth = 1;
 
 % save
@@ -93,8 +93,8 @@ plot(T,auxdata.lmin*ones(size(T)),'--','linewidth',2)
 ylim([auxdata.lmin*1.1 auxdata.lmax*1.1])
 
 % axis labels
-xlabel('$t$ (time)','fontsize',fontsize)
-ylabel('$G$','fontsize',fontsize)
+xlabel('$t$ (time)','fontsize',fontsize_)
+ylabel('$G$','fontsize',fontsize_)
 
 % configure axis
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>

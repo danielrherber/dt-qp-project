@@ -18,7 +18,7 @@ switch flag
     else
         close all
     end
-    fontsize = 16;
+    fontsize_ = 16;
     wcolor = [1 1 1]; % white color
     bcolor = [0 0 0]; % black color
     set(0,'DefaultTextInterpreter','latex'); % change the text interpreter
@@ -29,16 +29,16 @@ switch flag
     ha = gca; % get current axis handle
     ha.XAxis.Color = bcolor; % change the x axis color to black (not a dark gray)
     ha.YAxis.Color = bcolor; % change the y axis color to black (not a dark gray)
-    ha.XAxis.FontSize = fontsize-3; % change x tick font size
-    ha.YAxis.FontSize = fontsize-3; % change y tick font size
-    ha.XAxis.Label.FontSize = fontsize; % change x label font size
-    ha.YAxis.Label.FontSize = fontsize; % change y label font size
+    ha.XAxis.FontSize = fontsize_-3; % change x tick font size
+    ha.YAxis.FontSize = fontsize_-3; % change y tick font size
+    ha.XAxis.Label.FontSize = fontsize_; % change x label font size
+    ha.YAxis.Label.FontSize = fontsize_; % change y label font size
     ha.Box = 'on'; % box on
     ha.Layer = 'top'; % place the axes on top of the data
     ha.LineWidth = 1; % increase axis line width
     %----------------------------------------------------------------------
     case 'legend' % requires: bcolor, fontsize
-    hl.FontSize = fontsize-3; % change legend font size
+    hl.FontSize = fontsize_-3; % change legend font size
     hl.EdgeColor = bcolor; % change the legend border to black (not a dark gray)
     %----------------------------------------------------------------------
     case 'save' % requires: opts, pathplots, figname
@@ -70,11 +70,11 @@ switch flag
     end
 
     % axis
-    xlabel('$t$ (time)','fontsize',fontsize)
-    ylabel('$x$ (states)','fontsize',fontsize)
+    xlabel('$t$ (time)','fontsize',fontsize_)
+    ylabel('$x$ (states)','fontsize',fontsize_)
 
     % legend
-    hL_opts = {'Interpreter','latex','FontSize',fontsize-4,...
+    hL_opts = {'Interpreter','latex','FontSize',fontsize_-4,...
         'Location','best','EdgeColor',bcolor};
     legend(hL_opts{:});
 
@@ -99,11 +99,11 @@ switch flag
     end
 
     % axis
-    xlabel('$t$ (time)','fontsize',fontsize)
-    ylabel('$u$ (controls)','fontsize',fontsize)
+    xlabel('$t$ (time)','fontsize',fontsize_)
+    ylabel('$u$ (controls)','fontsize',fontsize_)
 
     % legend
-    hL_opts = {'Interpreter','latex','FontSize',fontsize-4,...
+    hL_opts = {'Interpreter','latex','FontSize',fontsize_-4,...
         'Location','best','EdgeColor',bcolor};
     legend(hL_opts{:});
 
@@ -130,7 +130,7 @@ switch flag
     ha.YScale = 'log';
 
     % legend
-    hL_opts = {'Interpreter','latex','FontSize',fontsize-4,...
+    hL_opts = {'Interpreter','latex','FontSize',fontsize_-4,...
         'Location','best','EdgeColor',bcolor};
     legend(hL_opts{:});
 

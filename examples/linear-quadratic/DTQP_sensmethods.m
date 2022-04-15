@@ -112,7 +112,7 @@ function outputPlot(output,narray,LegendArray)
 set(0,'DefaultTextInterpreter','latex'); % change the text interpreter
 set(0,'DefaultLegendInterpreter','latex'); % change the legend interpreter
 set(0,'DefaultAxesTickLabelInterpreter','latex'); % change the tick interpreter
-fontsize = 16;
+fontsize_ = 16;
 map = turbo(length(LegendArray));
 figure('color',[1 1 1]); hold on
 
@@ -140,11 +140,11 @@ end
 % axis
 ha = gca; ha.XScale = 'log'; ha.YScale = 'log';
 xlim([narray(1) narray(end)])
-xlabel('$n_t$','fontsize',fontsize)
-ylabel(['output: ',output.label],'fontsize',fontsize)
+xlabel('$n_t$','fontsize',fontsize_)
+ylabel(['output: ',output.label],'fontsize',fontsize_)
 
 % legend
-legend(LegendArray,'location','best','fontsize',fontsize-8)
+legend(LegendArray,'location','best','fontsize',fontsize_-8)
 
 end
 
