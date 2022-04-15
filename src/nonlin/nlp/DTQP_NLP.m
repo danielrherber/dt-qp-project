@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % DTQP_NLP.m
-% Prepare and solve NLDO problem using interior point fmincon
+% Prepare and solve NLDO problem
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -27,7 +27,7 @@ element = setup.element;
 % initialize
 lqdoflag = true;
 in.Ilambda = [];
-linflag = opts.method.olqflag;
+olqflag = opts.method.olqflag;
 
 % set default field value
 if isfield(element,'parameter_values')
@@ -48,173 +48,46 @@ end
 %--------------------------------------------------------------------------
 % objective function
 %--------------------------------------------------------------------------
-if isfield(element,'lagrange')
-
-    linflagOb = false; % false only at the moment
-
-    % check internal information is already available for the objective
-    if isfield(in.internalinfo,'obj')
-
-        % extract
-        obj = in.internalinfo.obj;
-
-    else
-
-        % calculate derivatives
-        [obj,opts] = DTQP_NLP_symb(element.lagrange,in,linflagOb,false,opts);
-
-        % store to internal information structure
-        in.internalinfo.obj = obj;
-
-    end
-
-    % initialize empty QP objective terms
-    H = sparse([],[],[],in.nx,in.nx); f = sparse([],[],[],in.nx,1); c = 0;
-
-    % check if there are OLQ elements
-    if isfield(obj,'Ilin')
-
-        % check if there are any quadratic objective function terms
-        if ~isempty(obj.Ilin)
-
-            % assign
-            in.IDlin = obj.Ilin;
-            in.IDnon = obj.Inon;
-
-            % TODO: construct LQDO objective terms
-
-        end
-    end
-
-    % assign
-    in.obj = obj;
-
-    % NLDO problem if any nonlinear elements
-    % if ~isempty()
-        lqdoflag = false;
-    % end
-
-    % construct objective function matrices
-    H = DTQP_createH(setup.L,setup.M,in,opts); % create Hessian
-    f = DTQP_createf(setup.l,setup.m,in,opts); % create gradient
-    c = DTQP_createc(setup.cL,setup.cM,in,opts); % determine constants
-
-    % fmincon expects H directly
-    H = H/2;
-
-else % only LQDO objective function terms
-
-    % construct objective function matrices
-    H = DTQP_createH(setup.L,setup.M,in,opts); % create Hessian
-    f = DTQP_createf(setup.l,setup.m,in,opts); % create gradient
-    c = DTQP_createc(setup.cL,setup.cM,in,opts); % determine constants
-
-    % fmincon expects H directly
-    H = H/2;
-
-    % default field value
-    in.obj = [];
-
-end
+% parse nonlinear/linear objective terms
+[H,f,c,lqdoflag,in,opts] = DTQP_NLP_parse_objective(setup,in,opts);
 
 %--------------------------------------------------------------------------
 % dynamics
 %--------------------------------------------------------------------------
-if isfield(element,'dynamics')
+% parse nonlinear/linear dynamics
+[Aeq1,beq1,Idyn,in,opts,nI] = DTQP_NLP_parse_dynamics(setup,in,opts,olqflag,nt);
 
-    % determine nonlinear/linear dynamics
-    [Aeq1,beq1,dyn,Idyn,in,opts] = DTQP_NLP_dyn(element.dynamics,in,linflag,opts,0,nt);
-
-    % assign
-    in.dyn = dyn;
-    in.Ilambda.dyn = Idyn;
-
-    % current number of nonlinear equality constraints
-    nI = max(vertcat(in.Ilambda.dyn{:}));
-
-    % NLDO problem if any nonlinear elements
-    if ~isempty(Idyn)
-        lqdoflag = false;
-    end
-
-else % only LQDO dynamic equations
-
-    % construct linear defect constraint matrices
-    [Aeq1,beq1,in] = DTQP_DEFECTS(setup.A,setup.B,setup.G,setup.d,in,opts);
-
-    % default field value
-    in.dyn = [];
-
+% NLDO problem if any nonlinear elements
+if ~isempty(Idyn)
+    lqdoflag = false;
 end
 
 %--------------------------------------------------------------------------
 % general equality constraints
 %--------------------------------------------------------------------------
-if isfield(element,'h')
+% parse nonlinear/linear equality constraints
+[Aeq2,beq2,Ih,in,opts,setup] = DTQP_NLP_parse_additional_constraints(setup,in,opts,olqflag,nt,nI,false);
 
-    % determine nonlinear/linear equality constraints
-    [Y,ceq,Iceq,in,opts] = DTQP_NLP_c(element.h,in,linflag,opts,nI,nt,false);
-
-    % combine
-    setup.Y = [setup.Y;Y];
-
-    % create linear path and boundary inequality constraints
-    [Aeq2,beq2] = DTQP_create_YZ(setup.Y,in);
-
-    % assign
-    in.ceq = ceq;
-    in.Ilambda.ceq = Iceq;
-
-    % NLDO problem if any nonlinear elements
-    if ~isempty(Iceq)
-        lqdoflag = false;
-    end
-
-else % only LQDO equality constraints
-
-    % create linear path and boundary equality constraints
-    [Aeq2,beq2] = DTQP_create_YZ(setup.Y,in);
-
-    % default field value
-    in.ceq = [];
-
+% NLDO problem if any nonlinear elements
+if ~isempty(Ih)
+    lqdoflag = false;
 end
 
-% combine linear equality constraints
+%--------------------------------------------------------------------------
+% combine linear equality constraints (Aeq*X = beq)
+%--------------------------------------------------------------------------
 Aeq = [Aeq1;Aeq2];
-beq = [beq1;beq2]; % Aeq*X = beq
+beq = [beq1;beq2];
 
 %--------------------------------------------------------------------------
 % general inequality constraints
 %--------------------------------------------------------------------------
-if isfield(element,'g')
+% parse nonlinear/linear equality constraints
+[A,b,Ig,in,opts,setup] = DTQP_NLP_parse_additional_constraints(setup,in,opts,olqflag,nt,0,true);
 
-    % determine nonlinear/linear equality constraints
-    [Z,cin,Icin,in,opts] = DTQP_NLP_c(element.g,in,linflag,opts,0,nt,true);
-
-    % combine
-    setup.Z = [setup.Z;Z];
-
-    % create linear path and boundary inequality constraints
-    [A,b] = DTQP_create_YZ(setup.Z,in); % A*X <= b
-
-    % assign
-    in.cin = cin;
-    in.Ilambda.cin = Icin;
-
-    % NLDO problem if any nonlinear elements
-    if ~isempty(Icin)
-        lqdoflag = false;
-    end
-
-else % only LQDO inequality constraints
-
-    % create linear path and boundary inequality constraints
-    [A,b] = DTQP_create_YZ(setup.Z,in);
-
-    % default field value
-    in.cin = [];
-
+% NLDO problem if any nonlinear elements
+if ~isempty(Ig)
+    lqdoflag = false;
 end
 
 %--------------------------------------------------------------------------
@@ -277,9 +150,8 @@ if scalerowflag
 end
 
 %--------------------------------------------------------------------------
-% solve the optimization problem
+% check if this ended up as am LQDO problem
 %--------------------------------------------------------------------------
-% check if this ended up as a LQDO problem
 if lqdoflag
 
     % use quadprog instead of fmincon
@@ -290,7 +162,9 @@ if lqdoflag
 
 end
 
-% solve
+%--------------------------------------------------------------------------
+% solve the optimization problem
+%--------------------------------------------------------------------------
 [X,F,in,opts] = DTQP_SOLVER(H,f,A,b,Aeq,beq,lb,ub,in,opts);
 
 %--------------------------------------------------------------------------
@@ -310,253 +184,6 @@ P = reshape(X(((nu+ny)*nt+1:(nu+ny)*nt+np)),np,1); % parameters
 % check for zero-order hold method and nan final controls
 if strcmpi(opts.dt.defects,'ZO') || strcmpi(opts.dt.defects,'EF')
     U(end,:) = nan;
-end
-
-end
-
-% dynamics
-function [Aeq1,beq1,dyn,Idyn,in,opts] = DTQP_NLP_dyn(D,in,linflag,opts,nI,nt)
-
-% check internal information is already available for the dynamics
-if isfield(in.internalinfo,'dyn')
-
-    % extract
-    dyn = in.internalinfo.dyn;
-
-else
-
-    % calculate derivatives
-    [dyn,opts] = DTQP_NLP_symb(D,in,linflag,false,opts);
-
-    % store to internal information structure
-    in.internalinfo.dyn = dyn;
-
-end
-
-% number of constraints
-nz = length(dyn.f);
-
-% initialize
-Idyn = cell(nz,1);
-
-% go through each constraint
-for k = 1:nz
-
-    % check the method
-    if strcmpi(opts.dt.defects,'PS')
-        Ii = nI + (1:nt)';
-    else
-        Ii = nI + (1:nt-1)';
-    end
-
-    % update
-    nI = max(Ii);
-
-    % assign
-    Idyn{k} = Ii;
-
-end
-
-% initialize linear defect constraint matrices
-Aeq1 = zeros(0,in.nx); beq1 = zeros(0,1);
-
-% check if this field is present
-if isfield(dyn,'Ilin')
-
-    % check if there are any linear dynamic equations
-    if ~isempty(dyn.Ilin)
-
-        % convert to DTQP compatible functions
-        if ~isempty(dyn.A)
-            setup.A = DTQP_QLIN_update_tmatrix(dyn.A,[],[],in.param);
-        else
-            setup.A = [];
-        end
-        if ~isempty(dyn.B)
-            setup.B = DTQP_QLIN_update_tmatrix(dyn.B,[],[],in.param);
-        else
-            setup.B = [];
-        end
-        if ~isempty(dyn.G)
-            setup.G = DTQP_QLIN_update_tmatrix(dyn.G,[],[],in.param);
-        else
-            setup.G = [];
-        end
-        if ~isempty(dyn.d)
-            setup.d = DTQP_QLIN_update_tmatrix(dyn.d,[],[],in.param);
-            in.nd = size(setup.d,1); % update number of disturbances
-        else
-            setup.d = [];
-        end
-
-        % assign
-        in.IDlin = dyn.Ilin;
-        in.IDnon = dyn.Inon;
-
-        % construct linear defect constraints
-        [Aeq1,beq1,in] = DTQP_DEFECTS(setup.A,setup.B,setup.G,setup.d,in,opts);
-
-    end
-end
-
-end
-
-% additional constraints
-function [YZ,c,Ic,in,opts] = DTQP_NLP_c(c,in,linflag,opts,nI,nt,cflag)
-
-% check if pathboundary was provided
-if isfield(c,'pathboundary')
-    pathboundary = c.pathboundary;
-end
-
-% determine which type of constraint
-if cflag
-    cstr = 'cin';
-else
-    cstr = 'ceq';
-end
-
-% check internal information is already available for the additional constraints
-if isfield(in.internalinfo,cstr)
-
-    % extract
-    if cflag
-        c = in.internalinfo.cin;
-    else
-        c = in.internalinfo.ceq;
-    end
-
-else
-
-    % calculate derivatives
-    [c,opts] = DTQP_NLP_symb(c.func,in,linflag,true,opts);
-
-    % store to internal information structure
-    if cflag
-        in.internalinfo.cin = c;
-    else
-        in.internalinfo.ceq = c;
-    end
-
-end
-
-% number of constraints
-nz = length(c.f);
-
-% assign pathboundary or extract if determined symbolically
-if isfield(c,'pathboundary')
-	pathboundary = c.pathboundary;
-else
-    c.pathboundary = pathboundary;
-end
-
-% initialize
-Ic = cell(nz,1);
-
-% go through each constraint
-for k = 1:nz
-
-    % check if this is a path constraint
-    if pathboundary(k)
-        Ii = nI + (1:nt)';
-    else
-        Ii = nI + 1;
-    end
-
-    % update
-    nI = max(Ii);
-
-    % assign
-    Ic{k} = Ii;
-
-end
-
-% initialize
-YZ = [];
-
-% add to setup.Y structure
-for k = 1:length(c.Ilin)
-
-    % reset local index
-    idx2 = 0;
-
-    % states
-    if ~isempty(c.A)
-
-        % increment local index
-        idx2 = idx2 + 1;
-
-        % variable
-        YZ(k).linear(idx2).right = 2; % states
-
-        % assign
-        YZ(k).linear(idx2).matrix = c.A(k,:);
-
-    end
-
-    % controls
-    if ~isempty(c.B)
-
-        % increment local index
-        idx2 = idx2 + 1;
-
-        % variable
-        YZ(k).linear(idx2).right = 1; % controls
-
-        % assign
-        YZ(k).linear(idx2).matrix = c.B(k,:);
-
-    end
-
-    % parameters
-    if ~isempty(c.G)
-
-        % increment local index
-        idx2 = idx2 + 1;
-
-        % variable
-        YZ(k).linear(idx2).right = 3; % parameters
-
-        % assign
-        YZ(k).linear(idx2).matrix = c.G(k,:);
-
-    end
-
-    % initial states
-    if ~isempty(c.Ai)
-
-        % increment local index
-        idx2 = idx2 + 1;
-
-        % variable
-        YZ(k).linear(idx2).right = 4; % initial states
-
-        % assign
-        YZ(k).linear(idx2).matrix = c.Ai(k,:);
-
-    end
-
-    % final states
-    if ~isempty(c.Af)
-
-        % increment local index
-        idx2 = idx2 + 1;
-
-        % variable
-        YZ(k).linear(idx2).right = 5; % final states
-
-        % assign
-        YZ(k).linear(idx2).matrix = c.Af(k,:);
-
-    end
-
-    % constant (negative disturbance)
-    if ~isempty(c.d)
-
-        % assign
-        YZ(k).b = {'prod',-1,c.d(k,:)}; % constant
-
-    end
 end
 
 end
