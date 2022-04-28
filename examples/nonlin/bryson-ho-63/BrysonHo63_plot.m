@@ -53,8 +53,8 @@ plot(E(:,1),E(:,2),'linewidth',2,'color','k')
 plot(Y(:,1),Y(:,2),'linewidth',2,'color','r')
 
 % axis
-xlabel('$x$','fontsize',fontsize)
-ylabel('$y$','fontsize',fontsize)
+xlabel('$x$','fontsize',fontsize_)
+ylabel('$y$','fontsize',fontsize_)
 
 % configure axis
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
@@ -65,7 +65,7 @@ Lv{1} = '$(x/y)^{*}$';
 Lv{2} = '$(x/y)^{DT}$';
 hL = legend(Lv);
 set(hL,'interpreter','latex','location','best',...
-    'fontsize',fontsize-4)
+    'fontsize',fontsize_-4)
 
 % save
 figname = 'figure-xy'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>

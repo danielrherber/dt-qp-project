@@ -59,7 +59,7 @@ switch opts.method.derivatives
     o{end+1} = 'SpecifyObjectiveGradient';
     o{end+1} = true;
     o{end+1} = 'HessianFcn';
-    o{end+1} = @(x,lambda) DTQP_IPFMINCON_hessian(x,lambda,obj,dyn,cin,ceq,H,in,opts);
+    o{end+1} = @(x,lambda) DTQP_NLP_hessian(x,lambda,obj,dyn,cin,ceq,H,in,opts);
     %----------------------------------------------------------------------
 end
 
@@ -79,13 +79,13 @@ options = optimoptions(@fmincon,o{:});
 % TODO: handle other constraint cases
 if isempty(dyn)
     % solve the NLDO problem
-    [X,F,EXITFLAG,OUTPUT,LAMBDA] = fmincon(@(X) DTQP_IPFMINCON_objective(X,obj,in,opts,H,f),...
+    [X,F,EXITFLAG,OUTPUT,LAMBDA] = fmincon(@(X) DTQP_NLP_objective(X,obj,in,opts,H,f),...
         X0,A,b,Aeq,beq,lb,ub,[],options);
 else
     % solve the NLDO problem
-    [X,F,EXITFLAG,OUTPUT,LAMBDA] = fmincon(@(X) DTQP_IPFMINCON_objective(X,obj,in,opts,H,f),...
+    [X,F,EXITFLAG,OUTPUT,LAMBDA] = fmincon(@(X) DTQP_NLP_objective(X,obj,in,opts,H,f),...
         X0,A,b,Aeq,beq,lb,ub,...
-        @(X)DTQP_IPFMINCON_constraints(X,dyn,cin,ceq,in,opts),options);
+        @(X)DTQP_NLP_constraints(X,dyn,cin,ceq,in,opts),options);
 end
 
 % store output structure and multipliers

@@ -36,7 +36,7 @@ for i = [1,ny]
     Lv{end+1} = ['$\xi^{DT}_{',num2str(i),'}$'];
 end
 hL = legend(Lv{:}); % only the first two entries
-set(hL,'interpreter','latex','location','best','fontsize',fontsize-4)
+set(hL,'interpreter','latex','location','best','fontsize',fontsize_-4)
 
 % configure axis
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
@@ -66,7 +66,7 @@ for i = 1:size(U,2)
     Lv{end+1} = ['$u^{DT}_{',num2str(i),'}$'];
 end
 hL = legend(Lv{1:2});
-set(hL,'interpreter','latex','location','best','fontsize',fontsize-4)
+set(hL,'interpreter','latex','location','best','fontsize',fontsize_-4)
 
 % configure axis
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>

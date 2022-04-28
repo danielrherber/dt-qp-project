@@ -1,16 +1,18 @@
 %--------------------------------------------------------------------------
-% AlpRider_plot.m
-% Plot function for AlpRider example
+% EarthLaunch_plot.m
+% Plot function for EarthLaunch example
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Contributor : Athul K. Sundarrajan (AthulKrishnaSundarrajan on Github)
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function AlpRider_plot(T,U,Y,P,F,in,opts,sol)
+function EarthLaunch_plot(T,U,Y,P,F,in,opts,sol)
 
 if opts.general.plotflag
+
+% scale time
+T = P(1)*T;
 
 % preliminary plot options
 flag = 'preliminary'; DTQP_plotCommon %#ok<NASGU>
@@ -43,34 +45,31 @@ flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 figname = 'figure-control'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
 flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
-%% path constraint
+%% altitude vs. range
 figure('Color',wcolor); hold on
 
-% line colors
-cArray = lines(size(Y,2));
+% plot
+plot(Y(:,1)/1000,Y(:,2)/1000,'.','markersize',12,'color',cArray(1,:));
 
-% plot path constraint
-T2 = linspace(T(1),T(end),1e4)';
-plot(T2,3*exp(-12*(T2-3).^2) + 3*exp(-10*(T2-6).^2) + 3*exp(-6*(T2-10).^2) + 8*exp(-4*(T2-15).^2) + 0.01,'.','color',cArray(1,:),'markersize',12);
-plot(T,sum(Y.^2,2),'.','color',cArray(2,:),'markersize',12);
+% highlight final point
+ha = gca;
+plot(Y(end,1)/1000,Y(end,2)/1000,'k.','markersize',20)
+line([ha.XLim(1) Y(end,1)/1000],[Y(end,2) Y(end,2)]/1000,...
+    'linestyle','--','Color','k','LineWidth',1);
+text(ha.XLim(1)+1,Y(end,2)/1000-6,string(Y(end,2)/1000))
+line([Y(end,1) Y(end,1)]/1000,[ha.YLim(1) Y(end,2)/1000],...
+    'linestyle','--','Color','k','LineWidth',1);
+text(Y(end,1)/1000-15,ha.YLim(1)+6,string(Y(end,1)/1000))
 
 % axis
-xlabel('$t$ (s)','fontsize',fontsize_)
-ylabel('peak function','fontsize',fontsize_)
-
-% legend
-Lv = {};
-Lv{end+1} = ['peak function'];
-Lv{end+1} = ['$(\xi_1^2 + \xi_2^2 + \xi_3^2 + \xi_4^2)^{DT}$'];
-hL = legend(Lv);
-set(hL,'interpreter','latex','location','best',...
-    'fontsize',fontsize_-4)
+xlabel('range [km]','fontsize',16)
+ylabel('altitude [km]','fontsize',16)
 
 % configure axis
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 
 % save
-figname = 'figure-path'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
+figname = 'figure-altitude-range'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
 flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
 end

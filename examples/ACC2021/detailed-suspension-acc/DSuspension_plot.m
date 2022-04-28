@@ -12,7 +12,7 @@ function DSuspension_plot(T,U,Y,P,F,in,opts,sol)
 if opts.general.plotflag
 
 % preliminary plot options
-fontsize = 16;
+fontsize_ = 16;
 wcolor = [1 1 1]; % white color
 bcolor = [0 0 0]; % black color
 set(0,'DefaultTextInterpreter','latex'); % change the text interpreter
@@ -73,8 +73,8 @@ cArray = lines(1);
 plot(T,Y(:,1)+Y(:,3),'.-','color',cArray(1,:),'markersize',12,'linewidth',1.5);
 
 % axis
-xlabel('$t$ (time)','fontsize',fontsize)
-ylabel('$y_1+y_3$','fontsize',fontsize)
+xlabel('$t$ (time)','fontsize',fontsize_)
+ylabel('$y_1+y_3$','fontsize',fontsize_)
 
 % save
 figname = 'figure-y1+y3'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>

@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DTQP_IPFMINCON_hessian.m
+% DTQP_NLP_hessian.m
 % Compute Hessian of the Lagrangian
 %--------------------------------------------------------------------------
 %
@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/dt-qp-project
 %--------------------------------------------------------------------------
-function Ho = DTQP_IPFMINCON_hessian(X,lambda,obj,dyn,cin,ceq,Hin,in,opts)
+function Ho = DTQP_NLP_hessian(X,lambda,obj,dyn,cin,ceq,Hin,in,opts)
 
 % extract
 nu = in.nu; ny = in.ny; np = in.np; ini = in.i; nx = in.nx;

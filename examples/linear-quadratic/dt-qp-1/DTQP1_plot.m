@@ -41,7 +41,7 @@ hL = legend('$\xi_1^*$','$\xi_2^*$','$\xi_3^*$',...
     '$\xi_2^*(t_0) - \xi_2^*(t_f) = 0$',...
     '$\xi_2^* \leq g(t)$',...
     '$\max(\xi_3^*) \leq p^*$' );
-set(hL,'location','best','fontsize',fontsize-4,'box','on')
+set(hL,'location','best','fontsize',fontsize_-4,'box','on')
 
 % configure axis
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
@@ -70,7 +70,7 @@ ylabel('$u$')
 
 % legend
 hL = legend('$u_1^*$','$u_2^*$','$|u_2^*|\leq 10$');
-set(hL,'location','best','fontsize',fontsize-4,'box','on')
+set(hL,'location','best','fontsize',fontsize_-4,'box','on')
 
 % configure axis
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
@@ -99,7 +99,7 @@ ylim([-2.1 0.2])
 hL = legend('$\int_0^t \xi_1^*(s) ds$',...
     '$-\xi^*_1+u^*_2/12 \leq 0$',...
     '$\int_0^1 \xi^*_1(t) dt = 0$');
-set(hL,'location','best','fontsize',fontsize-4,'box','on')
+set(hL,'location','best','fontsize',fontsize_-4,'box','on')
 hL.Position = [0.3905041 0.372839 0.243739 0.188766];
 
 % configure axis

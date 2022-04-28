@@ -53,8 +53,8 @@ plot(T,U(:,1)-U(:,2),'.-','color',cArray(1,:),'markersize',12);
 plot(T,U(:,3)-U(:,4),'.-','color',cArray(2,:),'markersize',12);
 
 % axis
-xlabel('$t$ (s)','fontsize',fontsize)
-ylabel('$T$','fontsize',fontsize)
+xlabel('$t$ (s)','fontsize',fontsize_)
+ylabel('$T$','fontsize',fontsize_)
 
 % legend
 Lv = {};
@@ -62,7 +62,7 @@ Lv{end+1} = ['$T^{DT}_{',num2str(1),'}$'];
 Lv{end+1} = ['$T^{DT}_{',num2str(2),'}$'];
 hL = legend(Lv);
 set(hL,'interpreter','latex','location','best',...
-    'fontsize',fontsize-4)
+    'fontsize',fontsize_-4)
 
 % configure axis
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>

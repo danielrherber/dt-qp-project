@@ -1,0 +1,28 @@
+%% formulation
+\documentclass{standalone}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{u(t),x(t),v(t),t_f} \quad & t_f \\
+\text{subject to:} \quad & \begin{bmatrix}
+\dot{x} \\ \dot{v}
+\end{bmatrix} = \begin{bmatrix}
+v \\
+0.001 u - 0.0025 \cos(3x) \\
+\end{bmatrix} \\
+& (x,v)(0) = (-0.5,0) \\
+& x(t_f) = 0.5 \\
+& |u(t)| \leq 1 \\
+& v(t_f) \geq 0
+\end{align*}
+}}
+\end{document}
+
+%% solution
