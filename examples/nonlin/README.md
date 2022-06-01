@@ -31,6 +31,7 @@
 | Simple SASA | [simple-sasa](simple-sasa/) | Her17 | closed-form |
 | Simple Suspension | [simple-suspension](simple-suspension/) | Her20 |  |
 | Space Shuttle Reentry | [space-shuttle-reentry](space-shuttle-reentry/) | Bett10 |  |
+| TimeEnergyInterceptor | [time-energy-interceptor](time-energy-interceptor/) | Ban20 |  |
 | Train | [train](train/) | Van01 |  |
 | Transfer - Maximum Radius | [transfer-max-radius](transfer-max-radius/) | Bry75 |  |
 | Transfer - Minimum Fuel | [transfer-min-fuel](transfer-min-fuel/) | Ross07 |  |
@@ -43,6 +44,7 @@
 - [**Aly78**] G. M. Aly, "*The computation of optimal singular control*", International Journal of Control, vol. 28, no. 5, pp. 681–688, Nov. 1978, doi: 10.1080/00207177808922489. [Online]. Available: http://dx.doi.org/10.1080/00207177808922489
 - [**Aug01**] D. Augustin and H. Maurer, "*Sensitivity Analysis and Real-Time Control of a Container Crane under State Constraints*," in Online Optimization of Large Scale Systems, Springer Berlin Heidelberg, 2001, pp. 69–82
 - [**Ban05**] J. R. Banga, E. Balsa-Canto, C. G. Moles, and A. A. Alonso, "*Dynamic optimization of bioprocesses: Efficient and robust numerical strategies*", Journal of Biotechnology, vol. 117, no. 4, pp. 407–419, Jun. 2005, doi: 10.1016/j.jbiotec.2005.02.013. [Online]. Available: http://dx.doi.org/10.1016/j.jbiotec.2005.02.013
+- [**Ban20**] A. Banerjee, M. Nabi, and T. Raghunathan, "*Time-energy optimal guidance strategy for realistic interceptor using pseudospectral method*", Transactions of the Institute of Measurement and Control, vol. 42, no. 13. SAGE Publications, pp. 2361–2371, Apr. 21, 2020 [Online]. Available: http://dx.doi.org/10.1177/0142331220910919 
 - [**Bett10**] J. T. Betts, "*Practical Methods for Optimal Control and Estimation Using Nonlinear Programming*." Society for Industrial and Applied Mathematics, Jan. 2010, doi: 10.1137/1.9780898718577
 - [**Bry75**] A. E. Bryson Jr. and Y.-C. Ho, "*Applied Optimal Control*."" Taylor & Francis, 1975, isbn: 9780891162285
 - [**Bul93**] R. Bulirsch, E. Nerz, H. J. Pesch, and O. von Stryk, "*Combining Direct and Indirect Methods in Optimal Control: Range Maximization of a Hang Glider,*" in Optimal Control, Birkhäuser Basel, 1993, pp. 273–288 [Online]. Available: http://dx.doi.org/10.1007/978-3-0348-7539-4_20
