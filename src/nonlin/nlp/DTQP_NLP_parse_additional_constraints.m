@@ -35,7 +35,7 @@ if cflag % inequality constraints
 else % equality constraints
 
     % check if there is a h field
-    if isfield(setup.element,'h') && ~isempty(setup.element.g)
+    if isfield(setup.element,'h') && ~isempty(setup.element.h)
 
         % extract
         c = setup.element.h;
