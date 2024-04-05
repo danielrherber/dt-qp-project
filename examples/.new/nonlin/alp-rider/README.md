@@ -3,7 +3,7 @@
 ### Formulation
 ```math
 \begin{align*}
-\text{changing :} \quad & u_1,u_2,x_1,x_2,_3,x_4 \\
+\text{changing :} \quad & u_1,u_2,x_1,x_2,x_3,x_4 \\
 \text{minimize :} \quad & \int_{0}^{20} \left[10^{2}(x_1^2 + x_2^2 + x_3^2 + x_4^2) + 10^{-2} (u_1^2 +u_2^2)\right] \mathrm{d}t \\
 \text{subject to :} \quad & \dot{\mathbf{x}} = \begin{bmatrix}
 -10 x_1 + u_1 + u_2 \\
