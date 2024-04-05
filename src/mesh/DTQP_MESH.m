@@ -14,7 +14,7 @@ switch upper(opts.dt(1).meshr.method)
     %----------------------------------------------------------------------
     case 'NONE' % no mesh refinement
     % check if there are symbolically defined problem elements
-    if isfield(setup,'element')
+    if isfield(setup,'element') && any(~structfun(@isempty, setup.element))
         solve_fun = @DTQP_NONLIN; % NLDO problem
     else
         solve_fun = @DTQP_multiphase; % LQDO problem

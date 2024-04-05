@@ -56,7 +56,7 @@ else
 end
 
 % states
-if isfield(ns,'ny')
+if isfield(ns,'ny') && ~isempty(ns.ny)
     in.ny = ns.ny;
 else
     in.ny = max([size(setup.A,1),size(setup.B,1),size(setup.G,1),size(setup.d,1)]);
@@ -64,7 +64,7 @@ end
 ny = in.ny;
 
 % controls
-if isfield(ns,'nu')
+if isfield(ns,'nu') && ~isempty(ns.nu)
     in.nu = ns.nu;
 else
     in.nu = size(setup.B,2);
@@ -72,7 +72,7 @@ end
 nu = in.nu;
 
 % parameters
-if isfield(ns,'np')
+if isfield(ns,'np') && ~isempty(ns.np)
     in.np = ns.np;
 else
     in.np = size(setup.G,2);

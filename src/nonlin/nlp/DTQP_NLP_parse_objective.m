@@ -10,7 +10,7 @@
 function [H,f,c,lqdoflag,in,opts] = DTQP_NLP_parse_objective(setup,in,opts)
 
 % check if there is a X field
-if isfield(setup.element,'lagrange')
+if isfield(setup.element,'lagrange') && ~isempty(setup.element.lagrange)
 
     % extract
     L = setup.element.lagrange;

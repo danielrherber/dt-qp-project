@@ -9,6 +9,9 @@
 %--------------------------------------------------------------------------
 function [T,U,Y,P,F,in,opts] = DTQP_solve(setup,opts)
 
+% (potentially) convert input structure
+setup = DTQP_setup_convert(setup);
+
 % initialize options and other things
 [setup,opts] = DTQP_default_opts(setup,opts);
 

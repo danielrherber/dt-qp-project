@@ -13,7 +13,7 @@ function [A,b,Ic,in,opts,setup] = DTQP_NLP_parse_additional_constraints(setup,in
 if cflag % inequality constraints
 
     % check if there is a g field
-    if isfield(setup.element,'g')
+    if isfield(setup.element,'g') && ~isempty(setup.element.g)
 
         % extract
         c = setup.element.g;
@@ -35,7 +35,7 @@ if cflag % inequality constraints
 else % equality constraints
 
     % check if there is a h field
-    if isfield(setup.element,'h')
+    if isfield(setup.element,'h') && ~isempty(setup.element.g)
 
         % extract
         c = setup.element.h;
