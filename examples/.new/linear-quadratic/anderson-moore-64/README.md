@@ -5,7 +5,7 @@
 \begin{align*}
 \mathrm{changing}: \quad & u,x \\
 \mathrm{minimize}: \quad & \int_{t_0}^{t_f}\left[ \frac{1}{2} e^{-t} x^2 + 2 e^{-t} u^2 \right] \mathrm{d}t \\
-\text{subject to:} \quad & \dot{x} = \frac{1}{2}x + u \\
+\mathrm{subject to}: \quad & \dot{x} = \frac{1}{2}x + u \\
 & x(0) = x_0
 \end{align*}
 ```
