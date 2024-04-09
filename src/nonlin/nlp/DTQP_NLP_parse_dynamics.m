@@ -10,7 +10,7 @@
 function [Aeq1,beq1,Idyn,in,opts,nI] = DTQP_NLP_parse_dynamics(setup,in,opts,olqflag,nt)
 
 % check if there is a dynamics field
-if isfield(setup.element,'dynamics')
+if isfield(setup.element,'dynamics') && ~isempty(setup.element.dynamics)
 
     % extract
     D = setup.element.dynamics;
