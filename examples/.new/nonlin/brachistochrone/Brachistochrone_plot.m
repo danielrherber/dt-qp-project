@@ -33,7 +33,7 @@ flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 xlim([T(1),max(sol(1).F,T(end))])
 
 % save
-figname = 'figure-state'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
+figname = 'figure-state'; %#ok<NASGU>
 flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
 %% control
@@ -47,7 +47,7 @@ flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 xlim([T(1),max(sol(1).F,T(end))])
 
 % save
-figname = 'figure-control'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
+figname = 'figure-control'; %#ok<NASGU>
 flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
 %% error
@@ -62,7 +62,7 @@ if solutionflag
     xlim([T(1),max(sol(1).F,T(end))])
 
     % save
-    figname = 'figure-error'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
+    figname = 'figure-error'; %#ok<NASGU>
     flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 end
 
@@ -105,7 +105,7 @@ set(hL,'interpreter','latex','location','best',...
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 
 % save
-figname = 'figure-xy'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
+figname = 'figure-xy'; %#ok<NASGU>
 flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
 end

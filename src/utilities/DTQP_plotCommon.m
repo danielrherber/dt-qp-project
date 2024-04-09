@@ -44,6 +44,9 @@ switch flag
     case 'save' % requires: opts, pathplots, figname
     if opts.general.saveflag
         % save a pdf and png version
+        stack = dbstack('-completenames');
+        mname = stack(2).name; % get calling function
+        pathplots = msavename(mname,'plots');
         filename = fullfile(pathplots,figname);
         str = ['export_fig ''',filename,''' -png -pdf'];
         eval(str)

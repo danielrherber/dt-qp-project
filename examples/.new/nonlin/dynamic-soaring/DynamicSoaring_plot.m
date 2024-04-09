@@ -24,7 +24,7 @@ flag = 'plot-state'; DTQP_plotCommon %#ok<NASGU>
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 
 % save
-figname = 'figure-state'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
+figname = 'figure-state'; %#ok<NASGU>
 flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
 %% control
@@ -38,7 +38,7 @@ flag = 'plot-control'; DTQP_plotCommon %#ok<NASGU>
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 
 % save
-figname = 'figure-control'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
+figname = 'figure-control'; %#ok<NASGU>
 flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
 %% positions
@@ -71,7 +71,7 @@ ha.ZAxis.Label.FontSize = fontsize_; % change z label font size
 ha.LineWidth = 1;
 
 % save
-figname = 'figure-positions'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
+figname = 'figure-positions'; %#ok<NASGU>
 flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
 %% path constraint
@@ -99,7 +99,7 @@ ylabel('$G$','fontsize',fontsize_)
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 
 % save
-figname = 'figure-positions'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
+figname = 'figure-positions'; %#ok<NASGU>
 flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
 end

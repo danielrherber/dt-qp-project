@@ -27,7 +27,7 @@ flag = 'plot-state'; DTQP_plotCommon %#ok<NASGU>
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 
 % save
-figname = 'figure-state'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
+figname = 'figure-state'; %#ok<NASGU>
 flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
 %% control
@@ -41,7 +41,7 @@ flag = 'plot-control'; DTQP_plotCommon %#ok<NASGU>
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 
 % save
-figname = 'figure-control'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
+figname = 'figure-control'; %#ok<NASGU>
 flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
 %% altitude vs. range
@@ -68,7 +68,7 @@ ylabel('altitude [km]','fontsize',16)
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 
 % save
-figname = 'figure-altitude-range'; pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
+figname = 'figure-altitude-range'; %#ok<NASGU>
 flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
 end
