@@ -10,7 +10,7 @@
 function in = DTQP_guess(setup,in)
 
 % check if a guess was provided
-if isfield(setup,'guess')
+if isfield(setup,'guess') && ~isempty(setup.guess)
 
     % extract
     guess = setup.guess;
