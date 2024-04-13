@@ -80,7 +80,7 @@ qlinflag = false; % quasilinearization not needed
 lqdoflag = true; % LQDO problem elements only
 
 % quadracize the objective term
-if isfield(element,'lagrange')
+if isfield(element,'lagrange') && ~isempty(element.lagrange)
 
     % quadraticization of a nonlinear scalar equation
     form = 4;
@@ -99,7 +99,7 @@ if isfield(element,'lagrange')
 end
 
 % linearize the dynamics
-if isfield(element,'dynamics')
+if isfield(element,'dynamics') && ~isempty(element.dynamics)
 
     % linearization of a nonlinear vector of equations
     form = 3;

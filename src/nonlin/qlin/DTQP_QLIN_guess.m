@@ -22,7 +22,7 @@ if isfield(opts.method,'sqpflag') && opts.method.sqpflag
 end
 
 % (potentially) used-defined initial guess
-if isfield(setup,'guess')
+if isfield(setup,'guess') && ~isempty(setup.guess)
 
     % extract
     guess = setup.guess;

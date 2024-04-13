@@ -32,19 +32,19 @@ if (iter==1)
     hf.Position(3:4) = [1200 420]; hf.Position(1) = 500;
     if ~isempty(Y)
         subplot(1,n,IY,'align'); hold on; xlabel("$t$");
-        title('States','fontsize',fontsize+2);
+        title('States','fontsize',fontsize_+2);
         flag = 'axis'; DTQP_plotCommon; %#ok<NASGU>
         legend('location','best');
     end
     if ~isempty(U)
         subplot(1,n,IU,'align'); hold on; hf.Color = 'w'; xlabel("$t$");
-        title('Controls','fontsize',fontsize+2);
+        title('Controls','fontsize',fontsize_+2);
         flag = 'axis'; DTQP_plotCommon; %#ok<NASGU>
         legend('location','best');
     end
     if ~isempty(P)
         subplot(1,n,IP,'align'); hold on; hf.Color = 'w'; xlabel("iteration");
-        title('Parameters','fontsize',fontsize+2);
+        title('Parameters','fontsize',fontsize_+2);
         flag = 'axis'; DTQP_plotCommon; %#ok<NASGU>
         legend('location','best');
     end
