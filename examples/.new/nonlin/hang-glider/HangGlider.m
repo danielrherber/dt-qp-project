@@ -100,7 +100,7 @@ scaling(2).right = 2; % states
 scaling(2).matrix = [3000 3000 15 15];
 scaling(3).right = 3; % parameters
 scaling(3).matrix = 200;
-setup.scaling = scaling;
+setup.method.scaling = scaling;
 
 end
 

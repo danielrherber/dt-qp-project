@@ -88,7 +88,7 @@ scaling(1).right = 1; % controls
 scaling(1).matrix = [1;1;1;1];
 scaling(2).right = 2; % states
 scaling(2).matrix = [10,10,pi/2,1,1,1];
-setup.scaling = scaling;
+setup.method.scaling = scaling;
 
 end
 

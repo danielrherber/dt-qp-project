@@ -83,7 +83,7 @@ scaling(1).right = 1; % controls
 scaling(1).matrix = [0.02;0.9];
 scaling(2).right = 2; % states
 scaling(2).matrix = [1200 5];
-setup.scaling = scaling;
+setup.method.scaling = scaling;
 
 end
 
