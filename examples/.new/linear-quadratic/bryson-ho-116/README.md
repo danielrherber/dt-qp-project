@@ -1,4 +1,4 @@
-## Bryson-Ho-116
+## bryson-ho-116
 
 ### Formulation
 ```math
