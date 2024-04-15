@@ -1,4 +1,4 @@
-## bryson-ho 153
+## bryson-ho-153
 
 ### Formulation
 ```math
