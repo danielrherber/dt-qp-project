@@ -54,7 +54,7 @@ setup.lq.lagrange = L;
 M(1).left = 5; M(1).right = 5; M(1).matrix = [auxdata.c2,0;0,auxdata.c1]/2;
 setup.lq.mayer = M;
 
-% initial conditions
+% simple bounds
 LB(1).right = 4; LB(1).matrix = [auxdata.x0;auxdata.v0]; % initial states
 UB(1).right = 4;  UB(1).matrix = [auxdata.x0;auxdata.v0];
 setup.lq.ub = UB; setup.lq.lb = LB;

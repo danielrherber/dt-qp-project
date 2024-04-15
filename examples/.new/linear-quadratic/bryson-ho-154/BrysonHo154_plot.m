@@ -25,7 +25,7 @@ flag = 'plot-state'; DTQP_plotCommon %#ok<NASGU>
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 
 % save
-figname = 'figure-state'; % pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
+figname = 'figure-state'; %#ok<NASGU>
 flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
 %% control
@@ -39,7 +39,7 @@ flag = 'plot-control'; DTQP_plotCommon %#ok<NASGU>
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 
 % save
-figname = 'figure-control'; % pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
+figname = 'figure-control'; %#ok<NASGU>
 flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
 %% error
@@ -52,7 +52,7 @@ flag = 'plot-error'; DTQP_plotCommon %#ok<NASGU>
 flag = 'axis'; DTQP_plotCommon %#ok<NASGU>
 
 % save
-figname = 'figure-error'; % pathplots = msavename(mfilename('fullpath'),'plots'); %#ok<NASGU>
+figname = 'figure-error'; %#ok<NASGU>
 flag = 'save'; DTQP_plotCommon %#ok<NASGU>
 
 end
