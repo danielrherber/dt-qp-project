@@ -35,6 +35,7 @@
 | Train | [train](train/) | Van01 |  |
 | Transfer - Maximum Radius | [transfer-max-radius](transfer-max-radius/) | Bry75 |  |
 | Transfer - Minimum Fuel | [transfer-min-fuel](transfer-min-fuel/) | Ross07 |  |
+| Transfer - Minimum Time | [transfer-min-time](transfer-min-time/) | Bry75 |  |
 | Tuberculosis | [tuberculosis](tuberculosis/) | Bett10 |  |
 | Tumor | [tumor](tumor/) | Led08 |  |
 | Two Link Robot | [two-link-robot](two-link-robot/) | Lu00 |  |

@@ -1,0 +1,23 @@
+%% formulation
+\documentclass{standalone}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\begin{document}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\pagecolor{white}
+\scalebox{2}{\parbox{0.1\textwidth}{%
+\begin{align*}
+\min_{\phi(t)} \quad & t_f \\
+\text{subject to:} \quad & \begin{bmatrix} \dot{r} \\ \dot{\theta} \\ \dot{v}_r \\ \dot{v}_\theta \end{bmatrix}
+=
+\begin{bmatrix} v_r \\ \frac{v_\theta}{r} \\ \frac{v_\theta^2}{r} - \frac{\mu}{r^2} + \frac{T}{m_0 + \dot{m}t} \sin(\phi) \\ - \frac{v_r v_\theta}{r} + \frac{T}{m_0 + \dot{m}t} \cos(\phi) \end{bmatrix} \\
+& (r,\theta,v_r,v_\theta)(0) = (1,0,0,1) \\
+& (r,v_r,v_\theta)(t_f) = \left(r_f, 0, \sqrt{\frac{\mu}{r_f}} \right)
+\end{align*}
+}}
+\end{document}
+
+%% solution
